@@ -1,0 +1,320 @@
+package builtin
+
+import (
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
+	"powershell/internal/object"
+)
+
+// ---- 路径与导航 ----
+
+func cmdTestPath(c *Context) ([]*object.PSObject, error) {
+	path := firstPathArg(c)
+	if path == "" {
+		return []*object.PSObject{object.Bool(false)}, nil
+	}
+	paths, derr := expandWildcard(c, path)
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	for _, p := range paths {
+		if _, err := os.Stat(p); err == nil {
+			return []*object.PSObject{object.Bool(true)}, nil
+		}
+	}
+	return []*object.PSObject{object.Bool(false)}, nil
+}
+
+func cmdResolvePath(c *Context) ([]*object.PSObject, error) {
+	path := firstPathArg(c)
+	if path == "" {
+		return nil, nil
+	}
+	full, derr := resolvePath(c, path)
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	real, err := filepath.EvalSymlinks(full)
+	if err == nil {
+		full = real
+	}
+	return []*object.PSObject{object.Str(full)}, nil
+}
+
+func cmdConvertPath(c *Context) ([]*object.PSObject, error) {
+	path := firstPathArg(c)
+	if path == "" {
+		return nil, nil
+	}
+	full, derr := resolvePath(c, path)
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	return []*object.PSObject{object.Str(filepath.Clean(full))}, nil
+}
+
+func cmdSplitPath(c *Context) ([]*object.PSObject, error) {
+	path := firstPathArg(c)
+	if path == "" {
+		return nil, nil
+	}
+	full, derr := resolvePath(c, path)
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	if c.Args.Switch("Qualifier") {
+		// 盘符限定符：本程序只有 C 盘，绝对路径（含 C: 前缀或 / 开头）返回 C:
+		if strings.HasPrefix(path, "C:") || strings.HasPrefix(path, "c:") || strings.HasPrefix(path, "/") {
+			return []*object.PSObject{object.Str("C:")}, nil
+		}
+		return []*object.PSObject{object.Str("")}, nil
+	}
+	if c.Args.Switch("Leaf") {
+		return []*object.PSObject{object.Str(filepath.Base(full))}, nil
+	}
+	if c.Args.Switch("Parent") {
+		return []*object.PSObject{object.Str(filepath.Dir(full))}, nil
+	}
+	// 无开关：输出父目录（PS 默认）
+	return []*object.PSObject{object.Str(filepath.Dir(full))}, nil
+}
+
+func cmdJoinPath(c *Context) ([]*object.PSObject, error) {
+	base, _ := c.Args.Str("Path")
+	if base == "" {
+		if p := c.Args.Pos(0); p != nil {
+			base = p.String()
+		}
+	}
+	child, _ := c.Args.Str("ChildPath")
+	if child == "" {
+		if p := c.Args.Pos(1); p != nil {
+			child = p.String()
+		}
+	}
+	if base == "" || child == "" {
+		return nil, nil
+	}
+	return []*object.PSObject{object.Str(filepath.Join(base, child))}, nil
+}
+
+func cmdPushLocation(c *Context) ([]*object.PSObject, error) {
+	path := firstPathArg(c)
+	target := c.Shell.Cwd
+	if path != "" {
+		newPath, derr := resolvePath(c, path)
+		if derr != nil {
+			return errf(c, "%v", derr)
+		}
+		if info, err := os.Stat(newPath); err != nil || !info.IsDir() {
+			return errf(c, "Push-Location : 找不到路径 %s。", path)
+		}
+		target = filepath.Clean(newPath)
+	}
+	c.Shell.DirStack = append(c.Shell.DirStack, c.Shell.Cwd)
+	c.Shell.Cwd = target
+	return nil, nil
+}
+
+func cmdPopLocation(c *Context) ([]*object.PSObject, error) {
+	if len(c.Shell.DirStack) == 0 {
+		return nil, nil
+	}
+	last := c.Shell.DirStack[len(c.Shell.DirStack)-1]
+	c.Shell.DirStack = c.Shell.DirStack[:len(c.Shell.DirStack)-1]
+	c.Shell.Cwd = last
+	return nil, nil
+}
+
+func cmdClearContent(c *Context) ([]*object.PSObject, error) {
+	path := firstPathArg(c)
+	if path == "" {
+		return nil, nil
+	}
+	paths, derr := expandWildcard(c, path)
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	for _, p := range paths {
+		if err := os.WriteFile(p, nil, 0o644); err != nil {
+			return errf(c, "Clear-Content : 无法清空 %s。", p)
+		}
+	}
+	return nil, nil
+}
+
+func cmdSetItem(c *Context) ([]*object.PSObject, error) {
+	path, value := pathAndValue(c)
+	if path == "" {
+		return nil, nil
+	}
+	if value == nil {
+		return nil, nil
+	}
+	// env: 驱动器
+	if strings.HasPrefix(path, "env:") {
+		os.Setenv(strings.TrimPrefix(path, "env:"), value.String())
+		return nil, nil
+	}
+	full, derr := resolvePath(c, path)
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	info, err := os.Stat(full)
+	if err == nil && info.IsDir() {
+		return nil, nil
+	}
+	if err := os.WriteFile(full, []byte(value.String()), 0o644); err != nil {
+		return errf(c, "Set-Item : 无法写入 %s。", path)
+	}
+	return nil, nil
+}
+
+func cmdClearItem(c *Context) ([]*object.PSObject, error) {
+	path := firstPathArg(c)
+	if path == "" {
+		return nil, nil
+	}
+	full, derr := resolvePath(c, path)
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	if info, err := os.Stat(full); err == nil && info.IsDir() {
+		return nil, nil
+	}
+	if err := os.WriteFile(full, nil, 0o644); err != nil {
+		return errf(c, "Clear-Item : 无法清空 %s。", path)
+	}
+	return nil, nil
+}
+
+func cmdGetItemProperty(c *Context) ([]*object.PSObject, error) {
+	path := firstPathArg(c)
+	if path == "" {
+		return nil, nil
+	}
+	full, derr := resolvePath(c, path)
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	info, err := os.Stat(full)
+	if err != nil {
+		return errf(c, "Get-ItemProperty : 找不到路径 %s。", path)
+	}
+	o := object.Object("System.Management.Automation.PSCustomObject", nil)
+	o.AddProp("Name", info.Name())
+	o.AddProp("FullName", full)
+	o.AddProp("Length", info.Size())
+	o.AddProp("LastWriteTime", info.ModTime())
+	o.AddProp("Mode", object.UnixMode(info))
+	// -Name：只保留指定属性（Windows 语义，如 Get-ItemProperty x -Name Length）
+	nameFilter := ""
+	if n, ok := c.Args.Str("Name"); ok && n != "" {
+		nameFilter = n
+	} else if p := c.Args.Pos(1); p != nil {
+		nameFilter = p.String()
+	}
+	if nameFilter != "" {
+		var kept []object.Prop
+		for _, p := range o.Props {
+			if strings.EqualFold(p.Name, nameFilter) {
+				kept = append(kept, p)
+			}
+		}
+		if len(kept) == 0 {
+			return errf(c, "Get-ItemProperty : 路径 %s 不存在属性 %s。", path, nameFilter)
+		}
+		o.Props = kept
+	}
+	return []*object.PSObject{o}, nil
+}
+
+func cmdSetItemProperty(c *Context) ([]*object.PSObject, error) {
+	// 位置参数依序填 路径→属性名→值，已用命名的槽位跳过
+	path := ""
+	if p, ok := c.Args.Str("Path"); ok {
+		path = p
+	}
+	name := ""
+	if n, ok := c.Args.Str("Name"); ok {
+		name = n
+	}
+	val := c.Args.Get("Value")
+	pi := 0
+	if path == "" && pi < len(c.Args.Positional) {
+		path = c.Args.Positional[pi].String()
+		pi++
+	}
+	if name == "" && pi < len(c.Args.Positional) {
+		name = c.Args.Positional[pi].String()
+		pi++
+	}
+	if val == nil && pi < len(c.Args.Positional) {
+		val = c.Args.Positional[pi]
+	}
+	if path == "" {
+		return nil, nil
+	}
+	// MVP：支持 -Name LastWriteTime -Value <时间>；其余属性忽略
+	if name != "" && val != nil && strings.EqualFold(name, "LastWriteTime") {
+		full, derr := resolvePath(c, path)
+		if derr != nil {
+			return errf(c, "%v", derr)
+		}
+		if err := os.Chtimes(full, time.Now(), time.Now()); err != nil {
+			return errf(c, "Set-ItemProperty : 找不到路径 %s。", path)
+		}
+	}
+	return nil, nil
+}
+
+// ---- 注册 ----
+
+func init() {
+	Register("Test-Path", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "PathType", Type: "string"},
+	}, cmdTestPath)
+	Register("Resolve-Path", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+	}, cmdResolvePath)
+	Register("Convert-Path", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+	}, cmdConvertPath)
+	Register("Split-Path", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Parent", Switch: true},
+		{Name: "Leaf", Switch: true},
+		{Name: "Qualifier", Switch: true},
+	}, cmdSplitPath)
+	Register("Join-Path", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "ChildPath", Position: 1, Type: "path"},
+	}, cmdJoinPath)
+	Register("Push-Location", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+	}, cmdPushLocation)
+	Register("Pop-Location", nil, cmdPopLocation)
+	Register("Clear-Content", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+	}, cmdClearContent)
+	Register("Set-Item", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Value", Position: 1, Type: "object"},
+	}, cmdSetItem)
+	Register("Clear-Item", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+	}, cmdClearItem)
+	Register("Get-ItemProperty", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Name", Position: 1, Type: "string"},
+	}, cmdGetItemProperty)
+	Register("Set-ItemProperty", []ParamSpec{
+		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Name", Position: 1, Type: "string"},
+		{Name: "Value", Position: 2, Type: "object"},
+	}, cmdSetItemProperty)
+}

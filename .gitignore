@@ -1,0 +1,8 @@
+# 编译产物
+/powershell.exe
+/powershell
+*.exe
+*.test
+
+# 测试临时目录
+test/tmp/

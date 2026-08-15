@@ -1,0 +1,218 @@
+// Package repl 实现交互式 REPL：提示符、行编辑、历史、Tab 补全、多行续行。
+package repl
+
+import (
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"powershell/internal/builtin"
+	"powershell/internal/eval"
+	"powershell/internal/object"
+	"powershell/internal/parser"
+	"powershell/internal/shell"
+)
+
+// lineReader 是行读取接口（Unix 为 raw 模式编辑器，其它平台回退为简单读取）。
+type lineReader interface {
+	ReadLine(prompt string) (string, error)
+}
+
+// REPL 是一次交互式会话。
+type REPL struct {
+	Session *shell.Session
+	Eval    *eval.Evaluator
+	in      *os.File
+	out     io.Writer
+	reader  lineReader
+	pending string // 多行续行累积
+}
+
+// Run 启动 REPL 主循环。
+func Run(sess *shell.Session, ev *eval.Evaluator, showBanner bool, in *os.File, out, errw io.Writer) {
+	if showBanner {
+		fmt.Fprintln(out, sess.Banner())
+		fmt.Fprintln(out)
+	}
+	r := &REPL{
+		Session: sess,
+		Eval:    ev,
+		in:      in,
+		out:     out,
+	}
+	hist := loadHistory(historyPath())
+	sess.History = hist
+	defer func() {
+		if err := saveHistory(historyPath(), sess.History); err != nil {
+			// 历史保存失败静默忽略
+		}
+	}()
+	r.reader = newLineReader(in, out, &sess.History, r.complete)
+	r.loop()
+}
+
+func (r *REPL) loop() {
+	for {
+		prompt := r.Session.Prompt() + " "
+		if r.pending != "" {
+			prompt = r.Session.ContinuationPrompt() + " "
+		}
+		line, err := r.reader.ReadLine(prompt)
+		if err != nil {
+			if err == io.EOF {
+				fmt.Fprintln(r.out)
+			}
+			return
+		}
+		r.pending += line + "\n"
+		res := parser.Parse(r.pending)
+		if res.Error != nil {
+			fmt.Fprintf(r.out, "%s : %v\n", r.Session.StyleName(), res.Error)
+			r.pending = ""
+			continue
+		}
+		if res.Incomplete {
+			continue
+		}
+		// 记录历史（整条合并）
+		joined := strings.Join(strings.Split(strings.TrimRight(r.pending, "\n"), "\n"), "; ")
+		if len(sessHistory(r.Session)) == 0 || sessHistory(r.Session)[len(sessHistory(r.Session))-1] != joined {
+			r.Session.History = append(r.Session.History, joined)
+		}
+		// 逐语句执行并格式化，保证与直写命令顺序一致
+		for _, st := range res.List.Statements {
+			objs := r.Eval.EvalStatement(st)
+			_ = object.FormatOutput(r.out, objs)
+			if r.Eval.ExitRequested {
+				r.pending = ""
+				return
+			}
+		}
+		r.pending = ""
+	}
+}
+
+func sessHistory(s *shell.Session) []string { return s.History }
+
+// ---- Tab 补全 ----
+
+func (r *REPL) complete(buf string) []string {
+	if buf == "" {
+		return nil
+	}
+	// 变量补全
+	if strings.HasPrefix(buf, "$") {
+		name := strings.TrimPrefix(buf, "$")
+		var out []string
+		for _, n := range r.Session.AllVarNames() {
+			if strings.HasPrefix(strings.ToLower(n), strings.ToLower(name)) {
+				out = append(out, "$"+n)
+			}
+		}
+		return out
+	}
+	// 命令补全（第一个词）
+	fields := strings.Fields(buf)
+	if len(fields) == 0 {
+		return nil // 纯空白行：无词可补
+	}
+	lastTok := fields[len(fields)-1]
+	if len(fields) == 1 {
+		var out []string
+		for _, n := range builtin.AllCmdletNames() {
+			if strings.HasPrefix(strings.ToLower(n), strings.ToLower(lastTok)) {
+				out = append(out, n+" ")
+			}
+		}
+		for _, n := range r.Session.AllAliasNames() {
+			if strings.HasPrefix(strings.ToLower(n), strings.ToLower(lastTok)) {
+				out = append(out, n+" ")
+			}
+		}
+		for n := range r.Session.Functions {
+			if strings.HasPrefix(strings.ToLower(n), strings.ToLower(lastTok)) {
+				out = append(out, n+" ")
+			}
+		}
+		return out
+	}
+	// 文件路径补全
+	return completePath(r.Session, lastTok)
+}
+
+func completePath(sess *shell.Session, tok string) []string {
+	dir := filepath.Dir(tok)
+	if dir == "." {
+		dir = "."
+	} else if !filepath.IsAbs(dir) {
+		dir = filepath.Join(sess.Cwd, dir)
+	}
+	base := filepath.Base(tok)
+	if base == tok && !strings.Contains(tok, string(filepath.Separator)) {
+		base = tok
+		dir = sess.Cwd
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return nil
+	}
+	var out []string
+	for _, en := range entries {
+		name := en.Name()
+		if !strings.HasPrefix(strings.ToLower(name), strings.ToLower(base)) {
+			continue
+		}
+		prefix := tok[:len(tok)-len(base)]
+		if en.IsDir() {
+			out = append(out, prefix+name+string(filepath.Separator))
+		} else {
+			out = append(out, prefix+name+" ")
+		}
+	}
+	return out
+}
+
+// ---- 历史持久化 ----
+
+func historyPath() string {
+	if p := os.Getenv("POWERSHELL_HISTORY_FILE"); p != "" {
+		return p
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ".powershell_history"
+	}
+	return filepath.Join(home, ".powershell_history")
+}
+
+func loadHistory(path string) []string {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+	var lines []string
+	for _, ln := range strings.Split(string(data), "\n") {
+		ln = strings.TrimRight(ln, "\r")
+		if ln != "" {
+			lines = append(lines, ln)
+		}
+	}
+	return lines
+}
+
+func saveHistory(path string, hist []string) error {
+	if len(hist) == 0 {
+		return nil
+	}
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	for _, h := range hist {
+		fmt.Fprintln(f, h)
+	}
+	return nil
+}

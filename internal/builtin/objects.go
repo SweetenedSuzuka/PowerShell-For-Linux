@@ -1,0 +1,441 @@
+package builtin
+
+import (
+	"sort"
+	"strings"
+
+	"powershell/internal/ast"
+	"powershell/internal/object"
+)
+
+// ---- 对象管道 ----
+
+func filterMatches(c *Context, obj *object.PSObject) bool {
+	// 位置 0：脚本块或比较表达式
+	if node := c.Args.PosNode(0); node != nil {
+		return evalFilterNode(c, node, obj)
+	}
+	// -Property Length -gt 100 → Property 的值是一个比较表达式
+	if node := c.Args.GetNode("Property"); node != nil {
+		if _, isBare := node.(*ast.BareWord); isBare {
+			return false // 缺比较运算符
+		}
+		return evalFilterNode(c, node, obj)
+	}
+	// -FilterScript { ... }
+	if node := c.Args.GetNode("FilterScript"); node != nil {
+		return evalFilterNode(c, node, obj)
+	}
+	// 无参数：输入对象本身作为过滤器（输出为真者）
+	return obj.Truthy()
+}
+
+func evalFilterNode(c *Context, node ast.Node, obj *object.PSObject) bool {
+	if sb, ok := node.(*ast.ScriptBlock); ok {
+		outs, _ := c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, map[string]*object.PSObject{"_": obj, "PSItem": obj}, c.Stdout)
+		if len(outs) == 0 {
+			return false
+		}
+		return outs[len(outs)-1].Truthy()
+	}
+	ok, err := c.Engine.EvalFilterExpr(node, obj)
+	if err != nil {
+		return false
+	}
+	return ok
+}
+
+func cmdWhereObject(c *Context) ([]*object.PSObject, error) {
+	not := c.Args.Switch("Not")
+	var out []*object.PSObject
+	for _, obj := range c.Input {
+		ok := filterMatches(c, obj)
+		if not {
+			ok = !ok
+		}
+		if ok {
+			out = append(out, obj)
+		}
+	}
+	return out, nil
+}
+
+func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
+	first, _ := c.Args.Int("First")
+	last, _ := c.Args.Int("Last")
+	unique := c.Args.Switch("Unique")
+
+	items := c.Input
+	props := c.Args.StringSlice("Property")
+	if len(items) > 0 {
+		// 有管道输入：位置 0 是属性列表（如 Select-Object Name,Length）
+		if len(props) == 0 {
+			if p := c.Args.Pos(0); p != nil {
+				for _, it := range p.ArrayItems() {
+					props = append(props, it.String())
+				}
+			}
+		}
+	} else if p := c.Args.Pos(0); p != nil {
+		// 无管道输入：位置 0 按数组元素处理（数据），不是属性列表
+		items = p.ArrayItems()
+	}
+	if first > 0 && int(first) < len(items) {
+		items = items[:first]
+	}
+	if last > 0 && int(last) < len(items) {
+		items = items[len(items)-int(last):]
+	}
+	if unique {
+		seen := map[string]bool{}
+		var uniq []*object.PSObject
+		for _, it := range items {
+			if !seen[it.String()] {
+				seen[it.String()] = true
+				uniq = append(uniq, it)
+			}
+		}
+		items = uniq
+	}
+	if len(props) > 0 {
+		// * 表示选全部属性
+		all := false
+		for _, p := range props {
+			if p == "*" {
+				all = true
+				break
+			}
+		}
+		var out []*object.PSObject
+		for _, it := range items {
+			names := props
+			if all {
+				names = nil
+				for _, pr := range it.Props {
+					names = append(names, pr.Name)
+				}
+				if len(names) == 0 {
+					out = append(out, it) // 无属性对象（标量等）原样保留
+					continue
+				}
+			}
+			// 只留选中的属性：生成 PSCustomObject（不保留原类型，避免按标量渲染漏掉属性）
+			n := object.Object("System.Management.Automation.PSCustomObject", nil)
+			for _, p := range names {
+				if v, ok := it.PropValue(p); ok {
+					n.AddProp(p, v.Value)
+				} else {
+					n.AddProp(p, nil)
+				}
+			}
+			out = append(out, n)
+		}
+		return out, nil
+	}
+	return items, nil
+}
+
+func cmdSortObject(c *Context) ([]*object.PSObject, error) {
+	props := c.Args.StringSlice("Property")
+	if len(props) == 0 {
+		if p := c.Args.Pos(0); p != nil {
+			for _, it := range p.ArrayItems() {
+				props = append(props, it.String())
+			}
+		}
+	}
+	desc := c.Args.Switch("Descending")
+	unique := c.Args.Switch("Unique")
+
+	// 取对象某属性值；缺失视为 $null（排序时排最前）。
+	keyOf := func(o *object.PSObject, p string) *object.PSObject {
+		if v, ok := o.PropValue(p); ok {
+			return v
+		}
+		return object.Null()
+	}
+	// 多属性逐个比较：第一个非 0 结果决定顺序。
+	compare := func(a, b *object.PSObject) int {
+		if len(props) == 0 {
+			return compareOrderBuiltin(a, b)
+		}
+		for _, p := range props {
+			if c := compareOrderBuiltin(keyOf(a, p), keyOf(b, p)); c != 0 {
+				return c
+			}
+		}
+		return compareOrderBuiltin(a, b)
+	}
+	items := c.Input
+	sort.SliceStable(items, func(i, j int) bool {
+		ord := compare(items[i], items[j])
+		if desc {
+			return ord > 0
+		}
+		return ord < 0
+	})
+	if unique {
+		seen := map[string]bool{}
+		var uniq []*object.PSObject
+		for _, it := range items {
+			var sb strings.Builder
+			if len(props) == 0 {
+				sb.WriteString(it.String())
+			} else {
+				for _, p := range props {
+					sb.WriteString(keyOf(it, p).String())
+					sb.WriteByte(0)
+				}
+			}
+			if !seen[sb.String()] {
+				seen[sb.String()] = true
+				uniq = append(uniq, it)
+			}
+		}
+		items = uniq
+	}
+	return items, nil
+}
+
+func compareOrderBuiltin(a, b *object.PSObject) int {
+	if an, ok := a.AsFloat(); ok {
+		if bn, ok2 := b.AsFloat(); ok2 {
+			if an < bn {
+				return -1
+			}
+			if an > bn {
+				return 1
+			}
+			return 0
+		}
+	}
+	return strings.Compare(strings.ToLower(a.String()), strings.ToLower(b.String()))
+}
+
+func cmdForEachObject(c *Context) ([]*object.PSObject, error) {
+	node := c.Args.PosNode(0)
+	if node == nil {
+		node = c.Args.GetNode("Process")
+	}
+	var out []*object.PSObject
+	run := func(n ast.Node, extra map[string]*object.PSObject) {
+		if sb, ok := n.(*ast.ScriptBlock); ok {
+			outs, _ := c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, extra, c.Stdout)
+			out = append(out, outs...)
+		}
+	}
+	// -Begin / -End：各执行一次（聚合写法）
+	if begin := c.Args.GetNode("Begin"); begin != nil {
+		run(begin, nil)
+	}
+	// -MemberName：对每个对象取该成员（如 ForEach-Object -MemberName Length）
+	if mn, ok := c.Args.Str("MemberName"); ok && mn != "" {
+		for _, obj := range c.Input {
+			if v, ok := obj.PropValue(mn); ok {
+				out = append(out, v)
+			}
+		}
+	} else if sb, ok := node.(*ast.ScriptBlock); ok {
+		for _, obj := range c.Input {
+			outs, _ := c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, map[string]*object.PSObject{"_": obj, "PSItem": obj}, c.Stdout)
+			out = append(out, outs...)
+		}
+	} else {
+		out = append(out, c.Input...)
+	}
+	if end := c.Args.GetNode("End"); end != nil {
+		run(end, nil)
+	}
+	return out, nil
+}
+
+func cmdGroupObject(c *Context) ([]*object.PSObject, error) {
+	prop := ""
+	if p, ok := c.Args.Str("Property"); ok {
+		prop = p
+	} else if p := c.Args.Pos(0); p != nil {
+		prop = p.String()
+	}
+	groups := map[string][]*object.PSObject{}
+	var order []string
+	for _, o := range c.Input {
+		k := ""
+		if prop != "" {
+			if v, ok := o.PropValue(prop); ok {
+				k = v.String()
+			}
+		} else {
+			k = o.String()
+		}
+		if _, ok := groups[k]; !ok {
+			order = append(order, k)
+		}
+		groups[k] = append(groups[k], o)
+	}
+	var out []*object.PSObject
+	for _, k := range order {
+		g := object.Object("GroupInfo", groups[k])
+		g.AddProp("Name", k)
+		g.AddProp("Count", int64(len(groups[k])))
+		g.Table = []object.Column{
+			{Label: "Count", Align: "right"},
+			{Label: "Name", Align: "left"},
+		}
+		out = append(out, g)
+	}
+	return out, nil
+}
+
+func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
+	prop := ""
+	if p, ok := c.Args.Str("Property"); ok {
+		prop = p
+	} else if p := c.Args.Pos(0); p != nil {
+		prop = p.String()
+	}
+	lineFlag := c.Args.Switch("Line")
+	sumFlag := c.Args.Switch("Sum")
+	avgFlag := c.Args.Switch("Average")
+	minFlag := c.Args.Switch("Minimum")
+	maxFlag := c.Args.Switch("Maximum")
+
+	items := c.Input
+	// -Line：数输入里的行数（对应 wc -l）
+	if lineFlag {
+		var lines int64
+		for _, o := range items {
+			s := o.String()
+			if s == "" {
+				continue
+			}
+			lines += int64(strings.Count(s, "\n")) + 1
+		}
+		m := object.Object("MeasureInfo", nil)
+		m.AddProp("Count", lines)
+		return []*object.PSObject{m}, nil
+	}
+	var sum, avg, mn, mx float64
+	var haveMin, haveMax bool
+	var nums []float64
+	for _, o := range items {
+		var v *object.PSObject
+		if prop != "" {
+			if pv, ok := o.PropValue(prop); ok {
+				v = pv
+			}
+		} else {
+			v = o
+		}
+		if v == nil {
+			continue // 对象没有该属性：跳过（不崩溃）
+		}
+		if n, ok := v.AsFloat(); ok {
+			nums = append(nums, n)
+			sum += n
+			if !haveMin || n < mn {
+				mn = n
+				haveMin = true
+			}
+			if !haveMax || n > mx {
+				mx = n
+				haveMax = true
+			}
+		}
+	}
+	if len(nums) > 0 {
+		avg = sum / float64(len(nums))
+	}
+	m := object.Object("MeasureInfo", nil)
+	m.AddProp("Count", int64(len(items)))
+	if sumFlag {
+		m.AddProp("Sum", sum)
+	}
+	if avgFlag {
+		m.AddProp("Average", avg)
+	}
+	if minFlag {
+		if haveMin {
+			m.AddProp("Minimum", mn)
+		} else {
+			m.AddProp("Minimum", nil)
+		}
+	}
+	if maxFlag {
+		if haveMax {
+			m.AddProp("Maximum", mx)
+		} else {
+			m.AddProp("Maximum", nil)
+		}
+	}
+	return []*object.PSObject{m}, nil
+}
+
+func cmdGetMember(c *Context) ([]*object.PSObject, error) {
+	seen := map[string]bool{}
+	var out []*object.PSObject
+	for _, o := range inputItems(c) {
+		if !seen["type:"+o.TypeName] {
+			seen["type:"+o.TypeName] = true
+			t := object.Object("PSMemberInfo", nil)
+			t.AddProp("Name", o.TypeName)
+			t.AddProp("MemberType", "TypeName")
+			t.AddProp("Definition", "")
+			out = append(out, t)
+		}
+		for _, p := range o.Props {
+			if seen[p.Name] {
+				continue
+			}
+			seen[p.Name] = true
+			pm := object.Object("PSMemberInfo", nil)
+			pm.AddProp("Name", p.Name)
+			pm.AddProp("MemberType", "Property")
+			pm.AddProp("Definition", object.ToPS(p.Value).String())
+			out = append(out, pm)
+		}
+	}
+	return out, nil
+}
+
+// ---- 注册 ----
+
+func init() {
+	Register("Where-Object", []ParamSpec{
+		{Name: "FilterScript", Position: 0, Type: "scriptblock"},
+		{Name: "Property", Type: "string"},
+		{Name: "Not", Switch: true},
+		{Name: "SimpleMatch", Switch: true},
+	}, cmdWhereObject)
+	Register("Select-Object", []ParamSpec{
+		{Name: "Property", Position: 0, Type: "string[]"},
+		{Name: "First", Type: "int"},
+		{Name: "Last", Type: "int"},
+		{Name: "Unique", Switch: true},
+	}, cmdSelectObject)
+	Register("Sort-Object", []ParamSpec{
+		{Name: "Property", Position: 0, Type: "string[]"},
+		{Name: "Descending", Switch: true},
+		{Name: "Unique", Switch: true},
+	}, cmdSortObject)
+	Register("ForEach-Object", []ParamSpec{
+		{Name: "Process", Position: 0, Type: "scriptblock"},
+		{Name: "Begin", Type: "scriptblock"},
+		{Name: "End", Type: "scriptblock"},
+		{Name: "MemberName", Type: "string"},
+	}, cmdForEachObject)
+	Register("Group-Object", []ParamSpec{
+		{Name: "Property", Position: 0, Type: "string"},
+	}, cmdGroupObject)
+	Register("Measure-Object", []ParamSpec{
+		{Name: "Property", Position: 0, Type: "string"},
+		{Name: "Sum", Switch: true},
+		{Name: "Average", Switch: true},
+		{Name: "Minimum", Switch: true},
+		{Name: "Maximum", Switch: true},
+		{Name: "Line", Switch: true},
+	}, cmdMeasureObject)
+	Register("Get-Member", []ParamSpec{
+		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "MemberType", Type: "string"},
+	}, cmdGetMember)
+}

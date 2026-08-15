@@ -1,0 +1,1032 @@
+// Package eval 实现 PowerShell 求值器：表达式、语句、管道、命令调度、控制流、函数调用与外部命令。
+package eval
+
+import (
+	"fmt"
+	"io"
+	"math"
+	"os"
+	"regexp"
+	"strconv"
+	"strings"
+	"time"
+
+	"powershell/internal/ast"
+	"powershell/internal/builtin"
+	"powershell/internal/external"
+	"powershell/internal/object"
+	"powershell/internal/shell"
+)
+
+// flowKind 是控制流信号类型。
+type flowKind int
+
+const (
+	flowBreak flowKind = iota
+	flowContinue
+	flowReturn
+	flowExit
+)
+
+// flowSignal 用 panic/recover 传递 break/continue/return/exit。
+type flowSignal struct {
+	kind  flowKind
+	value *object.PSObject // return 值
+	code  int              // exit 码
+}
+
+// Evaluator 是一次求值会话。
+type Evaluator struct {
+	Session       *shell.Session
+	stdout        io.Writer
+	stderr        io.Writer
+	stdin         io.Reader
+	hostOut       io.Writer
+	hostErr       io.Writer
+	scopes        []map[string]*object.PSObject // 变量作用域栈，scopes[0] 为全局
+	inCapture     int                           // 进入捕获模式（函数/脚本块/子表达式）计数
+	ExitRequested bool                          // 是否遇到 exit 语句
+	ExitCode      int                           // exit 码
+}
+
+// New 创建求值器。
+func New(sess *shell.Session, stdin io.Reader, stdout, stderr io.Writer) *Evaluator {
+	return &Evaluator{
+		Session: sess,
+		stdout:  stdout,
+		stderr:  stderr,
+		stdin:   stdin,
+		hostOut: stdout,
+		hostErr: stderr,
+		scopes:  []map[string]*object.PSObject{sess.Vars},
+	}
+}
+
+// ---- Engine 接口实现（供内置 cmdlet 调用） ----
+
+// EvalExpr 在 extra 变量作用域下求值表达式。
+func (e *Evaluator) EvalExpr(node ast.Node, extra map[string]*object.PSObject) (*object.PSObject, error) {
+	if len(extra) > 0 {
+		e.pushScope()
+		defer e.popScope()
+		for k, v := range extra {
+			e.scopes[len(e.scopes)-1][k] = v
+		}
+	}
+	return e.evalValue(node), nil
+}
+
+// InvokeBlock 执行脚本块并返回其输出对象（不打印）。
+func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObject, stdout io.Writer) ([]*object.PSObject, error) {
+	if block == nil {
+		return nil, nil
+	}
+	e.inCapture++
+	defer func() { e.inCapture-- }()
+	if len(extra) > 0 {
+		e.pushScope()
+		defer e.popScope()
+		for k, v := range extra {
+			e.scopes[len(e.scopes)-1][k] = v
+		}
+	}
+	out, sig := e.runStatements(block.Body.Statements)
+	if sig != nil && sig.kind == flowReturn {
+		return unwrapOutput(sig.value), nil
+	}
+	return out, nil
+}
+
+// ---- 作用域与变量 ----
+
+func (e *Evaluator) pushScope() {
+	e.scopes = append(e.scopes, map[string]*object.PSObject{})
+}
+
+func (e *Evaluator) popScope() {
+	if len(e.scopes) > 1 {
+		e.scopes = e.scopes[:len(e.scopes)-1]
+	}
+}
+
+func (e *Evaluator) lookupVar(name string) *object.PSObject {
+	for i := len(e.scopes) - 1; i >= 0; i-- {
+		if v, ok := e.scopes[i][name]; ok {
+			return v
+		}
+	}
+	if v, ok := e.Session.GetVar(name); ok {
+		return v
+	}
+	return object.Null()
+}
+
+func (e *Evaluator) setVar(name string, val *object.PSObject) error {
+	if shell.IsReadOnlyVar(name) {
+		return fmt.Errorf("无法对只读变量 $%s 赋值。", name)
+	}
+	e.scopes[len(e.scopes)-1][name] = val
+	return nil
+}
+
+// writeError 把错误写到 stderr 并标记 $? 为 false。
+func (e *Evaluator) writeError(err error) {
+	if err == nil {
+		return
+	}
+	fmt.Fprintf(e.hostErr, "%s : %v\n", e.Session.StyleName(), err)
+	e.Session.LastSuccess = false
+}
+
+// ---- 表达式求值 ----
+
+func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
+	switch v := n.(type) {
+	case nil:
+		return object.Null()
+	case *ast.StrLit:
+		return object.Str(v.Value)
+	case *ast.StrTemplate:
+		var sb strings.Builder
+		for _, part := range v.Parts {
+			sb.WriteString(e.evalValue(part).String())
+		}
+		return object.Str(sb.String())
+	case *ast.Number:
+		if v.IsInt {
+			return object.Int(int64(v.Value))
+		}
+		return object.Float(v.Value)
+	case *ast.BoolLit:
+		return object.Bool(v.Value)
+	case *ast.NullLit:
+		return object.Null()
+	case *ast.VarRef:
+		return e.lookupVar(v.Name)
+	case *ast.EnvRef:
+		return object.Str(os.Getenv(v.Name))
+	case *ast.BareWord:
+		return object.Str(v.Value)
+	case *ast.Paren:
+		return e.evalValue(v.Inner)
+	case *ast.Unary:
+		val := e.evalValue(v.Operand)
+		switch v.Op {
+		case "-not", "!":
+			return object.Bool(!val.Truthy())
+		case "-":
+			if n, ok := val.AsFloat(); ok {
+				return object.Float(-n)
+			}
+			return object.Float(0)
+		}
+		return val
+	case *ast.Binary:
+		return e.evalBinary(v)
+	case *ast.Ternary:
+		if e.evalValue(v.Cond).Truthy() {
+			return e.evalValue(v.If)
+		}
+		return e.evalValue(v.Else)
+	case *ast.ArrayLit:
+		items := make([]*object.PSObject, 0, len(v.Items))
+		for _, it := range v.Items {
+			items = append(items, e.evalValue(it))
+		}
+		return object.Array(items)
+	case *ast.HashtableLit:
+		entries := make([]object.HashEntry, 0, len(v.Pairs))
+		for _, p := range v.Pairs {
+			entries = append(entries, object.HashEntry{
+				Key:   e.evalValue(p.Key).String(),
+				Value: e.evalValue(p.Value),
+			})
+		}
+		return object.Hashtable(entries)
+	case *ast.MemberAccess:
+		base := e.evalValue(v.Base)
+		return e.memberProp(base, v.Prop)
+	case *ast.MethodCall:
+		return e.evalMethodCall(v)
+	case *ast.Index:
+		return e.evalIndex(v)
+	case *ast.ScriptBlock:
+		return object.ScriptBlock("{ ... }")
+	case *ast.SubExpr:
+		e.inCapture++
+		out, sig := e.runStatements(v.Body.Statements)
+		e.inCapture--
+		if sig != nil && sig.kind == flowReturn {
+			return sig.value
+		}
+		return wrapSingle(out)
+	case *ast.Increment:
+		cur := e.lookupVar(v.Var)
+		n, _ := cur.AsInt()
+		if v.Op == "++" {
+			n++
+		} else {
+			n--
+		}
+		_ = e.setVar(v.Var, object.Int(n))
+		return object.Int(n)
+	case *ast.PipelineExpr:
+		out := e.evalPipeline(v.Pipeline)
+		return wrapSingle(out)
+	case *ast.PropertyRef:
+		return object.Null()
+	}
+	return object.Null()
+}
+
+// wrapSingle 把输出列表包成单个值：0 → $null，1 → 该项，多 → 数组。
+func wrapSingle(out []*object.PSObject) *object.PSObject {
+	if len(out) == 0 {
+		return object.Null()
+	}
+	if len(out) == 1 {
+		return out[0]
+	}
+	return object.Array(out)
+}
+
+// unwrapOutput 把返回值展开为对象流（数组摊平）。
+func unwrapOutput(v *object.PSObject) []*object.PSObject {
+	if v == nil || v.IsNull() {
+		return nil
+	}
+	if v.IsArray() {
+		return v.ArrayItems()
+	}
+	return []*object.PSObject{v}
+}
+
+// ---- 属性与方法 ----
+
+// memberProp 取对象的属性。
+func (e *Evaluator) memberProp(base *object.PSObject, prop string) *object.PSObject {
+	if base == nil {
+		return object.Null()
+	}
+	if v, ok := base.PropValue(prop); ok {
+		return v
+	}
+	// 标量也提供 Count/Length = 1（PowerShell 语义）
+	switch strings.ToLower(prop) {
+	case "count", "length":
+		return object.Int(1)
+	}
+	return object.Null()
+}
+
+// propertyOf 在对象上取属性（用于 Where-Object Length 等裸属性）。
+func (e *Evaluator) propertyOf(obj *object.PSObject, name string) *object.PSObject {
+	if obj == nil {
+		return object.Null()
+	}
+	return e.memberProp(obj, name)
+}
+
+// evalMethodCall 调用字符串/数组/哈希表方法。
+func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
+	base := e.evalValue(m.Base)
+	args := make([]*object.PSObject, 0, len(m.Args))
+	for _, a := range m.Args {
+		args = append(args, e.evalValue(a))
+	}
+	arg := func(i int) *object.PSObject {
+		if i < len(args) {
+			return args[i]
+		}
+		return object.Null()
+	}
+	switch base.TypeName {
+	case "String":
+		s := base.String()
+		switch strings.ToLower(m.Name) {
+		case "toupper":
+			return object.Str(strings.ToUpper(s))
+		case "tolower":
+			return object.Str(strings.ToLower(s))
+		case "trim":
+			return object.Str(strings.TrimSpace(s))
+		case "trimstart":
+			return object.Str(strings.TrimLeft(s, arg(0).String()))
+		case "trimend":
+			return object.Str(strings.TrimRight(s, arg(0).String()))
+		case "contains":
+			return object.Bool(strings.Contains(s, arg(0).String()))
+		case "startswith":
+			return object.Bool(strings.HasPrefix(s, arg(0).String()))
+		case "endswith":
+			return object.Bool(strings.HasSuffix(s, arg(0).String()))
+		case "indexof":
+			return object.Int(int64(strings.Index(s, arg(0).String())))
+		case "substring":
+			start, ok := arg(0).AsInt()
+			if !ok {
+				return object.Null()
+			}
+			if len(args) >= 2 {
+				ln, _ := args[1].AsInt()
+				if int(start)+int(ln) <= len(s) {
+					return object.Str(s[start : start+ln])
+				}
+				return object.Str(s[start:])
+			}
+			if int(start) <= len(s) {
+				return object.Str(s[start:])
+			}
+			return object.Str("")
+		case "replace":
+			return object.Str(strings.ReplaceAll(s, arg(0).String(), arg(1).String()))
+		case "split":
+			sep := arg(0).String()
+			if sep == "" {
+				sep = " "
+			}
+			parts := strings.Split(s, sep)
+			items := make([]*object.PSObject, len(parts))
+			for i, p := range parts {
+				items[i] = object.Str(p)
+			}
+			return object.Array(items)
+		}
+	case "DateTime":
+		if t, ok := base.Value.(time.Time); ok {
+			switch strings.ToLower(m.Name) {
+			case "addhours", "addminutes", "addseconds", "adddays":
+				n, nok := arg(0).AsFloat()
+				if !nok {
+					return object.Null()
+				}
+				var d time.Duration
+				switch strings.ToLower(m.Name) {
+				case "addhours":
+					d = time.Duration(n * float64(time.Hour))
+				case "addminutes":
+					d = time.Duration(n * float64(time.Minute))
+				case "addseconds":
+					d = time.Duration(n * float64(time.Second))
+				case "adddays":
+					d = time.Duration(n * 24 * float64(time.Hour))
+				}
+				return object.DateTime(t.Add(d))
+			case "addyears", "addmonths":
+				n, nok := arg(0).AsInt()
+				if !nok {
+					return object.Null()
+				}
+				if strings.ToLower(m.Name) == "addyears" {
+					return object.DateTime(t.AddDate(int(n), 0, 0))
+				}
+				return object.DateTime(t.AddDate(0, int(n), 0))
+			}
+		}
+	case "Object[]":
+		items := base.ArrayItems()
+		switch strings.ToLower(m.Name) {
+		case "count":
+			return object.Int(int64(len(items)))
+		case "contains":
+			for _, it := range items {
+				if compareEq(it, arg(0)) {
+					return object.Bool(true)
+				}
+			}
+			return object.Bool(false)
+		}
+	case "Hashtable":
+		switch strings.ToLower(m.Name) {
+		case "contains":
+			if entries, ok := base.Value.([]object.HashEntry); ok {
+				for _, en := range entries {
+					if strings.EqualFold(en.Key, arg(0).String()) {
+						return object.Bool(true)
+					}
+				}
+			}
+			return object.Bool(false)
+		case "count":
+			if entries, ok := base.Value.([]object.HashEntry); ok {
+				return object.Int(int64(len(entries)))
+			}
+		}
+	}
+	return object.Null()
+}
+
+// evalIndex 索引访问。
+func (e *Evaluator) evalIndex(i *ast.Index) *object.PSObject {
+	base := e.evalValue(i.Base)
+	idx := e.evalValue(i.Index)
+	if base.IsNull() {
+		return object.Null()
+	}
+	if base.IsArray() {
+		items := base.ArrayItems()
+		n, ok := idx.AsInt()
+		if !ok {
+			return object.Null()
+		}
+		// 负数从末尾数
+		if n < 0 {
+			n = int64(len(items)) + n
+		}
+		if n >= 0 && int(n) < len(items) {
+			return items[n]
+		}
+		return object.Null()
+	}
+	if base.TypeName == "String" {
+		s := base.String()
+		n, ok := idx.AsInt()
+		if !ok {
+			return object.Null()
+		}
+		if n < 0 {
+			n = int64(len(s)) + n
+		}
+		if n >= 0 && int(n) < len(s) {
+			return object.Str(string(s[n]))
+		}
+		return object.Str("")
+	}
+	if base.TypeName == "Hashtable" {
+		if entries, ok := base.Value.([]object.HashEntry); ok {
+			key := idx.String()
+			for _, en := range entries {
+				if strings.EqualFold(en.Key, key) {
+					return en.Value
+				}
+			}
+		}
+		return object.Null()
+	}
+	return object.Null()
+}
+
+// ---- 二元运算 ----
+
+func (e *Evaluator) evalBinary(b *ast.Binary) *object.PSObject {
+	switch b.Op {
+	case "-and":
+		if !e.evalValue(b.L).Truthy() {
+			return object.Bool(false)
+		}
+		return object.Bool(e.evalValue(b.R).Truthy())
+	case "-or":
+		if e.evalValue(b.L).Truthy() {
+			return object.Bool(true)
+		}
+		return object.Bool(e.evalValue(b.R).Truthy())
+	case "-xor":
+		return object.Bool(e.evalValue(b.L).Truthy() != e.evalValue(b.R).Truthy())
+	case "??":
+		// 空合并：左值非 $null 取左值，否则取右值（短路）
+		lv := e.evalValue(b.L)
+		if lv.IsNull() {
+			return e.evalValue(b.R)
+		}
+		return lv
+	case "-f":
+		return e.formatOp(e.evalValue(b.L), e.evalValue(b.R))
+	}
+	l := e.evalValue(b.L)
+	r := e.evalValue(b.R)
+	return e.binaryOp(b.Op, l, r)
+}
+
+func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject {
+	switch op {
+	case "+":
+		return addOp(l, r)
+	case "-":
+		return numOp(l, r, func(a, b float64) float64 { return a - b })
+	case "*":
+		return mulOp(l, r)
+	case "/":
+		return numOp(l, r, func(a, b float64) float64 {
+			if b == 0 {
+				return math.Inf(1)
+			}
+			return a / b
+		})
+	case "%":
+		return numOp(l, r, func(a, b float64) float64 {
+			if b == 0 {
+				return 0
+			}
+			return math.Mod(a, b)
+		})
+	case "..":
+		return rangeOp(l, r)
+	case "-eq", "-ne", "-lt", "-le", "-gt", "-ge", "-like", "-notlike", "-match", "-notmatch",
+		"-ceq", "-cne", "-clt", "-cle", "-cgt", "-cge", "-clike", "-cnotlike", "-cmatch", "-cnotmatch":
+		// 数组左值 → 逐元素过滤
+		if l.IsArray() {
+			var matches []*object.PSObject
+			for _, it := range l.ArrayItems() {
+				if pairMatch(op, it, r) {
+					matches = append(matches, it)
+				}
+			}
+			if len(matches) == 0 {
+				return object.Null()
+			}
+			if len(matches) == 1 {
+				return matches[0]
+			}
+			return object.Array(matches)
+		}
+		return object.Bool(pairMatch(op, l, r))
+	case "-contains":
+		return object.Bool(arrayContains(l, r))
+	case "-notcontains":
+		return object.Bool(!arrayContains(l, r))
+	case "-ccontains":
+		return object.Bool(arrayContainsCase(l, r))
+	case "-cnotcontains":
+		return object.Bool(!arrayContainsCase(l, r))
+	case "-in":
+		return object.Bool(arrayContains(r, l))
+	case "-notin":
+		return object.Bool(!arrayContains(r, l))
+	case "-join":
+		return joinOp(l, r)
+	case "-split":
+		return splitOp(l, r)
+	case "-replace":
+		return replaceOp(l, r)
+	case "-is":
+		return object.Bool(typeIs(l, r))
+	case "-isnot":
+		return object.Bool(!typeIs(l, r))
+	case "-as":
+		return asOp(l, r)
+	case "-band":
+		return bitOp(l, r, func(a, b int64) int64 { return a & b })
+	case "-bor":
+		return bitOp(l, r, func(a, b int64) int64 { return a | b })
+	case "-bxor":
+		return bitOp(l, r, func(a, b int64) int64 { return a ^ b })
+	case "-shl":
+		return bitOp(l, r, func(a, b int64) int64 { return a << uint(b&63) })
+	case "-shr":
+		return bitOp(l, r, func(a, b int64) int64 { return a >> uint(b&63) })
+	}
+	return object.Bool(false)
+}
+
+// pairMatch 判断单个元素与右值是否满足比较运算符。
+// PowerShell 默认比较大小写不敏感；-c* 前缀是大小写敏感变体。
+func pairMatch(op string, l, r *object.PSObject) bool {
+	switch op {
+	case "-eq":
+		return compareEq(l, r)
+	case "-ne":
+		return !compareEq(l, r)
+	case "-ceq":
+		return caseSensitiveEq(l, r)
+	case "-cne":
+		return !caseSensitiveEq(l, r)
+	case "-lt":
+		return compareOrder(l, r) < 0
+	case "-le":
+		return compareOrder(l, r) <= 0
+	case "-gt":
+		return compareOrder(l, r) > 0
+	case "-ge":
+		return compareOrder(l, r) >= 0
+	case "-clt":
+		return caseSensitiveOrder(l, r) < 0
+	case "-cle":
+		return caseSensitiveOrder(l, r) <= 0
+	case "-cgt":
+		return caseSensitiveOrder(l, r) > 0
+	case "-cge":
+		return caseSensitiveOrder(l, r) >= 0
+	case "-like":
+		return object.WildcardMatchFold(r.String(), l.String())
+	case "-notlike":
+		return !object.WildcardMatchFold(r.String(), l.String())
+	case "-clike":
+		return object.WildcardMatch(r.String(), l.String())
+	case "-cnotlike":
+		return !object.WildcardMatch(r.String(), l.String())
+	case "-match":
+		re, err := regexp.Compile("(?i)" + r.String())
+		return err == nil && re.MatchString(l.String())
+	case "-notmatch":
+		re, err := regexp.Compile("(?i)" + r.String())
+		return err == nil && !re.MatchString(l.String())
+	case "-cmatch":
+		re, err := regexp.Compile(r.String())
+		return err == nil && re.MatchString(l.String())
+	case "-cnotmatch":
+		re, err := regexp.Compile(r.String())
+		return err == nil && !re.MatchString(l.String())
+	}
+	return false
+}
+
+func caseSensitiveEq(l, r *object.PSObject) bool {
+	if ln, ok := l.AsFloat(); ok {
+		if rn, ok2 := r.AsFloat(); ok2 {
+			return ln == rn
+		}
+	}
+	return l.String() == r.String()
+}
+
+func caseSensitiveOrder(l, r *object.PSObject) int {
+	if ln, ok := l.AsFloat(); ok {
+		if rn, ok2 := r.AsFloat(); ok2 {
+			if ln < rn {
+				return -1
+			}
+			if ln > rn {
+				return 1
+			}
+			return 0
+		}
+	}
+	return strings.Compare(l.String(), r.String())
+}
+
+func compareEq(l, r *object.PSObject) bool {
+	if ln, ok := l.AsFloat(); ok {
+		if rn, ok2 := r.AsFloat(); ok2 {
+			return ln == rn
+		}
+	}
+	return strings.EqualFold(l.String(), r.String())
+}
+
+func compareOrder(l, r *object.PSObject) int {
+	if ln, ok := l.AsFloat(); ok {
+		if rn, ok2 := r.AsFloat(); ok2 {
+			if ln < rn {
+				return -1
+			}
+			if ln > rn {
+				return 1
+			}
+			return 0
+		}
+	}
+	return strings.Compare(strings.ToLower(l.String()), strings.ToLower(r.String()))
+}
+
+func arrayContains(arr, elem *object.PSObject) bool {
+	for _, it := range arr.ArrayItems() {
+		if compareEq(it, elem) {
+			return true
+		}
+	}
+	return false
+}
+
+// arrayContainsCase 大小写敏感版（-ccontains）。
+func arrayContainsCase(arr, elem *object.PSObject) bool {
+	for _, it := range arr.ArrayItems() {
+		if caseSensitiveEq(it, elem) {
+			return true
+		}
+	}
+	return false
+}
+
+func addOp(l, r *object.PSObject) *object.PSObject {
+	if l.IsArray() {
+		return object.Array(append(l.ArrayItems(), r))
+	}
+	if r.IsArray() {
+		return object.Array(append([]*object.PSObject{l}, r.ArrayItems()...))
+	}
+	if li, ok := l.AsInt(); ok {
+		if ri, ok2 := r.AsInt(); ok2 {
+			return object.Int(li + ri)
+		}
+	}
+	if lf, ok := l.AsFloat(); ok {
+		if rf, ok2 := r.AsFloat(); ok2 {
+			return object.Float(lf + rf)
+		}
+	}
+	return object.Str(l.String() + r.String())
+}
+
+func numOp(l, r *object.PSObject, fn func(a, b float64) float64) *object.PSObject {
+	lf, ok := l.AsFloat()
+	if !ok {
+		return object.Null()
+	}
+	rf, ok2 := r.AsFloat()
+	if !ok2 {
+		return object.Null()
+	}
+	return object.Float(fn(lf, rf))
+}
+
+func mulOp(l, r *object.PSObject) *object.PSObject {
+	if l.TypeName == "String" {
+		if n, ok := r.AsInt(); ok && n >= 0 {
+			return object.Str(strings.Repeat(l.String(), int(n)))
+		}
+	}
+	if r.TypeName == "String" {
+		if n, ok := l.AsInt(); ok && n >= 0 {
+			return object.Str(strings.Repeat(r.String(), int(n)))
+		}
+	}
+	lf, ok := l.AsFloat()
+	if !ok {
+		return object.Null()
+	}
+	rf, ok2 := r.AsFloat()
+	if !ok2 {
+		return object.Null()
+	}
+	return object.Float(lf * rf)
+}
+
+func rangeOp(l, r *object.PSObject) *object.PSObject {
+	ls, ok := l.AsInt()
+	if !ok {
+		return object.Null()
+	}
+	rs, ok2 := r.AsInt()
+	if !ok2 {
+		return object.Null()
+	}
+	var items []*object.PSObject
+	if ls <= rs {
+		for i := ls; i <= rs; i++ {
+			items = append(items, object.Int(i))
+		}
+	} else {
+		for i := ls; i >= rs; i-- {
+			items = append(items, object.Int(i))
+		}
+	}
+	return object.Array(items)
+}
+
+// formatOp 实现 .NET 风格格式串："{模板}" -f 值[, 值...]。
+// 支持 {N}、{N,宽度}（空格对齐）、{N:规格}（D 十进制补零、X/x 十六进制、F 定点小数、N 千分位），
+// {{ 与 }} 转义字面大括号；未知规格退化为原样字符串。下标越界 → 报错并置 $?=false。
+func (e *Evaluator) formatOp(f, args *object.PSObject) *object.PSObject {
+	format := f.String()
+	items := flattenArgs(args)
+	var sb strings.Builder
+	for i := 0; i < len(format); i++ {
+		c := format[i]
+		if c != '{' {
+			sb.WriteByte(c)
+			continue
+		}
+		if i+1 < len(format) && format[i+1] == '{' {
+			sb.WriteByte('{')
+			i++
+			continue
+		}
+		j := strings.IndexByte(format[i+1:], '}')
+		if j < 0 {
+			sb.WriteString(format[i:])
+			break
+		}
+		inner := format[i+1 : i+1+j]
+		idxPart := inner
+		spec := ""
+		if k := strings.IndexByte(inner, ':'); k >= 0 {
+			idxPart, spec = inner[:k], inner[k+1:]
+		}
+		alignPart := idxPart
+		widthStr := ""
+		if k := strings.IndexByte(idxPart, ','); k >= 0 {
+			alignPart, widthStr = idxPart[:k], idxPart[k+1:]
+		}
+		idx, err := strconv.Atoi(strings.TrimSpace(alignPart))
+		if err != nil || idx < 0 || idx >= len(items) {
+			e.writeError(fmt.Errorf("格式串占位符 %q 越界（参数个数 %d）", inner, len(items)))
+			return object.Null()
+		}
+		s := formatArg(items[idx], spec)
+		if w, werr := strconv.Atoi(strings.TrimSpace(widthStr)); werr == nil {
+			aw := int(math.Abs(float64(w)))
+			if len(s) < aw {
+				pad := strings.Repeat(" ", aw-len(s))
+				if w < 0 {
+					s += pad
+				} else {
+					s = pad + s
+				}
+			}
+		}
+		sb.WriteString(s)
+		i += j + 1
+	}
+	return object.Str(sb.String())
+}
+
+// flattenArgs 把 -f 的参数数组展平为位置参数列表（范围/括号数组/变量数组都摊开）。
+func flattenArgs(v *object.PSObject) []*object.PSObject {
+	if !v.IsArray() {
+		return []*object.PSObject{v}
+	}
+	var out []*object.PSObject
+	for _, it := range v.ArrayItems() {
+		if it.IsArray() {
+			out = append(out, flattenArgs(it)...)
+		} else {
+			out = append(out, it)
+		}
+	}
+	return out
+}
+
+// formatArg 按 .NET 格式规格格式化单个参数。
+func formatArg(v *object.PSObject, spec string) string {
+	if spec == "" {
+		return v.String()
+	}
+	letter := spec[0]
+	width := spec[1:]
+	switch letter {
+	case 'D', 'd':
+		if n, ok := v.AsInt(); ok {
+			w, _ := strconv.Atoi(width)
+			digits := strconv.FormatInt(n, 10)
+			neg := strings.HasPrefix(digits, "-")
+			if neg {
+				digits = digits[1:]
+			}
+			if w > len(digits) {
+				digits = strings.Repeat("0", w-len(digits)) + digits
+			}
+			if neg {
+				digits = "-" + digits
+			}
+			return digits
+		}
+	case 'X', 'x':
+		if n, ok := v.AsInt(); ok {
+			s := strconv.FormatInt(n, 16)
+			if letter == 'X' {
+				s = strings.ToUpper(s)
+			}
+			w, _ := strconv.Atoi(width)
+			if w > len(s) {
+				s = strings.Repeat("0", w-len(s)) + s
+			}
+			return s
+		}
+	case 'F', 'f':
+		if fv, ok := v.AsFloat(); ok {
+			dec := 2
+			if d, derr := strconv.Atoi(width); derr == nil {
+				dec = d
+			}
+			return strconv.FormatFloat(fv, 'f', dec, 64)
+		}
+	case 'N', 'n':
+		if fv, ok := v.AsFloat(); ok {
+			dec := 2
+			if d, derr := strconv.Atoi(width); derr == nil {
+				dec = d
+			}
+			return addThousands(strconv.FormatFloat(fv, 'f', dec, 64))
+		}
+	}
+	// 未知规格：退化为普通字符串
+	return v.String()
+}
+
+// addThousands 给数字串的整数部分加千分位逗号（.NET N 规格）。
+func addThousands(s string) string {
+	dot := strings.IndexByte(s, '.')
+	intPart, fracPart := s, ""
+	if dot >= 0 {
+		intPart, fracPart = s[:dot], s[dot:]
+	}
+	sign := ""
+	if strings.HasPrefix(intPart, "-") {
+		sign, intPart = "-", intPart[1:]
+	}
+	var b strings.Builder
+	b.WriteString(sign)
+	n := len(intPart)
+	for i := 0; i < n; i++ {
+		if i > 0 && (n-i)%3 == 0 {
+			b.WriteByte(',')
+		}
+		b.WriteByte(intPart[i])
+	}
+	return b.String() + fracPart
+}
+
+func joinOp(l, r *object.PSObject) *object.PSObject {
+	sep := r.String()
+	var parts []string
+	if l.IsArray() {
+		for _, it := range l.ArrayItems() {
+			parts = append(parts, it.String())
+		}
+	} else {
+		parts = []string{l.String()}
+	}
+	return object.Str(strings.Join(parts, sep))
+}
+
+func splitOp(l, r *object.PSObject) *object.PSObject {
+	re, err := regexp.Compile(r.String())
+	if err != nil {
+		re = regexp.MustCompile(regexp.QuoteMeta(r.String()))
+	}
+	parts := re.Split(l.String(), -1)
+	items := make([]*object.PSObject, len(parts))
+	for i, p := range parts {
+		items[i] = object.Str(p)
+	}
+	return object.Array(items)
+}
+
+func replaceOp(l, r *object.PSObject) *object.PSObject {
+	items := r.ArrayItems()
+	pattern := ""
+	replacement := ""
+	if len(items) >= 1 {
+		pattern = items[0].String()
+	}
+	if len(items) >= 2 {
+		replacement = items[1].String()
+	}
+	re, err := regexp.Compile(pattern)
+	if err != nil {
+		return l
+	}
+	return object.Str(re.ReplaceAllString(l.String(), replacement))
+}
+
+func typeIs(l, r *object.PSObject) bool {
+	name := strings.ToLower(r.String())
+	switch name {
+	case "int":
+		return l.TypeName == "Int"
+	case "string":
+		return l.TypeName == "String"
+	case "bool", "boolean":
+		return l.TypeName == "Boolean"
+	case "double":
+		return l.TypeName == "Double"
+	case "array", "object[]":
+		return l.IsArray()
+	case "hashtable":
+		return l.TypeName == "Hashtable"
+	}
+	return false
+}
+
+func asOp(l, r *object.PSObject) *object.PSObject {
+	switch strings.ToLower(r.String()) {
+	case "int":
+		if n, ok := l.AsInt(); ok {
+			return object.Int(n)
+		}
+		return object.Null()
+	case "double", "float":
+		if n, ok := l.AsFloat(); ok {
+			return object.Float(n)
+		}
+		return object.Null()
+	case "string":
+		return object.Str(l.String())
+	case "bool":
+		return object.Bool(l.Truthy())
+	case "array":
+		return object.Array(l.ArrayItems())
+	}
+	return l
+}
+
+func bitOp(l, r *object.PSObject, fn func(a, b int64) int64) *object.PSObject {
+	li, ok := l.AsInt()
+	if !ok {
+		return object.Null()
+	}
+	ri, ok2 := r.AsInt()
+	if !ok2 {
+		return object.Null()
+	}
+	return object.Int(fn(li, ri))
+}
+
+// wildcardMatch 委托给 object 包的通配符实现。
+func wildcardMatch(pattern, s string) bool {
+	return object.WildcardMatch(pattern, s)
+}
+
+// requireBuiltin 简化：确保包被引用（编译期占位）。
+var _ = builtin.Lookup
+var _ = external.LookPath

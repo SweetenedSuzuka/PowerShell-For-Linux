@@ -111,6 +111,38 @@ func TestStringOps(t *testing.T) {
 	wantStr(t, `"a,b,c".Split(",")[1]`, "b")
 }
 
+// TestRangeIndex 验证范围/逗号多下标索引：$a[1..2]、$a[0,2]、
+// 负数从末尾数、嵌套下标展平、越界补 $null、字符串范围索引。
+func TestRangeIndex(t *testing.T) {
+	// 范围下标：逐元素取值
+	wantStr(t, "$a = 1,2,3,4; $a[1..2]", "2", "3")
+	wantStr(t, "$a = 1,2,3,4; $a[0..2]", "1", "2", "3")
+	// 单个结果展开为标量
+	wantStr(t, "$a = 1,2,3,4; $a[1..1]", "2")
+	// 负数从末尾数（1..-1 = 1,0,-1）
+	wantStr(t, "$a = 1,2,3,4; $a[1..-1]", "2", "1", "4")
+	wantStr(t, "$a = 1,2,3,4; $a[-1..-3]", "4", "3", "2")
+	// 逗号多下标
+	wantStr(t, "$a = 1,2,3,4; $a[0,2]", "1", "3")
+	// 嵌套下标数组展平（$a[1..2,0] = 下标 1,2,0）
+	wantStr(t, "$a = 1,2,3,4; $a[1..2,0]", "2", "3", "1")
+	// 变量范围
+	wantStr(t, "$a = 1,2,3,4; $x = 1; $y = 2; $a[$x..$y]", "2", "3")
+	// 降序范围
+	wantStr(t, "$a = 1,2,3,4; $a[2..0]", "3", "2", "1")
+	// 越界补 $null（显示为空；$a[1..9] 共 9 个位置，超出部分逐位补）
+	wantStr(t, "$a = 1,2,3,4; $a[1..9]", "2", "3", "4", "", "", "", "", "", "")
+	// 字符串范围索引：返回字符数组
+	wantStr(t, `"abcdef"[1..3]`, "b", "c", "d")
+	wantStr(t, `"abcdef"[1..-2]`, "b", "a", "f", "e")
+	// 单个字符展开为标量
+	wantStr(t, `"abcdef"[1..1]`, "b")
+	// 标量下标行为不变
+	wantStr(t, "$a = 1,2,3,4; $a[1]", "2")
+	wantStr(t, "$a = 1,2,3,4; $a[-1]", "4")
+	wantStr(t, `"abcdef"[2]`, "c")
+}
+
 func TestComparisonAndLogic(t *testing.T) {
 	wantStr(t, "5 -gt 3", "True")
 	wantStr(t, "5 -lt 3", "False")

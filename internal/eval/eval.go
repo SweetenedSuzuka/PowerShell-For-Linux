@@ -468,32 +468,31 @@ func (e *Evaluator) evalIndex(i *ast.Index) *object.PSObject {
 	}
 	if base.IsArray() {
 		items := base.ArrayItems()
+		// 多下标（$a[1..2]、$a[0,2]、$a[1..2,0]）：下标表达式是数组时逐元素取值，
+		// 嵌套数组展平，越界补 $null（对齐 PowerShell 的索引语义）。
+		if idx.IsArray() {
+			return indexSelect(idx, func(n int64) *object.PSObject {
+				return arrayItemAt(items, n)
+			})
+		}
 		n, ok := idx.AsInt()
 		if !ok {
 			return object.Null()
 		}
-		// 负数从末尾数
-		if n < 0 {
-			n = int64(len(items)) + n
-		}
-		if n >= 0 && int(n) < len(items) {
-			return items[n]
-		}
-		return object.Null()
+		return arrayItemAt(items, n)
 	}
 	if base.TypeName == "String" {
 		s := base.String()
+		if idx.IsArray() {
+			return indexSelect(idx, func(n int64) *object.PSObject {
+				return stringItemAt(s, n)
+			})
+		}
 		n, ok := idx.AsInt()
 		if !ok {
 			return object.Null()
 		}
-		if n < 0 {
-			n = int64(len(s)) + n
-		}
-		if n >= 0 && int(n) < len(s) {
-			return object.Str(string(s[n]))
-		}
-		return object.Str("")
+		return stringItemAt(s, n)
 	}
 	if base.TypeName == "Hashtable" {
 		if entries, ok := base.Value.([]object.HashEntry); ok {
@@ -507,6 +506,56 @@ func (e *Evaluator) evalIndex(i *ast.Index) *object.PSObject {
 		return object.Null()
 	}
 	return object.Null()
+}
+
+// indexSelect 按下标数组（范围/逗号表达式）逐元素取值；
+// 单个结果展开为标量，多个结果组成数组（对齐 PowerShell）。
+func indexSelect(idx *object.PSObject, pick func(n int64) *object.PSObject) *object.PSObject {
+	var sel []*object.PSObject
+	for _, id := range flattenIndices(idx) {
+		sel = append(sel, pick(id))
+	}
+	if len(sel) == 1 {
+		return sel[0]
+	}
+	return object.Array(sel)
+}
+
+// flattenIndices 把下标表达式递归展平为整数下标列表（$a[1..2,0] 的嵌套数组展开）。
+func flattenIndices(idx *object.PSObject) []int64 {
+	if !idx.IsArray() {
+		if n, ok := idx.AsInt(); ok {
+			return []int64{n}
+		}
+		return nil
+	}
+	var out []int64
+	for _, it := range idx.ArrayItems() {
+		out = append(out, flattenIndices(it)...)
+	}
+	return out
+}
+
+// arrayItemAt 取数组元素：负数从末尾数，越界返回 $null（对齐 PowerShell）。
+func arrayItemAt(items []*object.PSObject, n int64) *object.PSObject {
+	if n < 0 {
+		n = int64(len(items)) + n
+	}
+	if n >= 0 && int(n) < len(items) {
+		return items[n]
+	}
+	return object.Null()
+}
+
+// stringItemAt 取字符串字符：负数从末尾数，越界返回空串。
+func stringItemAt(s string, n int64) *object.PSObject {
+	if n < 0 {
+		n = int64(len(s)) + n
+	}
+	if n >= 0 && int(n) < len(s) {
+		return object.Str(string(s[n]))
+	}
+	return object.Str("")
 }
 
 // ---- 二元运算 ----

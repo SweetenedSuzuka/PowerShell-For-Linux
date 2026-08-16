@@ -810,8 +810,9 @@ func (l *Lexer) lexOperator(adj bool) Token {
 
 func (l *Lexer) lexWord(adj bool) Token {
 	startLine, startCol := l.line, l.col
-	// ".." 后紧跟数字（如 1..5）→ 只取 ".." 作为范围运算符
-	if l.peek() == '.' && l.peekAt(1) == '.' && isDigit(l.peekAt(2)) {
+	// ".." 后紧跟数字（如 1..5）或负号数字（如 1..-1）→ 只取 ".." 作为范围运算符
+	if l.peek() == '.' && l.peekAt(1) == '.' &&
+		(isDigit(l.peekAt(2)) || (l.peekAt(2) == '-' && isDigit(l.peekAt(3)))) {
 		l.next()
 		l.next()
 		return Token{Type: TkWord, Text: "..", Line: startLine, Col: startCol, Adjacent: adj}

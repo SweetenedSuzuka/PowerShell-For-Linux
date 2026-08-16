@@ -544,6 +544,25 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 					return object.DateTime(t.AddDate(int(n), 0, 0))
 				}
 				return object.DateTime(t.AddDate(0, int(n), 0))
+			case "toshortdatestring":
+				// 固定 en-US 风格（与 PowerShell on Linux 默认区域性一致）
+				return object.Str(t.Format("1/2/2006"))
+			case "tolongdatestring":
+				return object.Str(t.Format("Monday, January 2, 2006"))
+			case "toshorttimestring":
+				return object.Str(t.Format("3:04 PM"))
+			case "tolongtimestring":
+				return object.Str(t.Format("3:04:05 PM"))
+			case "tostring":
+				return object.Str(t.Format("1/2/2006 3:04:05 PM"))
+			case "touniversaltime":
+				return object.DateTime(t.UTC())
+			case "tolocaltime":
+				return object.DateTime(t.Local())
+			case "tofiletime":
+				// Windows 文件时间：1601-01-01 起 100 纳秒刻度数
+				const epochOffset = 116444736000000000
+				return object.Int(t.UTC().UnixNano()/100 + epochOffset)
 			}
 		}
 	case "Object[]":

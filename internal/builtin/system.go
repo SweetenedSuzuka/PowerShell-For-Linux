@@ -24,10 +24,33 @@ import (
 
 func cmdGetDate(c *Context) ([]*object.PSObject, error) {
 	now := time.Now()
+	// -Date 指定日期时间（本地时区，无时区信息时按本地解析，对齐 PowerShell）
+	if d, ok := c.Args.Str("Date"); ok && d != "" {
+		if t, err := parseDateArg(d); err == nil {
+			now = t
+		}
+	}
 	if f, ok := c.Args.Str("Format"); ok && f != "" {
 		return []*object.PSObject{object.Str(now.Format(dotnetToGoLayout(f)))}, nil
 	}
 	return []*object.PSObject{object.DateTime(now)}, nil
+}
+
+// parseDateArg 按常见日期时间格式解析 -Date 参数（无时区信息按本地时区）。
+func parseDateArg(s string) (time.Time, error) {
+	layouts := []string{
+		"2006-01-02 15:04:05",
+		"2006-01-02T15:04:05",
+		"2006-01-02",
+		"2006/1/2",
+		time.RFC3339,
+	}
+	for _, l := range layouts {
+		if t, err := time.ParseInLocation(l, s, time.Local); err == nil {
+			return t, nil
+		}
+	}
+	return time.Time{}, fmt.Errorf("无法解析日期时间：%s", s)
 }
 
 // dotnetToGoLayout 把 .NET 日期格式串转换为 Go 布局（yyyy→2006、MM→01、dd→02、HH→15 等）。
@@ -568,6 +591,7 @@ func AllCmdletNames() []string {
 
 func init() {
 	Register("Get-Date", []ParamSpec{
+		{Name: "Date", Type: "string"},
 		{Name: "Format", Type: "string"},
 	}, cmdGetDate)
 	Register("Get-Help", []ParamSpec{

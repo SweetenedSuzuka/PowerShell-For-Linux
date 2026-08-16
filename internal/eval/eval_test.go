@@ -118,6 +118,26 @@ func TestFloatIncrement(t *testing.T) {
 	wantStr(t, "$i = 0.5; $i += 1; $i", "1.5")
 }
 
+// TestDivideByZero 验证除零报错（对齐 PowerShell）：结果置 $null、$? 置 false，
+// REPL 语义下后续语句继续执行；正常除法与取模不受影响。
+func TestDivideByZero(t *testing.T) {
+	// 除零与模零：报错无输出（错误写到 stderr）
+	wantStr(t, "5/0")
+	wantStr(t, "5.0/0")
+	wantStr(t, "1 % 0")
+	// 赋值得到 $null
+	wantStr(t, "$x = 5/0; $x -eq $null", "True")
+	wantStr(t, "$x = 1 % 0; $x -eq $null", "True")
+	// 除零后 $? 为 false（用 if 读取，赋值语句会先置位 $?）
+	wantStr(t, "5/0; if ($?) { \"ok\" } else { \"err\" }", "err")
+	// 后续语句继续执行
+	wantStr(t, "1/0; \"继续\"", "继续")
+	// 正常除法与取模不受影响
+	wantStr(t, "5/2", "2.5")
+	wantStr(t, "6/3", "2")
+	wantStr(t, "5 % 2", "1")
+}
+
 func TestStringOps(t *testing.T) {
 	wantStr(t, `"a" + "b"`, "ab")
 	wantStr(t, `"ab" * 3`, "ababab")

@@ -63,13 +63,14 @@ func (e *Evaluator) EvalStatement(st ast.Node) []*object.PSObject {
 func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 	var cur []*object.PSObject
 	if pipe.Expr != nil {
+		// 纯表达式语句求值前置位 $?（对齐命令路径：求值中出错由 writeError 覆盖为 false）
+		e.Session.LastSuccess = true
 		if inc, ok := pipe.Expr.(*ast.Increment); ok {
 			// $i++ 作为语句：仅副作用，不输出
 			e.evalValue(inc)
 		} else {
 			cur = flattenOutput(e.evalValue(pipe.Expr))
 		}
-		e.Session.LastSuccess = true // 纯表达式语句求值成功
 	}
 	for i, cmd := range pipe.Commands {
 		isLast := i == len(pipe.Commands)-1

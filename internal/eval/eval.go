@@ -609,19 +609,19 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 	case "*":
 		return mulOp(l, r)
 	case "/":
-		return numOp(l, r, func(a, b float64) float64 {
-			if b == 0 {
-				return math.Inf(1)
-			}
-			return a / b
-		})
+		// 除数为零报错并置 $?=false（对齐 PowerShell：1/0 → 尝试除以零）
+		if rf, ok := r.AsFloat(); ok && rf == 0 {
+			e.writeError(fmt.Errorf("尝试除以零"))
+			return object.Null()
+		}
+		return numOp(l, r, func(a, b float64) float64 { return a / b })
 	case "%":
-		return numOp(l, r, func(a, b float64) float64 {
-			if b == 0 {
-				return 0
-			}
-			return math.Mod(a, b)
-		})
+		// 模数为零同样报错
+		if rf, ok := r.AsFloat(); ok && rf == 0 {
+			e.writeError(fmt.Errorf("尝试除以零"))
+			return object.Null()
+		}
+		return numOp(l, r, func(a, b float64) float64 { return math.Mod(a, b) })
 	case "..":
 		return rangeOp(l, r)
 	case "-eq", "-ne", "-lt", "-le", "-gt", "-ge", "-like", "-notlike", "-match", "-notmatch",

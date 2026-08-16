@@ -791,49 +791,84 @@ func buildMatches(re *regexp.Regexp, s string, idx []int) *object.PSObject {
 	return object.Hashtable(entries)
 }
 
+// caseSensitiveEq 大小写敏感相等（-ceq）。对齐 PowerShell：右操作数按左操作数类型转换，
+// 左为数字则两边按数字，左为字符串则两边按字符串，左为 $null 则只与 $null 相等。
 func caseSensitiveEq(l, r *object.PSObject) bool {
-	if ln, ok := l.AsFloat(); ok {
-		if rn, ok2 := r.AsFloat(); ok2 {
-			return ln == rn
+	switch l.TypeName {
+	case "Int", "Double", "Boolean":
+		if ln, ok := l.AsFloat(); ok {
+			if rn, ok2 := r.AsFloat(); ok2 {
+				return ln == rn
+			}
 		}
+	case "String":
+		if r.IsNull() {
+			return false
+		}
+		return l.String() == r.String()
+	case "Null":
+		return r.IsNull()
 	}
 	return l.String() == r.String()
 }
 
+// caseSensitiveOrder 大小写敏感顺序（-clt 等）。右操作数按左操作数类型参与比较：
+// 左为数字则按数字，否则按字符串（"5" -clt "10" 是字典序，结果为 False）。
 func caseSensitiveOrder(l, r *object.PSObject) int {
-	if ln, ok := l.AsFloat(); ok {
-		if rn, ok2 := r.AsFloat(); ok2 {
-			if ln < rn {
-				return -1
+	switch l.TypeName {
+	case "Int", "Double":
+		if ln, ok := l.AsFloat(); ok {
+			if rn, ok2 := r.AsFloat(); ok2 {
+				if ln < rn {
+					return -1
+				}
+				if ln > rn {
+					return 1
+				}
+				return 0
 			}
-			if ln > rn {
-				return 1
-			}
-			return 0
 		}
 	}
 	return strings.Compare(l.String(), r.String())
 }
 
+// compareEq 相等判断（-eq）。对齐 PowerShell：右操作数按左操作数类型转换，
+// 左为数字则两边按数字，左为字符串则两边按字符串，左为 $null 则只与 $null 相等。
 func compareEq(l, r *object.PSObject) bool {
-	if ln, ok := l.AsFloat(); ok {
-		if rn, ok2 := r.AsFloat(); ok2 {
-			return ln == rn
+	switch l.TypeName {
+	case "Int", "Double", "Boolean":
+		if ln, ok := l.AsFloat(); ok {
+			if rn, ok2 := r.AsFloat(); ok2 {
+				return ln == rn
+			}
 		}
+	case "String":
+		if r.IsNull() {
+			return false
+		}
+		return strings.EqualFold(l.String(), r.String())
+	case "Null":
+		return r.IsNull()
 	}
 	return strings.EqualFold(l.String(), r.String())
 }
 
+// compareOrder 判断 -lt/-le/-gt/-ge 的顺序。对齐 PowerShell：右操作数按左操作数类型
+// 参与比较——左为数字则两边按数字（5 -lt "10" 为 True），左为字符串则两边按字符串
+// （"5" -lt "10" 是字典序比较，结果为 False）。
 func compareOrder(l, r *object.PSObject) int {
-	if ln, ok := l.AsFloat(); ok {
-		if rn, ok2 := r.AsFloat(); ok2 {
-			if ln < rn {
-				return -1
+	switch l.TypeName {
+	case "Int", "Double":
+		if ln, ok := l.AsFloat(); ok {
+			if rn, ok2 := r.AsFloat(); ok2 {
+				if ln < rn {
+					return -1
+				}
+				if ln > rn {
+					return 1
+				}
+				return 0
 			}
-			if ln > rn {
-				return 1
-			}
-			return 0
 		}
 	}
 	return strings.Compare(strings.ToLower(l.String()), strings.ToLower(r.String()))

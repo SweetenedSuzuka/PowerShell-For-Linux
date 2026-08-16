@@ -154,6 +154,35 @@ func TestComparisonAndLogic(t *testing.T) {
 	wantStr(t, "-not $false", "True")
 }
 
+// TestStringNumberComparison 验证字符串与数字混合比较按左操作数类型转换
+// （对齐 PowerShell）：两个字符串按字典序（"5" -lt "10" 为 False），
+// 数字对字符串按数字（5 -lt "10" 为 True），$null 只与 $null 相等。
+func TestStringNumberComparison(t *testing.T) {
+	// 字符串-字符串：字典序
+	wantStr(t, `"5" -lt "10"`, "False")
+	wantStr(t, `"10" -lt "5"`, "True")
+	wantStr(t, `"5" -gt "10"`, "True")
+	wantStr(t, `"abc" -lt "abd"`, "True")
+	wantStr(t, `"a" -lt "B"`, "True") // 大小写不敏感
+	// 大小写敏感变体同样按字符串
+	wantStr(t, `"5" -clt "10"`, "False")
+	// 数字-字符串：右操作数转数字
+	wantStr(t, `5 -lt "10"`, "True")
+	wantStr(t, `1 -lt "2"`, "True")
+	wantStr(t, `2 -gt "10"`, "False")
+	// 字符串-数字：右操作数转字符串
+	wantStr(t, `"5" -lt 10`, "False")
+	// 相等：双向转换一致
+	wantStr(t, `5 -eq "5"`, "True")
+	wantStr(t, `"5" -eq 5`, "True")
+	wantStr(t, `1 -eq 1.0`, "True")
+	wantStr(t, `$true -eq 1`, "True")
+	// $null 只与 $null 相等
+	wantStr(t, `$null -eq $null`, "True")
+	wantStr(t, `$null -eq ""`, "False")
+	wantStr(t, `"" -eq $null`, "False")
+}
+
 func TestArrayOps(t *testing.T) {
 	wantStr(t, "(1..3) -gt 1", "2", "3")
 	wantStr(t, "1,2,3 -eq 2", "2")

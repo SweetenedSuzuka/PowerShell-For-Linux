@@ -245,6 +245,21 @@ function SetSF { $script:sf = 5 }
 SetSF
 $results += T '$script: 作用域写回' (($sf -eq 5))
 
+Write-Output "== 词法与数字 =="
+
+# 66. 除法 5/2（数字后的 / 是运算符，不是路径）
+$q = 5/2
+$results += T "除法 5/2" (($q -eq 2.5))
+# 67. 0x10 十六进制
+$hx = 0x10
+$results += T "0x10 十六进制" (($hx -eq 16))
+# 68. 1KB 后缀（二进制倍数）
+$kb = 1KB
+$results += T "1KB 后缀" (($kb -eq 1024))
+# 69. 浮点加法不截断（2 + 1/2 = 2.5）
+$fa = 2 + 1/2
+$results += T "浮点加法" (($fa -eq 2.5))
+
 # == 结尾统计 ==
 Write-Output ""
 $failN = 0

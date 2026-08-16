@@ -283,8 +283,8 @@ func bindPositional(ba *BoundArgs, spec []ParamSpec) {
 	var restNode []ast.Node
 	next := 0
 	for i := 0; i < len(ba.Positional); i++ {
-		// 跳过已被显式命名赋值的槽位
-		for next < len(slots) && ba.Named[slots[next].Name] != nil {
+		// 跳过已被显式命名赋值的槽位（脚本块只填 NamedNode，两者都要查）
+		for next < len(slots) && (ba.Named[slots[next].Name] != nil || ba.NamedNode[slots[next].Name] != nil) {
 			next++
 		}
 		if next < len(slots) {

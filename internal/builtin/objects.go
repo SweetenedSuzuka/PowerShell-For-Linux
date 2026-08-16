@@ -60,6 +60,7 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 	first, _ := c.Args.Int("First")
 	last, _ := c.Args.Int("Last")
 	unique := c.Args.Switch("Unique")
+	expand, _ := c.Args.Str("ExpandProperty")
 
 	items := c.Input
 	props := c.Args.StringSlice("Property")
@@ -122,6 +123,18 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 				}
 			}
 			out = append(out, n)
+		}
+		return out, nil
+	}
+	// -ExpandProperty：取属性值本身输出（数组摊平），不做对象包装
+	if expand != "" {
+		var out []*object.PSObject
+		for _, it := range items {
+			if v, ok := it.PropValue(expand); ok {
+				for _, e := range v.ArrayItems() {
+					out = append(out, e)
+				}
+			}
 		}
 		return out, nil
 	}
@@ -381,6 +394,7 @@ func init() {
 	}, cmdWhereObject)
 	Register("Select-Object", []ParamSpec{
 		{Name: "Property", Position: 0, PositionSet: true, Type: "string[]"},
+		{Name: "ExpandProperty", Type: "string"},
 		{Name: "First", Type: "int"},
 		{Name: "Last", Type: "int"},
 		{Name: "Unique", Switch: true},

@@ -12,17 +12,30 @@ import (
 // ---- 路径与导航 ----
 
 func cmdTestPath(c *Context) ([]*object.PSObject, error) {
-	path := firstPathArg(c)
-	if path == "" {
+	// 路径：-Path（命名或位置，数组摊平）加超量位置实参，命中任意一个即 True
+	var paths []string
+	if v := c.Args.Get("Path"); v != nil {
+		for _, it := range v.ArrayItems() {
+			paths = append(paths, it.String())
+		}
+	}
+	for _, p := range c.Args.Positional {
+		for _, it := range p.ArrayItems() {
+			paths = append(paths, it.String())
+		}
+	}
+	if len(paths) == 0 {
 		return []*object.PSObject{object.Bool(false)}, nil
 	}
-	paths, derr := expandWildcard(c, path)
-	if derr != nil {
-		return errf(c, "%v", derr)
-	}
-	for _, p := range paths {
-		if _, err := os.Stat(p); err == nil {
-			return []*object.PSObject{object.Bool(true)}, nil
+	for _, path := range paths {
+		expanded, derr := expandWildcard(c, path)
+		if derr != nil {
+			return errf(c, "%v", derr)
+		}
+		for _, p := range expanded {
+			if _, err := os.Stat(p); err == nil {
+				return []*object.PSObject{object.Bool(true)}, nil
+			}
 		}
 	}
 	return []*object.PSObject{object.Bool(false)}, nil

@@ -106,24 +106,34 @@ func listOne(c *Context, p string, info os.FileInfo, filter string, nameOnly boo
 }
 
 func cmdGetItem(c *Context) ([]*object.PSObject, error) {
-	path := firstPathArg(c)
-	if path == "" {
-		return nil, nil
+	// 路径：-Path（命名或位置，数组摊平）加超量位置实参
+	var paths []string
+	if v := c.Args.Get("Path"); v != nil {
+		for _, it := range v.ArrayItems() {
+			paths = append(paths, it.String())
+		}
 	}
-	paths, derr := expandWildcard(c, path)
-	if derr != nil {
-		return errf(c, "%v", derr)
+	for _, p := range c.Args.Positional {
+		for _, it := range p.ArrayItems() {
+			paths = append(paths, it.String())
+		}
 	}
 	var out []*object.PSObject
-	for _, p := range paths {
-		info, err := os.Stat(p)
-		if err != nil {
-			return errf(c, "Get-Item : 找不到路径 %s。", p)
+	for _, path := range paths {
+		expanded, derr := expandWildcard(c, path)
+		if derr != nil {
+			return errf(c, "%v", derr)
 		}
-		if info.IsDir() {
-			out = append(out, object.DirInfo(p, info))
-		} else {
-			out = append(out, object.FileInfo(p, info))
+		for _, p := range expanded {
+			info, err := os.Stat(p)
+			if err != nil {
+				return errf(c, "Get-Item : 找不到路径 %s。", p)
+			}
+			if info.IsDir() {
+				out = append(out, object.DirInfo(p, info))
+			} else {
+				out = append(out, object.FileInfo(p, info))
+			}
 		}
 	}
 	return out, nil
@@ -158,45 +168,60 @@ func cmdGetLocation(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdGetContent(c *Context) ([]*object.PSObject, error) {
-	path := firstPathArg(c)
-	if path == "" {
+	// 路径：-Path（命名或位置，数组摊平）加超量位置实参，逐个文件读取
+	var paths []string
+	if v := c.Args.Get("Path"); v != nil {
+		for _, it := range v.ArrayItems() {
+			paths = append(paths, it.String())
+		}
+	}
+	for _, p := range c.Args.Positional {
+		for _, it := range p.ArrayItems() {
+			paths = append(paths, it.String())
+		}
+	}
+	if len(paths) == 0 {
 		if len(c.Input) > 0 {
 			return c.Input, nil
 		}
 		return nil, nil
 	}
 	raw := c.Args.Switch("Raw")
-	full, derr := resolvePath(c, path)
-	if derr != nil {
-		return errf(c, "%v", derr)
-	}
-	data, err := os.ReadFile(full)
-	if err != nil {
-		return errf(c, "Get-Content : 找不到路径 %s。", path)
-	}
-	text := string(data)
-	if raw {
-		return []*object.PSObject{object.Str(text)}, nil
-	}
-	lines := strings.Split(strings.TrimSuffix(text, "\n"), "\n")
-	if len(lines) == 1 && lines[0] == "" {
-		lines = nil
-	}
-	if total, ok := c.Args.Int("TotalCount"); ok && total >= 0 {
-		if int(total) < len(lines) {
-			lines = lines[:total]
+	var out []*object.PSObject
+	for _, path := range paths {
+		full, derr := resolvePath(c, path)
+		if derr != nil {
+			return errf(c, "%v", derr)
+		}
+		data, err := os.ReadFile(full)
+		if err != nil {
+			return errf(c, "Get-Content : 找不到路径 %s。", path)
+		}
+		text := string(data)
+		if raw {
+			out = append(out, object.Str(text))
+			continue
+		}
+		lines := strings.Split(strings.TrimSuffix(text, "\n"), "\n")
+		if len(lines) == 1 && lines[0] == "" {
+			lines = nil
+		}
+		// -TotalCount / -Tail 对每个文件分别生效（与 PowerShell 一致）
+		if total, ok := c.Args.Int("TotalCount"); ok && total >= 0 {
+			if int(total) < len(lines) {
+				lines = lines[:total]
+			}
+		}
+		if tail, ok := c.Args.Int("Tail"); ok && tail >= 0 {
+			if int(tail) < len(lines) {
+				lines = lines[len(lines)-int(tail):]
+			}
+		}
+		for _, l := range lines {
+			out = append(out, object.Str(l))
 		}
 	}
-	if tail, ok := c.Args.Int("Tail"); ok && tail >= 0 {
-		if int(tail) < len(lines) {
-			lines = lines[len(lines)-int(tail):]
-		}
-	}
-	items := make([]*object.PSObject, len(lines))
-	for i, l := range lines {
-		items[i] = object.Str(l)
-	}
-	return items, nil
+	return out, nil
 }
 
 func cmdSetContent(c *Context) ([]*object.PSObject, error) {

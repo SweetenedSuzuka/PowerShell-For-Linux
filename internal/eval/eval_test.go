@@ -209,6 +209,24 @@ func TestPSVersionTableDesktop(t *testing.T) {
 	check("$PSVersionTable.PSEdition", "Desktop")
 }
 
+func TestMatchesCapture(t *testing.T) {
+	// 标量 -match 成功后填充 $Matches：0 是整体匹配，1.. 是捕获组
+	wantStr(t, `$x = "abc123" -match "(\d+)"; $Matches[0]`, "123")
+	wantStr(t, `$x = "abc123" -match "(\d+)"; $Matches[1]`, "123")
+	wantStr(t, `$x = "2024-08-16" -match "^(\d+)-(\d+)-(\d+)$"; $Matches[3]`, "16")
+	// 命名组用组名取
+	wantStr(t, `$x = "abc123" -match "(?<letters>[a-z]+)(?<digits>\d+)"; $Matches.letters`, "abc")
+	wantStr(t, `$x = "abc123" -match "(?<letters>[a-z]+)(?<digits>\d+)"; $Matches.digits`, "123")
+	// 未参与的可选组不写入，且未命名组序号按全部未命名组计
+	wantStr(t, `$x = "abc" -match "(\d+)?(a.*)"; $Matches.Keys -join ","`, "0,2")
+	// 不匹配不清空旧值
+	wantStr(t, `$x = "abc123" -match "(\d+)"; $y = "x" -match "(\d+)"; $Matches[1]`, "123")
+	// 数组左值不设置 $Matches
+	wantStr(t, `$x = "a","b1" -match "(\d)"; $Matches -eq $null`, "True")
+	// 未匹配过时 $Matches 为 $null
+	wantStr(t, "$Matches -eq $null", "True")
+}
+
 func TestExternalCommand(t *testing.T) {
 	// 未命中的命令应输出"未找到"错误到 stderr（这里仅验证不崩溃）
 	objs := runEval(t, "thisCommandDoesNotExist123")

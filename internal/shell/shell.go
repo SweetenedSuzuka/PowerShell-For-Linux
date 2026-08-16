@@ -81,7 +81,8 @@ type Session struct {
 	History       []string
 	HistoryFile   string // 历史文件路径（空则不持久化）
 	LastExit      int
-	LastSuccess   bool // $?
+	LastSuccess   bool             // $?
+	Matches       *object.PSObject // $Matches：最近一次标量 -match 的捕获组，未匹配过为 nil
 	PSCommandPath string
 	Args          []*object.PSObject // 脚本/函数实参（$args）
 	HostOut       io.Writer
@@ -129,7 +130,7 @@ func (s *Session) StyleName() string {
 func IsReadOnlyVar(name string) bool {
 	switch name {
 	case "PSVersionTable", "PID", "PWD", "HOME", "Host", "IsLinux", "IsWindows", "IsMacOS",
-		"PSCommandPath", "PSEdition", "PSHOME":
+		"PSCommandPath", "PSEdition", "PSHOME", "Matches":
 		return true
 	}
 	return false
@@ -165,6 +166,11 @@ func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 		return object.Int(int64(s.LastExit)), true
 	case "?":
 		return object.Bool(s.LastSuccess), true
+	case "Matches":
+		if s.Matches == nil {
+			return object.Null(), true
+		}
+		return s.Matches, true
 	case "PSCommandPath":
 		if s.PSCommandPath != "" {
 			return object.Str(s.PSCommandPath), true
@@ -269,7 +275,7 @@ func (s *Session) AllVarNames() []string {
 	for n := range s.Vars {
 		set[n] = true
 	}
-	for _, n := range []string{"PWD", "HOME", "PID", "PSVersionTable", "LASTEXITCODE", "?", "PSCommandPath", "args", "Host", "PSEdition", "IsLinux", "IsWindows", "IsMacOS", "PSHOME", "OFS"} {
+	for _, n := range []string{"PWD", "HOME", "PID", "PSVersionTable", "LASTEXITCODE", "?", "Matches", "PSCommandPath", "args", "Host", "PSEdition", "IsLinux", "IsWindows", "IsMacOS", "PSHOME", "OFS"} {
 		set[n] = true
 	}
 	var names []string

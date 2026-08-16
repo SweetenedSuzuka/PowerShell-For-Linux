@@ -539,6 +539,10 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 			}
 			return object.Array(matches)
 		}
+		if op == "-match" || op == "-cmatch" {
+			// 标量 -match/-cmatch 匹配成功后填充 $Matches（数组左值在上面的过滤分支里不填充）
+			return e.evalMatch(op, l, r)
+		}
 		return object.Bool(pairMatch(op, l, r))
 	case "-contains":
 		return object.Bool(arrayContains(l, r))
@@ -614,20 +618,85 @@ func pairMatch(op string, l, r *object.PSObject) bool {
 		return object.WildcardMatch(r.String(), l.String())
 	case "-cnotlike":
 		return !object.WildcardMatch(r.String(), l.String())
-	case "-match":
-		re, err := regexp.Compile("(?i)" + r.String())
-		return err == nil && re.MatchString(l.String())
-	case "-notmatch":
-		re, err := regexp.Compile("(?i)" + r.String())
-		return err == nil && !re.MatchString(l.String())
-	case "-cmatch":
-		re, err := regexp.Compile(r.String())
-		return err == nil && re.MatchString(l.String())
-	case "-cnotmatch":
-		re, err := regexp.Compile(r.String())
-		return err == nil && !re.MatchString(l.String())
+	case "-match", "-notmatch", "-cmatch", "-cnotmatch":
+		re, err := compilePattern(op, r.String())
+		if err != nil {
+			return false
+		}
+		matched := re.MatchString(l.String())
+		if op == "-notmatch" || op == "-cnotmatch" {
+			return !matched
+		}
+		return matched
 	}
 	return false
+}
+
+// compilePattern 编译 -match/-cmatch 用的正则，并把 .NET 命名组语法转成 Go 语法。
+// -match/-notmatch 在模式前加 (?i) 实现大小写不敏感。
+func compilePattern(op, pattern string) (*regexp.Regexp, error) {
+	p := translateNamedGroups(pattern)
+	if op == "-match" || op == "-notmatch" {
+		p = "(?i)" + p
+	}
+	return regexp.Compile(p)
+}
+
+// translateNamedGroups 把 .NET 的命名组语法 (?<name>...) 转成 Go 的 (?P<name>...)。
+// (?<= 与 (?<! 是环视，Go 不支持，原样保留，交给编译阶段报错。
+func translateNamedGroups(pattern string) string {
+	var sb strings.Builder
+	for i := 0; i < len(pattern); {
+		if i+2 < len(pattern) && pattern[i] == '(' && pattern[i+1] == '?' && pattern[i+2] == '<' {
+			if i+3 < len(pattern) && (pattern[i+3] == '=' || pattern[i+3] == '!') {
+				sb.WriteString("(?<") // 环视，保留原样
+				i += 3
+				continue
+			}
+			sb.WriteString("(?P<") // 命名组
+			i += 3
+			continue
+		}
+		sb.WriteByte(pattern[i])
+		i++
+	}
+	return sb.String()
+}
+
+// evalMatch 处理标量的 -match/-cmatch：匹配成功后把捕获组写入 $Matches。
+// 不匹配时不动 $Matches（与真 PowerShell 一致）；数组左值不经过这里。
+func (e *Evaluator) evalMatch(op string, l, r *object.PSObject) *object.PSObject {
+	re, err := compilePattern(op, r.String())
+	if err != nil {
+		return object.Bool(false)
+	}
+	idx := re.FindStringSubmatchIndex(l.String())
+	if idx == nil {
+		return object.Bool(false)
+	}
+	e.Session.Matches = buildMatches(re, l.String(), idx)
+	return object.Bool(true)
+}
+
+// buildMatches 由正则匹配结果构造 $Matches 哈希表。
+// 键规则与真 PowerShell 一致："0" 是整体匹配；命名组用组名；
+// 未命名组按其在未命名组中的序号（从 1 起）作键；未参与的组不写入。
+func buildMatches(re *regexp.Regexp, s string, idx []int) *object.PSObject {
+	names := re.SubexpNames()
+	entries := []object.HashEntry{{Key: "0", Value: object.Str(s[idx[0]:idx[1]])}}
+	unnamed := 0
+	for i := 1; i < len(names); i++ {
+		key := names[i]
+		if key == "" {
+			unnamed++ // 未命名组按序号计数，未参与的也占号（与 .NET 一致）
+			key = strconv.Itoa(unnamed)
+		}
+		if idx[2*i] < 0 {
+			continue // 未参与的组不写入 $Matches
+		}
+		entries = append(entries, object.HashEntry{Key: key, Value: object.Str(s[idx[2*i]:idx[2*i+1]])})
+	}
+	return object.Hashtable(entries)
 }
 
 func caseSensitiveEq(l, r *object.PSObject) bool {

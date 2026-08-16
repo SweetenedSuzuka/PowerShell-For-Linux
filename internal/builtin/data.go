@@ -75,8 +75,6 @@ func cmdConvertFromCsv(c *Context) ([]*object.PSObject, error) {
 		text = sb.String()
 	} else if v := c.Args.Get("InputObject"); v != nil {
 		text = v.String()
-	} else if p := c.Args.Pos(0); p != nil {
-		text = p.String()
 	}
 	r := csv.NewReader(strings.NewReader(text))
 	records, err := r.ReadAll()
@@ -231,8 +229,6 @@ func cmdConvertFromJson(c *Context) ([]*object.PSObject, error) {
 		text = sb.String()
 	} else if v := c.Args.Get("InputObject"); v != nil {
 		text = v.String()
-	} else if p := c.Args.Pos(0); p != nil {
-		text = p.String()
 	}
 	var val any
 	if err := json.Unmarshal([]byte(text), &val); err != nil {
@@ -277,8 +273,6 @@ func cmdConvertFromStringData(c *Context) ([]*object.PSObject, error) {
 	var text string
 	if v := c.Args.Get("StringData"); v != nil {
 		text = v.String()
-	} else if p := c.Args.Pos(0); p != nil {
-		text = p.String()
 	} else if len(c.Input) > 0 {
 		// 命名/位置都没给时才用管道输入
 		var sb strings.Builder
@@ -303,13 +297,7 @@ func cmdConvertFromStringData(c *Context) ([]*object.PSObject, error) {
 
 func cmdCompareObject(c *Context) ([]*object.PSObject, error) {
 	ref := c.Args.Get("ReferenceObject")
-	if ref == nil {
-		ref = c.Args.Pos(0)
-	}
 	diff := c.Args.Get("DifferenceObject")
-	if diff == nil {
-		diff = c.Args.Pos(1)
-	}
 	var refItems, diffItems []*object.PSObject
 	if ref != nil {
 		refItems = ref.ArrayItems()
@@ -420,10 +408,7 @@ func randomInRange(lo, hi int64) int64 {
 }
 
 func cmdMeasureCommand(c *Context) ([]*object.PSObject, error) {
-	node := c.Args.PosNode(0)
-	if node == nil {
-		node = c.Args.GetNode("Expression")
-	}
+	node := c.Args.GetNode("Expression")
 	if sb, ok := node.(*ast.ScriptBlock); ok {
 		start := time.Now()
 		_, _ = c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, nil, c.Stdout)
@@ -575,8 +560,6 @@ func cmdTestJson(c *Context) ([]*object.PSObject, error) {
 	var text string
 	if v := c.Args.Get("Json"); v != nil {
 		text = v.String()
-	} else if p := c.Args.Pos(0); p != nil {
-		text = p.String()
 	} else if len(c.Input) > 0 {
 		// 命名/位置都没给时才用管道输入
 		var sb strings.Builder

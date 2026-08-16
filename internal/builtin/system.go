@@ -118,12 +118,7 @@ func dotnetToGoLayout(f string) string {
 }
 
 func cmdGetHelp(c *Context) ([]*object.PSObject, error) {
-	name := ""
-	if n, ok := c.Args.Str("Name"); ok && n != "" {
-		name = n
-	} else if p := c.Args.Pos(0); p != nil {
-		name = p.String()
-	}
+	name, _ := c.Args.Str("Name")
 	if name == "" {
 		fmt.Fprintln(c.Stdout, c.Shell.Usage())
 		return nil, nil
@@ -188,14 +183,7 @@ func canonicalName(name string) string {
 }
 
 func cmdGetCommand(c *Context) ([]*object.PSObject, error) {
-	var names []string
-	if ns := c.Args.StringSlice("Name"); len(ns) > 0 {
-		names = ns
-	} else if p := c.Args.Pos(0); p != nil {
-		for _, it := range p.ArrayItems() {
-			names = append(names, it.String())
-		}
-	}
+	names := c.Args.StringSlice("Name")
 	var out []*object.PSObject
 	match := func(n string) bool {
 		if len(names) == 0 {
@@ -250,14 +238,7 @@ func cmdGetCommand(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdGetAlias(c *Context) ([]*object.PSObject, error) {
-	var names []string
-	if ns := c.Args.StringSlice("Name"); len(ns) > 0 {
-		names = ns
-	} else if p := c.Args.Pos(0); p != nil {
-		for _, it := range p.ArrayItems() {
-			names = append(names, it.String())
-		}
-	}
+	names := c.Args.StringSlice("Name")
 	match := func(n string) bool {
 		if len(names) == 0 {
 			return true
@@ -287,18 +268,8 @@ func cmdGetAlias(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdSetAlias(c *Context) ([]*object.PSObject, error) {
-	name := ""
-	if n, ok := c.Args.Str("Name"); ok {
-		name = n
-	} else if p := c.Args.Pos(0); p != nil {
-		name = p.String()
-	}
-	value := ""
-	if v, ok := c.Args.Str("Value"); ok {
-		value = v
-	} else if p := c.Args.Pos(1); p != nil {
-		value = p.String()
-	}
+	name, _ := c.Args.Str("Name")
+	value, _ := c.Args.Str("Value")
 	if name != "" && value != "" {
 		c.Shell.SetAlias(name, value)
 	}
@@ -306,12 +277,7 @@ func cmdSetAlias(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdGetProcess(c *Context) ([]*object.PSObject, error) {
-	name := ""
-	if n, ok := c.Args.Str("Name"); ok && n != "" {
-		name = n
-	} else if p := c.Args.Pos(0); p != nil {
-		name = p.String()
-	}
+	name, _ := c.Args.Str("Name")
 	procs, err := listProcesses()
 	if err != nil {
 		return []*object.PSObject{object.Process(os.Getpid(), "powershell", 0, 0)}, nil
@@ -389,14 +355,7 @@ func cmdGetUptime(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdGetVariable(c *Context) ([]*object.PSObject, error) {
-	var names []string
-	if ns := c.Args.StringSlice("Name"); len(ns) > 0 {
-		names = ns
-	} else if p := c.Args.Pos(0); p != nil {
-		for _, it := range p.ArrayItems() {
-			names = append(names, it.String())
-		}
-	}
+	names := c.Args.StringSlice("Name")
 	match := func(n string) bool {
 		if len(names) == 0 {
 			return true
@@ -461,12 +420,7 @@ func cmdClearHistory(c *Context) ([]*object.PSObject, error) {
 
 // cmdSetPSVersion 切换 5.X/7.X 风格。
 func cmdSetPSVersion(c *Context) ([]*object.PSObject, error) {
-	ver := ""
-	if v, ok := c.Args.Str("Version"); ok {
-		ver = v
-	} else if p := c.Args.Pos(0); p != nil {
-		ver = p.String()
-	}
+	ver, _ := c.Args.Str("Version")
 	switch {
 	case strings.HasPrefix(ver, "5"):
 		c.Shell.SetStyle(shell.StyleDesktop)
@@ -480,12 +434,7 @@ func cmdSetPSVersion(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdInvokeWebRequest(c *Context) ([]*object.PSObject, error) {
-	uri := ""
-	if u, ok := c.Args.Str("Uri"); ok {
-		uri = u
-	} else if p := c.Args.Pos(0); p != nil {
-		uri = p.String()
-	}
+	uri, _ := c.Args.Str("Uri")
 	if uri == "" {
 		return nil, nil
 	}
@@ -505,12 +454,7 @@ func cmdInvokeWebRequest(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdInvokeRestMethod(c *Context) ([]*object.PSObject, error) {
-	uri := ""
-	if u, ok := c.Args.Str("Uri"); ok {
-		uri = u
-	} else if p := c.Args.Pos(0); p != nil {
-		uri = p.String()
-	}
+	uri, _ := c.Args.Str("Uri")
 	if uri == "" {
 		return nil, nil
 	}

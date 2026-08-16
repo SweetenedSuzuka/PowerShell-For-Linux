@@ -11,8 +11,8 @@ import (
 // ---- 对象管道 ----
 
 func filterMatches(c *Context, obj *object.PSObject) bool {
-	// 位置 0：脚本块或比较表达式
-	if node := c.Args.PosNode(0); node != nil {
+	// -FilterScript（命名或位置）：脚本块或比较表达式
+	if node := c.Args.GetNode("FilterScript"); node != nil {
 		return evalFilterNode(c, node, obj)
 	}
 	// -Property Length -gt 100 → Property 的值是一个比较表达式
@@ -67,18 +67,13 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 
 	items := c.Input
 	props := c.Args.StringSlice("Property")
-	if len(items) > 0 {
-		// 有管道输入：位置 0 是属性列表（如 Select-Object Name,Length）
-		if len(props) == 0 {
-			if p := c.Args.Pos(0); p != nil {
-				for _, it := range p.ArrayItems() {
-					props = append(props, it.String())
-				}
+	if len(items) == 0 && len(props) == 0 {
+		// 无管道输入且属性来自位置映射：位置实参按数据输出（本项目语义，如 Select-Object a,b）
+		if c.Args.PosMapped["Property"] {
+			if v := c.Args.Get("Property"); v != nil {
+				items = v.ArrayItems()
 			}
 		}
-	} else if p := c.Args.Pos(0); p != nil {
-		// 无管道输入：位置 0 按数组元素处理（数据），不是属性列表
-		items = p.ArrayItems()
 	}
 	if first > 0 && int(first) < len(items) {
 		items = items[:first]
@@ -137,13 +132,6 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 
 func cmdSortObject(c *Context) ([]*object.PSObject, error) {
 	props := c.Args.StringSlice("Property")
-	if len(props) == 0 {
-		if p := c.Args.Pos(0); p != nil {
-			for _, it := range p.ArrayItems() {
-				props = append(props, it.String())
-			}
-		}
-	}
 	desc := c.Args.Switch("Descending")
 	unique := c.Args.Switch("Unique")
 
@@ -213,10 +201,7 @@ func compareOrderBuiltin(a, b *object.PSObject) int {
 }
 
 func cmdForEachObject(c *Context) ([]*object.PSObject, error) {
-	node := c.Args.PosNode(0)
-	if node == nil {
-		node = c.Args.GetNode("Process")
-	}
+	node := c.Args.GetNode("Process")
 	var out []*object.PSObject
 	run := func(n ast.Node, extra map[string]*object.PSObject) {
 		if sb, ok := n.(*ast.ScriptBlock); ok {
@@ -250,12 +235,7 @@ func cmdForEachObject(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdGroupObject(c *Context) ([]*object.PSObject, error) {
-	prop := ""
-	if p, ok := c.Args.Str("Property"); ok {
-		prop = p
-	} else if p := c.Args.Pos(0); p != nil {
-		prop = p.String()
-	}
+	prop, _ := c.Args.Str("Property")
 	groups := map[string][]*object.PSObject{}
 	var order []string
 	for _, o := range c.Input {
@@ -287,12 +267,7 @@ func cmdGroupObject(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
-	prop := ""
-	if p, ok := c.Args.Str("Property"); ok {
-		prop = p
-	} else if p := c.Args.Pos(0); p != nil {
-		prop = p.String()
-	}
+	prop, _ := c.Args.Str("Property")
 	lineFlag := c.Args.Switch("Line")
 	sumFlag := c.Args.Switch("Sum")
 	avgFlag := c.Args.Switch("Average")

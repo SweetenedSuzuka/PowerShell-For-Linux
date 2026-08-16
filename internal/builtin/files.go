@@ -325,7 +325,7 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 		label = "Move-Item"
 	}
 	recurse := c.Args.Switch("Recurse")
-	// 源路径：命名 -Path（数组摊平）优先，其次管道输入，再次位置参数（末位为目标）
+	// 源路径：命名/位置 -Path（数组摊平）优先，其次管道输入
 	var paths []string
 	if v := c.Args.Get("Path"); v != nil {
 		for _, it := range v.ArrayItems() {
@@ -336,28 +336,8 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 			paths = append(paths, o.String())
 		}
 	}
-	// 目标：命名 -Destination 优先，其次位置参数末位
-	dest := ""
-	if d, ok := c.Args.Str("Destination"); ok {
-		dest = d
-	}
-	posDest := ""
-	if len(c.Args.Positional) > 0 && dest == "" {
-		posDest = c.Args.Positional[len(c.Args.Positional)-1].String()
-		dest = posDest
-	}
-	// 位置源：目标来自位置参数时排除末位，否则全部当源（数组摊平）
-	if len(paths) == 0 {
-		limit := len(c.Args.Positional)
-		if posDest != "" {
-			limit--
-		}
-		for i := 0; i < limit; i++ {
-			for _, it := range c.Args.Positional[i].ArrayItems() {
-				paths = append(paths, it.String())
-			}
-		}
-	}
+	// 目标：-Destination（命名或位置，多源时末位位置实参已由 Bind 映射到此）
+	dest, _ := c.Args.Str("Destination")
 	if len(paths) == 0 {
 		return nil, nil
 	}
@@ -437,17 +417,9 @@ func cmdMoveItem(c *Context) ([]*object.PSObject, error) { return copyItem(c, tr
 func cmdRenameItem(c *Context) ([]*object.PSObject, error) {
 	path := firstPathArg(c)
 	newName := ""
-	// -NewName：只取叶子名，支持传完整路径；先过盘符校验（D:\ 报错，C:\ 归一到根再取叶子）
+	// -NewName（命名或位置）：只取叶子名，支持传完整路径；先过盘符校验（D:\ 报错，C:\ 归一到根再取叶子）
 	if n, ok := c.Args.Str("NewName"); ok {
 		np, derr := shell.DrivePath(n)
-		if derr != nil {
-			return errf(c, "%v", derr)
-		}
-		newName = filepath.Base(np)
-	}
-	if len(c.Args.Positional) >= 2 {
-		path = c.Args.Positional[0].String()
-		np, derr := shell.DrivePath(c.Args.Positional[1].String())
 		if derr != nil {
 			return errf(c, "%v", derr)
 		}
@@ -501,12 +473,7 @@ func cmdGetPSDrive(c *Context) ([]*object.PSObject, error) {
 	env.AddProp("Name", "Env").AddProp("Root", "").AddProp("CurrentLocation", "")
 	drives := []*object.PSObject{d, env}
 	// -Name（命名或位置）：只列出指定名的驱动器，支持通配（如 Get-PSDrive -Name *）
-	nameFilter := ""
-	if n, ok := c.Args.Str("Name"); ok {
-		nameFilter = n
-	} else if p := c.Args.Pos(0); p != nil {
-		nameFilter = p.String()
-	}
+	nameFilter, _ := c.Args.Str("Name")
 	if nameFilter != "" {
 		var out []*object.PSObject
 		for _, dr := range drives {

@@ -84,17 +84,7 @@ func cmdSplitPath(c *Context) ([]*object.PSObject, error) {
 
 func cmdJoinPath(c *Context) ([]*object.PSObject, error) {
 	base, _ := c.Args.Str("Path")
-	if base == "" {
-		if p := c.Args.Pos(0); p != nil {
-			base = p.String()
-		}
-	}
 	child, _ := c.Args.Str("ChildPath")
-	if child == "" {
-		if p := c.Args.Pos(1); p != nil {
-			child = p.String()
-		}
-	}
 	if base == "" || child == "" {
 		return nil, nil
 	}
@@ -211,12 +201,7 @@ func cmdGetItemProperty(c *Context) ([]*object.PSObject, error) {
 	o.AddProp("LastWriteTime", info.ModTime())
 	o.AddProp("Mode", object.UnixMode(info))
 	// -Name：只保留指定属性（Windows 语义，如 Get-ItemProperty x -Name Length）
-	nameFilter := ""
-	if n, ok := c.Args.Str("Name"); ok && n != "" {
-		nameFilter = n
-	} else if p := c.Args.Pos(1); p != nil {
-		nameFilter = p.String()
-	}
+	nameFilter, _ := c.Args.Str("Name")
 	if nameFilter != "" {
 		var kept []object.Prop
 		for _, p := range o.Props {
@@ -233,28 +218,10 @@ func cmdGetItemProperty(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdSetItemProperty(c *Context) ([]*object.PSObject, error) {
-	// 位置参数依序填 路径→属性名→值，已用命名的槽位跳过
-	path := ""
-	if p, ok := c.Args.Str("Path"); ok {
-		path = p
-	}
-	name := ""
-	if n, ok := c.Args.Str("Name"); ok {
-		name = n
-	}
+	// 位置实参已由 Bind 中心化映射到 路径→属性名→值（跳过已命名的槽位）
+	path, _ := c.Args.Str("Path")
+	name, _ := c.Args.Str("Name")
 	val := c.Args.Get("Value")
-	pi := 0
-	if path == "" && pi < len(c.Args.Positional) {
-		path = c.Args.Positional[pi].String()
-		pi++
-	}
-	if name == "" && pi < len(c.Args.Positional) {
-		name = c.Args.Positional[pi].String()
-		pi++
-	}
-	if val == nil && pi < len(c.Args.Positional) {
-		val = c.Args.Positional[pi]
-	}
 	if path == "" {
 		return nil, nil
 	}

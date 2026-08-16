@@ -52,12 +52,7 @@ func cmdGetService(c *Context) ([]*object.PSObject, error) {
 	}
 	var result []*object.PSObject
 	// -Name（命名或位置）：按服务名过滤（支持通配，Windows 语义）
-	nameFilter := ""
-	if n, ok := c.Args.Str("Name"); ok {
-		nameFilter = n
-	} else if p := c.Args.Pos(0); p != nil {
-		nameFilter = p.String()
-	}
+	nameFilter, _ := c.Args.Str("Name")
 	for _, ln := range strings.Split(string(out), "\n") {
 		fields := strings.Fields(ln)
 		if len(fields) < 3 || !strings.HasSuffix(fields[0], ".service") {
@@ -219,11 +214,6 @@ func cmdStartSleep(c *Context) ([]*object.PSObject, error) {
 	if ms, ok := c.Args.Int("Milliseconds"); ok {
 		d = time.Duration(ms) * time.Millisecond
 	}
-	if p := c.Args.Pos(0); p != nil && d == 0 {
-		if sec, ok := p.AsInt(); ok {
-			d = time.Duration(sec) * time.Second
-		}
-	}
 	if d > 0 {
 		time.Sleep(d)
 	}
@@ -381,8 +371,6 @@ func cmdSetClipboard(c *Context) ([]*object.PSObject, error) {
 		}
 	} else if v := c.Args.Get("Value"); v != nil {
 		text = v.String()
-	} else if p := c.Args.Pos(0); p != nil {
-		text = p.String()
 	}
 	text = strings.TrimRight(text, "\n")
 	if _, err := exec.LookPath("xclip"); err == nil {
@@ -408,12 +396,7 @@ func cmdStopComputer(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdRenameComputer(c *Context) ([]*object.PSObject, error) {
-	name := ""
-	if n, ok := c.Args.Str("NewName"); ok {
-		name = n
-	} else if p := c.Args.Pos(0); p != nil {
-		name = p.String()
-	}
+	name, _ := c.Args.Str("NewName")
 	if name != "" {
 		runExternalRaw(c, "sudo", []string{"hostnamectl", "set-hostname", name})
 	}

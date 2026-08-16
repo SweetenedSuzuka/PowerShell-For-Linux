@@ -7,6 +7,7 @@ package builtin
 import (
 	"fmt"
 	"io"
+	"sort"
 	"strings"
 
 	"powershell/internal/ast"
@@ -44,6 +45,7 @@ type BoundArgs struct {
 	Named          map[string]*object.PSObject
 	NamedNode      map[string]ast.Node
 	Switches       map[string]bool
+	PosMapped      map[string]bool // 参数名 → 是否由位置实参中心化映射而来（cmdlet 区分"显式命名"与"位置"用）
 }
 
 // Pos 取第 i 个位置参数（越界返回 nil）。
@@ -175,13 +177,16 @@ var commonSwitchParams = map[string]bool{
 }
 
 // Bind 依据参数规格把命令实参绑定为 BoundArgs。
-// 命名参数进入 Named/Switches；位置实参原样保留在 Positional（cmdlet 自行解释）。
+// 命名参数进入 Named/Switches；位置实参先按源码顺序收进 Positional，
+// 再由 bindPositional 依据规格的 Position 序号中心化映射到命名参数，
+// 未声明位置槽位的实参（如数组多源、超量实参）留在 Positional 兜底。
 // engine 用于求值参数表达式；extra 是求值时额外的变量作用域。
 func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*object.PSObject) (*BoundArgs, error) {
 	ba := &BoundArgs{
 		Named:     map[string]*object.PSObject{},
 		NamedNode: map[string]ast.Node{},
 		Switches:  map[string]bool{},
+		PosMapped: map[string]bool{},
 	}
 	findSpec := func(name string) *ParamSpec {
 		for i := range spec {
@@ -250,5 +255,51 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 			}
 		}
 	}
+	bindPositional(ba, spec)
 	return ba, nil
+}
+
+// bindPositional 把位置实参按规格的 Position 序号中心化映射到命名参数。
+// 规则：
+//   - 第 k 个位置实参（0 起）映射到 Position 序号第 k 大的参数；
+//   - 已被显式命名赋值的槽位跳过（如 Set-Content -Path foo bar 中 bar 落到 Value）；
+//   - 脚本块参数只映射 AST 节点（NamedNode），保持惰性求值；
+//   - 超出规格声明范围的实参留在 Positional，由 cmdlet 自行兜底。
+func bindPositional(ba *BoundArgs, spec []ParamSpec) {
+	var slots []*ParamSpec
+	for i := range spec {
+		if spec[i].Position >= 0 && !spec[i].Switch {
+			slots = append(slots, &spec[i])
+		}
+	}
+	if len(slots) == 0 {
+		return
+	}
+	sort.Slice(slots, func(a, b int) bool { return slots[a].Position < slots[b].Position })
+	var rest []*object.PSObject
+	var restNode []ast.Node
+	next := 0
+	for i := 0; i < len(ba.Positional); i++ {
+		// 跳过已被显式命名赋值的槽位
+		for next < len(slots) && ba.Named[slots[next].Name] != nil {
+			next++
+		}
+		if next < len(slots) {
+			sp := slots[next]
+			if sp.Type == "scriptblock" {
+				// 脚本块保留原始 AST 节点（惰性求值），值不预求值
+				ba.NamedNode[sp.Name] = ba.PositionalNode[i]
+			} else {
+				ba.Named[sp.Name] = ba.Positional[i]
+				ba.NamedNode[sp.Name] = ba.PositionalNode[i]
+			}
+			ba.PosMapped[sp.Name] = true
+			next++
+		} else {
+			rest = append(rest, ba.Positional[i])
+			restNode = append(restNode, ba.PositionalNode[i])
+		}
+	}
+	ba.Positional = rest
+	ba.PositionalNode = restNode
 }

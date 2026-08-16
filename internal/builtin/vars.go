@@ -29,26 +29,14 @@ func cmdNewVariable(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdRemoveVariable(c *Context) ([]*object.PSObject, error) {
-	if ns := c.Args.StringSlice("Name"); len(ns) > 0 {
-		for _, n := range ns {
-			delete(c.Shell.Vars, n)
-		}
-	} else if p := c.Args.Pos(0); p != nil {
-		for _, it := range p.ArrayItems() {
-			delete(c.Shell.Vars, it.String())
-		}
+	for _, n := range c.Args.StringSlice("Name") {
+		delete(c.Shell.Vars, n)
 	}
 	return nil, nil
 }
 
 func cmdClearVariable(c *Context) ([]*object.PSObject, error) {
-	name := ""
-	if n, ok := c.Args.Str("Name"); ok {
-		name = n
-	} else if p := c.Args.Pos(0); p != nil {
-		name = p.String()
-	}
-	if name != "" {
+	if name, ok := c.Args.Str("Name"); ok && name != "" {
 		_ = c.Shell.SetVar(name, object.Null())
 	}
 	return nil, nil
@@ -57,18 +45,8 @@ func cmdClearVariable(c *Context) ([]*object.PSObject, error) {
 // ---- 别名 ----
 
 func cmdNewAlias(c *Context) ([]*object.PSObject, error) {
-	name := ""
-	if n, ok := c.Args.Str("Name"); ok {
-		name = n
-	} else if p := c.Args.Pos(0); p != nil {
-		name = p.String()
-	}
-	value := ""
-	if v, ok := c.Args.Str("Value"); ok {
-		value = v
-	} else if p := c.Args.Pos(1); p != nil {
-		value = p.String()
-	}
+	name, _ := c.Args.Str("Name")
+	value, _ := c.Args.Str("Value")
 	if name == "" || value == "" {
 		return nil, nil
 	}
@@ -80,12 +58,7 @@ func cmdNewAlias(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdRemoveAlias(c *Context) ([]*object.PSObject, error) {
-	name := ""
-	if n, ok := c.Args.Str("Name"); ok {
-		name = n
-	} else if p := c.Args.Pos(0); p != nil {
-		name = p.String()
-	}
+	name, _ := c.Args.Str("Name")
 	for n := range c.Shell.Aliases {
 		if strings.EqualFold(n, name) {
 			delete(c.Shell.Aliases, n)
@@ -145,8 +118,6 @@ func cmdAddHistory(c *Context) ([]*object.PSObject, error) {
 		for _, it := range v.ArrayItems() {
 			c.Shell.History = append(c.Shell.History, it.String())
 		}
-	} else if p := c.Args.Pos(0); p != nil {
-		c.Shell.History = append(c.Shell.History, p.String())
 	}
 	return nil, nil
 }
@@ -159,8 +130,6 @@ func cmdInvokeHistory(c *Context) ([]*object.PSObject, error) {
 		}
 	} else if v := c.Args.Get("InputObject"); v != nil {
 		cmdText = v.String()
-	} else if p := c.Args.Pos(0); p != nil {
-		cmdText = p.String()
 	} else if len(c.Shell.History) > 0 {
 		cmdText = c.Shell.History[len(c.Shell.History)-1]
 	}
@@ -209,12 +178,7 @@ func cmdOutHost(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdReadHost(c *Context) ([]*object.PSObject, error) {
-	prompt := ""
-	if p, ok := c.Args.Str("Prompt"); ok {
-		prompt = p
-	} else if p := c.Args.Pos(0); p != nil {
-		prompt = p.String()
-	}
+	prompt, _ := c.Args.Str("Prompt")
 	if prompt != "" {
 		fmt.Fprint(c.Stdout, prompt)
 	}
@@ -230,8 +194,6 @@ func cmdInvokeExpression(c *Context) ([]*object.PSObject, error) {
 	var src string
 	if v := c.Args.Get("Command"); v != nil {
 		src = v.String()
-	} else if p := c.Args.Pos(0); p != nil {
-		src = p.String()
 	} else if len(c.Input) > 0 {
 		// 命名/位置都没给时才用管道输入（PowerShell 绑定顺序）
 		var sb strings.Builder
@@ -252,7 +214,7 @@ func cmdInvokeExpression(c *Context) ([]*object.PSObject, error) {
 func init() {
 	Register("New-Variable", []ParamSpec{
 		{Name: "Name", Position: 0, Type: "string"},
-		{Name: "Value", Type: "object"},
+		{Name: "Value", Position: 1, Type: "object"},
 		{Name: "Force", Switch: true},
 	}, cmdNewVariable)
 	Register("Remove-Variable", []ParamSpec{

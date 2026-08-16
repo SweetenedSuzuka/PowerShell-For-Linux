@@ -34,14 +34,10 @@ func firstPathArg(c *Context) string {
 	return firstArg(c, "Path")
 }
 
-// firstArg 取命名参数或首个位置参数（命令的主参数名各异的 cmdlet 用）。
-// 它同样能取 -Name、-FilePath、-TargetName、-Date 等命名参数，避免只匹配 -Path 而漏掉命名形式。
+// firstArg 取命名参数（位置实参已由 Bind 按规格中心化映射到同名命名参数）。
 func firstArg(c *Context, name string) string {
 	if p, ok := c.Args.Str(name); ok && p != "" {
 		return p
-	}
-	if p := c.Args.Pos(0); p != nil {
-		return p.String()
 	}
 	return ""
 }
@@ -64,45 +60,25 @@ func namedOrPosArgs(c *Context, name string) []string {
 }
 
 // pathAndValue 解析"路径 + 值"类命令（Set-Content/Add-Content/Set-Item）。
-// -Path/-Value 用命名或位置形式均可，位置参数依序填路径与值。
+// 位置实参已由 Bind 中心化映射到 -Path/-Value（跳过已命名的槽位）。
 func pathAndValue(c *Context) (string, *object.PSObject) {
-	path := ""
-	_, pathNamed := c.Args.Str("Path")
-	if v := c.Args.Get("Value"); v != nil {
-		return firstArg(c, "Path"), v
-	}
-	if len(c.Args.Positional) == 0 {
+	path, _ := c.Args.Str("Path")
+	val := c.Args.Get("Value")
+	if path == "" && val == nil {
 		return "", nil
 	}
-	if pathNamed {
-		path, _ = c.Args.Str("Path")
-		return path, c.Args.Pos(0)
-	}
-	path = c.Args.Pos(0).String()
-	if len(c.Args.Positional) >= 2 {
-		return path, c.Args.Pos(1)
-	}
-	return path, nil
+	return path, val
 }
 
-// pairArgs 解析"名称 + 值"类命令（New-Variable）。
-// -Name/-Value 用命名或位置形式均可，位置参数依序填名称与值。
+// pairArgs 解析"名称 + 值"类命令（New-Variable/Set-Variable）。
+// 位置实参已由 Bind 中心化映射到 -Name/-Value（跳过已命名的槽位）。
 func pairArgs(c *Context, keyName string) (string, *object.PSObject) {
-	if v := c.Args.Get("Value"); v != nil {
-		return firstArg(c, keyName), v
-	}
-	if len(c.Args.Positional) == 0 {
+	key, _ := c.Args.Str(keyName)
+	val := c.Args.Get("Value")
+	if key == "" && val == nil {
 		return "", nil
 	}
-	if _, keyNamed := c.Args.Str(keyName); keyNamed {
-		key, _ := c.Args.Str(keyName)
-		return key, c.Args.Pos(0)
-	}
-	key := c.Args.Pos(0).String()
-	if len(c.Args.Positional) >= 2 {
-		return key, c.Args.Pos(1)
-	}
-	return key, nil
+	return key, val
 }
 
 // expandWildcard 展开路径通配符；无通配符则原样（相对路径基于 cwd）。
@@ -160,24 +136,22 @@ func pathList(c *Context) []string {
 	return paths
 }
 
-// inputItems 取输入对象：优先管道输入，其次 -InputObject，再次位置参数（数组摊平）。
+// inputItems 取输入对象：优先管道输入，其次 -InputObject（含位置映射），
+// 再补齐剩余位置实参（未声明位置槽位的实参，数组摊平）。
 func inputItems(c *Context) []*object.PSObject {
 	if len(c.Input) > 0 {
 		return c.Input
 	}
+	var out []*object.PSObject
 	if v := c.Args.Get("InputObject"); v != nil {
-		return v.ArrayItems()
+		out = append(out, v.ArrayItems()...)
 	}
-	if len(c.Args.Positional) > 0 {
-		var out []*object.PSObject
-		for _, p := range c.Args.Positional {
-			if p.IsArray() {
-				out = append(out, p.ArrayItems()...)
-			} else {
-				out = append(out, p)
-			}
+	for _, p := range c.Args.Positional {
+		if p.IsArray() {
+			out = append(out, p.ArrayItems()...)
+		} else {
+			out = append(out, p)
 		}
-		return out
 	}
-	return nil
+	return out
 }

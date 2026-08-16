@@ -44,12 +44,7 @@ func cmdOutNull(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdOutFile(c *Context) ([]*object.PSObject, error) {
-	path := ""
-	if p, ok := c.Args.Str("FilePath"); ok {
-		path = p
-	} else if p := c.Args.Pos(0); p != nil {
-		path = p.String()
-	}
+	path, _ := c.Args.Str("FilePath")
 	if path == "" {
 		return nil, nil
 	}
@@ -78,18 +73,11 @@ func cmdOutFile(c *Context) ([]*object.PSObject, error) {
 
 func cmdFormatTable(c *Context) ([]*object.PSObject, error) {
 	props := c.Args.StringSlice("Property")
-	if len(props) == 0 {
-		// 位置参数当属性列表（如 ft Name,Length）
-		if p := c.Args.Pos(0); p != nil {
-			for _, it := range p.ArrayItems() {
-				props = append(props, it.String())
-			}
-		}
-	}
 	objs := c.Input
 	if len(objs) == 0 {
-		if p := c.Args.Pos(1); p != nil {
-			objs = []*object.PSObject{p}
+		// 无管道输入：剩余位置实参（超量/未声明槽位）当数据
+		if len(c.Args.Positional) > 0 {
+			objs = c.Args.Positional
 		}
 	}
 	_ = object.FormatTableTo(c.Stdout, objs, props)
@@ -98,17 +86,10 @@ func cmdFormatTable(c *Context) ([]*object.PSObject, error) {
 
 func cmdFormatList(c *Context) ([]*object.PSObject, error) {
 	props := c.Args.StringSlice("Property")
-	if len(props) == 0 {
-		if p := c.Args.Pos(0); p != nil {
-			for _, it := range p.ArrayItems() {
-				props = append(props, it.String())
-			}
-		}
-	}
 	objs := c.Input
 	if len(objs) == 0 {
-		if p := c.Args.Pos(1); p != nil {
-			objs = []*object.PSObject{p}
+		if len(c.Args.Positional) > 0 {
+			objs = c.Args.Positional
 		}
 	}
 	_ = object.FormatListTo(c.Stdout, objs, props)
@@ -121,13 +102,8 @@ func cmdFormatWide(c *Context) ([]*object.PSObject, error) {
 	if w, ok := c.Args.Int("Column"); ok {
 		width = int(w)
 	}
-	// -Property <string>（位置 0）：取对象的该属性显示
-	prop := ""
-	if p, ok := c.Args.Str("Property"); ok {
-		prop = p
-	} else if p := c.Args.Pos(0); p != nil {
-		prop = p.String()
-	}
+	// -Property（命名或位置）：取对象的该属性显示
+	prop, _ := c.Args.Str("Property")
 	_ = object.FormatWideTo(c.Stdout, objs, width, prop)
 	return nil, nil
 }
@@ -137,12 +113,7 @@ func cmdSelectString(c *Context) ([]*object.PSObject, error) {
 	if pattern == "" {
 		return nil, nil
 	}
-	path := ""
-	if p, ok := c.Args.Str("Path"); ok {
-		path = p
-	} else if len(c.Args.Positional) >= 2 {
-		path = c.Args.Positional[1].String()
-	}
+	path, _ := c.Args.Str("Path")
 	var out []*object.PSObject
 	scan := func(name string, text string) {
 		for i, line := range strings.Split(strings.TrimSuffix(text, "\n"), "\n") {

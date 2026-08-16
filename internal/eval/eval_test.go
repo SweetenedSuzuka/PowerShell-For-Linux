@@ -68,6 +68,41 @@ func TestArithmetic(t *testing.T) {
 	wantStr(t, "(1..3) -gt 1", "2", "3")
 }
 
+// TestNumericLiterals 验证数字字面量：紧贴除法（5/2、$x/2）、十六进制、KB 后缀。
+func TestNumericLiterals(t *testing.T) {
+	// 紧贴除法：/ 后跟数字且前一 token 是值 → 除法运算符
+	wantStr(t, "5/2", "2.5")
+	wantStr(t, "$x = 10; $x/2", "5")
+	wantStr(t, "5 / 2", "2.5")
+	wantStr(t, "(5)/2", "2.5")
+	// 路径语义不破坏：/ 后跟数字但前面不是值 → 仍是路径参数
+	wantStr(t, `Write-Output /2`, "/2")
+	wantStr(t, `Write-Output a /2`, "a", "/2")
+	wantStr(t, `Write-Output ./x`, "./x")
+	// 十六进制字面量
+	wantStr(t, "0x10", "16")
+	wantStr(t, "0xff", "255")
+	wantStr(t, "0x10 + 1", "17")
+	// 数字后缀（二进制倍数）
+	wantStr(t, "1KB", "1024")
+	wantStr(t, "1MB", "1048576")
+	wantStr(t, "2KB/2", "1024")
+	wantStr(t, "2.5KB", "2560")
+	wantStr(t, "1GB", "1073741824")
+}
+
+// TestFloatAddition 验证浮点加法不截断：整型路径按 TypeName 识别，
+// 任一操作数是浮点就走浮点运算（2 + 1/2 = 2.5 而非 2）。
+func TestFloatAddition(t *testing.T) {
+	wantStr(t, "2 + 1/2", "2.5")
+	wantStr(t, "1/2 + 1/2", "1")
+	wantStr(t, "0.5 + 0.25", "0.75")
+	wantStr(t, "5/2 + 1", "3.5")
+	// 整型加法与字符串拼接不受影响
+	wantStr(t, "1 + 2", "3")
+	wantStr(t, `"a" + "b"`, "ab")
+}
+
 func TestStringOps(t *testing.T) {
 	wantStr(t, `"a" + "b"`, "ab")
 	wantStr(t, `"ab" * 3`, "ababab")

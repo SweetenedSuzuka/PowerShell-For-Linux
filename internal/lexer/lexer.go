@@ -311,6 +311,40 @@ func (l *Lexer) lexNumber(adj bool) Token {
 		neg = true
 		sb.WriteByte(l.next())
 	}
+
+	// 十六进制字面量（PowerShell）：0x 前缀 + 十六进制数字（0x10 → 16）
+	if l.peek() == '0' && (l.peekAt(1) == 'x' || l.peekAt(1) == 'X') {
+		l.next()
+		l.next()
+		var hx strings.Builder
+		for {
+			c := l.peek()
+			if isDigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') {
+				hx.WriteByte(l.next())
+			} else {
+				break
+			}
+		}
+		var f float64
+		for i := 0; i < hx.Len(); i++ {
+			c := hx.String()[i]
+			var d float64
+			switch {
+			case c >= '0' && c <= '9':
+				d = float64(c - '0')
+			case c >= 'a' && c <= 'f':
+				d = float64(c-'a') + 10
+			default:
+				d = float64(c-'A') + 10
+			}
+			f = f*16 + d
+		}
+		if neg {
+			f = -f
+		}
+		return Token{Type: TkNumber, Text: "0x" + hx.String(), Num: f, IsInt: true, Line: startLine, Col: startCol, Adjacent: adj}
+	}
+
 	isInt := true
 	for {
 		c := l.peek()
@@ -343,7 +377,40 @@ func (l *Lexer) lexNumber(adj bool) Token {
 	} else {
 		f = parseFloat(s)
 	}
+	// 数字后缀（PowerShell）：KB/MB/GB/TB/PB 二进制倍数（1KB → 1024）
+	if mult, ok := l.numberSuffix(); ok {
+		f *= mult
+		s += l.src[l.pos-2 : l.pos] // 后缀原文（两个字符），供 Text 使用
+	}
 	return Token{Type: TkNumber, Text: s, Num: f, IsInt: isIntF, Line: startLine, Col: startCol, Adjacent: adj}
+}
+
+// numberSuffix 尝试读取数字后缀 KB/MB/GB/TB/PB（不区分大小写，二进制倍数）。
+// 成功时消费两个字符并返回倍数；不匹配返回 false（不动游标）。
+func (l *Lexer) numberSuffix() (float64, bool) {
+	c := l.peek()
+	b := l.peekAt(1)
+	var mult float64
+	switch c {
+	case 'k', 'K':
+		mult = 1 << 10
+	case 'm', 'M':
+		mult = 1 << 20
+	case 'g', 'G':
+		mult = 1 << 30
+	case 't', 'T':
+		mult = 1 << 40
+	case 'p', 'P':
+		mult = 1 << 50
+	default:
+		return 0, false
+	}
+	if b != 'B' && b != 'b' {
+		return 0, false
+	}
+	l.next()
+	l.next()
+	return mult, true
 }
 
 func parseInt(s string) float64 {
@@ -645,6 +712,18 @@ func (l *Lexer) endsValue(adj bool) bool {
 	return false
 }
 
+// prevIsValue 报告前一 token 是否为表达式值结尾（数字/字符串/变量/右括号）。
+// 与 endsValue 不同：不认裸字，用于区分 5/2（除法）与命令参数路径 /2。
+func (l *Lexer) prevIsValue() bool {
+	switch l.prevType {
+	case TkNumber, TkString, TkVariable, TkBraceVar:
+		return true
+	case TkPunct:
+		return l.prevText == ")" || l.prevText == "]" || l.prevText == "}"
+	}
+	return false
+}
+
 func (l *Lexer) lexOperator(adj bool) Token {
 	startLine, startCol := l.line, l.col
 	c := l.peek()
@@ -679,9 +758,13 @@ func (l *Lexer) lexOperator(adj bool) Token {
 		}
 		return l.lexWord(adj)
 	case '/':
-		// '/' 后跟字母/点/等 → 路径裸字；否则除法
+		// '/' 后跟字母/点 → 路径裸字（/tmp、./x）；后跟数字时：
+		// 前一 token 是值（5/2、$x/2、(5)/2）→ 除法，否则仍是路径裸字（/2）
 		nc := l.peekAt(1)
-		if isLetter(nc) || nc == '.' || isDigit(nc) {
+		if isLetter(nc) || nc == '.' {
+			return l.lexWord(adj)
+		}
+		if isDigit(nc) && !l.prevIsValue() {
 			return l.lexWord(adj)
 		}
 		l.next()

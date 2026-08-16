@@ -1155,11 +1155,30 @@ func joinOp(l, r *object.PSObject) *object.PSObject {
 }
 
 func splitOp(l, r *object.PSObject) *object.PSObject {
-	re, err := regexp.Compile(r.String())
-	if err != nil {
-		re = regexp.MustCompile(regexp.QuoteMeta(r.String()))
+	// 右操作数可为 分隔符 或 分隔符, 最大子串数（"a,b,c" -split ",",2 → a、b,c）
+	delim := r.String()
+	maxN := -1
+	if r.IsArray() {
+		items := r.ArrayItems()
+		if len(items) >= 1 {
+			delim = items[0].String()
+		}
+		if len(items) >= 2 {
+			if n, ok := items[1].AsInt(); ok {
+				maxN = int(n)
+			}
+		}
 	}
-	parts := re.Split(l.String(), -1)
+	re, err := regexp.Compile(delim)
+	if err != nil {
+		re = regexp.MustCompile(regexp.QuoteMeta(delim))
+	}
+	// n>0 时最多分 n 段、末段保留未分割剩余；n=0 或负数不限（对齐 PowerShell）
+	n := -1
+	if maxN > 0 {
+		n = maxN
+	}
+	parts := re.Split(l.String(), n)
 	items := make([]*object.PSObject, len(parts))
 	for i, p := range parts {
 		items[i] = object.Str(p)

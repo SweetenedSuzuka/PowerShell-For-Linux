@@ -138,6 +138,21 @@ func TestDivideByZero(t *testing.T) {
 	wantStr(t, "5 % 2", "1")
 }
 
+// TestSplitMaxSubstrings 验证 -split 的最大子串数参数（"a,b,c" -split ",",2 → a、b,c），
+// 末段保留未分割剩余，0/负数/超上限不限段数。
+func TestSplitMaxSubstrings(t *testing.T) {
+	wantStr(t, `"a,b,c" -split ",",2`, "a", "b,c")
+	wantStr(t, `"a,b,c" -split ",",1`, "a,b,c")
+	wantStr(t, `"a,b,c" -split ",",5`, "a", "b", "c")
+	wantStr(t, `"a,b,c" -split ",",0`, "a", "b", "c")
+	wantStr(t, `"a,b,c" -split ",",-1`, "a", "b", "c")
+	wantStr(t, `"a,b," -split ",",2`, "a", "b,")
+	// 无最大子串数参数行为不变
+	wantStr(t, `"a-b-c" -split "-"`, "a", "b", "c")
+	// 正则分隔符同样生效
+	wantStr(t, `"a1b22c" -split "\d+",2`, "a", "b22c")
+}
+
 func TestStringOps(t *testing.T) {
 	wantStr(t, `"a" + "b"`, "ab")
 	wantStr(t, `"ab" * 3`, "ababab")

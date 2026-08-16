@@ -577,56 +577,56 @@ func cmdTestJson(c *Context) ([]*object.PSObject, error) {
 
 func init() {
 	Register("ConvertTo-Csv", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "Property", Type: "string[]"},
 	}, cmdConvertToCsv)
 	Register("ConvertFrom-Csv", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdConvertFromCsv)
 	Register("ConvertTo-Json", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "Depth", Type: "int"},
 	}, cmdConvertToJson)
 	Register("ConvertFrom-Json", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdConvertFromJson)
 	Register("ConvertFrom-StringData", []ParamSpec{
-		{Name: "StringData", Position: 0, Type: "string"},
+		{Name: "StringData", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdConvertFromStringData)
 	Register("Compare-Object", []ParamSpec{
-		{Name: "ReferenceObject", Position: 0, Type: "object"},
-		{Name: "DifferenceObject", Position: 1, Type: "object"},
+		{Name: "ReferenceObject", Position: 0, PositionSet: true, Type: "object"},
+		{Name: "DifferenceObject", Position: 1, PositionSet: true, Type: "object"},
 	}, cmdCompareObject)
 	Register("Get-Unique", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "AsString", Switch: true},
 	}, cmdGetUnique)
 	Register("Get-Random", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "Minimum", Type: "int"},
 		{Name: "Maximum", Type: "int"},
 		{Name: "Count", Type: "int"},
 	}, cmdGetRandom)
 	Register("Measure-Command", []ParamSpec{
-		{Name: "Expression", Position: 0, Type: "scriptblock"},
+		{Name: "Expression", Position: 0, PositionSet: true, Type: "scriptblock"},
 	}, cmdMeasureCommand)
 	Register("Out-String", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "Stream", Switch: true},
 	}, cmdOutString)
 	Register("Tee-Object", []ParamSpec{
-		{Name: "FilePath", Position: 0, Type: "path"},
+		{Name: "FilePath", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "Append", Switch: true},
 	}, cmdTeeObject)
 	Register("Format-Hex", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdFormatHex)
 	Register("Join-String", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "Separator", Type: "string"},
 	}, cmdJoinString)
 	Register("Add-Member", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "MemberType", Type: "string"},
 		{Name: "Name", Type: "string"},
 		{Name: "Value", Type: "object"},
@@ -642,6 +642,6 @@ func init() {
 		{Name: "Extension", Type: "string"},
 	}, cmdNewTemporaryFile)
 	Register("Test-Json", []ParamSpec{
-		{Name: "Json", Position: 0, Type: "string"},
+		{Name: "Json", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdTestJson)
 }

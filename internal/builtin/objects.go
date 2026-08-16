@@ -22,10 +22,6 @@ func filterMatches(c *Context, obj *object.PSObject) bool {
 		}
 		return evalFilterNode(c, node, obj)
 	}
-	// -FilterScript { ... }
-	if node := c.Args.GetNode("FilterScript"); node != nil {
-		return evalFilterNode(c, node, obj)
-	}
 	// 无参数：输入对象本身作为过滤器（输出为真者）
 	return obj.Truthy()
 }
@@ -67,13 +63,15 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 
 	items := c.Input
 	props := c.Args.StringSlice("Property")
-	if len(items) == 0 && len(props) == 0 {
-		// 无管道输入且属性来自位置映射：位置实参按数据输出（本项目语义，如 Select-Object a,b）
-		if c.Args.PosMapped["Property"] {
-			if v := c.Args.Get("Property"); v != nil {
-				items = v.ArrayItems()
-			}
+	if len(items) == 0 && c.Args.PosMapped["Property"] {
+		// 无管道输入且属性来自位置映射：位置实参按数据原样输出（本项目语义，如 Select-Object a,b），
+		// 不做属性选择（props 清空）
+		if v := c.Args.Get("Property"); v != nil {
+			items = append(items, v.ArrayItems()...)
 		}
+		// 超量位置实参（第 2 个起的实参）也当数据
+		items = append(items, c.Args.Positional...)
+		props = nil
 	}
 	if first > 0 && int(first) < len(items) {
 		items = items[:first]
@@ -376,33 +374,33 @@ func cmdGetMember(c *Context) ([]*object.PSObject, error) {
 
 func init() {
 	Register("Where-Object", []ParamSpec{
-		{Name: "FilterScript", Position: 0, Type: "scriptblock"},
+		{Name: "FilterScript", Position: 0, PositionSet: true, Type: "scriptblock"},
 		{Name: "Property", Type: "string"},
 		{Name: "Not", Switch: true},
 		{Name: "SimpleMatch", Switch: true},
 	}, cmdWhereObject)
 	Register("Select-Object", []ParamSpec{
-		{Name: "Property", Position: 0, Type: "string[]"},
+		{Name: "Property", Position: 0, PositionSet: true, Type: "string[]"},
 		{Name: "First", Type: "int"},
 		{Name: "Last", Type: "int"},
 		{Name: "Unique", Switch: true},
 	}, cmdSelectObject)
 	Register("Sort-Object", []ParamSpec{
-		{Name: "Property", Position: 0, Type: "string[]"},
+		{Name: "Property", Position: 0, PositionSet: true, Type: "string[]"},
 		{Name: "Descending", Switch: true},
 		{Name: "Unique", Switch: true},
 	}, cmdSortObject)
 	Register("ForEach-Object", []ParamSpec{
-		{Name: "Process", Position: 0, Type: "scriptblock"},
+		{Name: "Process", Position: 0, PositionSet: true, Type: "scriptblock"},
 		{Name: "Begin", Type: "scriptblock"},
 		{Name: "End", Type: "scriptblock"},
 		{Name: "MemberName", Type: "string"},
 	}, cmdForEachObject)
 	Register("Group-Object", []ParamSpec{
-		{Name: "Property", Position: 0, Type: "string"},
+		{Name: "Property", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdGroupObject)
 	Register("Measure-Object", []ParamSpec{
-		{Name: "Property", Position: 0, Type: "string"},
+		{Name: "Property", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Sum", Switch: true},
 		{Name: "Average", Switch: true},
 		{Name: "Minimum", Switch: true},
@@ -410,7 +408,7 @@ func init() {
 		{Name: "Line", Switch: true},
 	}, cmdMeasureObject)
 	Register("Get-Member", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "MemberType", Type: "string"},
 	}, cmdGetMember)
 }

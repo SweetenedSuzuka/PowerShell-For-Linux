@@ -130,10 +130,11 @@ func inlineSwitchBool(v *object.PSObject) bool {
 
 // ParamSpec 描述一个命令参数。
 type ParamSpec struct {
-	Name     string
-	Switch   bool   // 开关参数（不取值）
-	Position int    // 位置参数序号；-1 表示不参与位置绑定
-	Type     string // 提示：string/int/path/bool/object[]/scriptblock
+	Name        string
+	Switch      bool   // 开关参数（不取值）
+	Position    int    // 位置参数序号；仅 PositionSet 为 true 时参与位置绑定
+	PositionSet bool   // 是否显式声明了位置槽位（未声明的参数只接受命名，默认不参与位置绑定）
+	Type        string // 提示：string/int/path/bool/object[]/scriptblock
 }
 
 // CmdFunc 是内置 cmdlet 实现签名。
@@ -261,6 +262,8 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 
 // bindPositional 把位置实参按规格的 Position 序号中心化映射到命名参数。
 // 规则：
+//   - 只有显式声明了位置槽位（PositionSet）的参数参与，未声明的参数（如
+//     -Encoding、-Filter 这类仅命名参数）不占槽位；
 //   - 第 k 个位置实参（0 起）映射到 Position 序号第 k 大的参数；
 //   - 已被显式命名赋值的槽位跳过（如 Set-Content -Path foo bar 中 bar 落到 Value）；
 //   - 脚本块参数只映射 AST 节点（NamedNode），保持惰性求值；
@@ -268,7 +271,7 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 func bindPositional(ba *BoundArgs, spec []ParamSpec) {
 	var slots []*ParamSpec
 	for i := range spec {
-		if spec[i].Position >= 0 && !spec[i].Switch {
+		if spec[i].PositionSet && !spec[i].Switch {
 			slots = append(slots, &spec[i])
 		}
 	}

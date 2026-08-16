@@ -162,37 +162,37 @@ func cmdSelectString(c *Context) ([]*object.PSObject, error) {
 
 func init() {
 	Register("Write-Output", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdWriteOutput)
 	Register("Write-Host", []ParamSpec{
-		{Name: "Object", Position: 0, Type: "object"},
+		{Name: "Object", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "NoNewline", Switch: true},
 	}, cmdWriteHost)
 	Register("Write-Error", []ParamSpec{
-		{Name: "Message", Position: 0, Type: "string"},
+		{Name: "Message", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdWriteError)
 	Register("Out-Null", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdOutNull)
 	Register("Out-File", []ParamSpec{
-		{Name: "FilePath", Position: 0, Type: "path"},
+		{Name: "FilePath", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "Append", Switch: true},
 		{Name: "Encoding", Type: "string"},
 	}, cmdOutFile)
 	Register("Format-Table", []ParamSpec{
-		{Name: "Property", Position: 0, Type: "string[]"},
+		{Name: "Property", Position: 0, PositionSet: true, Type: "string[]"},
 		{Name: "AutoSize", Switch: true},
 	}, cmdFormatTable)
 	Register("Format-List", []ParamSpec{
-		{Name: "Property", Position: 0, Type: "string[]"},
+		{Name: "Property", Position: 0, PositionSet: true, Type: "string[]"},
 	}, cmdFormatList)
 	Register("Format-Wide", []ParamSpec{
-		{Name: "Property", Position: 0, Type: "string"},
+		{Name: "Property", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Column", Type: "int"},
 	}, cmdFormatWide)
 	Register("Select-String", []ParamSpec{
-		{Name: "Pattern", Position: 0, Type: "string"},
-		{Name: "Path", Position: 1, Type: "path"},
+		{Name: "Pattern", Position: 0, PositionSet: true, Type: "string"},
+		{Name: "Path", Position: 1, PositionSet: true, Type: "path"},
 		{Name: "SimpleMatch", Switch: true},
 		{Name: "InputObject", Type: "object"},
 	}, cmdSelectString)

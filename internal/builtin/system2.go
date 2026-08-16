@@ -407,61 +407,61 @@ func cmdRenameComputer(c *Context) ([]*object.PSObject, error) {
 
 func init() {
 	Register("Get-Service", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdGetService)
 	Register("Start-Service", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, serviceAction("start"))
 	Register("Stop-Service", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, serviceAction("stop"))
 	Register("Restart-Service", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, serviceAction("restart"))
 	Register("Resume-Service", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, serviceAction("start"))
 	Register("Set-Service", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Status", Type: "string"},
 		{Name: "StartupType", Type: "string"},
 	}, cmdSetService)
 	Register("Get-ComputerInfo", nil, cmdGetComputerInfo)
 	Register("Get-TimeZone", nil, cmdGetTimeZone)
 	Register("Set-TimeZone", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdSetTimeZone)
 	Register("Get-Culture", nil, cmdGetCulture)
 	Register("Test-Connection", []ParamSpec{
-		{Name: "TargetName", Position: 0, Type: "string"},
+		{Name: "TargetName", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Count", Type: "int"},
 	}, cmdTestConnection)
 	Register("Start-Sleep", []ParamSpec{
-		{Name: "Seconds", Position: 0, Type: "int"},
+		{Name: "Seconds", Position: 0, PositionSet: true, Type: "int"},
 		{Name: "Milliseconds", Type: "int"},
 	}, cmdStartSleep)
 	Register("Stop-Process", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Id", Type: "int"},
 	}, cmdStopProcess)
 	Register("Start-Process", []ParamSpec{
-		{Name: "FilePath", Position: 0, Type: "path"},
+		{Name: "FilePath", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "ArgumentList", Type: "string[]"},
 	}, cmdStartProcess)
 	Register("Wait-Process", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Id", Type: "int"},
 	}, cmdWaitProcess)
 	Register("Set-Date", []ParamSpec{
-		{Name: "Date", Position: 0, Type: "string"},
+		{Name: "Date", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdSetDate)
 	Register("Get-Clipboard", nil, cmdGetClipboard)
 	Register("Set-Clipboard", []ParamSpec{
-		{Name: "Value", Position: 0, Type: "object"},
+		{Name: "Value", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdSetClipboard)
 	Register("Restart-Computer", nil, cmdRestartComputer)
 	Register("Stop-Computer", nil, cmdStopComputer)
 	Register("Rename-Computer", []ParamSpec{
-		{Name: "NewName", Position: 0, Type: "string"},
+		{Name: "NewName", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdRenameComputer)
 }

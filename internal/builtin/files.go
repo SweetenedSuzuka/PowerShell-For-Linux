@@ -13,9 +13,20 @@ import (
 // ---- 导航与文件 ----
 
 func cmdGetChildItem(c *Context) ([]*object.PSObject, error) {
-	path := firstPathArg(c)
-	if path == "" {
-		path = "."
+	// 路径：-Path（命名或位置，数组摊平）加超量位置实参，全部当起始路径
+	var paths []string
+	if v := c.Args.Get("Path"); v != nil {
+		for _, it := range v.ArrayItems() {
+			paths = append(paths, it.String())
+		}
+	}
+	for _, p := range c.Args.Positional {
+		for _, it := range p.ArrayItems() {
+			paths = append(paths, it.String())
+		}
+	}
+	if len(paths) == 0 {
+		paths = []string{"."}
 	}
 	recurse := c.Args.Switch("Recurse")
 	nameOnly := c.Args.Switch("Name")
@@ -25,17 +36,19 @@ func cmdGetChildItem(c *Context) ([]*object.PSObject, error) {
 	if f, ok := c.Args.Str("Filter"); ok {
 		filter = f
 	}
-	paths, derr := expandWildcard(c, path)
-	if derr != nil {
-		return errf(c, "%v", derr)
-	}
 	var out []*object.PSObject
-	for _, p := range paths {
-		info, err := os.Stat(p)
-		if err != nil {
-			continue
+	for _, path := range paths {
+		expanded, derr := expandWildcard(c, path)
+		if derr != nil {
+			return errf(c, "%v", derr)
 		}
-		out = append(out, listOne(c, p, info, filter, nameOnly, recurse, dirOnly, fileOnly)...)
+		for _, p := range expanded {
+			info, err := os.Stat(p)
+			if err != nil {
+				continue
+			}
+			out = append(out, listOne(c, p, info, filter, nameOnly, recurse, dirOnly, fileOnly)...)
+		}
 	}
 	return out, nil
 }
@@ -336,8 +349,28 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 			paths = append(paths, o.String())
 		}
 	}
-	// 目标：-Destination（命名或位置，多源时末位位置实参已由 Bind 映射到此）
+	// 目标：-Destination（命名或位置）
 	dest, _ := c.Args.Str("Destination")
+	// 超量位置实参兜底（本项目多源写法 Copy-Item a b c → 复制 a、b 到 c）：
+	// 目标由位置映射时末位实参提升为目标，Path 与映射到 Destination 的值都并入源；
+	// 目标显式命名时剩余实参全部并入源（如 Copy-Item a b -Destination d）。
+	if len(c.Args.Positional) > 0 {
+		rest := c.Args.Positional
+		if c.Args.PosMapped["Destination"] {
+			dest = rest[len(rest)-1].String()
+			rest = rest[:len(rest)-1]
+			if v := c.Args.Get("Destination"); v != nil {
+				for _, it := range v.ArrayItems() {
+					paths = append(paths, it.String())
+				}
+			}
+		}
+		for _, p := range rest {
+			for _, it := range p.ArrayItems() {
+				paths = append(paths, it.String())
+			}
+		}
+	}
 	if len(paths) == 0 {
 		return nil, nil
 	}
@@ -490,7 +523,7 @@ func cmdGetPSDrive(c *Context) ([]*object.PSObject, error) {
 
 func init() {
 	Register("Get-ChildItem", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "Recurse", Switch: true},
 		{Name: "Force", Switch: true},
 		{Name: "Name", Switch: true},
@@ -499,57 +532,57 @@ func init() {
 		{Name: "File", Switch: true},
 	}, cmdGetChildItem)
 	Register("Get-Item", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 	}, cmdGetItem)
 	Register("Set-Location", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 	}, cmdSetLocation)
 	Register("Get-Location", nil, cmdGetLocation)
 	Register("Get-Content", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "Raw", Switch: true},
 		{Name: "TotalCount", Type: "int"},
 		{Name: "Tail", Type: "int"},
 	}, cmdGetContent)
 	Register("Set-Content", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
-		{Name: "Value", Position: 1, Type: "object"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "Value", Position: 1, PositionSet: true, Type: "object"},
 		{Name: "Encoding", Type: "string"},
 	}, cmdSetContent)
 	Register("Add-Content", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
-		{Name: "Value", Position: 1, Type: "object"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "Value", Position: 1, PositionSet: true, Type: "object"},
 	}, cmdAddContent)
 	Register("New-Item", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "ItemType", Type: "string"},
 		{Name: "Force", Switch: true},
 	}, cmdNewItem)
 	Register("Remove-Item", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "Recurse", Switch: true},
 		{Name: "Force", Switch: true},
 	}, cmdRemoveItem)
 	Register("Copy-Item", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
-		{Name: "Destination", Position: 1, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "Destination", Position: 1, PositionSet: true, Type: "path"},
 		{Name: "Recurse", Switch: true},
 	}, cmdCopyItem)
 	Register("Move-Item", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
-		{Name: "Destination", Position: 1, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "Destination", Position: 1, PositionSet: true, Type: "path"},
 		{Name: "Recurse", Switch: true},
 		{Name: "Force", Switch: true},
 	}, cmdMoveItem)
 	Register("Rename-Item", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
-		{Name: "NewName", Position: 1, Type: "string"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "NewName", Position: 1, PositionSet: true, Type: "string"},
 	}, cmdRenameItem)
 	Register("Clear-Host", nil, cmdClearHost)
 	Register("Invoke-Item", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 	}, cmdInvokeItem)
 	Register("Get-PSDrive", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdGetPSDrive)
 }

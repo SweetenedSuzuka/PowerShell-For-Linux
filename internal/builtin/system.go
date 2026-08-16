@@ -571,46 +571,46 @@ func init() {
 		{Name: "Format", Type: "string"},
 	}, cmdGetDate)
 	Register("Get-Help", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdGetHelp)
 	Register("Get-Command", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdGetCommand)
 	Register("Get-Alias", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdGetAlias)
 	Register("Set-Alias", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
-		{Name: "Value", Position: 1, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
+		{Name: "Value", Position: 1, PositionSet: true, Type: "string"},
 	}, cmdSetAlias)
 	Register("Get-Process", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdGetProcess)
 	Register("Get-Uptime", nil, cmdGetUptime)
 	Register("Get-Variable", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdGetVariable)
 	Register("Set-Variable", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
-		{Name: "Value", Position: 1, Type: "object"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
+		{Name: "Value", Position: 1, PositionSet: true, Type: "object"},
 	}, cmdSetVariable)
 	Register("Get-History", nil, cmdGetHistory)
 	Register("Clear-History", nil, cmdClearHistory)
 	Register("Set-PSVersion", []ParamSpec{
-		{Name: "Version", Position: 0, Type: "string"},
+		{Name: "Version", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdSetPSVersion)
 	Register("Invoke-WebRequest", []ParamSpec{
-		{Name: "Uri", Position: 0, Type: "string"},
+		{Name: "Uri", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Method", Type: "string"},
 		{Name: "Body", Type: "object"},
 	}, cmdInvokeWebRequest)
 	Register("Invoke-RestMethod", []ParamSpec{
-		{Name: "Uri", Position: 0, Type: "string"},
+		{Name: "Uri", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Method", Type: "string"},
 		{Name: "Body", Type: "object"},
 	}, cmdInvokeRestMethod)
 	Register("Get-FileHash", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "Algorithm", Type: "string"},
 	}, cmdGetFileHash)
 }

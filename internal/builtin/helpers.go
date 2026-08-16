@@ -61,10 +61,15 @@ func namedOrPosArgs(c *Context, name string) []string {
 
 // pathAndValue 解析"路径 + 值"类命令（Set-Content/Add-Content/Set-Item）。
 // 位置实参已由 Bind 中心化映射到 -Path/-Value（跳过已命名的槽位）。
+// 缺值时的旧行为：显式命名 -Path 而无值视为命令没写完，静默不动；
+// 位置形式（如 Set-Content foo）允许写空文件。用 PosMapped 区分两者。
 func pathAndValue(c *Context) (string, *object.PSObject) {
 	path, _ := c.Args.Str("Path")
 	val := c.Args.Get("Value")
-	if path == "" && val == nil {
+	if path == "" {
+		return "", nil
+	}
+	if val == nil && !c.Args.PosMapped["Path"] {
 		return "", nil
 	}
 	return path, val

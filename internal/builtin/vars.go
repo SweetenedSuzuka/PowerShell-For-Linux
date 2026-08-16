@@ -213,57 +213,57 @@ func cmdInvokeExpression(c *Context) ([]*object.PSObject, error) {
 
 func init() {
 	Register("New-Variable", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
-		{Name: "Value", Position: 1, Type: "object"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
+		{Name: "Value", Position: 1, PositionSet: true, Type: "object"},
 		{Name: "Force", Switch: true},
 	}, cmdNewVariable)
 	Register("Remove-Variable", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdRemoveVariable)
 	Register("Clear-Variable", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdClearVariable)
 	Register("New-Alias", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
-		{Name: "Value", Position: 1, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
+		{Name: "Value", Position: 1, PositionSet: true, Type: "string"},
 		{Name: "Force", Switch: true},
 	}, cmdNewAlias)
 	Register("Remove-Alias", []ParamSpec{
-		{Name: "Name", Position: 0, Type: "string"},
+		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdRemoveAlias)
 	Register("Export-Alias", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 	}, cmdExportAlias)
 	Register("Import-Alias", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 	}, cmdImportAlias)
 	Register("Add-History", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdAddHistory)
 	Register("Invoke-History", []ParamSpec{
 		{Name: "Id", Type: "int"},
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdInvokeHistory)
 	Register("Get-Host", nil, cmdGetHost)
 	Register("Write-Verbose", []ParamSpec{
-		{Name: "Message", Position: 0, Type: "string"},
+		{Name: "Message", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdWriteVerbose)
 	Register("Write-Warning", []ParamSpec{
-		{Name: "Message", Position: 0, Type: "string"},
+		{Name: "Message", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdWriteWarning)
 	Register("Write-Information", []ParamSpec{
-		{Name: "MessageData", Position: 0, Type: "string"},
+		{Name: "MessageData", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdWriteInformation)
 	Register("Write-Debug", []ParamSpec{
-		{Name: "Message", Position: 0, Type: "string"},
+		{Name: "Message", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdWriteDebug)
 	Register("Out-Host", []ParamSpec{
-		{Name: "InputObject", Position: 0, Type: "object"},
+		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdOutHost)
 	Register("Read-Host", []ParamSpec{
-		{Name: "Prompt", Position: 0, Type: "string"},
+		{Name: "Prompt", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdReadHost)
 	Register("Invoke-Expression", []ParamSpec{
-		{Name: "Command", Position: 0, Type: "string"},
+		{Name: "Command", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdInvokeExpression)
 }

@@ -242,46 +242,46 @@ func cmdSetItemProperty(c *Context) ([]*object.PSObject, error) {
 
 func init() {
 	Register("Test-Path", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "PathType", Type: "string"},
 	}, cmdTestPath)
 	Register("Resolve-Path", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 	}, cmdResolvePath)
 	Register("Convert-Path", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 	}, cmdConvertPath)
 	Register("Split-Path", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "Parent", Switch: true},
 		{Name: "Leaf", Switch: true},
 		{Name: "Qualifier", Switch: true},
 	}, cmdSplitPath)
 	Register("Join-Path", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
-		{Name: "ChildPath", Position: 1, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "ChildPath", Position: 1, PositionSet: true, Type: "path"},
 	}, cmdJoinPath)
 	Register("Push-Location", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 	}, cmdPushLocation)
 	Register("Pop-Location", nil, cmdPopLocation)
 	Register("Clear-Content", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 	}, cmdClearContent)
 	Register("Set-Item", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
-		{Name: "Value", Position: 1, Type: "object"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "Value", Position: 1, PositionSet: true, Type: "object"},
 	}, cmdSetItem)
 	Register("Clear-Item", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 	}, cmdClearItem)
 	Register("Get-ItemProperty", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
-		{Name: "Name", Position: 1, Type: "string"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "Name", Position: 1, PositionSet: true, Type: "string"},
 	}, cmdGetItemProperty)
 	Register("Set-ItemProperty", []ParamSpec{
-		{Name: "Path", Position: 0, Type: "path"},
-		{Name: "Name", Position: 1, Type: "string"},
-		{Name: "Value", Position: 2, Type: "object"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "Name", Position: 1, PositionSet: true, Type: "string"},
+		{Name: "Value", Position: 2, PositionSet: true, Type: "object"},
 	}, cmdSetItemProperty)
 }

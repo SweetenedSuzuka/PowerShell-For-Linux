@@ -403,6 +403,15 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 		case "replace":
 			return object.Str(strings.ReplaceAll(s, arg(0).String(), arg(1).String()))
 		case "split":
+			// 无参按任意空白分割且合并连续空白（.NET Split() 无参语义，与 strings.Fields 一致）
+			if len(args) == 0 {
+				parts := strings.Fields(s)
+				items := make([]*object.PSObject, len(parts))
+				for i, p := range parts {
+					items[i] = object.Str(p)
+				}
+				return object.Array(items)
+			}
 			sep := arg(0).String()
 			if sep == "" {
 				sep = " "

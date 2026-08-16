@@ -231,8 +231,7 @@ func TestBindValueObjects(t *testing.T) {
 	}
 }
 
-// TestBindSwitchValueFallback 开关被赋予值时开关置真、值退回位置参数
-// （Bind 的 ArgNamed 分支：Get-ChildItem -Force foo 中 foo 是位置实参，再按槽位映射）。
+// TestBindSwitchValueFallback 开关被赋予值时开关置真、值退回位置参数（Bind 的 ArgNamed 分支：Get-ChildItem -Force foo 中 foo 是位置实参，再按槽位映射）。
 func TestBindSwitchValueFallback(t *testing.T) {
 	args, err := bind(t, "Get-ChildItem -Force foo")
 	if err != nil {

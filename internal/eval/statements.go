@@ -113,10 +113,8 @@ func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 }
 
 // execTry 执行 try/catch/finally：
-// body 出错（flowError）→ 找第一个匹配的 catch（无类型全捕，[Exception]/[System.Exception] 基类全捕，
-// 其余按异常类型名精确匹配）→ 把错误记录临时绑到 $_（块结束恢复，普通赋值穿透外层）执行 catch 体；
-// finally 无论是否出错、是否被捕获都恒执行；catch/finally 自身的信号优先，
-// 未捕获的错误在 finally 之后原样上抛（外层 try 可继续捕获）。
+// body 出错（flowError）→ 找第一个匹配的 catch（无类型全捕，[Exception]/[System.Exception] 基类全捕，其余按异常类型名精确匹配）→ 把错误记录临时绑到 $_（块结束恢复，普通赋值穿透外层）执行 catch 体；
+// finally 无论是否出错、是否被捕获都恒执行；catch/finally 自身的信号优先，未捕获的错误在 finally 之后原样上抛（外层 try 可继续捕获）。
 func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 	var out []*object.PSObject
 	bodyOut, sig := e.runStatements(v.Body.Body.Statements)
@@ -128,8 +126,7 @@ func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 			if !catchMatches(cc.TypeName, sig.value) {
 				continue
 			}
-			// catch 块不推独立作用域（对齐 PowerShell）：普通变量赋值穿透，
-			// 只有 $_ 是临时绑定，块结束恢复原值
+			// catch 块不推独立作用域（对齐 PowerShell）：普通变量赋值穿透，只有 $_ 是临时绑定，块结束恢复原值。
 			sc := e.scopes[len(e.scopes)-1]
 			oldUS, hadUS := sc["_"]
 			sc["_"] = sig.value

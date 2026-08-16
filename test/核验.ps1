@@ -1,5 +1,5 @@
 # 指令核验脚本：对照 docs/指令参考.md 逐条运行示例，用 $? 判定通过/失败。
-# 用法：./powershell -NoLogo -NoProfile -File test/核验.ps1
+# 用法：./powershell -NoLogo -NoProfile -File test/核验.ps1。
 # 平台相关项（systemctl/ping/xclip/sudo）在非对应环境会失败，属预期，见参考文档说明。
 
 $pass = 0

@@ -152,8 +152,7 @@ func (p *Parser) isStatementEnd(t lexer.Token) bool {
 // parseStatementList 解析一串语句，直到 EOF 或闭合字符 term（0 表示顶层）。
 func (p *Parser) parseStatementList(term byte) *ast.StatementList {
 	list := &ast.StatementList{}
-	// 块/脚本开头的 param() 声明块：它是块的头部而非普通语句，
-	// 先行解析，不受语句终止符检查约束（param($x) 后可直接跟语句）。
+	// 块/脚本开头的 param() 声明块：它是块的头部而非普通语句，先行解析，不受语句终止符检查约束（param($x) 后可直接跟语句）。
 	if p.cur().Type == TkWord && strings.EqualFold(p.cur().Text, "param") {
 		nt := p.peekAt(1)
 		if nt.Type == TkPunct && nt.Text == "(" {
@@ -754,8 +753,7 @@ func (p *Parser) parseCommand() *ast.Command {
 			name, val, hasVal := strings.Cut(t.Text, ":")
 			if hasVal {
 				p.advance() // 吃掉 -Name: 本体（含冒号）
-				// -Name:$var / -Name:5 / -Name:"str"：$、引号不是 dash word 字符，
-				// 词法器会把冒号后的内联值拆成独立 token（紧贴冒号）。
+				// -Name:$var / -Name:5 / -Name:"str"：$、引号不是 dash word 字符，词法器会把冒号后的内联值拆成独立 token（紧贴冒号）。
 				// 用该 token 的原始文本作为内联值，保证 -Recurse:$true 等语义正确。
 				// 仅合并单个 token 能完整表示的值；表达式（括号等）跨多 token，不合并。
 				if val == "" && p.cur().Adjacent && p.isValueStart(p.cur()) {

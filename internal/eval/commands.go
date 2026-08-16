@@ -525,8 +525,7 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 	return all
 }
 
-// bindScriptParams 按 param() 声明把脚本实参绑到当前作用域（脚本不推独立作用域，
-// 变量可见性等价调用点：控制台调用留在会话，函数内调用随函数销毁）。
+// bindScriptParams 按 param() 声明把脚本实参绑到当前作用域（脚本不推独立作用域，变量可见性等价调用点：控制台调用留在会话，函数内调用随函数销毁）。
 // 位置实参依次落位，缺的用默认值或 $null，剩余实参保留在 $args。
 func (e *Evaluator) bindScriptParams(params []ast.FunctionParam, args []*object.PSObject) {
 	sc := e.scopes[len(e.scopes)-1]

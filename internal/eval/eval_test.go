@@ -91,8 +91,7 @@ func TestNumericLiterals(t *testing.T) {
 	wantStr(t, "1GB", "1073741824")
 }
 
-// TestFloatAddition 验证浮点加法不截断：整型路径按 TypeName 识别，
-// 任一操作数是浮点就走浮点运算（2 + 1/2 = 2.5 而非 2）。
+// TestFloatAddition 验证浮点加法不截断：整型路径按 TypeName 识别，任一操作数是浮点就走浮点运算（2 + 1/2 = 2.5 而非 2）。
 func TestFloatAddition(t *testing.T) {
 	wantStr(t, "2 + 1/2", "2.5")
 	wantStr(t, "1/2 + 1/2", "1")
@@ -103,8 +102,7 @@ func TestFloatAddition(t *testing.T) {
 	wantStr(t, `"a" + "b"`, "ab")
 }
 
-// TestFloatIncrement 验证浮点变量 ++/-- 不截断（$i = 0.5; $i++ → 1.5），
-// 整型与未定义变量行为不变。
+// TestFloatIncrement 验证浮点变量 ++/-- 不截断（$i = 0.5; $i++ → 1.5），整型与未定义变量行为不变。
 func TestFloatIncrement(t *testing.T) {
 	wantStr(t, "$i = 0.5; $i++; $i", "1.5")
 	wantStr(t, "$i = 1.5; $i--; $i", "0.5")
@@ -118,8 +116,8 @@ func TestFloatIncrement(t *testing.T) {
 	wantStr(t, "$i = 0.5; $i += 1; $i", "1.5")
 }
 
-// TestDivideByZero 验证除零报错（对齐 PowerShell）：结果置 $null、$? 置 false，
-// REPL 语义下后续语句继续执行；正常除法与取模不受影响。
+// TestDivideByZero 验证除零报错（对齐 PowerShell）：
+// 结果置 $null、$? 置 false，REPL 语义下后续语句继续执行；正常除法与取模不受影响。
 func TestDivideByZero(t *testing.T) {
 	// 除零与模零：报错无输出（错误写到 stderr）
 	wantStr(t, "5/0")
@@ -138,8 +136,7 @@ func TestDivideByZero(t *testing.T) {
 	wantStr(t, "5 % 2", "1")
 }
 
-// TestSplitMaxSubstrings 验证 -split 的最大子串数参数（"a,b,c" -split ",",2 → a、b,c），
-// 末段保留未分割剩余，0/负数/超上限不限段数。
+// TestSplitMaxSubstrings 验证 -split 的最大子串数参数（"a,b,c" -split ",",2 → a、b,c），末段保留未分割剩余，0/负数/超上限不限段数。
 func TestSplitMaxSubstrings(t *testing.T) {
 	wantStr(t, `"a,b,c" -split ",",2`, "a", "b,c")
 	wantStr(t, `"a,b,c" -split ",",1`, "a,b,c")
@@ -204,9 +201,7 @@ func TestComparisonAndLogic(t *testing.T) {
 	wantStr(t, "-not $false", "True")
 }
 
-// TestStringNumberComparison 验证字符串与数字混合比较按左操作数类型转换
-// （对齐 PowerShell）：两个字符串按字典序（"5" -lt "10" 为 False），
-// 数字对字符串按数字（5 -lt "10" 为 True），$null 只与 $null 相等。
+// TestStringNumberComparison 验证字符串与数字混合比较按左操作数类型转换（对齐 PowerShell）：两个字符串按字典序（"5" -lt "10" 为 False），数字对字符串按数字（5 -lt "10" 为 True），$null 只与 $null 相等。
 func TestStringNumberComparison(t *testing.T) {
 	// 字符串-字符串：字典序
 	wantStr(t, `"5" -lt "10"`, "False")

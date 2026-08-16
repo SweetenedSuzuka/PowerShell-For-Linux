@@ -178,9 +178,8 @@ var commonSwitchParams = map[string]bool{
 }
 
 // Bind 依据参数规格把命令实参绑定为 BoundArgs。
-// 命名参数进入 Named/Switches；位置实参先按源码顺序收进 Positional，
-// 再由 bindPositional 依据规格的 Position 序号中心化映射到命名参数，
-// 未声明位置槽位的实参（如数组多源、超量实参）留在 Positional 兜底。
+// 命名参数进入 Named/Switches；位置实参先按源码顺序收进 Positional。
+// bindPositional 依据规格的 Position 序号把位置实参中心化映射到命名参数；未声明位置槽位的实参（如数组多源、超量实参）留在 Positional 兜底。
 // engine 用于求值参数表达式；extra 是求值时额外的变量作用域。
 func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*object.PSObject) (*BoundArgs, error) {
 	ba := &BoundArgs{

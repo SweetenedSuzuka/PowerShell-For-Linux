@@ -127,8 +127,7 @@ func (e *Evaluator) popScope() {
 }
 
 // lookupVar 按名字与作用域修饰符查变量。
-// scope 为空：自顶向下查（PowerShell 默认读语义）；"script"/"global"：只查全局（scopes[0]，
-// 即脚本作用域，本解释器脚本不推独立作用域）；"local"：只查当前（栈顶）作用域。
+// scope 为空：自顶向下查（PowerShell 默认读语义）；"script"/"global"：只查全局（scopes[0]，即脚本作用域，本解释器脚本不推独立作用域）；"local"：只查当前（栈顶）作用域。
 func (e *Evaluator) lookupVar(name, scope string) *object.PSObject {
 	switch scope {
 	case "script", "global":
@@ -479,8 +478,7 @@ func (e *Evaluator) evalIndex(i *ast.Index) *object.PSObject {
 	}
 	if base.IsArray() {
 		items := base.ArrayItems()
-		// 多下标（$a[1..2]、$a[0,2]、$a[1..2,0]）：下标表达式是数组时逐元素取值，
-		// 嵌套数组展平，越界补 $null（对齐 PowerShell 的索引语义）。
+		// 多下标（$a[1..2]、$a[0,2]、$a[1..2,0]）：下标表达式是数组时逐元素取值，嵌套数组展平，越界补 $null（对齐 PowerShell 的索引语义）。
 		if idx.IsArray() {
 			return indexSelect(idx, func(n int64) *object.PSObject {
 				return arrayItemAt(items, n)
@@ -802,8 +800,7 @@ func buildMatches(re *regexp.Regexp, s string, idx []int) *object.PSObject {
 	return object.Hashtable(entries)
 }
 
-// caseSensitiveEq 大小写敏感相等（-ceq）。对齐 PowerShell：右操作数按左操作数类型转换，
-// 左为数字则两边按数字，左为字符串则两边按字符串，左为 $null 则只与 $null 相等。
+// caseSensitiveEq 大小写敏感相等（-ceq）。对齐 PowerShell：右操作数按左操作数类型转换，左为数字则两边按数字，左为字符串则两边按字符串，左为 $null 则只与 $null 相等。
 func caseSensitiveEq(l, r *object.PSObject) bool {
 	switch l.TypeName {
 	case "Int", "Double", "Boolean":
@@ -843,8 +840,7 @@ func caseSensitiveOrder(l, r *object.PSObject) int {
 	return strings.Compare(l.String(), r.String())
 }
 
-// compareEq 相等判断（-eq）。对齐 PowerShell：右操作数按左操作数类型转换，
-// 左为数字则两边按数字，左为字符串则两边按字符串，左为 $null 则只与 $null 相等。
+// compareEq 相等判断（-eq）。对齐 PowerShell：右操作数按左操作数类型转换，左为数字则两边按数字，左为字符串则两边按字符串，左为 $null 则只与 $null 相等。
 func compareEq(l, r *object.PSObject) bool {
 	switch l.TypeName {
 	case "Int", "Double", "Boolean":
@@ -864,9 +860,7 @@ func compareEq(l, r *object.PSObject) bool {
 	return strings.EqualFold(l.String(), r.String())
 }
 
-// compareOrder 判断 -lt/-le/-gt/-ge 的顺序。对齐 PowerShell：右操作数按左操作数类型
-// 参与比较——左为数字则两边按数字（5 -lt "10" 为 True），左为字符串则两边按字符串
-// （"5" -lt "10" 是字典序比较，结果为 False）。
+// compareOrder 判断 -lt/-le/-gt/-ge 的顺序。对齐 PowerShell：右操作数按左操作数类型参与比较——左为数字则两边按数字（5 -lt "10" 为 True），左为字符串则两边按字符串（"5" -lt "10" 是字典序比较，结果为 False）。
 func compareOrder(l, r *object.PSObject) int {
 	switch l.TypeName {
 	case "Int", "Double":
@@ -989,8 +983,8 @@ func rangeOp(l, r *object.PSObject) *object.PSObject {
 }
 
 // formatOp 实现 .NET 风格格式串："{模板}" -f 值[, 值...]。
-// 支持 {N}、{N,宽度}（空格对齐）、{N:规格}（D 十进制补零、X/x 十六进制、F 定点小数、N 千分位），
-// {{ 与 }} 转义字面大括号；未知规格退化为原样字符串。下标越界 → 报错并置 $?=false。
+// 支持 {N}、{N,宽度}（空格对齐）、{N:规格}（D 十进制补零、X/x 十六进制、F 定点小数、N 千分位）。
+// {{ 与 }} 转义字面大括号；未知规格退化为原样字符串；下标越界 → 报错并置 $?=false。
 func (e *Evaluator) formatOp(f, args *object.PSObject) *object.PSObject {
 	format := f.String()
 	items := flattenArgs(args)

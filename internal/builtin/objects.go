@@ -65,8 +65,7 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 	items := c.Input
 	props := c.Args.StringSlice("Property")
 	if len(items) == 0 && c.Args.PosMapped["Property"] {
-		// 无管道输入且属性来自位置映射：位置实参按数据原样输出（本项目语义，如 Select-Object a,b），
-		// 不做属性选择（props 清空）
+		// 无管道输入且属性来自位置映射：位置实参按数据原样输出（本项目语义，如 Select-Object a,b），不做属性选择（props 清空）。
 		if v := c.Args.Get("Property"); v != nil {
 			items = append(items, v.ArrayItems()...)
 		}

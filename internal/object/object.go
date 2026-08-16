@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -214,6 +215,26 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 					vals = append(vals, en.Value)
 				}
 				return Array(vals), true
+			}
+		}
+	case "System.IO.FileInfo", "System.IO.DirectoryInfo":
+		// 虚拟属性从路径计算：Extension（目录恒空）、BaseName（文件去扩展名）、DirectoryName（父目录）。
+		// 与 FullName 一致按传入路径原样计算，不解析为绝对路径（对齐现有简化）。
+		if path, ok := o.Value.(string); ok {
+			switch strings.ToLower(name) {
+			case "extension":
+				if o.TypeName == "System.IO.DirectoryInfo" {
+					return Str(""), true
+				}
+				return Str(filepath.Ext(path)), true
+			case "basename":
+				base := filepath.Base(path)
+				if o.TypeName == "System.IO.FileInfo" {
+					base = strings.TrimSuffix(base, filepath.Ext(base))
+				}
+				return Str(base), true
+			case "directoryname":
+				return Str(filepath.Dir(path)), true
 			}
 		}
 	case "DateTime":

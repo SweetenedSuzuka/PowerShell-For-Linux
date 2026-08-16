@@ -105,7 +105,8 @@ func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObj
 	if sig != nil {
 		switch sig.kind {
 		case flowReturn:
-			return unwrapOutput(sig.value), nil
+			// return 前的输出一并保留（与函数调用一致：& { "a"; return "b" } 输出 a、b）
+			return append(out, unwrapOutput(sig.value)...), nil
 		case flowError:
 			return nil, fmt.Errorf("%s", sig.value.String())
 		}
@@ -255,7 +256,8 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		if sig != nil {
 			switch sig.kind {
 			case flowReturn:
-				return sig.value
+				// 子表达式整体作为输出流：return 前的输出保留（$( "a"; return "b" ) → a、b）
+				return wrapSingle(append(out, unwrapOutput(sig.value)...))
 			case flowError:
 				panic(sig) // 子表达式里的终止错误向上传播（外层 try 可捕获）
 			}

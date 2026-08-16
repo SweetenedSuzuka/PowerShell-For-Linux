@@ -289,6 +289,14 @@ func TestTryCatchFinally(t *testing.T) {
 	wantStr(t, `$r2 = try { throw "bad" } catch { "捕获值" }; "r2=$r2"`, "r2=捕获值")
 	// 无 catch 只有 finally：finally 仍执行并输出，错误继续上抛（顶层打印，无输出）
 	wantStr(t, `try { throw "只有finally" } finally { "清理" }`, "清理")
+	// return 前与 finally 的输出在函数返回值之前（调用点统一语义）
+	wantStr(t, `function f { "前"; return "r" }; f`, "前", "r")
+	// 脚本块 return 沿途输出保留（与函数一致）
+	wantStr(t, `"x" | ForEach-Object { "块前"; return "块后" }`, "块前", "块后")
+	// 子表达式 return 沿途输出保留
+	wantStr(t, `$("a"; return "b")`, "a", "b")
+	// switch 不推独立作用域：case 块内普通赋值穿透外层（与 foreach 同机制）
+	wantStr(t, `switch (1) { 1 { $sv = 5 } }; $sv`, "5")
 }
 
 // TestTryScriptPropagation 验证脚本内 throw 跨脚本传播与调用方 try 捕获。

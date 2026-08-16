@@ -114,7 +114,7 @@ func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 
 // execTry 执行 try/catch/finally：
 // body 出错（flowError）→ 找第一个匹配的 catch（无类型全捕，[Exception]/[System.Exception] 基类全捕，
-// 其余按异常类型名精确匹配）→ 在独立作用域把错误记录绑到 $_ 后执行 catch 体；
+// 其余按异常类型名精确匹配）→ 把错误记录临时绑到 $_（块结束恢复，普通赋值穿透外层）执行 catch 体；
 // finally 无论是否出错、是否被捕获都恒执行；catch/finally 自身的信号优先，
 // 未捕获的错误在 finally 之后原样上抛（外层 try 可继续捕获）。
 func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
@@ -348,11 +348,24 @@ func (e *Evaluator) execFor(v *ast.For) []*object.PSObject {
 // execSwitch 执行 switch 语句。
 // 值为数组时逐元素匹配：每个元素跑全部 case（可命中多个），default 按元素判断；
 // break 退出整个 switch，continue 进入下一个元素（标量时二者等效，都退出）。
+// 与 foreach 同机制：不推独立作用域（体内普通赋值穿透外层），只临时绑定 $_/PSItem，结束恢复。
 func (e *Evaluator) execSwitch(v *ast.Switch) []*object.PSObject {
 	val := e.evalValue(v.Value)
-	e.pushScope()
-	defer e.popScope()
 	sc := e.scopes[len(e.scopes)-1]
+	oldItem, hadItem := sc["PSItem"]
+	oldUS, hadUS := sc["_"]
+	defer func() {
+		if hadItem {
+			sc["PSItem"] = oldItem
+		} else {
+			delete(sc, "PSItem")
+		}
+		if hadUS {
+			sc["_"] = oldUS
+		} else {
+			delete(sc, "_")
+		}
+	}()
 	sc["PSItem"] = val
 
 	var items []*object.PSObject
@@ -432,7 +445,8 @@ func (e *Evaluator) evalBlockValue(body *ast.StatementList) *object.PSObject {
 	if sig != nil {
 		switch sig.kind {
 		case flowReturn:
-			return sig.value
+			// return 前的输出保留（switch 条件块与函数语义一致）
+			return wrapSingle(append(out, unwrapOutput(sig.value)...))
 		case flowError:
 			panic(sig) // 块内的终止错误向上传播（外层 try 可捕获）
 		}

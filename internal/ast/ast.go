@@ -162,6 +162,24 @@ type ParamBlock struct {
 	Params []FunctionParam
 }
 
+// CatchClause 是 try 的一个 catch 分支。
+type CatchClause struct {
+	TypeName string // 可选 [类型] 过滤，空为全部捕获
+	Body     *Block
+}
+
+// Try 是 try/catch/finally 语句。
+type Try struct {
+	Body    *Block
+	Catches []CatchClause
+	Finally *Block
+}
+
+// Throw 是 throw 语句。
+type Throw struct {
+	Value Node
+}
+
 // FunctionDef 是 function / filter 定义。
 type FunctionDef struct {
 	Name   string

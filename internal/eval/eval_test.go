@@ -250,7 +250,66 @@ func TestParamBlock(t *testing.T) {
 	wantStr(t, "param($z)")
 }
 
-// TestScriptParam 验证脚本 param() 声明块（显式实参、默认值、剩余实参进 $args）。
+// TestTryCatchFinally 验证 try/catch/finally + throw：
+// 基本捕获、$_ 绑定、finally 恒执行、类型过滤、函数/循环传播、return 顺序、try 作表达式。
+func TestTryCatchFinally(t *testing.T) {
+	// 基本捕获与 $_ 绑定（错误记录的 Message 属性）
+	wantStr(t, `try { throw "boom" } catch { "已捕获" }`, "已捕获")
+	wantStr(t, `try { throw "msg1" } catch { $_.Message }`, "msg1")
+	// catch 块不推独立作用域：普通变量赋值穿透到外层（对齐 PowerShell）
+	wantStr(t, `$tc = "未执行"; try { throw "boom" } catch { $tc = "已捕获" }; $tc`, "已捕获")
+	// catch 的 $_ 是临时绑定：块结束后外层 $_ 不受影响
+	wantStr(t, `$old = $_; try { throw "x" } catch { $tmp = $_ }; $_ -eq $old`, "True")
+	// 无异常时 catch 不执行，finally 恒执行
+	wantStr(t, `try { "正常体" } catch { "不会到" } finally { "finally" }`, "正常体", "finally")
+	// 捕获后继续执行后续语句
+	wantStr(t, `try { throw "x" } catch { "c" }; "继续"`, "c", "继续")
+	// catch [System.Exception] 基类全捕
+	wantStr(t, `try { throw "e1" } catch [System.Exception] { "基类捕获" }`, "基类捕获")
+	// catch 精确类型不匹配 → 未捕获，顶层打印（无输出）
+	wantStr(t, `try { throw "e2" } catch [System.ArgumentException] { "不会到" }`)
+	// 多 catch 顺序：第一个匹配生效
+	wantStr(t, `try { throw "x" } catch [System.ArgumentException] { "A" } catch { "全捕" }`, "全捕")
+	// 函数内 throw 被调用方 try 捕获
+	wantStr(t, `function f { throw "函数错" }; try { f } catch { "捕获" }`, "捕获")
+	// 循环内 throw 传播到外层 try，且 throw 前循环已输出保留
+	wantStr(t, `try { foreach ($i in 1..3) { if ($i -eq 2) { throw "循环错" }; "i=$i" } } catch { "循环捕获" }`, "i=1", "循环捕获")
+	// return 时 finally 恒执行，且 finally 输出在返回值之前（对齐 PowerShell）
+	wantStr(t, `function g { try { return "r" } finally { "fin" } }; g`, "fin", "r")
+	// 嵌套 try：内层类型不匹配 → 外层捕获
+	wantStr(t, `try { try { throw "内层错" } catch [System.ArgumentException] { "不会到" } } catch { "外层捕获" }`, "外层捕获")
+	// catch 内重抛，外层再捕获
+	wantStr(t, `try { try { throw "a" } catch { "内捕"; throw } } catch { "外捕" }`, "内捕", "外捕")
+	// finally 里 throw 覆盖原错误
+	wantStr(t, `try { throw "原错" } catch { "会捕获" } finally { throw "finally错" }`, "会捕获")
+	// catch 里的 break 传播到外层循环
+	wantStr(t, `for ($i = 0; $i -lt 2; $i++) { try { throw "t" } catch { "i=$i"; break } }; "结束"`, "i=0", "结束")
+	// try 作表达式（赋值右侧）
+	wantStr(t, `$r = try { "成功值" } catch { "失败值" }; "r=$r"`, "r=成功值")
+	wantStr(t, `$r2 = try { throw "bad" } catch { "捕获值" }; "r2=$r2"`, "r2=捕获值")
+	// 无 catch 只有 finally：finally 仍执行并输出，错误继续上抛（顶层打印，无输出）
+	wantStr(t, `try { throw "只有finally" } finally { "清理" }`, "清理")
+}
+
+// TestTryScriptPropagation 验证脚本内 throw 跨脚本传播与调用方 try 捕获。
+func TestTryScriptPropagation(t *testing.T) {
+	dir := t.TempDir()
+	srcPath := filepath.Join(dir, "src.ps1")
+	if err := os.WriteFile(srcPath, []byte("param($who)\n\"脚本运行中\"\nthrow \"脚本抛错 $who\"\n\"脚本尾部\"\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	callPath := filepath.Join(dir, "call.ps1")
+	callSrc := "try { " + srcPath + " \"X\" } catch { \"调用方捕获: $($_.Message)\" }\n\"调用方继续\"\n"
+	if err := os.WriteFile(callPath, []byte(callSrc), 0644); err != nil {
+		t.Fatal(err)
+	}
+	// 跨脚本：被调脚本 throw 前输出保留，调用方捕获后继续
+	wantStr(t, callSrc, "脚本运行中", "调用方捕获: 脚本抛错 X", "调用方继续")
+	// 顶层逐语句（REPL 语义）：未捕获错误打印到 stderr（io.Discard），会话继续执行后续语句
+	wantStr(t, "\"前\"; throw \"停\"; \"后\"", "前", "后")
+}
+
+
 func TestScriptParam(t *testing.T) {
 	dir := t.TempDir()
 	scriptPath := filepath.Join(dir, "s.ps1")

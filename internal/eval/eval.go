@@ -26,13 +26,24 @@ const (
 	flowContinue
 	flowReturn
 	flowExit
+	flowError // 终止错误（throw / 未捕获错误）
 )
 
-// flowSignal 用 panic/recover 传递 break/continue/return/exit。
+// flowSignal 用 panic/recover 传递 break/continue/return/exit/error。
 type flowSignal struct {
 	kind  flowKind
-	value *object.PSObject // return 值
+	value *object.PSObject // return 值 / 错误记录
 	code  int              // exit 码
+	out   []*object.PSObject // panic 前已产生的输出（传播时保留，如 throw 前循环的输出）
+}
+
+// RecoverError 提取 panic 值里的终止错误（供 main.go -File 顶层兜底打印）。
+// 非错误 panic 返回 nil，交由调用方继续传播。
+func RecoverError(r any) error {
+	if fs, ok := r.(*flowSignal); ok && fs.kind == flowError {
+		return fmt.Errorf("%s", fs.value.String())
+	}
+	return nil
 }
 
 // Evaluator 是一次求值会话。
@@ -91,8 +102,13 @@ func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObj
 		}
 	}
 	out, sig := e.runStatements(block.Body.Statements)
-	if sig != nil && sig.kind == flowReturn {
-		return unwrapOutput(sig.value), nil
+	if sig != nil {
+		switch sig.kind {
+		case flowReturn:
+			return unwrapOutput(sig.value), nil
+		case flowError:
+			return nil, fmt.Errorf("%s", sig.value.String())
+		}
 	}
 	return out, nil
 }
@@ -236,8 +252,13 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		e.inCapture++
 		out, sig := e.runStatements(v.Body.Statements)
 		e.inCapture--
-		if sig != nil && sig.kind == flowReturn {
-			return sig.value
+		if sig != nil {
+			switch sig.kind {
+			case flowReturn:
+				return sig.value
+			case flowError:
+				panic(sig) // 子表达式里的终止错误向上传播（外层 try 可捕获）
+			}
 		}
 		return wrapSingle(out)
 	case *ast.Increment:

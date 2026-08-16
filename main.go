@@ -61,9 +61,21 @@ func run(args []string) int {
 		for _, a := range fs.Args() {
 			scriptArgs = append(scriptArgs, object.Str(a))
 		}
-		ev.RunScriptFileStreaming(*file, scriptArgs, func(objs []*object.PSObject) {
-			_ = object.FormatOutput(os.Stdout, objs)
-		})
+		func() {
+			// 脚本顶层未捕获的终止错误（throw）：打印后以失败退出码结束
+			defer func() {
+				if r := recover(); r != nil {
+					if err := eval.RecoverError(r); err != nil {
+						fmt.Fprintf(os.Stderr, "%s : %v\n", sess.StyleName(), err)
+						os.Exit(1)
+					}
+					panic(r)
+				}
+			}()
+			ev.RunScriptFileStreaming(*file, scriptArgs, func(objs []*object.PSObject) {
+				_ = object.FormatOutput(os.Stdout, objs)
+			})
+		}()
 		return exitCode(ev, sess)
 	}
 

@@ -211,7 +211,7 @@ func (p *Parser) skipNewlinesAndSemicolons() {
 // isStatementKeyword 报告单词是否为可作表达式的语句关键字（赋值右侧等位置）。
 func isStatementKeyword(text string) bool {
 	switch strings.ToLower(text) {
-	case "if", "switch", "foreach", "while", "do", "for":
+	case "if", "switch", "foreach", "while", "do", "for", "try":
 		return true
 	}
 	return false
@@ -259,6 +259,16 @@ func (p *Parser) parseStatement() ast.Node {
 				e.Code = p.parseExpression(false)
 			}
 			return e
+		case strings.EqualFold(t.Text, "try"):
+			return p.parseTry()
+		case strings.EqualFold(t.Text, "throw"):
+			return p.parseThrow()
+		case strings.EqualFold(t.Text, "catch"):
+			p.fail("catch 必须跟在 try 之后")
+			return nil
+		case strings.EqualFold(t.Text, "finally"):
+			p.fail("finally 必须跟在 try 之后")
+			return nil
 		}
 	}
 	if (t.Type == TkVariable || t.Type == TkBraceVar) && p.isAssignOp(p.peekAt(1)) {
@@ -366,6 +376,61 @@ func (p *Parser) parseIf() ast.Node {
 		break
 	}
 	return node
+}
+
+// parseTry 解析 try { } catch [类型]? { } finally { } 链。
+// catch 可多个，可带可选的 [类型] 过滤；finally 至多一个，均可省略。
+func (p *Parser) parseTry() ast.Node {
+	p.advance() // try
+	node := &ast.Try{}
+	node.Body = p.parseBlock()
+	if p.err != nil {
+		return node
+	}
+	for {
+		t := p.cur()
+		if t.Type == TkWord && strings.EqualFold(t.Text, "catch") {
+			p.advance()
+			cc := ast.CatchClause{}
+			if p.cur().Type == TkPunct && p.cur().Text == "[" {
+				p.advance()
+				tn := p.cur()
+				if tn.Type == TkWord {
+					p.advance()
+					cc.TypeName = tn.Text
+				}
+				if p.cur().Type == TkPunct && p.cur().Text == "]" {
+					p.advance()
+				}
+			}
+			cc.Body = p.parseBlock()
+			if p.err != nil {
+				return node
+			}
+			node.Catches = append(node.Catches, cc)
+			continue
+		}
+		if t.Type == TkWord && strings.EqualFold(t.Text, "finally") {
+			p.advance()
+			node.Finally = p.parseBlock()
+			if p.err != nil {
+				return node
+			}
+			break
+		}
+		break
+	}
+	return node
+}
+
+// parseThrow 解析 throw [表达式] 语句；无表达式时默认消息 ScriptHalted。
+func (p *Parser) parseThrow() ast.Node {
+	p.advance() // throw
+	th := &ast.Throw{}
+	if !p.isStatementEnd(p.cur()) {
+		th.Value = p.parseExpression(false)
+	}
+	return th
 }
 
 func (p *Parser) parseForEach() ast.Node {

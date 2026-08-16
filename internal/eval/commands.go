@@ -30,11 +30,17 @@ func (e *Evaluator) RunSource(src string) ([]*object.PSObject, error) {
 }
 
 // EvalStatements 是顶层求值入口：执行语句列表，返回输出对象。
+// 未捕获的终止错误（throw）在此打印并标记 $?，不中断会话。
 func (e *Evaluator) EvalStatements(list *ast.StatementList) []*object.PSObject {
 	out, sig := e.runStatements(list.Statements)
-	if sig != nil && sig.kind == flowExit {
-		e.ExitRequested = true
-		e.ExitCode = sig.code
+	if sig != nil {
+		switch sig.kind {
+		case flowExit:
+			e.ExitRequested = true
+			e.ExitCode = sig.code
+		case flowError:
+			e.writeError(fmt.Errorf("%s", sig.value.String()))
+		}
 	}
 	return out
 }
@@ -42,9 +48,14 @@ func (e *Evaluator) EvalStatements(list *ast.StatementList) []*object.PSObject {
 // EvalStatement 执行单条语句并返回输出对象（顶层逐语句输出用，保证与直写命令顺序一致）。
 func (e *Evaluator) EvalStatement(st ast.Node) []*object.PSObject {
 	out, sig := e.runStatements([]ast.Node{st})
-	if sig != nil && sig.kind == flowExit {
-		e.ExitRequested = true
-		e.ExitCode = sig.code
+	if sig != nil {
+		switch sig.kind {
+		case flowExit:
+			e.ExitRequested = true
+			e.ExitCode = sig.code
+		case flowError:
+			e.writeError(fmt.Errorf("%s", sig.value.String()))
+		}
 	}
 	return out
 }
@@ -311,10 +322,11 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 
 	out, sig := e.runStatements(fn.Body.Body.Statements)
 	if sig != nil {
-		if sig.kind == flowReturn {
-			return unwrapOutput(sig.value)
-		}
-		if sig.kind == flowExit {
+		switch sig.kind {
+		case flowReturn:
+			// return 前的输出（如 try/finally 沿途写入的）一并保留
+			return append(out, unwrapOutput(sig.value)...)
+		case flowExit, flowError:
 			panic(sig)
 		}
 	}
@@ -488,10 +500,22 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 	}
 	var all []*object.PSObject
 	for _, st := range stmts {
-		objs := e.EvalStatement(st)
+		objs, sig := e.runStatements([]ast.Node{st})
 		all = append(all, objs...)
 		if emit != nil {
 			emit(objs)
+		}
+		if sig != nil {
+			switch sig.kind {
+			case flowExit:
+				e.ExitRequested = true
+				e.ExitCode = sig.code
+			case flowError:
+				// 未捕获的终止错误：中止脚本并向上传播（调用方 try 可捕获；
+				// 顶层由 EvalStatement/main.go 兜底打印）；panic 前已产生的输出一并携带
+				sig.out = all
+				panic(sig)
+			}
 		}
 		if e.ExitRequested {
 			break

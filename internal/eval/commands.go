@@ -208,14 +208,14 @@ func (e *Evaluator) stderrRedirectTarget(cmd *ast.Command) (io.Writer, io.Closer
 }
 
 // applyRedirects 处理命令的 stdout 重定向（> / >>）。
+// stdout 被重定向时输出不进管道（返回 nil）；只有 stderr 重定向时输出照常返回。
 func (e *Evaluator) applyRedirects(cmd *ast.Command, out []*object.PSObject) []*object.PSObject {
-	if len(cmd.Redirs) == 0 {
-		return out
-	}
+	hasStdout := false
 	for _, r := range cmd.Redirs {
 		if r.Kind != ast.RedirStdout && r.Kind != ast.RedirAppend {
 			continue
 		}
+		hasStdout = true
 		target, ok := e.redirTargetPath(r.Target)
 		if !ok {
 			continue // > $null 或非法盘符：丢弃
@@ -236,7 +236,10 @@ func (e *Evaluator) applyRedirects(cmd *ast.Command, out []*object.PSObject) []*
 		_, _ = f.WriteString(buf.String())
 		_ = f.Close()
 	}
-	return nil
+	if hasStdout {
+		return nil
+	}
+	return out
 }
 
 // ---- 函数调用 ----

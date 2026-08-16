@@ -3,6 +3,8 @@ package eval
 import (
 	"bytes"
 	"io"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -198,6 +200,24 @@ func TestStatementAsExpression(t *testing.T) {
 	wantStr(t, "$fv = foreach ($i in 1..3) { $i * 2 }; $fv -join ','", "2,4,6")
 	// while 作表达式
 	wantStr(t, "$i = 0; $wv = while ($i -lt 3) { $i; $i++ }; $wv -join ','", "0,1,2")
+}
+
+// TestStderrRedirectKeepsOutput 验证 2> 重定向不影响 stdout 输出（此前 applyRedirects 一律吞掉）。
+func TestStderrRedirectKeepsOutput(t *testing.T) {
+	// 2>$null 只丢弃错误流，输出照常（内置与函数各一例）
+	wantStr(t, `Write-Output "w" 2>$null`, "w")
+	wantStr(t, "function F { 'f-out' }; F 2>$null", "f-out")
+	// > 文件：输出进文件，不进管道
+	dir := t.TempDir()
+	outFile := filepath.Join(dir, "o.txt")
+	src := "Write-Output 'file' > " + outFile
+	if got := strs(runEval(t, src)); len(got) != 0 {
+		t.Fatalf("> 文件应无输出，实际 %v", got)
+	}
+	data, err := os.ReadFile(outFile)
+	if err != nil || string(data) != "file\n" {
+		t.Fatalf("> 文件应写入 file，err=%v data=%q", err, data)
+	}
 }
 
 func TestPipeline(t *testing.T) {

@@ -816,6 +816,14 @@ func addOp(l, r *object.PSObject) *object.PSObject {
 	if r.IsArray() {
 		return object.Array(append([]*object.PSObject{l}, r.ArrayItems()...))
 	}
+	// 任一操作数是浮点 → 浮点加法（整型路径会把 0.5 截断成 0，如 2 + 1/2）
+	if l.TypeName == "Double" || r.TypeName == "Double" {
+		if lf, ok := l.AsFloat(); ok {
+			if rf, ok2 := r.AsFloat(); ok2 {
+				return object.Float(lf + rf)
+			}
+		}
+	}
 	if li, ok := l.AsInt(); ok {
 		if ri, ok2 := r.AsInt(); ok2 {
 			return object.Int(li + ri)

@@ -210,17 +210,30 @@ func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 	return nil, false
 }
 
+// psVersion* 是 $PSVersionTable 里宣称的版本号，只标到 -Version 标志的粒度：
+// 5.X 对应 Windows PowerShell 5.1，7.X 对应 PowerShell 7（Minor 为 0，渲染时省略）。
+// 不宣称具体小版本；要改版本号，只改这里的常量，渲染与 $PSVersionTable 都会跟着变。
+const (
+	psVersionMajorDesktop = 5
+	psVersionMinorDesktop = 1
+	psVersionMajorCore    = 7
+	psVersionMinorCore    = 0
+)
+
 // VersionTable 构造 $PSVersionTable 哈希表。
+// 风格区分靠 PSEdition（Desktop/Core）。
 func (s *Session) VersionTable() *object.PSObject {
-	// 只保留有意义、非版本号的字段：命令格式（PSEdition）与平台。
 	var entries []object.HashEntry
 	add := func(k string, v any) {
 		entries = append(entries, object.HashEntry{Key: k, Value: object.ToPS(v)})
 	}
 	if s.Style == StyleDesktop {
+		add("PSVersion", object.Version(psVersionMajorDesktop, psVersionMinorDesktop, 0, 0))
 		add("PSEdition", "Desktop")
 	} else {
+		add("PSVersion", object.Version(psVersionMajorCore, psVersionMinorCore, 0, 0))
 		add("PSEdition", "Core")
+		add("GitCommitId", "0000000000000000000000000000000000000000")
 		add("OS", s.OSName())
 		add("Platform", "Unix")
 	}

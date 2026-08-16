@@ -69,6 +69,57 @@ func TestArrayAndProps(t *testing.T) {
 	}
 }
 
+func TestVersionObject(t *testing.T) {
+	// 末尾为 0 的段省略，至少保留 major
+	if got := Version(7, 0, 0, 0).String(); got != "7" {
+		t.Errorf("Version(7,0,0,0).String() = %q，想要 \"7\"", got)
+	}
+	if got := Version(5, 1, 0, 0).String(); got != "5.1" {
+		t.Errorf("Version(5,1,0,0).String() = %q，想要 \"5.1\"", got)
+	}
+	if got := Version(1, 2, 3, 0).String(); got != "1.2.3" {
+		t.Errorf("Version(1,2,3,0).String() = %q，想要 \"1.2.3\"", got)
+	}
+	if got := Version(1, 2, 3, 4).String(); got != "1.2.3.4" {
+		t.Errorf("Version(1,2,3,4).String() = %q，想要 \"1.2.3.4\"", got)
+	}
+	v := Version(7, 0, 0, 0)
+	if p, ok := v.PropValue("Major"); !ok || p.String() != "7" {
+		t.Errorf("Version Major 取不到或值错：%v %v", p, ok)
+	}
+	if p, ok := v.PropValue("Minor"); !ok || p.String() != "0" {
+		t.Errorf("Version Minor 取不到或值错：%v %v", p, ok)
+	}
+	if p, ok := v.PropValue("Build"); !ok || p.String() != "0" {
+		t.Errorf("Version Build 取不到或值错：%v %v", p, ok)
+	}
+}
+
+func TestHashtableVirtualProps(t *testing.T) {
+	h := Hashtable([]HashEntry{
+		{Key: "a", Value: Int(1)},
+		{Key: "b", Value: Int(2)},
+	})
+	if v, ok := h.PropValue("Count"); !ok || v.String() != "2" {
+		t.Errorf("Count 取不到或值错：%v %v", v, ok)
+	}
+	// 哈希表没有 Length，应走标量兜底返回 1
+	if v, ok := h.PropValue("Length"); !ok || v.String() != "1" {
+		t.Errorf("Length 取不到或值错：%v %v", v, ok)
+	}
+	if v, ok := h.PropValue("Keys"); !ok || v.String() != "a b" {
+		t.Errorf("Keys 取不到或值错：%v %v", v, ok)
+	}
+	if v, ok := h.PropValue("Values"); !ok || v.String() != "1 2" {
+		t.Errorf("Values 取不到或值错：%v %v", v, ok)
+	}
+	// 键优先于属性：存在 Count 键时返回键值而非条目数
+	hc := Hashtable([]HashEntry{{Key: "Count", Value: Int(5)}})
+	if v, ok := hc.PropValue("Count"); !ok || v.String() != "5" {
+		t.Errorf("键 Count 应优先于属性：%v %v", v, ok)
+	}
+}
+
 func TestFormatTable(t *testing.T) {
 	o1 := Object("File", "/a")
 	o1.AddProp("Name", "one").AddProp("Length", int64(10))

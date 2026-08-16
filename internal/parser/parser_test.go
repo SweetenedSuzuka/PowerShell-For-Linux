@@ -255,6 +255,46 @@ func TestSimplePipeline(t *testing.T) {
 	}
 }
 
+func TestChainedMemberAccess(t *testing.T) {
+	// 词法器把 a.b 并成一个词，解析器须拆成嵌套成员访问
+	list := parseOK(t, "$h.a.b")
+	pipe, ok := list.Statements[0].(*ast.Pipeline)
+	if !ok || pipe.Expr == nil {
+		t.Fatalf("$h.a.b 应解析为带表达式的管道")
+	}
+	outer, ok := pipe.Expr.(*ast.MemberAccess)
+	if !ok {
+		t.Fatalf("$h.a.b 外层应为成员访问")
+	}
+	if outer.Prop != "b" {
+		t.Fatalf("外层属性应为 b，得到 %q", outer.Prop)
+	}
+	inner, ok := outer.Base.(*ast.MemberAccess)
+	if !ok {
+		t.Fatalf("$h.a.b 内层应为成员访问")
+	}
+	if inner.Prop != "a" {
+		t.Fatalf("内层属性应为 a，得到 %q", inner.Prop)
+	}
+	if vr, ok := inner.Base.(*ast.VarRef); !ok || vr.Name != "h" {
+		t.Fatalf("$h.a.b 基座应为变量 $h")
+	}
+
+	// 链式访问最后一段是方法调用时，应解析为 MethodCall
+	list = parseOK(t, "$x.a.b()")
+	pipe = list.Statements[0].(*ast.Pipeline)
+	mc, ok := pipe.Expr.(*ast.MethodCall)
+	if !ok {
+		t.Fatalf("$x.a.b() 应解析为方法调用")
+	}
+	if mc.Name != "b" {
+		t.Fatalf("方法名应为 b，得到 %q", mc.Name)
+	}
+	if ma, ok := mc.Base.(*ast.MemberAccess); !ok || ma.Prop != "a" {
+		t.Fatalf("$x.a.b() 的基座应为 .a 成员访问")
+	}
+}
+
 func TestAssignment(t *testing.T) {
 	d := dump(parseOK(t, "$x = 1 + 2"))
 	want := "stmt[set(x = (num(1) + num(2)))]"

@@ -72,6 +72,35 @@ func DateTime(t time.Time) *PSObject {
 	return &PSObject{TypeName: "DateTime", Value: t}
 }
 
+// versionParts 存放四段版本号（major.minor.build.revision）。
+type versionParts struct {
+	major, minor, build, revision int
+}
+
+// String 渲染版本号：从右往左省略为 0 的段，至少保留 major。
+// 这样 Version(7,0,0,0) 显示 "7"，Version(5,1,0,0) 显示 "5.1"。
+func (v versionParts) String() string {
+	segs := []int{v.major, v.minor, v.build, v.revision}
+	end := len(segs) - 1
+	for end > 0 && segs[end] == 0 {
+		end--
+	}
+	var sb strings.Builder
+	for i := 0; i <= end; i++ {
+		if i > 0 {
+			sb.WriteByte('.')
+		}
+		sb.WriteString(strconv.Itoa(segs[i]))
+	}
+	return sb.String()
+}
+
+// Version 创建版本对象（TypeName "System.Version"），模拟 .NET 的 System.Version。
+// 用于 $PSVersionTable.PSVersion，让脚本能读取 .Major/.Minor/.Build/.Revision。
+func Version(major, minor, build, revision int) *PSObject {
+	return &PSObject{TypeName: "System.Version", Value: versionParts{major, minor, build, revision}}
+}
+
 // Error 创建错误记录对象。
 func Error(msg string) *PSObject {
 	o := &PSObject{TypeName: "ErrorRecord", Value: msg}
@@ -168,6 +197,24 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 					return en.Value, true
 				}
 			}
+			// 键未命中时才落到内置属性（真实 PowerShell 键优先于属性）。
+			// Count 返回条目数；Keys/Values 返回按插入顺序排列的数组。
+			switch strings.ToLower(name) {
+			case "count":
+				return Int(int64(len(entries))), true
+			case "keys":
+				keys := make([]*PSObject, 0, len(entries))
+				for _, en := range entries {
+					keys = append(keys, Str(en.Key))
+				}
+				return Array(keys), true
+			case "values":
+				vals := make([]*PSObject, 0, len(entries))
+				for _, en := range entries {
+					vals = append(vals, en.Value)
+				}
+				return Array(vals), true
+			}
 		}
 	case "DateTime":
 		if t, ok := o.Value.(time.Time); ok {
@@ -188,6 +235,19 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 				return Str(t.Weekday().String()), true
 			case "dayofyear":
 				return Int(int64(t.YearDay())), true
+			}
+		}
+	case "System.Version":
+		if v, ok := o.Value.(versionParts); ok {
+			switch strings.ToLower(name) {
+			case "major":
+				return Int(int64(v.major)), true
+			case "minor":
+				return Int(int64(v.minor)), true
+			case "build":
+				return Int(int64(v.build)), true
+			case "revision":
+				return Int(int64(v.revision)), true
 			}
 		}
 	}
@@ -338,6 +398,8 @@ func (o *PSObject) String() string {
 		return hashtableString(v)
 	case time.Time:
 		return formatDateTime(v)
+	case versionParts:
+		return v.String()
 	}
 	return fmt.Sprintf("%v", o.Value)
 }

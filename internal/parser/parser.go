@@ -911,10 +911,16 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 				break
 			}
 			p.advance() // .
-			prop := nt.Text
-			p.advance()
+			p.advance() // 属性名（可能含点，如 $h.a.b 被词法器并为 a.b）
+			// 词法器把 '.' 视为裸字字符，因此 a.b.c 会作为单个词进入这里。
+			// 按 PowerShell 语义，未加引号的点号只会是链式成员访问，故拆开逐段解析。
+			segs := strings.Split(nt.Text, ".")
+			for _, seg := range segs[:len(segs)-1] {
+				e = &ast.MemberAccess{Base: e, Prop: seg}
+			}
+			last := segs[len(segs)-1]
 			if p.cur().Type == TkPunct && p.cur().Text == "(" {
-				// 方法调用
+				// 方法调用（只能是最后一段）
 				p.advance() // (
 				var args []ast.Node
 				for {
@@ -932,10 +938,10 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 						p.advance()
 					}
 				}
-				e = &ast.MethodCall{Base: e, Name: prop, Args: args}
+				e = &ast.MethodCall{Base: e, Name: last, Args: args}
 				continue
 			}
-			e = &ast.MemberAccess{Base: e, Prop: prop}
+			e = &ast.MemberAccess{Base: e, Prop: last}
 			continue
 		}
 		if t.Type == TkPunct && t.Text == "[" {

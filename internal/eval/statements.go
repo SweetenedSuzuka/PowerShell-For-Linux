@@ -227,57 +227,76 @@ func (e *Evaluator) execFor(v *ast.For) []*object.PSObject {
 	return out
 }
 
+// execSwitch 执行 switch 语句。
+// 值为数组时逐元素匹配：每个元素跑全部 case（可命中多个），default 按元素判断；
+// break 退出整个 switch，continue 进入下一个元素（标量时二者等效，都退出）。
 func (e *Evaluator) execSwitch(v *ast.Switch) []*object.PSObject {
 	val := e.evalValue(v.Value)
 	e.pushScope()
-	e.scopes[len(e.scopes)-1]["_"] = val
-	e.scopes[len(e.scopes)-1]["PSItem"] = val
 	defer e.popScope()
+	sc := e.scopes[len(e.scopes)-1]
+	sc["PSItem"] = val
+
+	var items []*object.PSObject
+	if val.IsArray() {
+		items = val.ArrayItems()
+	} else {
+		items = []*object.PSObject{val}
+	}
 
 	var out []*object.PSObject
-	matched := false
-	for _, c := range v.Cases {
-		if c.Cond == nil {
-			// default：仅在无匹配时执行
-			if !matched {
+nextItem:
+	for _, item := range items {
+		sc["_"] = item
+		sc["PSItem"] = item
+		matched := false
+		for _, c := range v.Cases {
+			if c.Cond == nil {
+				// default：仅在本元素无匹配时执行
+				if !matched {
+					o, sig := e.runStatements(c.Body.Body.Statements)
+					out = append(out, o...)
+					if sig != nil {
+						switch sig.kind {
+						case flowBreak:
+							return out
+						case flowContinue:
+							continue nextItem
+						case flowReturn, flowExit:
+							panic(sig)
+						}
+					}
+				}
+				continue
+			}
+			var isMatch bool
+			switch cond := c.Cond.(type) {
+			case *ast.ScriptBlock:
+				isMatch = e.evalBlockValue(cond.Body).Truthy()
+			default:
+				cv := e.evalValue(c.Cond)
+				switch v.Mode {
+				case "regex":
+					isMatch, _ = regexp.MatchString(cv.String(), item.String())
+				case "wildcard":
+					isMatch = wildcardMatch(cv.String(), item.String())
+				default:
+					isMatch = compareEq(cv, item)
+				}
+			}
+			if isMatch {
+				matched = true
 				o, sig := e.runStatements(c.Body.Body.Statements)
 				out = append(out, o...)
 				if sig != nil {
-					if sig.kind == flowBreak {
+					switch sig.kind {
+					case flowBreak:
 						return out
-					}
-					if sig.kind == flowReturn || sig.kind == flowExit {
+					case flowContinue:
+						continue nextItem
+					case flowReturn, flowExit:
 						panic(sig)
 					}
-				}
-			}
-			continue
-		}
-		var isMatch bool
-		switch cond := c.Cond.(type) {
-		case *ast.ScriptBlock:
-			isMatch = e.evalBlockValue(cond.Body).Truthy()
-		default:
-			cv := e.evalValue(c.Cond)
-			switch v.Mode {
-			case "regex":
-				isMatch, _ = regexp.MatchString(cv.String(), val.String())
-			case "wildcard":
-				isMatch = wildcardMatch(cv.String(), val.String())
-			default:
-				isMatch = compareEq(cv, val)
-			}
-		}
-		if isMatch {
-			matched = true
-			o, sig := e.runStatements(c.Body.Body.Statements)
-			out = append(out, o...)
-			if sig != nil {
-				if sig.kind == flowBreak {
-					return out
-				}
-				if sig.kind == flowReturn || sig.kind == flowExit {
-					panic(sig)
 				}
 			}
 		}

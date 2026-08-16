@@ -103,6 +103,21 @@ func TestFloatAddition(t *testing.T) {
 	wantStr(t, `"a" + "b"`, "ab")
 }
 
+// TestFloatIncrement 验证浮点变量 ++/-- 不截断（$i = 0.5; $i++ → 1.5），
+// 整型与未定义变量行为不变。
+func TestFloatIncrement(t *testing.T) {
+	wantStr(t, "$i = 0.5; $i++; $i", "1.5")
+	wantStr(t, "$i = 1.5; $i--; $i", "0.5")
+	wantStr(t, "$i = 0.5; $i++; $i++; $i", "2.5")
+	// 整型增量不变
+	wantStr(t, "$i = 1; $i++; $i", "2")
+	wantStr(t, "$i = 3; $i--; $i", "2")
+	// 未定义变量从 0 起增
+	wantStr(t, "$i++; $i", "1")
+	// 复合赋值 += 浮点（走 addOp）
+	wantStr(t, "$i = 0.5; $i += 1; $i", "1.5")
+}
+
 func TestStringOps(t *testing.T) {
 	wantStr(t, `"a" + "b"`, "ab")
 	wantStr(t, `"ab" * 3`, "ababab")

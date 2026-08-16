@@ -265,6 +265,17 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		return wrapSingle(out)
 	case *ast.Increment:
 		cur := e.lookupVar(v.Var, v.Scope)
+		// 浮点变量按浮点增减：$i = 0.5; $i++ → 1.5（AsInt 会把 0.5 截断成 0）
+		if cur.TypeName == "Double" {
+			f, _ := cur.AsFloat()
+			if v.Op == "++" {
+				f++
+			} else {
+				f--
+			}
+			_ = e.setVar(v.Var, v.Scope, object.Float(f))
+			return object.Float(f)
+		}
 		n, _ := cur.AsInt()
 		if v.Op == "++" {
 			n++

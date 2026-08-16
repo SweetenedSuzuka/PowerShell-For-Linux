@@ -200,6 +200,15 @@ func (p *Parser) skipNewlinesAndSemicolons() {
 	}
 }
 
+// isStatementKeyword 报告单词是否为可作表达式的语句关键字（赋值右侧等位置）。
+func isStatementKeyword(text string) bool {
+	switch strings.ToLower(text) {
+	case "if", "switch", "foreach", "while", "do", "for":
+		return true
+	}
+	return false
+}
+
 func (p *Parser) parseStatement() ast.Node {
 	t := p.cur()
 	if t.Type == TkWord {
@@ -754,6 +763,10 @@ func (p *Parser) parseExpression(argMode bool) ast.Node {
 		isBinary := (nt.Type == TkDashWord && lexer.IsComparisonOp("-"+nt.Text)) ||
 			(nt.Type == TkOp && (nt.Text == "+" || nt.Text == "-" || nt.Text == "*" || nt.Text == "/" || nt.Text == "%"))
 		if !isBinary {
+			// 语句作表达式：$x = switch (...) {...} / $x = if (...) {...}
+			if isStatementKeyword(p.cur().Text) {
+				return p.parseStatement()
+			}
 			// 命令调用作为表达式（如 $x = Get-ChildItem、foreach 集合）
 			return &ast.PipelineExpr{Pipeline: p.parsePipeline()}
 		}

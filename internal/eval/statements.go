@@ -85,9 +85,16 @@ func (e *Evaluator) execStatement(n ast.Node) []*object.PSObject {
 }
 
 // execAssign 处理赋值（含 $env: 与复合赋值）。
+// 右侧若是语句节点（$x = switch ... 等），执行语句并把输出包成单个值。
 func (e *Evaluator) execAssign(a *ast.Assign) {
 	e.Session.LastSuccess = true
-	val := e.evalValue(a.Value)
+	var val *object.PSObject
+	switch a.Value.(type) {
+	case *ast.If, *ast.Switch, *ast.ForEach, *ast.While, *ast.DoWhile, *ast.For:
+		val = e.execStatementValue(a.Value)
+	default:
+		val = e.evalValue(a.Value)
+	}
 	if strings.HasPrefix(a.Target, "env:") {
 		if a.Op != "=" {
 			cur := os.Getenv(a.Target[len("env:"):])
@@ -103,6 +110,12 @@ func (e *Evaluator) execAssign(a *ast.Assign) {
 	if err := e.setVar(a.Target, a.Scope, val); err != nil {
 		e.writeError(err)
 	}
+}
+
+// execStatementValue 执行语句并把输出包成单个值（$x = switch ... 等场景）。
+func (e *Evaluator) execStatementValue(n ast.Node) *object.PSObject {
+	out := e.execStatement(n)
+	return wrapSingle(out)
 }
 
 func (e *Evaluator) execIf(v *ast.If) []*object.PSObject {

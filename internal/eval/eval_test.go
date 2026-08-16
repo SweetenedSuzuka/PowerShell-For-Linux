@@ -186,6 +186,20 @@ func TestSwitchArray(t *testing.T) {
 	wantStr(t, `switch -regex ("a1","b2","c3") { "a\d" { "A" } "\d" { "N" } }`, "A", "N", "N", "N")
 }
 
+// TestStatementAsExpression 验证语句可作赋值右侧（$x = switch / if / foreach ...）。
+func TestStatementAsExpression(t *testing.T) {
+	// switch 作表达式：数组逐元素输出
+	wantStr(t, "$swr = switch (1,2,3) { default { $_ } }; $swr -join ','", "1,2,3")
+	// switch 命中 case
+	wantStr(t, "$v = switch (5) { 5 { 'five' } default { 'other' } }; $v", "five")
+	// if 作表达式
+	wantStr(t, "$iv = if ($true) { 'yes' } else { 'no' }; $iv", "yes")
+	// foreach 作表达式
+	wantStr(t, "$fv = foreach ($i in 1..3) { $i * 2 }; $fv -join ','", "2,4,6")
+	// while 作表达式
+	wantStr(t, "$i = 0; $wv = while ($i -lt 3) { $i; $i++ }; $wv -join ','", "0,1,2")
+}
+
 func TestPipeline(t *testing.T) {
 	wantStr(t, "1..5 | Where-Object { $_ % 2 -eq 0 }", "2", "4")
 	wantStr(t, "3,1,2 | Sort-Object", "1", "2", "3")

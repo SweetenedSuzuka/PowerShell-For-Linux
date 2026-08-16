@@ -824,7 +824,7 @@ func caseSensitiveEq(l, r *object.PSObject) bool {
 // 左为数字则按数字，否则按字符串（"5" -clt "10" 是字典序，结果为 False）。
 func caseSensitiveOrder(l, r *object.PSObject) int {
 	switch l.TypeName {
-	case "Int", "Double":
+	case "Int", "Double", "Boolean":
 		if ln, ok := l.AsFloat(); ok {
 			if rn, ok2 := r.AsFloat(); ok2 {
 				if ln < rn {
@@ -863,7 +863,7 @@ func compareEq(l, r *object.PSObject) bool {
 // compareOrder 判断 -lt/-le/-gt/-ge 的顺序。对齐 PowerShell：右操作数按左操作数类型参与比较——左为数字则两边按数字（5 -lt "10" 为 True），左为字符串则两边按字符串（"5" -lt "10" 是字典序比较，结果为 False）。
 func compareOrder(l, r *object.PSObject) int {
 	switch l.TypeName {
-	case "Int", "Double":
+	case "Int", "Double", "Boolean":
 		if ln, ok := l.AsFloat(); ok {
 			if rn, ok2 := r.AsFloat(); ok2 {
 				if ln < rn {

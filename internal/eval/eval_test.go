@@ -222,6 +222,13 @@ func TestStringNumberComparison(t *testing.T) {
 	wantStr(t, `"5" -eq 5`, "True")
 	wantStr(t, `1 -eq 1.0`, "True")
 	wantStr(t, `$true -eq 1`, "True")
+	// 布尔-数字顺序：$true=1、$false=0 参与数字比较
+	wantStr(t, `$true -lt 2`, "True")
+	wantStr(t, `$false -lt 1`, "True")
+	wantStr(t, `$true -gt 1`, "False")
+	wantStr(t, `$true -ge 1`, "True")
+	wantStr(t, `$true -clt 2`, "True")
+	wantStr(t, `$false -clt 1`, "True")
 	// $null 只与 $null 相等
 	wantStr(t, `$null -eq $null`, "True")
 	wantStr(t, `$null -eq ""`, "False")

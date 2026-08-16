@@ -278,6 +278,8 @@ $results += T "-split 最大子串" (($sp -join "|") -eq "a|b,c")
 $zr = 5/0
 if (-not $?) { $zd = "err" } else { $zd = "ok" }
 $results += T "除零报错" (($zr -eq $null) -and ($zd -eq "err"))
+# 75. 布尔-数字顺序比较（$true=1、$false=0 参与数字比较）
+$results += T "布尔比较 -lt" (($true -lt 2) -and (-not ($true -gt 1)) -and ($false -lt 1))
 
 # == 结尾统计 ==
 Write-Output ""

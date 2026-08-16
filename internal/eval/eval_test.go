@@ -609,3 +609,45 @@ func TestSortObjectPositionalMultiProps(t *testing.T) {
 	// -Unique 按排序键去重
 	wantStr(t, "1,1,2,2 | Sort-Object -Unique", "1", "2")
 }
+
+// TestTrimNoArgs 验证 TrimStart/TrimEnd 无参清空白（有参按字符集裁剪行为不变）。
+func TestTrimNoArgs(t *testing.T) {
+	wantStr(t, `"  x  ".TrimStart()`, "x  ")
+	wantStr(t, `"  x  ".TrimEnd()`, "  x")
+	wantStr(t, `"  x  ".Trim()`, "x")
+	wantStr(t, `"007".TrimStart("0")`, "7")
+	wantStr(t, `"007".TrimEnd("7")`, "00")
+}
+
+// TestSplitNoArgs 验证 Split 无参按任意空白分割（含 tab/换行，连续空白合并），有参行为不变。
+func TestSplitNoArgs(t *testing.T) {
+	wantStr(t, "\"a\tb c\".Split()", "a", "b", "c")
+	wantStr(t, "\"a  b   c\".Split()", "a", "b", "c")
+	wantStr(t, `"a,b".Split(",")`, "a", "b")
+	wantStr(t, `"a,b,".Split(",")`, "a", "b", "")
+}
+
+// TestStringMethodFamily 验证字符串方法族：LastIndexOf/Remove/PadLeft/PadRight/Insert。
+func TestStringMethodFamily(t *testing.T) {
+	wantStr(t, `"abcabc".LastIndexOf("b")`, "4")
+	wantStr(t, `"abcabc".LastIndexOf("b", 2)`, "1")
+	wantStr(t, `"abc".LastIndexOf("x")`, "-1")
+	wantStr(t, `"abc".Remove(1)`, "a")
+	wantStr(t, `"abc".Remove(1, 1)`, "ac")
+	wantStr(t, `"7".PadLeft(3, "0")`, "007")
+	wantStr(t, `"7".PadLeft(3)`, "  7")
+	wantStr(t, `"7".PadRight(3, "0")`, "700")
+	wantStr(t, `"abc".Insert(1, "X")`, "aXbc")
+	wantStr(t, `"abc".Insert(3, "!")`, "abc!")
+}
+
+// TestDateTimeMethods 验证 DateTime 方法族：ToShortDateString/ToLongDateString/ToShortTimeString/ToLongTimeString/ToString/ToFileTime。
+func TestDateTimeMethods(t *testing.T) {
+	wantStr(t, `(Get-Date -Date "2020-01-15").ToShortDateString()`, "1/15/2020")
+	wantStr(t, `(Get-Date -Date "2020-01-15").ToLongDateString()`, "Wednesday, January 15, 2020")
+	wantStr(t, `(Get-Date -Date "2020-01-15 08:30:00").ToShortTimeString()`, "8:30 AM")
+	wantStr(t, `(Get-Date -Date "2020-01-15 08:30:00").ToLongTimeString()`, "8:30:00 AM")
+	wantStr(t, `(Get-Date -Date "2020-01-15").ToString()`, "1/15/2020 12:00:00 AM")
+	// ToFileTime：1601-01-01 起 100 纳秒刻度（与解析时区无关的绝对时间）
+	wantStr(t, `(Get-Date -Date "2020-01-15").ToFileTime()`, "132235200000000000")
+}

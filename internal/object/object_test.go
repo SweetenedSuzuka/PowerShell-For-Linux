@@ -1,6 +1,7 @@
 package object
 
 import (
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -180,5 +181,43 @@ func TestFormatOutputStrings(t *testing.T) {
 	}
 	if sb.String() != "a\nb\n" {
 		t.Errorf("字符串输出 = %q", sb.String())
+	}
+}
+
+// TestFileInfoVirtualProps 验证 FileInfo/DirectoryInfo 虚拟属性：Extension/BaseName/DirectoryName 从路径计算。
+func TestFileInfoVirtualProps(t *testing.T) {
+	fi, err := os.Stat("object.go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// 文件：Extension 含点、BaseName 去扩展名、DirectoryName 父目录
+	f := FileInfo("/some/dir/report.tar.gz", fi)
+	if v, ok := f.PropValue("Extension"); !ok || v.String() != ".gz" {
+		t.Errorf("文件 Extension = %v", v)
+	}
+	if v, ok := f.PropValue("BaseName"); !ok || v.String() != "report.tar" {
+		t.Errorf("文件 BaseName = %v", v)
+	}
+	if v, ok := f.PropValue("DirectoryName"); !ok || v.String() != "/some/dir" {
+		t.Errorf("文件 DirectoryName = %v", v)
+	}
+	// 无扩展名文件：Extension 空串、BaseName 原名
+	f2 := FileInfo("/tmp/README", fi)
+	if v, _ := f2.PropValue("Extension"); v.String() != "" {
+		t.Errorf("无扩展名 Extension = %q", v.String())
+	}
+	if v, _ := f2.PropValue("BaseName"); v.String() != "README" {
+		t.Errorf("无扩展名 BaseName = %q", v.String())
+	}
+	// 目录：Extension 恒空、BaseName 是目录名（不去扩展名）
+	d := DirInfo("/some/dir.v2/sub", fi)
+	if v, _ := d.PropValue("Extension"); v.String() != "" {
+		t.Errorf("目录 Extension = %q", v.String())
+	}
+	if v, _ := d.PropValue("BaseName"); v.String() != "sub" {
+		t.Errorf("目录 BaseName = %q", v.String())
+	}
+	if v, _ := d.PropValue("DirectoryName"); v.String() != "/some/dir.v2" {
+		t.Errorf("目录 DirectoryName = %q", v.String())
 	}
 }

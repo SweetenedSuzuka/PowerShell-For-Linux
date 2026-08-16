@@ -384,6 +384,26 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			return object.Bool(strings.HasSuffix(s, arg(0).String()))
 		case "indexof":
 			return object.Int(int64(strings.Index(s, arg(0).String())))
+		case "lastindexof":
+			// 一参为子串；两参为 子串,起始下标（.NET 搜索范围含起始下标，向左找）
+			if len(args) == 0 {
+				return object.Null()
+			}
+			sub := arg(0).String()
+			if len(args) >= 2 {
+				from, ok := arg(1).AsInt()
+				if !ok {
+					return object.Null()
+				}
+				if from < 0 {
+					return object.Int(-1)
+				}
+				if int(from) >= len(s) {
+					return object.Int(int64(strings.LastIndex(s, sub)))
+				}
+				return object.Int(int64(strings.LastIndex(s[:from+1], sub)))
+			}
+			return object.Int(int64(strings.LastIndex(s, sub)))
 		case "substring":
 			start, ok := arg(0).AsInt()
 			if !ok {
@@ -402,6 +422,78 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			return object.Str("")
 		case "replace":
 			return object.Str(strings.ReplaceAll(s, arg(0).String(), arg(1).String()))
+		case "remove":
+			// 一参从下标删到末尾；两参为 起始下标,删除长度（对齐 .NET Remove）
+			start, ok := arg(0).AsInt()
+			if !ok {
+				return object.Null()
+			}
+			if start < 0 {
+				return object.Null()
+			}
+			if len(args) >= 2 {
+				ln, lok := arg(1).AsInt()
+				if !lok || ln < 0 {
+					return object.Null()
+				}
+				if int(start) >= len(s) {
+					return object.Str(s)
+				}
+				end := start + ln
+				if end > int64(len(s)) {
+					end = int64(len(s))
+				}
+				return object.Str(s[:start] + s[end:])
+			}
+			if int(start) >= len(s) {
+				return object.Str(s)
+			}
+			return object.Str(s[:start])
+		case "padleft":
+			// 一参为总宽（空格补齐）；两参为 总宽,填充字符（只取首个字符，对齐 .NET char 参数）
+			total, ok := arg(0).AsInt()
+			if !ok || total < 0 {
+				return object.Null()
+			}
+			pad := " "
+			if len(args) >= 2 {
+				ps := arg(1).String()
+				if ps != "" {
+					pad = string([]rune(ps)[0])
+				}
+			}
+			if int(total) <= len([]rune(s)) {
+				return object.Str(s)
+			}
+			return object.Str(strings.Repeat(pad, int(total)-len([]rune(s))) + s)
+		case "padright":
+			// 同 PadLeft，右对齐方向相反（右侧补齐）
+			total, ok := arg(0).AsInt()
+			if !ok || total < 0 {
+				return object.Null()
+			}
+			pad := " "
+			if len(args) >= 2 {
+				ps := arg(1).String()
+				if ps != "" {
+					pad = string([]rune(ps)[0])
+				}
+			}
+			if int(total) <= len([]rune(s)) {
+				return object.Str(s)
+			}
+			return object.Str(s + strings.Repeat(pad, int(total)-len([]rune(s))))
+		case "insert":
+			// 在指定下标插入子串（对齐 .NET Insert）
+			pos, ok := arg(0).AsInt()
+			if !ok || pos < 0 {
+				return object.Null()
+			}
+			if int(pos) > len([]rune(s)) {
+				return object.Null()
+			}
+			r := []rune(s)
+			return object.Str(string(r[:pos]) + arg(1).String() + string(r[pos:]))
 		case "split":
 			// 无参按任意空白分割且合并连续空白（.NET Split() 无参语义，与 strings.Fields 一致）
 			if len(args) == 0 {

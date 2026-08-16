@@ -148,7 +148,18 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		return e.applyRedirects(cmd, out)
 	}
 	if isScriptPath(name) {
-		return e.applyRedirects(cmd, e.runScriptFile(name, input))
+		// 显式位置实参（如 .\s.ps1 1 2 3）优先作为脚本实参；
+		// 无显式实参时沿用管道输入（保持原有近似行为）
+		var args []*object.PSObject
+		for _, slot := range cmd.ArgOrder {
+			if slot.Kind == ast.ArgPositional {
+				args = append(args, e.evalValue(cmd.Positional[slot.Index]))
+			}
+		}
+		if len(args) == 0 && len(input) > 0 {
+			args = input
+		}
+		return e.applyRedirects(cmd, e.runScriptFile(name, args))
 	}
 	return e.runExternal(cmd, input, isLast)
 }
@@ -467,8 +478,16 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 	}()
 	e.inCapture++
 	defer func() { e.inCapture-- }()
+	stmts := res.List.Statements
+	// param() 块：脚本开头的参数声明，按实参绑定后从语句里剔除
+	if len(stmts) > 0 {
+		if pb, ok := stmts[0].(*ast.ParamBlock); ok {
+			e.bindScriptParams(pb.Params, args)
+			stmts = stmts[1:]
+		}
+	}
 	var all []*object.PSObject
-	for _, st := range res.List.Statements {
+	for _, st := range stmts {
 		objs := e.EvalStatement(st)
 		all = append(all, objs...)
 		if emit != nil {
@@ -479,6 +498,25 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 		}
 	}
 	return all
+}
+
+// bindScriptParams 按 param() 声明把脚本实参绑到当前作用域（脚本不推独立作用域，
+// 变量可见性等价调用点：控制台调用留在会话，函数内调用随函数销毁）。
+// 位置实参依次落位，缺的用默认值或 $null，剩余实参保留在 $args。
+func (e *Evaluator) bindScriptParams(params []ast.FunctionParam, args []*object.PSObject) {
+	sc := e.scopes[len(e.scopes)-1]
+	bound := 0
+	for _, p := range params {
+		if bound < len(args) {
+			sc[p.Name] = args[bound]
+			bound++
+		} else if p.Default != nil {
+			sc[p.Name] = e.evalValue(p.Default)
+		} else {
+			sc[p.Name] = object.Null()
+		}
+	}
+	e.Session.Args = args[bound:]
 }
 
 // runScriptFile 作为命令调用脚本（.\foo.ps1）。

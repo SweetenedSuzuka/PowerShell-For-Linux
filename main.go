@@ -55,9 +55,13 @@ func run(args []string) int {
 		return 0
 	}
 
-	// -File 脚本
+	// -File 脚本（-File 后的剩余位置参数作为脚本实参，供 param() 与 $args 使用）
 	if *file != "" {
-		ev.RunScriptFileStreaming(*file, nil, func(objs []*object.PSObject) {
+		var scriptArgs []*object.PSObject
+		for _, a := range fs.Args() {
+			scriptArgs = append(scriptArgs, object.Str(a))
+		}
+		ev.RunScriptFileStreaming(*file, scriptArgs, func(objs []*object.PSObject) {
 			_ = object.FormatOutput(os.Stdout, objs)
 		})
 		return exitCode(ev, sess)

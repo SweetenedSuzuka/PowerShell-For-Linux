@@ -236,6 +236,48 @@ Add 5 10
 	wantStr(t, src, "6", "15")
 }
 
+// TestParamBlock 验证函数 param() 声明块（默认值、多余实参进 $args、旧括号语法共存）。
+func TestParamBlock(t *testing.T) {
+	// param() 块形式
+	wantStr(t, "function Fp { param($x) $x * 2 }; Fp 21", "42")
+	// 默认值
+	wantStr(t, "function Fd { param($x, $y = 100) $x + $y }; Fd 5; Fd 5 7", "105", "12")
+	// 多余实参进 $args
+	wantStr(t, `function Fa { param($x) "x=$x rest=$args" }; Fa 1 2 3`, "x=1 rest=2 3")
+	// 旧括号语法仍可用
+	wantStr(t, "function Old($a, $b) { $a + $b }; Old 1 2", "3")
+	// 顶层 param() 不是脚本/函数开头时执行报错（无输出）
+	wantStr(t, "param($z)")
+}
+
+// TestScriptParam 验证脚本 param() 声明块（显式实参、默认值、剩余实参进 $args）。
+func TestScriptParam(t *testing.T) {
+	dir := t.TempDir()
+	scriptPath := filepath.Join(dir, "s.ps1")
+	content := "param($a, $b = 10)\n\"a=$a b=$b args=$args\""
+	if err := os.WriteFile(scriptPath, []byte(content), 0644); err != nil {
+		t.Fatal(err)
+	}
+	sess := shell.New(shell.StyleCore, io.Discard, io.Discard, strings.NewReader(""))
+	ev := New(sess, strings.NewReader(""), io.Discard, io.Discard)
+
+	// 显式实参按位置绑定
+	out := ev.RunScriptFile(scriptPath, []*object.PSObject{object.Int(5), object.Int(6)})
+	if got := strs(out); len(got) != 1 || got[0] != "a=5 b=6 args=" {
+		t.Fatalf("显式实参 → %v", got)
+	}
+	// 缺参用默认值
+	out = ev.RunScriptFile(scriptPath, nil)
+	if got := strs(out); len(got) != 1 || got[0] != "a= b=10 args=" {
+		t.Fatalf("默认值 → %v", got)
+	}
+	// 多余实参保留在 $args
+	out = ev.RunScriptFile(scriptPath, []*object.PSObject{object.Int(1), object.Int(2), object.Int(3)})
+	if got := strs(out); len(got) != 1 || got[0] != "a=1 b=2 args=3" {
+		t.Fatalf("剩余实参 → %v", got)
+	}
+}
+
 func TestHashtableAndSubexpr(t *testing.T) {
 	wantStr(t, "$h = @{ Name = 'x'; Count = 2 }; $h.Count", "2")
 	wantStr(t, "$(1 + 2)", "3")

@@ -157,6 +157,11 @@ type FunctionParam struct {
 	Default Node
 }
 
+// ParamBlock 是 param(...) 参数声明块，只能出现在脚本或函数体开头。
+type ParamBlock struct {
+	Params []FunctionParam
+}
+
 // FunctionDef 是 function / filter 定义。
 type FunctionDef struct {
 	Name   string

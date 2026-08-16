@@ -152,6 +152,14 @@ func (p *Parser) isStatementEnd(t lexer.Token) bool {
 // parseStatementList 解析一串语句，直到 EOF 或闭合字符 term（0 表示顶层）。
 func (p *Parser) parseStatementList(term byte) *ast.StatementList {
 	list := &ast.StatementList{}
+	// 块/脚本开头的 param() 声明块：它是块的头部而非普通语句，
+	// 先行解析，不受语句终止符检查约束（param($x) 后可直接跟语句）。
+	if p.cur().Type == TkWord && strings.EqualFold(p.cur().Text, "param") {
+		nt := p.peekAt(1)
+		if nt.Type == TkPunct && nt.Text == "(" {
+			list.Statements = append(list.Statements, p.parseParamBlock())
+		}
+	}
 	for {
 		p.skipNewlinesAndSemicolons()
 		t := p.cur()
@@ -229,6 +237,8 @@ func (p *Parser) parseStatement() ast.Node {
 			return p.parseFunction(false)
 		case strings.EqualFold(t.Text, "filter"):
 			return p.parseFunction(true)
+		case strings.EqualFold(t.Text, "param"):
+			return p.parseParamBlock()
 		case strings.EqualFold(t.Text, "break"):
 			p.advance()
 			return &ast.Break{}
@@ -479,40 +489,67 @@ func (p *Parser) parseSwitch() ast.Node {
 	return node
 }
 
+// parseParamList 解析参数列表（param(...) 块与 function f(...) 括号形式共用）。
+// 进入时当前位置已越过 '('；'$名' 后可选 '= 默认值'，逗号分隔。
+func (p *Parser) parseParamList() []ast.FunctionParam {
+	var params []ast.FunctionParam
+	for {
+		p.skipNewlinesAndSemicolons()
+		t := p.cur()
+		if t.Type == TkPunct && t.Text == ")" {
+			p.advance()
+			break
+		}
+		if t.Type == TkEOF {
+			p.incomplete = true
+			break
+		}
+		if t.Type != TkVariable && t.Type != TkBraceVar {
+			p.fail("函数参数应为 $变量名")
+			break
+		}
+		param := ast.FunctionParam{Name: t.Text}
+		p.advance()
+		if p.cur().Type == TkOp && p.cur().Text == "=" {
+			p.advance()
+			param.Default = p.parseExpression(false)
+		}
+		params = append(params, param)
+		if p.cur().Type == TkPunct && p.cur().Text == "," {
+			p.advance()
+		}
+	}
+	return params
+}
+
+// parseParamBlock 解析 param(...) 参数声明块。
+func (p *Parser) parseParamBlock() ast.Node {
+	p.advance() // param
+	if p.cur().Type != TkPunct || p.cur().Text != "(" {
+		p.fail("param 需要参数列表 (...) ")
+		return &ast.ParamBlock{}
+	}
+	p.advance() // (
+	params := p.parseParamList()
+	return &ast.ParamBlock{Params: params}
+}
+
 func (p *Parser) parseFunction(filter bool) ast.Node {
 	p.advance() // function / filter
 	name := p.expectWord("函数名")
 	fn := &ast.FunctionDef{Name: name, Filter: filter}
 	if p.cur().Type == TkPunct && p.cur().Text == "(" {
 		p.advance()
-		for {
-			p.skipNewlinesAndSemicolons()
-			t := p.cur()
-			if t.Type == TkPunct && t.Text == ")" {
-				p.advance()
-				break
-			}
-			if t.Type == TkEOF {
-				p.incomplete = true
-				break
-			}
-			if t.Type != TkVariable && t.Type != TkBraceVar {
-				p.fail("函数参数应为 $变量名")
-				break
-			}
-			param := ast.FunctionParam{Name: t.Text}
-			p.advance()
-			if p.cur().Type == TkOp && p.cur().Text == "=" {
-				p.advance()
-				param.Default = p.parseExpression(false)
-			}
-			fn.Params = append(fn.Params, param)
-			if p.cur().Type == TkPunct && p.cur().Text == "," {
-				p.advance()
-			}
-		}
+		fn.Params = p.parseParamList()
 	}
 	fn.Body = p.parseBlock()
+	// param() 块：函数体开头的参数声明，提取进 Params 并从体里剔除
+	if fn.Body != nil && len(fn.Body.Body.Statements) > 0 {
+		if pb, ok := fn.Body.Body.Statements[0].(*ast.ParamBlock); ok {
+			fn.Params = append(fn.Params, pb.Params...)
+			fn.Body.Body.Statements = fn.Body.Body.Statements[1:]
+		}
+	}
 	return fn
 }
 

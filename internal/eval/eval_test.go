@@ -137,6 +137,26 @@ func TestVariablesAndScope(t *testing.T) {
 	wantStr(t, "$env:DUMMY_VAR_XYZ", "")
 }
 
+// TestScopeModifiers 验证 $script:/$global:/$local: 作用域修饰符（读写、复合、增量、插值）。
+func TestScopeModifiers(t *testing.T) {
+	// $script: 写回：函数内改脚本作用域变量
+	wantStr(t, "$sf = 0; function Set { $script:sf = 5 }; Set; $sf", "5")
+	// $script: 读：函数内读脚本作用域变量
+	wantStr(t, "$sf = 7; function Get { $script:sf }; Get", "7")
+	// $global: 写：函数内写全局变量
+	wantStr(t, "$gg = 0; function SetG { $global:gg = 9 }; SetG; $gg", "9")
+	// $local: 只读写当前作用域，不落到外层
+	wantStr(t, "$lv = 1; function L { $local:lv = 2; $lv }; L; $lv", "2", "1")
+	// $script: 复合赋值
+	wantStr(t, "$sf = 3; function A { $script:sf += 2 }; A; $sf", "5")
+	// $script: 增量
+	wantStr(t, "$sf = 1; function I { $script:sf++ }; I; $sf", "2")
+	// 字符串插值里的 $script:
+	wantStr(t, `$sf = 8; function S { "v=$script:sf" }; S`, "v=8")
+	// ${} 括号形式
+	wantStr(t, "$sf = 6; function B { ${script:sf} = 6 }; B; $sf", "6")
+}
+
 func TestControlFlow(t *testing.T) {
 	wantStr(t, "if (5 -gt 3) { 'big' } else { 'small' }", "big")
 	wantStr(t, "foreach ($i in 1..3) { $i }", "1", "2", "3")

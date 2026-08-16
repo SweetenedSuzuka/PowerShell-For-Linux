@@ -97,10 +97,10 @@ func (e *Evaluator) execAssign(a *ast.Assign) {
 		return
 	}
 	if a.Op != "=" {
-		cur := e.lookupVar(a.Target)
+		cur := e.lookupVar(a.Target, a.Scope)
 		val = e.binaryOp(a.Op[:len(a.Op)-1], cur, val)
 	}
-	if err := e.setVar(a.Target, val); err != nil {
+	if err := e.setVar(a.Target, a.Scope, val); err != nil {
 		e.writeError(err)
 	}
 }

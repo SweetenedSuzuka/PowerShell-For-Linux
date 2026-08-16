@@ -109,10 +109,25 @@ func (e *Evaluator) popScope() {
 	}
 }
 
-func (e *Evaluator) lookupVar(name string) *object.PSObject {
-	for i := len(e.scopes) - 1; i >= 0; i-- {
-		if v, ok := e.scopes[i][name]; ok {
+// lookupVar 按名字与作用域修饰符查变量。
+// scope 为空：自顶向下查（PowerShell 默认读语义）；"script"/"global"：只查全局（scopes[0]，
+// 即脚本作用域，本解释器脚本不推独立作用域）；"local"：只查当前（栈顶）作用域。
+func (e *Evaluator) lookupVar(name, scope string) *object.PSObject {
+	switch scope {
+	case "script", "global":
+		if v, ok := e.scopes[0][name]; ok {
 			return v
+		}
+	case "local":
+		if v, ok := e.scopes[len(e.scopes)-1][name]; ok {
+			return v
+		}
+		return object.Null()
+	default:
+		for i := len(e.scopes) - 1; i >= 0; i-- {
+			if v, ok := e.scopes[i][name]; ok {
+				return v
+			}
 		}
 	}
 	if v, ok := e.Session.GetVar(name); ok {
@@ -121,11 +136,16 @@ func (e *Evaluator) lookupVar(name string) *object.PSObject {
 	return object.Null()
 }
 
-func (e *Evaluator) setVar(name string, val *object.PSObject) error {
+// setVar 按作用域修饰符写变量：script/global 写全局（scopes[0]），local 与默认写当前（栈顶）。
+func (e *Evaluator) setVar(name, scope string, val *object.PSObject) error {
 	if shell.IsReadOnlyVar(name) {
 		return fmt.Errorf("无法对只读变量 $%s 赋值。", name)
 	}
-	e.scopes[len(e.scopes)-1][name] = val
+	if scope == "script" || scope == "global" {
+		e.scopes[0][name] = val
+	} else {
+		e.scopes[len(e.scopes)-1][name] = val
+	}
 	return nil
 }
 
@@ -162,7 +182,7 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 	case *ast.NullLit:
 		return object.Null()
 	case *ast.VarRef:
-		return e.lookupVar(v.Name)
+		return e.lookupVar(v.Name, v.Scope)
 	case *ast.EnvRef:
 		return object.Str(os.Getenv(v.Name))
 	case *ast.BareWord:
@@ -221,14 +241,14 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		}
 		return wrapSingle(out)
 	case *ast.Increment:
-		cur := e.lookupVar(v.Var)
+		cur := e.lookupVar(v.Var, v.Scope)
 		n, _ := cur.AsInt()
 		if v.Op == "++" {
 			n++
 		} else {
 			n--
 		}
-		_ = e.setVar(v.Var, object.Int(n))
+		_ = e.setVar(v.Var, v.Scope, object.Int(n))
 		return object.Int(n)
 	case *ast.PipelineExpr:
 		out := e.evalPipeline(v.Pipeline)

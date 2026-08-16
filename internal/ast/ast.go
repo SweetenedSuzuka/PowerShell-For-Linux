@@ -75,9 +75,10 @@ type Command struct {
 	RawParts   []string  // 各 token 原始文本（外部命令重建备用）
 }
 
-// Assign 是赋值：$x = 5、$env:X = "y"、$x += 1。
+// Assign 是赋值：$x = 5、$env:X = "y"、$x += 1、$script:x = 1。
 type Assign struct {
 	Target string // 变量名，可为 "env:Name" 或 "$x"（去掉 $ 与 ${}）
+	Scope  string // 作用域修饰符："" / "script" / "global" / "local"（$env: 单独走 Target）
 	Op     string // =、+=、-=、*=、/=、%=
 	Value  Node
 }
@@ -178,7 +179,10 @@ type StrLit struct{ Value string }
 type StrTemplate struct{ Parts []Node }
 
 // VarRef 是变量引用（$x / ${x}）。
-type VarRef struct{ Name string }
+type VarRef struct {
+	Name  string
+	Scope string // 作用域修饰符："" / "script" / "global" / "local"
+}
 
 // EnvRef 是环境变量引用（$env:Name）。
 type EnvRef struct{ Name string }
@@ -216,10 +220,11 @@ type Unary struct {
 	Operand Node
 }
 
-// Increment 是增量/减量运算符（$i++ / $i--）。
+// Increment 是增量/减量运算符（$i++ / $i-- / $script:i++）。
 type Increment struct {
-	Var string
-	Op  string // ++ 或 --
+	Var   string
+	Scope string // 作用域修饰符："" / "script" / "global" / "local"
+	Op    string // ++ 或 --
 }
 
 // Binary 是二元运算：算术、比较、逻辑。

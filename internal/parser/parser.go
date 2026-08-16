@@ -287,7 +287,8 @@ func (p *Parser) parseAssign() *ast.Assign {
 	}
 	p.advance()
 	value := p.parseExpression(false)
-	return &ast.Assign{Target: target, Op: opTok.Text, Value: value}
+	scope, name := splitScopeName(target)
+	return &ast.Assign{Target: name, Scope: scope, Op: opTok.Text, Value: value}
 }
 
 func (p *Parser) parseBlock() *ast.Block {
@@ -965,7 +966,7 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 		if t.Type == TkOp && (t.Text == "++" || t.Text == "--") {
 			if vr, ok := e.(*ast.VarRef); ok {
 				p.advance()
-				return &ast.Increment{Var: vr.Name, Op: t.Text}
+				return &ast.Increment{Var: vr.Name, Scope: vr.Scope, Op: t.Text}
 			}
 			p.fail("增量/减量运算符只能用于变量")
 			break
@@ -997,7 +998,8 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 		if strings.HasPrefix(t.Text, "env:") {
 			return &ast.EnvRef{Name: t.Text[len("env:"):]}
 		}
-		return &ast.VarRef{Name: t.Text}
+		scope, name := splitScopeName(t.Text)
+		return &ast.VarRef{Name: name, Scope: scope}
 	case TkWord:
 		if argMode && p.canMergeBareword() {
 			return p.mergeBareword()
@@ -1110,6 +1112,21 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 	return &ast.BareWord{Value: ""}
 }
 
+// splitScopeName 把 $script:x 这类带作用域修饰符的名字拆成 (作用域, 名字)。
+// 只认 script/global/local；env: 由 EnvRef 单独处理，其余含冒号名字按原样返回。
+func splitScopeName(text string) (string, string) {
+	idx := strings.Index(text, ":")
+	if idx <= 0 {
+		return "", text
+	}
+	scope := strings.ToLower(text[:idx])
+	switch scope {
+	case "script", "global", "local":
+		return scope, text[idx+1:]
+	}
+	return "", text
+}
+
 func (p *Parser) parseVariable(t lexer.Token) ast.Node {
 	// $() 子表达式
 	if t.Text == "" {
@@ -1136,7 +1153,8 @@ func (p *Parser) parseVariable(t lexer.Token) ast.Node {
 	if strings.HasPrefix(t.Text, "env:") {
 		return &ast.EnvRef{Name: t.Text[len("env:"):]}
 	}
-	return &ast.VarRef{Name: t.Text}
+	scope, name := splitScopeName(t.Text)
+	return &ast.VarRef{Name: name, Scope: scope}
 }
 
 func (p *Parser) parseScriptBlockExpr() ast.Node {
@@ -1195,14 +1213,16 @@ func (p *Parser) stringFromParts(parts []lexer.StringPart) ast.Node {
 		case lexer.PartLit:
 			nodes = append(nodes, &ast.StrLit{Value: part.Text})
 		case lexer.PartVar:
-			nodes = append(nodes, &ast.VarRef{Name: part.Text})
+			scope, name := splitScopeName(part.Text)
+			nodes = append(nodes, &ast.VarRef{Name: name, Scope: scope})
 		case lexer.PartEnvVar:
 			nodes = append(nodes, &ast.EnvRef{Name: part.Text})
 		case lexer.PartBraceVar:
 			if strings.HasPrefix(part.Text, "env:") {
 				nodes = append(nodes, &ast.EnvRef{Name: part.Text[len("env:"):]})
 			} else {
-				nodes = append(nodes, &ast.VarRef{Name: part.Text})
+				scope, name := splitScopeName(part.Text)
+				nodes = append(nodes, &ast.VarRef{Name: name, Scope: scope})
 			}
 		case lexer.PartSubexpr:
 			sub := Parse(part.Text)

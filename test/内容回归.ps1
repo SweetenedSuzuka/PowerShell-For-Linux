@@ -6,7 +6,6 @@
 
 $results = @()
 # T 断言：返回 PASS/FAIL 字符串，顶层收集后统一打印与统计。
-# 不用 $script: 计数（作用域修饰符未实现，见《已知缺陷.ps1》）。
 function T($name, $cond) { if ($cond) { "PASS  $name" } else { "FAIL  $name" } }
 
 # 工作目录：清空重建，保证可重复运行
@@ -225,6 +224,26 @@ $results += T "Get-Content 单文件" (($gp -join ",") -eq "p1")
 # 61. Select-Object 无管道位置当数据（回归）
 $so2 = Select-Object x y
 $results += T "Select-Object 无管道回归" (($so2 -join ",") -eq "x,y")
+
+Write-Output "== 语言结构（作用域/迭代/参数/异常） =="
+
+# 62. try/catch 捕获
+$tc = "未执行"
+try { throw "boom" } catch { $tc = "已捕获" }
+$results += T "try/catch 捕获" (($tc -eq "已捕获"))
+# 63. param() 块（函数）
+function Fp { param($x) $x * 2 }
+$pv = $null
+$pv = Fp 21 2>$null
+$results += T "param() 块" (($pv -eq 42))
+# 64. switch 对数组迭代
+$swr = switch (1,2,3) { default { $_ } }
+$results += T "switch 数组迭代" (($swr -join ",") -eq "1,2,3")
+# 65. $script: 作用域写回（函数内改脚本作用域变量）
+$sf = 0
+function SetSF { $script:sf = 5 }
+SetSF
+$results += T '$script: 作用域写回' (($sf -eq 5))
 
 # == 结尾统计 ==
 Write-Output ""

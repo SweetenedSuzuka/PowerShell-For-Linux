@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
 	"powershell/internal/ast"
 	"powershell/internal/builtin"
@@ -364,8 +365,16 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 		case "trim":
 			return object.Str(strings.TrimSpace(s))
 		case "trimstart":
+			// 无参清前导空白（PowerShell 语义）；有参按字符集裁剪
+			if len(args) == 0 {
+				return object.Str(strings.TrimLeftFunc(s, unicode.IsSpace))
+			}
 			return object.Str(strings.TrimLeft(s, arg(0).String()))
 		case "trimend":
+			// 无参清尾随空白；有参按字符集裁剪
+			if len(args) == 0 {
+				return object.Str(strings.TrimRightFunc(s, unicode.IsSpace))
+			}
 			return object.Str(strings.TrimRight(s, arg(0).String()))
 		case "contains":
 			return object.Bool(strings.Contains(s, arg(0).String()))

@@ -100,16 +100,21 @@ func cmdConvertFromCsv(c *Context) ([]*object.PSObject, error) {
 
 func cmdConvertToJson(c *Context) ([]*object.PSObject, error) {
 	items := inputItems(c)
+	// -Depth 限制嵌套展开深度（默认 2，对齐 PowerShell）
+	depth := 2
+	if d, ok := c.Args.Int("Depth"); ok && d >= 0 {
+		depth = int(d)
+	}
 	// 单对象原样；多对象成数组
 	var buf bytes.Buffer
 	if len(items) == 1 {
-		writeJSON(&buf, items[0], 0)
+		writeJSON(&buf, items[0], 0, depth)
 	} else {
 		buf.WriteByte('[')
 		for i, it := range items {
 			buf.WriteByte('\n')
 			buf.WriteString(strings.Repeat("  ", 1))
-			writeJSON(&buf, it, 1)
+			writeJSON(&buf, it, 1, depth)
 			if i < len(items)-1 {
 				buf.WriteByte(',')
 			}
@@ -123,12 +128,17 @@ func cmdConvertToJson(c *Context) ([]*object.PSObject, error) {
 }
 
 // writeJSON 把 PSObject 序列化为美化 JSON（2 空格缩进），保持对象/哈希表的键序。
-func writeJSON(buf *bytes.Buffer, o *object.PSObject, indent int) {
+// remaining 为剩余可展开深度；到 0 时数组/对象不再展开（对齐 PowerShell 的 -Depth 截断）。
+func writeJSON(buf *bytes.Buffer, o *object.PSObject, indent, remaining int) {
 	if o == nil || o.IsNull() {
 		buf.WriteString("null")
 		return
 	}
 	if o.IsArray() {
+		if remaining <= 0 {
+			buf.WriteString("[]")
+			return
+		}
 		items := o.ArrayItems()
 		if len(items) == 0 {
 			buf.WriteString("[]")
@@ -137,7 +147,7 @@ func writeJSON(buf *bytes.Buffer, o *object.PSObject, indent int) {
 		buf.WriteString("[\n")
 		for i, it := range items {
 			buf.WriteString(strings.Repeat("  ", indent+1))
-			writeJSON(buf, it, indent+1)
+			writeJSON(buf, it, indent+1, remaining-1)
 			if i < len(items)-1 {
 				buf.WriteByte(',')
 			}
@@ -149,7 +159,7 @@ func writeJSON(buf *bytes.Buffer, o *object.PSObject, indent int) {
 	}
 	if o.TypeName == "Hashtable" {
 		if entries, ok := o.Value.([]object.HashEntry); ok {
-			if len(entries) == 0 {
+			if remaining <= 0 || len(entries) == 0 {
 				buf.WriteString("{}")
 				return
 			}
@@ -158,7 +168,7 @@ func writeJSON(buf *bytes.Buffer, o *object.PSObject, indent int) {
 				buf.WriteString(strings.Repeat("  ", indent+1))
 				writeJSONString(buf, en.Key)
 				buf.WriteString(": ")
-				writeJSON(buf, en.Value, indent+1)
+				writeJSON(buf, en.Value, indent+1, remaining-1)
 				if i < len(entries)-1 {
 					buf.WriteByte(',')
 				}
@@ -170,12 +180,16 @@ func writeJSON(buf *bytes.Buffer, o *object.PSObject, indent int) {
 		}
 	}
 	if len(o.Props) > 0 {
+		if remaining <= 0 {
+			buf.WriteString("{}")
+			return
+		}
 		buf.WriteString("{\n")
 		for i, p := range o.Props {
 			buf.WriteString(strings.Repeat("  ", indent+1))
 			writeJSONString(buf, p.Name)
 			buf.WriteString(": ")
-			writeJSON(buf, object.ToPS(p.Value), indent+1)
+			writeJSON(buf, object.ToPS(p.Value), indent+1, remaining-1)
 			if i < len(o.Props)-1 {
 				buf.WriteByte(',')
 			}

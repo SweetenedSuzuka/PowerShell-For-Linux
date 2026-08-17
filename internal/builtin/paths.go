@@ -27,13 +27,31 @@ func cmdTestPath(c *Context) ([]*object.PSObject, error) {
 	if len(paths) == 0 {
 		return []*object.PSObject{object.Bool(false)}, nil
 	}
+	// -PathType 过滤：Leaf 只认文件、Container 只认目录、Any/缺省不限制
+	pt, _ := c.Args.Str("PathType")
+	typeMatch := func(p string) bool {
+		if pt == "" || strings.EqualFold(pt, "Any") {
+			return true
+		}
+		st, err := os.Stat(p)
+		if err != nil {
+			return false
+		}
+		if strings.EqualFold(pt, "Leaf") {
+			return !st.IsDir()
+		}
+		if strings.EqualFold(pt, "Container") {
+			return st.IsDir()
+		}
+		return true
+	}
 	for _, path := range paths {
 		expanded, derr := expandWildcard(c, path)
 		if derr != nil {
 			return errf(c, "%v", derr)
 		}
 		for _, p := range expanded {
-			if _, err := os.Stat(p); err == nil {
+			if _, err := os.Stat(p); err == nil && typeMatch(p) {
 				return []*object.PSObject{object.Bool(true)}, nil
 			}
 		}

@@ -387,6 +387,26 @@ func cmdGetMember(c *Context) ([]*object.PSObject, error) {
 	return out, nil
 }
 
+// cmdNewObject 构造对象：目前支持 PSObject/PSCustomObject（-Property 哈希表变属性）。
+func cmdNewObject(c *Context) ([]*object.PSObject, error) {
+	tn, _ := c.Args.Str("TypeName")
+	if tn == "" {
+		return nil, nil
+	}
+	switch strings.ToLower(tn) {
+	case "psobject", "pscustomobject":
+		var entries []object.HashEntry
+		if p := c.Args.Get("Property"); p != nil && p.TypeName == "Hashtable" {
+			if es, ok := p.Value.([]object.HashEntry); ok {
+				entries = es
+			}
+		}
+		return []*object.PSObject{object.PSCustomObject(entries)}, nil
+	default:
+		return errf(c, "New-Object : 不支持的类型 %s。", tn)
+	}
+}
+
 // ---- 注册 ----
 
 func init() {
@@ -429,4 +449,8 @@ func init() {
 		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "MemberType", Type: "string"},
 	}, cmdGetMember)
+	Register("New-Object", []ParamSpec{
+		{Name: "TypeName", Position: 0, PositionSet: true, Type: "string"},
+		{Name: "Property", Type: "hashtable"},
+	}, cmdNewObject)
 }

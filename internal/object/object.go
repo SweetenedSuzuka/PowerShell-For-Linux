@@ -68,6 +68,15 @@ func Hashtable(entries []HashEntry) *PSObject {
 	return &PSObject{TypeName: "Hashtable", Value: entries}
 }
 
+// PSCustomObject 创建自定义对象：哈希表条目按顺序变成属性（[pscustomobject] 与 New-Object 共用）。
+func PSCustomObject(entries []HashEntry) *PSObject {
+	o := &PSObject{TypeName: "System.Management.Automation.PSCustomObject"}
+	for _, en := range entries {
+		o.AddProp(en.Key, en.Value)
+	}
+	return o
+}
+
 // DateTime 创建时间对象。
 func DateTime(t time.Time) *PSObject {
 	return &PSObject{TypeName: "DateTime", Value: t}

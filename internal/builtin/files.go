@@ -244,7 +244,8 @@ func cmdSetContent(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
-	if err := os.WriteFile(full, []byte(sb.String()), 0o644); err != nil {
+	enc, _ := c.Args.Str("Encoding")
+	if err := os.WriteFile(full, encodeText(enc, sb.String(), true), 0o644); err != nil {
 		return errf(c, "Set-Content : 无法写入 %s。", path)
 	}
 	return nil, nil

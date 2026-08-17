@@ -67,7 +67,9 @@ func cmdOutFile(c *Context) ([]*object.PSObject, error) {
 		return errf(c, "Out-File : 无法写入 %s。", path)
 	}
 	defer f.Close()
-	_, _ = f.WriteString(buf.String())
+	enc, _ := c.Args.Str("Encoding")
+	// 追加模式不写 BOM，避免重复追加时多次写文件头
+	_, _ = f.Write(encodeText(enc, buf.String(), !appendMode))
 	return nil, nil
 }
 

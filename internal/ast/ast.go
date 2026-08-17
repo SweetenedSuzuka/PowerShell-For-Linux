@@ -234,6 +234,12 @@ type HashPair struct {
 // HashtableLit 是哈希表字面量 @{ k = v; ... }。
 type HashtableLit struct{ Pairs []HashPair }
 
+// TypeCast 是类型字面量：[pscustomobject]@{...} 构造自定义对象。
+type TypeCast struct {
+	TypeName string
+	Expr     Node
+}
+
 // Paren 是括号表达式。
 type Paren struct{ Inner Node }
 

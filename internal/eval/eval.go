@@ -240,6 +240,15 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 			})
 		}
 		return object.Hashtable(entries)
+	case *ast.TypeCast:
+		// [pscustomobject]@{...}：哈希表条目变属性
+		expr := e.evalValue(v.Expr)
+		if strings.EqualFold(v.TypeName, "pscustomobject") {
+			if entries, ok := expr.Value.([]object.HashEntry); ok {
+				return object.PSCustomObject(entries)
+			}
+		}
+		return expr
 	case *ast.MemberAccess:
 		base := e.evalValue(v.Base)
 		return e.memberProp(base, v.Prop)

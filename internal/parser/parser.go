@@ -1216,8 +1216,29 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 			item := p.parseExpression(false)
 			return &ast.ArrayLit{Items: []ast.Node{item}}
 		case "[":
-			p.fail("不支持类型字面量 [...]")
+			// 类型字面量：目前只支持 [pscustomobject]@{...} 构造自定义对象
+			p.advance() // [
+			name := p.cur()
+			if name.Type != TkWord {
+				p.fail("类型字面量需要类型名")
+				p.advance()
+				return &ast.BareWord{Value: ""}
+			}
 			p.advance()
+			if !(p.cur().Type == TkPunct && p.cur().Text == "]") {
+				p.fail("类型字面量需要 ']'")
+				return &ast.BareWord{Value: ""}
+			}
+			p.advance()
+			if strings.EqualFold(name.Text, "pscustomobject") {
+				if p.cur().Type == TkPunct && p.cur().Text == "@" {
+					p.advance() // @
+					return &ast.TypeCast{TypeName: name.Text, Expr: p.parseHashtable()}
+				}
+				p.fail("[pscustomobject] 需要后跟 @{...}")
+				return &ast.BareWord{Value: ""}
+			}
+			p.fail("不支持类型字面量 [...]")
 			return &ast.BareWord{Value: ""}
 		}
 	}

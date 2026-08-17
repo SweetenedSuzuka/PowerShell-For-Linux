@@ -651,3 +651,44 @@ func TestDateTimeMethods(t *testing.T) {
 	// ToFileTime：1601-01-01 起 100 纳秒刻度（与解析时区无关的绝对时间）
 	wantStr(t, `(Get-Date -Date "2020-01-15").ToFileTime()`, "132235200000000000")
 }
+
+// TestPSCustomObjectLiteral 验证 [pscustomobject]@{...} 构造自定义对象（条目变属性）。
+func TestPSCustomObjectLiteral(t *testing.T) {
+	wantStr(t, `$p = [pscustomobject]@{a = 1; b = "x"}; $p.a`, "1")
+	wantStr(t, `$p = [pscustomobject]@{a = 1; b = "x"}; $p.b`, "x")
+	wantStr(t, `$p = [pscustomobject]@{n = 5}; $p.n`, "5")
+}
+
+// TestNewObject 验证 New-Object PSObject/PSCustomObject 与 -Property 哈希表。
+func TestNewObject(t *testing.T) {
+	wantStr(t, `$o = New-Object PSObject -Property @{a = 1; b = "x"}; $o.a`, "1")
+	wantStr(t, `$o = New-Object PSObject -Property @{a = 1; b = "x"}; $o.b`, "x")
+	wantStr(t, `$o = New-Object pscustomobject -Property @{k = "v"}; $o.k`, "v")
+}
+
+// TestTestPathType 验证 Test-Path -PathType 按类型过滤（Leaf 文件 / Container 目录）。
+func TestTestPathType(t *testing.T) {
+	wantStr(t, `Test-Path /etc/hostname -PathType Leaf`, "True")
+	wantStr(t, `Test-Path /etc/hostname -PathType Container`, "False")
+	wantStr(t, `Test-Path /etc -PathType Container`, "True")
+	wantStr(t, `Test-Path /etc -PathType Leaf`, "False")
+}
+
+// TestGetMemberMemberType 验证 Get-Member -MemberType 过滤成员类型。
+func TestGetMemberMemberType(t *testing.T) {
+	wantStr(t, `(Get-Item /etc/hostname | Get-Member -MemberType TypeName).Name`, "System.IO.FileInfo")
+	wantStr(t, `$gm = Get-Item /etc/hostname | Get-Member -MemberType Property; ($gm.Count -gt 0) -and ($gm[0].MemberType -eq "Property")`, "True")
+}
+
+// TestJsonDepth 验证 ConvertTo-Json -Depth 截断嵌套展开。
+func TestJsonDepth(t *testing.T) {
+	wantStr(t, `@{ a = @{ b = 1 } } | ConvertTo-Json -Depth 1`, "{\n  \"a\": {}\n}")
+	wantStr(t, `@{ a = @{ b = 1 } } | ConvertTo-Json -Depth 2`, "{\n  \"a\": {\n    \"b\": 1\n  }\n}")
+}
+
+// TestEncodingParams 验证 -Encoding 参数生效（BOM 与 ascii 替换字节数）。
+func TestEncodingParams(t *testing.T) {
+	wantStr(t, `Set-Content /tmp/psl-e1.txt "hi" -Encoding utf8BOM; (Get-Item /tmp/psl-e1.txt).Length`, "6")
+	wantStr(t, `Set-Content /tmp/psl-e2.txt "héllo" -Encoding ascii; (Get-Item /tmp/psl-e2.txt).Length`, "6")
+	wantStr(t, `"x" | Out-File /tmp/psl-e3.txt -Encoding unicode; (Get-Item /tmp/psl-e3.txt).Length`, "6")
+}

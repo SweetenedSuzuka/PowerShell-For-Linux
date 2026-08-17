@@ -356,10 +356,15 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdGetMember(c *Context) ([]*object.PSObject, error) {
+	// -MemberType 过滤成员类型（Property/TypeName 等，大小写不敏感，缺省返回全部）
+	mt, _ := c.Args.Str("MemberType")
+	typeMatch := func(t string) bool {
+		return mt == "" || strings.EqualFold(t, mt)
+	}
 	seen := map[string]bool{}
 	var out []*object.PSObject
 	for _, o := range inputItems(c) {
-		if !seen["type:"+o.TypeName] {
+		if !seen["type:"+o.TypeName] && typeMatch("TypeName") {
 			seen["type:"+o.TypeName] = true
 			t := object.Object("PSMemberInfo", nil)
 			t.AddProp("Name", o.TypeName)
@@ -368,7 +373,7 @@ func cmdGetMember(c *Context) ([]*object.PSObject, error) {
 			out = append(out, t)
 		}
 		for _, p := range o.Props {
-			if seen[p.Name] {
+			if seen[p.Name] || !typeMatch("Property") {
 				continue
 			}
 			seen[p.Name] = true

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 
@@ -29,7 +30,6 @@ func run(args []string) int {
 	file := fs.String("File", "", "执行 .ps1 脚本后退出")
 	noLogo := fs.Bool("NoLogo", false, "不显示启动横幅")
 	noProfile := fs.Bool("NoProfile", false, "不加载启动脚本")
-	_ = noProfile // 目前无启动脚本，参数占位接受
 	help := fs.Bool("?", false, "显示帮助")
 	fs.BoolVar(help, "Help", false, "显示帮助")
 
@@ -53,6 +53,11 @@ func run(args []string) int {
 	if *help || fs.NArg() > 0 && (fs.Arg(0) == "-?" || fs.Arg(0) == "-Help" || fs.Arg(0) == "-h") {
 		fmt.Fprint(os.Stdout, sess.Usage())
 		return 0
+	}
+
+	// 启动脚本：默认加载 $HOME/.config/powershell/profile.ps1（-NoProfile 跳过）
+	if !*noProfile {
+		loadProfile(ev, sess, os.Stdout)
 	}
 
 	// -File 脚本（-File 后的剩余位置参数作为脚本实参，供 param() 与 $args 使用）
@@ -102,6 +107,31 @@ func run(args []string) int {
 	sess.Cwd, _ = os.Getwd()
 	repl.Run(sess, ev, !*noLogo, os.Stdin, os.Stdout, os.Stderr)
 	return 0
+}
+
+// loadProfile 加载用户启动脚本 $HOME/.config/powershell/profile.ps1（PowerShell 7 Linux 的 $PROFILE 路径）。
+// 文件不存在跳过；脚本出错打印提示后继续启动（对齐 PowerShell 的宽容行为）。
+func loadProfile(ev *eval.Evaluator, sess *shell.Session, out io.Writer) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return
+	}
+	path := filepath.Join(home, ".config", "powershell", "profile.ps1")
+	if _, err := os.Stat(path); err != nil {
+		return
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			if err := eval.RecoverError(r); err != nil {
+				fmt.Fprintf(out, "%s : %v\n", sess.StyleName(), err)
+				return
+			}
+			panic(r)
+		}
+	}()
+	ev.RunScriptFileStreaming(path, nil, func(objs []*object.PSObject) {
+		_ = object.FormatOutput(out, objs)
+	})
 }
 
 // executeOnce 执行一段命令文本并输出结果，返回退出码。

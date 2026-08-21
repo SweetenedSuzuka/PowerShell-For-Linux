@@ -650,6 +650,8 @@ func TestDateTimeMethods(t *testing.T) {
 	wantStr(t, `(Get-Date -Date "2020-01-15").ToString()`, "1/15/2020 12:00:00 AM")
 	// ToFileTime 取该时刻的 Windows 文件时间刻度；用带时区的 ISO 串固定为 UTC 零点，使期望值与时区无关。
 	wantStr(t, `(Get-Date -Date "2020-01-15T00:00:00Z").ToFileTime()`, "132235200000000000")
+	// 文件时间纪元 1601-01-01 UTC 的刻度为 0，验证远古日期不再溢出
+	wantStr(t, `(Get-Date -Date "1601-01-01T00:00:00Z").ToFileTime()`, "0")
 }
 
 // TestPSCustomObjectLiteral 验证 [pscustomobject]@{...} 构造自定义对象（条目变属性）。

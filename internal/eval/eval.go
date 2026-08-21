@@ -571,7 +571,9 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			case "tofiletime":
 				// Windows 文件时间：1601-01-01 起 100 纳秒刻度数
 				const epochOffset = 116444736000000000
-				return object.Int(t.UTC().UnixNano()/100 + epochOffset)
+				u := t.UTC()
+				// 用秒数加纳秒余数计算，不用 UnixNano：后者在 1672 年前与 2262 年后会溢出
+				return object.Int(u.Unix()*10000000 + int64(u.Nanosecond())/100 + epochOffset)
 			}
 		}
 	case "Object[]":

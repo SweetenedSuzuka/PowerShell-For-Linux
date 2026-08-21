@@ -123,10 +123,22 @@ func cmdSelectString(c *Context) ([]*object.PSObject, error) {
 				continue
 			}
 			matched := false
+			caseSensitive := c.Args.Switch("CaseSensitive")
 			if c.Args.Switch("SimpleMatch") {
-				matched = strings.Contains(line, pattern)
-			} else if re, err := regexp.Compile(pattern); err == nil {
-				matched = re.MatchString(line)
+				if caseSensitive {
+					matched = strings.Contains(line, pattern)
+				} else {
+					matched = strings.Contains(strings.ToLower(line), strings.ToLower(pattern))
+				}
+			} else {
+				// 正则匹配默认大小写不敏感，加 (?i) 开启；-CaseSensitive 时原样编译
+				p := pattern
+				if !caseSensitive {
+					p = "(?i)" + pattern
+				}
+				if re, err := regexp.Compile(p); err == nil {
+					matched = re.MatchString(line)
+				}
 			}
 			if matched {
 				o := object.Object("Microsoft.PowerShell.Commands.MatchInfo", nil)
@@ -196,6 +208,7 @@ func init() {
 		{Name: "Pattern", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Path", Position: 1, PositionSet: true, Type: "path"},
 		{Name: "SimpleMatch", Switch: true},
+		{Name: "CaseSensitive", Switch: true},
 		{Name: "InputObject", Type: "object"},
 	}, cmdSelectString)
 }

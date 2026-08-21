@@ -721,3 +721,15 @@ func TestEncodingParams(t *testing.T) {
 	wantStr(t, `Set-Content /tmp/psl-e2.txt "héllo" -Encoding ascii; (Get-Item /tmp/psl-e2.txt).Length`, "6")
 	wantStr(t, `"x" | Out-File /tmp/psl-e3.txt -Encoding unicode; (Get-Item /tmp/psl-e3.txt).Length`, "6")
 }
+
+// TestSelectStringCase 验证 Select-String 默认大小写不敏感，-CaseSensitive 才敏感。
+func TestSelectStringCase(t *testing.T) {
+	// 默认不敏感：匹配大小写变体
+	wantStr(t, `"Hello" | Select-String "hello" | ForEach-Object { $_.Line }`, "Hello")
+	wantStr(t, `"HELLO" | Select-String "hello" | ForEach-Object { $_.Line }`, "HELLO")
+	// -CaseSensitive：仅精确大小写匹配
+	wantStr(t, `"hello" | Select-String "hello" -CaseSensitive | ForEach-Object { $_.Line }`, "hello")
+	wantStr(t, `"Hello" | Select-String "hello" -CaseSensitive | ForEach-Object { $_.Line }`)
+	// SimpleMatch 同样默认不敏感
+	wantStr(t, `"HELLO" | Select-String "hello" -SimpleMatch | ForEach-Object { $_.Line }`, "HELLO")
+}

@@ -759,3 +759,13 @@ func TestSortObjectUniqueCase(t *testing.T) {
 	// -CaseSensitive：保留各大小写变体
 	wantStr(t, `("apple","Apple","APPLE","banana" | Sort-Object -Unique -CaseSensitive | Measure-Object).Count`, "4")
 }
+
+// TestSelectObjectFirstLastZero 验证 Select-Object -First/-Last 显式 0 返回空。
+func TestSelectObjectFirstLastZero(t *testing.T) {
+	// -First 0 返回空（Count 为 0）
+	wantStr(t, `("1","2","3" | Select-Object -First 0 | Measure-Object).Count`, "0")
+	// -Last 0 返回空
+	wantStr(t, `("1","2","3" | Select-Object -Last 0 | Measure-Object).Count`, "0")
+	// -First 1 正常取首项
+	wantStr(t, `"1","2","3" | Select-Object -First 1`, "1")
+}

@@ -57,8 +57,8 @@ func cmdWhereObject(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
-	first, _ := c.Args.Int("First")
-	last, _ := c.Args.Int("Last")
+	first, firstSet := c.Args.Int("First")
+	last, lastSet := c.Args.Int("Last")
 	unique := c.Args.Switch("Unique")
 	expand, _ := c.Args.Str("ExpandProperty")
 
@@ -73,11 +73,20 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 		items = append(items, c.Args.Positional...)
 		props = nil
 	}
-	if first > 0 && int(first) < len(items) {
-		items = items[:first]
+	// -First/-Last 显式 0 时返回空（真 PowerShell 语义），未设置则不动
+	if firstSet {
+		if first <= 0 {
+			items = nil
+		} else if int(first) < len(items) {
+			items = items[:first]
+		}
 	}
-	if last > 0 && int(last) < len(items) {
-		items = items[len(items)-int(last):]
+	if lastSet {
+		if last <= 0 {
+			items = nil
+		} else if int(last) < len(items) {
+			items = items[len(items)-int(last):]
+		}
 	}
 	if unique {
 		seen := map[string]bool{}

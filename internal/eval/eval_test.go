@@ -769,3 +769,15 @@ func TestSelectObjectFirstLastZero(t *testing.T) {
 	// -First 1 正常取首项
 	wantStr(t, `"1","2","3" | Select-Object -First 1`, "1")
 }
+
+// TestMeasureObjectFields 验证 Measure-Object 字段总是补全，未开统计为 $null。
+func TestMeasureObjectFields(t *testing.T) {
+	// 未开开关：Count 有值，Sum/Average 等为空
+	wantStr(t, `"1","2","3" | Measure-Object | ForEach-Object { $_.Count }`, "3")
+	wantStr(t, `"1","2","3" | Measure-Object | ForEach-Object { $_.Sum -eq $null }`, "True")
+	wantStr(t, `"1","2","3" | Measure-Object | ForEach-Object { $_.Average -eq $null }`, "True")
+	// 开 Sum：有数字时 Sum 有值
+	wantStr(t, `"1","2","3" | Measure-Object -Sum | ForEach-Object { $_.Sum }`, "6")
+	// 开 Sum 但无数字：Sum 仍为空
+	wantStr(t, `"a","b" | Measure-Object -Sum | ForEach-Object { $_.Sum -eq $null }`, "True")
+}

@@ -354,27 +354,27 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 		avg = sum / float64(len(nums))
 	}
 	m := object.Object("MeasureInfo", nil)
+	// 字段按真 PowerShell 顺序补全：Count 总有，统计字段未开或无数据时为 $null
+	var sumVal, avgVal, minVal, maxVal any
+	if sumFlag && len(nums) > 0 {
+		sumVal = sum
+	}
+	if avgFlag && len(nums) > 0 {
+		avgVal = avg
+	}
+	if minFlag && haveMin {
+		minVal = mn
+	}
+	if maxFlag && haveMax {
+		maxVal = mx
+	}
 	m.AddProp("Count", int64(len(items)))
-	if sumFlag {
-		m.AddProp("Sum", sum)
-	}
-	if avgFlag {
-		m.AddProp("Average", avg)
-	}
-	if minFlag {
-		if haveMin {
-			m.AddProp("Minimum", mn)
-		} else {
-			m.AddProp("Minimum", nil)
-		}
-	}
-	if maxFlag {
-		if haveMax {
-			m.AddProp("Maximum", mx)
-		} else {
-			m.AddProp("Maximum", nil)
-		}
-	}
+	m.AddProp("Average", avgVal)
+	m.AddProp("Sum", sumVal)
+	m.AddProp("Maximum", maxVal)
+	m.AddProp("Minimum", minVal)
+	m.AddProp("StandardDeviation", nil)
+	m.AddProp("Property", nil)
 	return []*object.PSObject{m}, nil
 }
 

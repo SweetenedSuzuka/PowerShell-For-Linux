@@ -685,6 +685,10 @@ func TestNewObject(t *testing.T) {
 
 // TestTestPathType 验证 Test-Path -PathType 按类型过滤（Leaf 文件 / Container 目录）。
 func TestTestPathType(t *testing.T) {
+	// 用 /etc 与 /etc/hostname，仅 Linux 存在这些路径
+	if runtime.GOOS != "linux" {
+		t.Skip("跳过：测试依赖 Linux 专属路径 /etc、/etc/hostname")
+	}
 	wantStr(t, `Test-Path /etc/hostname -PathType Leaf`, "True")
 	wantStr(t, `Test-Path /etc/hostname -PathType Container`, "False")
 	wantStr(t, `Test-Path /etc -PathType Container`, "True")

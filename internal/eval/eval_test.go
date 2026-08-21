@@ -697,6 +697,10 @@ func TestTestPathType(t *testing.T) {
 
 // TestGetMemberMemberType 验证 Get-Member -MemberType 过滤成员类型。
 func TestGetMemberMemberType(t *testing.T) {
+	// 用 /etc/hostname，仅 Linux 存在该路径
+	if runtime.GOOS != "linux" {
+		t.Skip("跳过：测试依赖 Linux 专属路径 /etc/hostname")
+	}
 	wantStr(t, `(Get-Item /etc/hostname | Get-Member -MemberType TypeName).Name`, "System.IO.FileInfo")
 	wantStr(t, `$gm = Get-Item /etc/hostname | Get-Member -MemberType Property; ($gm.Count -gt 0) -and ($gm[0].MemberType -eq "Property")`, "True")
 }

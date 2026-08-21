@@ -713,6 +713,10 @@ func TestJsonDepth(t *testing.T) {
 
 // TestEncodingParams 验证 -Encoding 参数生效（BOM 与 ascii 替换字节数）。
 func TestEncodingParams(t *testing.T) {
+	// 用 /tmp 路径与字节计数，Windows 的 /tmp 映射会改变字节数
+	if runtime.GOOS != "linux" {
+		t.Skip("跳过：测试依赖 Linux 的 /tmp 路径与字节计数")
+	}
 	wantStr(t, `Set-Content /tmp/psl-e1.txt "hi" -Encoding utf8BOM; (Get-Item /tmp/psl-e1.txt).Length`, "6")
 	wantStr(t, `Set-Content /tmp/psl-e2.txt "héllo" -Encoding ascii; (Get-Item /tmp/psl-e2.txt).Length`, "6")
 	wantStr(t, `"x" | Out-File /tmp/psl-e3.txt -Encoding unicode; (Get-Item /tmp/psl-e3.txt).Length`, "6")

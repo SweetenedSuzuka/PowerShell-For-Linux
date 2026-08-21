@@ -648,8 +648,8 @@ func TestDateTimeMethods(t *testing.T) {
 	wantStr(t, `(Get-Date -Date "2020-01-15 08:30:00").ToShortTimeString()`, "8:30 AM")
 	wantStr(t, `(Get-Date -Date "2020-01-15 08:30:00").ToLongTimeString()`, "8:30:00 AM")
 	wantStr(t, `(Get-Date -Date "2020-01-15").ToString()`, "1/15/2020 12:00:00 AM")
-	// ToFileTime：1601-01-01 起 100 纳秒刻度（与解析时区无关的绝对时间）
-	wantStr(t, `(Get-Date -Date "2020-01-15").ToFileTime()`, "132235200000000000")
+	// ToFileTime 取该时刻的 Windows 文件时间刻度；用带时区的 ISO 串固定为 UTC 零点，使期望值与时区无关。
+	wantStr(t, `(Get-Date -Date "2020-01-15T00:00:00Z").ToFileTime()`, "132235200000000000")
 }
 
 // TestPSCustomObjectLiteral 验证 [pscustomobject]@{...} 构造自定义对象（条目变属性）。

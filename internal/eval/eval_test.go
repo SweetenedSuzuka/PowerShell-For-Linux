@@ -751,3 +751,11 @@ func TestCompareObject(t *testing.T) {
 	// -CaseSensitive：a 与 A 不等
 	wantStr(t, `Compare-Object -ReferenceObject "a","A" -DifferenceObject "a" -CaseSensitive | ForEach-Object { $_.SideIndicator + $_.InputObject }`, "<=A")
 }
+
+// TestSortObjectUniqueCase 验证 Sort-Object -Unique 默认折叠大小写去重，-CaseSensitive 才分。
+func TestSortObjectUniqueCase(t *testing.T) {
+	// 默认不敏感：apple/Apple/APPLE 折叠为 apple，排序后去重
+	wantStr(t, `"apple","Apple","APPLE","banana" | Sort-Object -Unique | ForEach-Object { $_ }`, "apple", "banana")
+	// -CaseSensitive：保留各大小写变体
+	wantStr(t, `("apple","Apple","APPLE","banana" | Sort-Object -Unique -CaseSensitive | Measure-Object).Count`, "4")
+}

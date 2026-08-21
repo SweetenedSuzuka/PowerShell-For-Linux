@@ -144,6 +144,7 @@ func cmdSortObject(c *Context) ([]*object.PSObject, error) {
 	props := c.Args.StringSlice("Property")
 	desc := c.Args.Switch("Descending")
 	unique := c.Args.Switch("Unique")
+	caseSensitive := c.Args.Switch("CaseSensitive")
 
 	// 取对象某属性值；缺失视为 $null（排序时排最前）。
 	keyOf := func(o *object.PSObject, p string) *object.PSObject {
@@ -185,8 +186,13 @@ func cmdSortObject(c *Context) ([]*object.PSObject, error) {
 					sb.WriteByte(0)
 				}
 			}
-			if !seen[sb.String()] {
-				seen[sb.String()] = true
+			k := sb.String()
+			// -Unique 默认按小写折叠去重，-CaseSensitive 时原样
+			if !caseSensitive {
+				k = strings.ToLower(k)
+			}
+			if !seen[k] {
+				seen[k] = true
 				uniq = append(uniq, it)
 			}
 		}
@@ -435,6 +441,7 @@ func init() {
 		{Name: "Property", Position: 0, PositionSet: true, Type: "string[]"},
 		{Name: "Descending", Switch: true},
 		{Name: "Unique", Switch: true},
+		{Name: "CaseSensitive", Switch: true},
 	}, cmdSortObject)
 	Register("ForEach-Object", []ParamSpec{
 		{Name: "Process", Position: 0, PositionSet: true, Type: "scriptblock"},

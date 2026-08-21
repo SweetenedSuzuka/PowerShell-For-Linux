@@ -2,6 +2,7 @@ package object
 
 import (
 	"os"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -186,6 +187,10 @@ func TestFormatOutputStrings(t *testing.T) {
 
 // TestFileInfoVirtualProps 验证 FileInfo/DirectoryInfo 虚拟属性：Extension/BaseName/DirectoryName 从路径计算。
 func TestFileInfoVirtualProps(t *testing.T) {
+	// DirectoryName 经 filepath.Dir 计算，Windows 下返回反斜杠分隔，测试验证 Linux 行为
+	if runtime.GOOS != "linux" {
+		t.Skip("跳过：DirectoryName 的路径分隔符随平台变化，仅验证 Linux")
+	}
 	fi, err := os.Stat("object.go")
 	if err != nil {
 		t.Fatal(err)

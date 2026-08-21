@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -54,6 +55,19 @@ func wantStr(t *testing.T, src string, want ...string) {
 			t.Fatalf("%q → %v，想要 %v", src, got, want)
 		}
 	}
+}
+
+// osName 复刻 shell.OSName 的平台映射，供测试构造跨平台的 OS 期望值。
+func osName() string {
+	switch runtime.GOOS {
+	case "linux":
+		return "Linux"
+	case "windows":
+		return "Windows"
+	case "darwin":
+		return "Darwin"
+	}
+	return runtime.GOOS
 }
 
 func TestArithmetic(t *testing.T) {
@@ -517,7 +531,8 @@ func TestPSVersionTableCore(t *testing.T) {
 	wantStr(t, "$PSVersionTable.PSVersion.Minor", "0")
 	wantStr(t, "$PSVersionTable.PSVersion", "7")
 	wantStr(t, "$PSVersionTable.PSEdition", "Core")
-	wantStr(t, "$PSVersionTable.OS", "Linux")
+	// OS 按 runtime.GOOS 报告，期望值跟随运行平台（Linux 上为 Linux、Windows 上为 Windows）
+	wantStr(t, "$PSVersionTable.OS", osName())
 	wantStr(t, "$PSVersionTable.GitCommitId", "0000000000000000000000000000000000000000")
 }
 

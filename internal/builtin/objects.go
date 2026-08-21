@@ -325,6 +325,8 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 	var sum, avg, mn, mx float64
 	var haveMin, haveMax bool
 	var nums []float64
+	// Count 按 -Property 过滤：只数能取到该属性的对象（无 -Property 时数全部）
+	matchedCount := int64(0)
 	// Sum/Average 遇非数字输入作废（对齐真 PowerShell：报错且字段置 $null）；Min/Max 仅统计数字
 	sumAvgValid := true
 	for _, o := range items {
@@ -332,12 +334,15 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 		if prop != "" {
 			if pv, ok := o.PropValue(prop); ok {
 				v = pv
+			} else {
+				continue // 对象没有该属性：不计入 Count
 			}
 		} else {
 			v = o
 		}
+		matchedCount++
 		if v == nil {
-			continue // 对象没有该属性：跳过（不崩溃）
+			continue // 属性值为 $null：计入 Count 但不参与统计
 		}
 		if n, ok := v.AsFloat(); ok {
 			nums = append(nums, n)
@@ -373,7 +378,7 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 	if maxFlag && haveMax {
 		maxVal = mx
 	}
-	m.AddProp("Count", int64(len(items)))
+	m.AddProp("Count", matchedCount)
 	m.AddProp("Average", avgVal)
 	m.AddProp("Sum", sumVal)
 	m.AddProp("Maximum", maxVal)

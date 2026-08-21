@@ -746,8 +746,10 @@ func TestGroupObjectCase(t *testing.T) {
 func TestCompareObject(t *testing.T) {
 	// 默认大小写不敏感：B/b、c/C 视为相等，仅输出各自独有项，先右(=>)后左(<=)
 	wantStr(t, `Compare-Object -ReferenceObject "a","B","c" -DifferenceObject "b","C","d" | ForEach-Object { $_.SideIndicator + $_.InputObject }`, "=>d", "<=a")
-	// IncludeEqual：相等项(==)最先
+	// IncludeEqual：相等项(==)最先，然后右(=>)再左(<=)
 	wantStr(t, `Compare-Object -ReferenceObject "a","b" -DifferenceObject "b","c" -IncludeEqual | ForEach-Object { $_.SideIndicator + $_.InputObject }`, "==b", "=>c", "<=a")
+	// IncludeEqual 相等项显示参考集(ref)的值，非差集
+	wantStr(t, `Compare-Object -ReferenceObject "A" -DifferenceObject "a" -IncludeEqual | ForEach-Object { $_.SideIndicator + $_.InputObject }`, "==A")
 	// -CaseSensitive：a 与 A 不等
 	wantStr(t, `Compare-Object -ReferenceObject "a","A" -DifferenceObject "a" -CaseSensitive | ForEach-Object { $_.SideIndicator + $_.InputObject }`, "<=A")
 }
@@ -784,4 +786,7 @@ func TestMeasureObjectFields(t *testing.T) {
 	wantStr(t, `"1","a","2" | Measure-Object -Sum | ForEach-Object { $_.Sum -eq $null }`, "True")
 	// 混合输入开 Average：作废
 	wantStr(t, `"2","a" | Measure-Object -Average | ForEach-Object { $_.Average -eq $null }`, "True")
+	// -Property 模式：Count 只数有该属性的对象
+	wantStr(t, `@{a=1},@{a=2},@{b=3} | Measure-Object -Property a -Sum | ForEach-Object { $_.Count }`, "2")
+	wantStr(t, `@{a=1},@{a=2},@{b=3} | Measure-Object -Property a -Sum | ForEach-Object { $_.Sum }`, "3")
 }

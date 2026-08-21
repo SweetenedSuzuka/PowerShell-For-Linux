@@ -354,14 +354,23 @@ func cmdCompareObject(c *Context) ([]*object.PSObject, error) {
 		diffUnique = append(diffUnique, item{d, k, "=>"})
 	}
 	// 输出顺序：IncludeEqual 时相等项最先，然后右侧独有（=>），再左侧独有（<=）
+	// 相等项显示参考集（ref）的值，对齐真 PowerShell
 	var equalOut, rightOut, leftOut []*object.PSObject
 	seen := map[string]bool{}
 	for _, d := range diffUnique {
 		if inRef[d.key] {
 			if includeEqual && !seen["=="+d.key] {
 				seen["=="+d.key] = true
+				// 相等项的值取 ref 侧首次出现
+				var refVal *object.PSObject
+				for _, r := range refUnique {
+					if r.key == d.key {
+						refVal = r.val
+						break
+					}
+				}
 				o := object.Object("System.Management.Automation.PSCustomObject", nil)
-				o.AddProp("InputObject", d.val)
+				o.AddProp("InputObject", refVal)
 				o.AddProp("SideIndicator", "==")
 				equalOut = append(equalOut, o)
 			}

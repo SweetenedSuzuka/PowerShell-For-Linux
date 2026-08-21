@@ -319,34 +319,71 @@ func cmdCompareObject(c *Context) ([]*object.PSObject, error) {
 	if diff != nil {
 		diffItems = diff.ArrayItems()
 	}
+	// key 函数：默认小写折叠（大小写不敏感），-CaseSensitive 时原样
+	caseSensitive := c.Args.Switch("CaseSensitive")
+	keyOf := func(s string) string {
+		if caseSensitive {
+			return s
+		}
+		return strings.ToLower(s)
+	}
+	includeEqual := c.Args.Switch("IncludeEqual")
+	// ref 与 diff 各自按 key 去重，保留首次原值
+	type item struct {
+		val  *object.PSObject
+		key  string
+		side string
+	}
 	inRef := map[string]bool{}
+	var refUnique, diffUnique []item
 	for _, r := range refItems {
-		inRef[r.String()] = true
+		k := keyOf(r.String())
+		if inRef[k] {
+			continue
+		}
+		inRef[k] = true
+		refUnique = append(refUnique, item{r, k, "<="})
 	}
 	inDiff := map[string]bool{}
 	for _, d := range diffItems {
-		inDiff[d.String()] = true
+		k := keyOf(d.String())
+		if inDiff[k] {
+			continue
+		}
+		inDiff[k] = true
+		diffUnique = append(diffUnique, item{d, k, "=>"})
 	}
-	var out []*object.PSObject
+	// 输出顺序：IncludeEqual 时相等项最先，然后右侧独有（=>），再左侧独有（<=）
+	var equalOut, rightOut, leftOut []*object.PSObject
 	seen := map[string]bool{}
-	for _, r := range refItems {
-		if !inDiff[r.String()] && !seen["<="+r.String()] {
-			seen["<="+r.String()] = true
+	for _, d := range diffUnique {
+		if inRef[d.key] {
+			if includeEqual && !seen["=="+d.key] {
+				seen["=="+d.key] = true
+				o := object.Object("System.Management.Automation.PSCustomObject", nil)
+				o.AddProp("InputObject", d.val)
+				o.AddProp("SideIndicator", "==")
+				equalOut = append(equalOut, o)
+			}
+		} else if !seen["=>"+d.key] {
+			seen["=>"+d.key] = true
 			o := object.Object("System.Management.Automation.PSCustomObject", nil)
-			o.AddProp("InputObject", r)
-			o.AddProp("SideIndicator", "<=")
-			out = append(out, o)
-		}
-	}
-	for _, d := range diffItems {
-		if !inRef[d.String()] && !seen["=>"+d.String()] {
-			seen["=>"+d.String()] = true
-			o := object.Object("System.Management.Automation.PSCustomObject", nil)
-			o.AddProp("InputObject", d)
+			o.AddProp("InputObject", d.val)
 			o.AddProp("SideIndicator", "=>")
-			out = append(out, o)
+			rightOut = append(rightOut, o)
 		}
 	}
+	for _, r := range refUnique {
+		if !inDiff[r.key] && !seen["<="+r.key] {
+			seen["<="+r.key] = true
+			o := object.Object("System.Management.Automation.PSCustomObject", nil)
+			o.AddProp("InputObject", r.val)
+			o.AddProp("SideIndicator", "<=")
+			leftOut = append(leftOut, o)
+		}
+	}
+	out := append(equalOut, rightOut...)
+	out = append(out, leftOut...)
 	return out, nil
 }
 
@@ -610,6 +647,8 @@ func init() {
 	Register("Compare-Object", []ParamSpec{
 		{Name: "ReferenceObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "DifferenceObject", Position: 1, PositionSet: true, Type: "object"},
+		{Name: "CaseSensitive", Switch: true},
+		{Name: "IncludeEqual", Switch: true},
 	}, cmdCompareObject)
 	Register("Get-Unique", []ParamSpec{
 		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},

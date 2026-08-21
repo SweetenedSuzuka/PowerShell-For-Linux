@@ -741,3 +741,13 @@ func TestGroupObjectCase(t *testing.T) {
 	// -CaseSensitive：按原值分组
 	wantStr(t, `("apple","Apple","APPLE" | Group-Object -CaseSensitive | Measure-Object).Count`, "3")
 }
+
+// TestCompareObject 验证 Compare-Object 默认大小写不敏感、输出先右后左、IncludeEqual。
+func TestCompareObject(t *testing.T) {
+	// 默认大小写不敏感：B/b、c/C 视为相等，仅输出各自独有项，先右(=>)后左(<=)
+	wantStr(t, `Compare-Object -ReferenceObject "a","B","c" -DifferenceObject "b","C","d" | ForEach-Object { $_.SideIndicator + $_.InputObject }`, "=>d", "<=a")
+	// IncludeEqual：相等项(==)最先
+	wantStr(t, `Compare-Object -ReferenceObject "a","b" -DifferenceObject "b","c" -IncludeEqual | ForEach-Object { $_.SideIndicator + $_.InputObject }`, "==b", "=>c", "<=a")
+	// -CaseSensitive：a 与 A 不等
+	wantStr(t, `Compare-Object -ReferenceObject "a","A" -DifferenceObject "a" -CaseSensitive | ForEach-Object { $_.SideIndicator + $_.InputObject }`, "<=A")
+}

@@ -246,7 +246,9 @@ func cmdForEachObject(c *Context) ([]*object.PSObject, error) {
 
 func cmdGroupObject(c *Context) ([]*object.PSObject, error) {
 	prop, _ := c.Args.Str("Property")
+	caseSensitive := c.Args.Switch("CaseSensitive")
 	groups := map[string][]*object.PSObject{}
+	firstName := map[string]string{}
 	var order []string
 	for _, o := range c.Input {
 		k := ""
@@ -257,15 +259,21 @@ func cmdGroupObject(c *Context) ([]*object.PSObject, error) {
 		} else {
 			k = o.String()
 		}
-		if _, ok := groups[k]; !ok {
-			order = append(order, k)
+		// map key：默认按小写折叠（大小写不敏感），-CaseSensitive 时原样
+		mk := k
+		if !caseSensitive {
+			mk = strings.ToLower(k)
 		}
-		groups[k] = append(groups[k], o)
+		if _, ok := groups[mk]; !ok {
+			order = append(order, mk)
+			firstName[mk] = k
+		}
+		groups[mk] = append(groups[mk], o)
 	}
 	var out []*object.PSObject
 	for _, k := range order {
 		g := object.Object("GroupInfo", groups[k])
-		g.AddProp("Name", k)
+		g.AddProp("Name", firstName[k])
 		g.AddProp("Count", int64(len(groups[k])))
 		g.Table = []object.Column{
 			{Label: "Count", Align: "right"},
@@ -436,6 +444,7 @@ func init() {
 	}, cmdForEachObject)
 	Register("Group-Object", []ParamSpec{
 		{Name: "Property", Position: 0, PositionSet: true, Type: "string"},
+		{Name: "CaseSensitive", Switch: true},
 	}, cmdGroupObject)
 	Register("Measure-Object", []ParamSpec{
 		{Name: "Property", Position: 0, PositionSet: true, Type: "string"},

@@ -733,3 +733,11 @@ func TestSelectStringCase(t *testing.T) {
 	// SimpleMatch 同样默认不敏感
 	wantStr(t, `"HELLO" | Select-String "hello" -SimpleMatch | ForEach-Object { $_.Line }`, "HELLO")
 }
+
+// TestGroupObjectCase 验证 Group-Object 默认大小写不敏感合并，-CaseSensitive 才分组。
+func TestGroupObjectCase(t *testing.T) {
+	// 默认不敏感：apple/Apple/APPLE 合并为一组，Name 取首次原值
+	wantStr(t, `"apple","Apple","APPLE" | Group-Object | ForEach-Object { $_.Name + ":" + $_.Count }`, "apple:3")
+	// -CaseSensitive：按原值分组
+	wantStr(t, `("apple","Apple","APPLE" | Group-Object -CaseSensitive | Measure-Object).Count`, "3")
+}

@@ -325,6 +325,8 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 	var sum, avg, mn, mx float64
 	var haveMin, haveMax bool
 	var nums []float64
+	// Sum/Average 遇非数字输入作废（对齐真 PowerShell：报错且字段置 $null）；Min/Max 仅统计数字
+	sumAvgValid := true
 	for _, o := range items {
 		var v *object.PSObject
 		if prop != "" {
@@ -348,18 +350,21 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 				mx = n
 				haveMax = true
 			}
+		} else if sumFlag || avgFlag {
+			// Sum/Average 开启后遇非数字：累加类统计作废
+			sumAvgValid = false
 		}
 	}
 	if len(nums) > 0 {
 		avg = sum / float64(len(nums))
 	}
 	m := object.Object("MeasureInfo", nil)
-	// 字段按真 PowerShell 顺序补全：Count 总有，统计字段未开或无数据时为 $null
+	// 字段按真 PowerShell 顺序补全：Count 总有，统计字段未开或无数据或遇非数字时为 $null
 	var sumVal, avgVal, minVal, maxVal any
-	if sumFlag && len(nums) > 0 {
+	if sumFlag && sumAvgValid && len(nums) > 0 {
 		sumVal = sum
 	}
-	if avgFlag && len(nums) > 0 {
+	if avgFlag && sumAvgValid && len(nums) > 0 {
 		avgVal = avg
 	}
 	if minFlag && haveMin {

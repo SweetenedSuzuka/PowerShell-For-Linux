@@ -332,11 +332,15 @@ func listProcesses() ([]procEntry, error) {
 	return nil, fmt.Errorf("不支持")
 }
 
+// clockTicks 是内核每秒的时钟滴答数（/proc/stat 时间字段单位），Linux 用户态 ABI 固定 100。
+const clockTicks = 100
+
 func listLinuxProcs() ([]procEntry, error) {
 	entries, err := os.ReadDir("/proc")
 	if err != nil {
 		return nil, err
 	}
+	pageSize := int64(os.Getpagesize())
 	var out []procEntry
 	for _, en := range entries {
 		if !en.IsDir() {
@@ -346,12 +350,27 @@ func listLinuxProcs() ([]procEntry, error) {
 		if err != nil {
 			continue
 		}
-		stat, err := os.ReadFile("/proc/" + en.Name() + "/comm")
-		if err != nil {
-			continue
+		name := ""
+		if data, err := os.ReadFile("/proc/" + en.Name() + "/comm"); err == nil {
+			name = strings.TrimSpace(string(data))
 		}
-		name := strings.TrimSpace(string(stat))
-		out = append(out, procEntry{pid: pid, name: name})
+		cpu, mem := 0.0, int64(0)
+		if data, err := os.ReadFile("/proc/" + en.Name() + "/stat"); err == nil {
+			// stat 第 2 字段（comm）可含空格与括号，从最后一个 ')' 之后解析数字字段
+			s := string(data)
+			if i := strings.LastIndexByte(s, ')'); i >= 0 && i+2 <= len(s) {
+				fields := strings.Fields(s[i+2:])
+				// fields 从 state（原第 3 字段）起：utime 是原第 14 字段 → 下标 11；stime → 12；rss → 21
+				if len(fields) > 22 {
+					utime, _ := strconv.ParseFloat(fields[11], 64)
+					stime, _ := strconv.ParseFloat(fields[12], 64)
+					rss, _ := strconv.ParseInt(fields[21], 10, 64)
+					cpu = (utime + stime) / clockTicks
+					mem = rss * pageSize
+				}
+			}
+		}
+		out = append(out, procEntry{pid: pid, name: name, cpu: cpu, mem: mem})
 	}
 	return out, nil
 }

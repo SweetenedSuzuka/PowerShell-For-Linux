@@ -2,6 +2,7 @@
 package shell
 
 import (
+	"crypto/rand"
 	"fmt"
 	"io"
 	"os"
@@ -260,14 +261,42 @@ func (s *Session) OSName() string {
 	return runtime.GOOS
 }
 
-// HostObject 构造 $Host 对象。
+// cultureObject 构造 CultureInfo 对象（LCID/Name/DisplayName），区域随界面语言。
+func cultureObject(name string, lcid int64, display string) *object.PSObject {
+	c := object.Object("System.Globalization.CultureInfo", name)
+	c.AddProp("LCID", lcid)
+	c.AddProp("Name", name)
+	c.AddProp("DisplayName", display)
+	return c
+}
+
+// newUUID 生成随机 UUID v4。
+func newUUID() string {
+	var b [16]byte
+	if _, err := rand.Read(b[:]); err != nil {
+		return ""
+	}
+	b[6] = (b[6] & 0x0F) | 0x40
+	b[8] = (b[8] & 0x3F) | 0x80
+	return fmt.Sprintf("%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+		b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], b[11], b[12], b[13], b[14], b[15])
+}
+
+// HostObject 构造 $Host 对象：InstanceId 为本会话的随机 UUID，区域随界面语言。
 func (s *Session) HostObject() *object.PSObject {
 	h := object.Object("System.Management.Automation.Internal.Host.InternalHost", nil)
 	h.AddProp("Name", "ConsoleHost")
-	h.AddProp("InstanceId", "")
-	h.AddProp("UI", object.Null())
-	h.AddProp("CurrentCulture", "en-US")
-	h.AddProp("CurrentUICulture", "zh-CN")
+	h.AddProp("InstanceId", newUUID())
+	ui := object.Object("System.Management.Automation.Internal.Host.InternalHostUserInterface", nil)
+	ui.AddProp("SupportsVirtualTerminal", true)
+	h.AddProp("UI", ui)
+	if s.Lang == LangZh {
+		h.AddProp("CurrentCulture", cultureObject("zh-CN", 2052, "中文（中国）"))
+		h.AddProp("CurrentUICulture", cultureObject("zh-CN", 2052, "中文（中国）"))
+	} else {
+		h.AddProp("CurrentCulture", cultureObject("en-US", 1033, "English (United States)"))
+		h.AddProp("CurrentUICulture", cultureObject("en-US", 1033, "English (United States)"))
+	}
 	return h
 }
 

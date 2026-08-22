@@ -226,15 +226,25 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		}
 		return e.evalValue(v.Else)
 	case *ast.ArrayLit:
+		// @(...) 对齐 PowerShell：
+		//   唯一元素 → “确保是数组”：元素输出流直接作为结果（@($arr) 得到 $arr 的元素）。
+		//   多个元素 → 各语句输出依次收集，数组值整体占一位（@(@("a"),"b") 内层数组保留）。
+		//   管道元素 → 每项输出各占一位（@("x" | ForEach-Object { ... })）。
+		if v.Flatten && len(v.Items) == 1 {
+			if pl, ok := v.Items[0].(*ast.PipelineExpr); ok {
+				return object.Array(e.evalPipeline(pl.Pipeline))
+			}
+			return object.Array(unwrapOutput(e.evalValue(v.Items[0])))
+		}
 		items := make([]*object.PSObject, 0, len(v.Items))
 		for _, it := range v.Items {
-			val := e.evalValue(it)
-			// @(...) 元素按输出流摊平（@($arr) 得到元素本身）；逗号列表不摊平，内嵌数组保持
 			if v.Flatten {
-				items = append(items, unwrapOutput(val)...)
-			} else {
-				items = append(items, val)
+				if pl, ok := it.(*ast.PipelineExpr); ok {
+					items = append(items, e.evalPipeline(pl.Pipeline)...)
+					continue
+				}
 			}
+			items = append(items, e.evalValue(it))
 		}
 		return object.Array(items)
 	case *ast.HashtableLit:

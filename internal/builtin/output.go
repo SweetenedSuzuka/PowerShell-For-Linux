@@ -116,39 +116,34 @@ func cmdSelectString(c *Context) ([]*object.PSObject, error) {
 		return nil, nil
 	}
 	path, _ := c.Args.Str("Path")
+	caseSensitive := c.Args.Switch("CaseSensitive")
+	simple := c.Args.Switch("SimpleMatch")
 	var out []*object.PSObject
-	scan := func(name string, text string) {
-		for i, line := range strings.Split(strings.TrimSuffix(text, "\n"), "\n") {
-			if line == "" {
-				continue
-			}
-			matched := false
-			caseSensitive := c.Args.Switch("CaseSensitive")
-			if c.Args.Switch("SimpleMatch") {
-				if caseSensitive {
-					matched = strings.Contains(line, pattern)
-				} else {
-					matched = strings.Contains(strings.ToLower(line), strings.ToLower(pattern))
-				}
-			} else {
-				// 正则匹配默认大小写不敏感，加 (?i) 开启；-CaseSensitive 时原样编译
-				p := pattern
-				if !caseSensitive {
-					p = "(?i)" + pattern
-				}
-				if re, err := regexp.Compile(p); err == nil {
-					matched = re.MatchString(line)
-				}
-			}
-			if matched {
-				o := object.Object("Microsoft.PowerShell.Commands.MatchInfo", nil)
-				o.AddProp("LineNumber", int64(i+1))
-				o.AddProp("Line", line)
-				o.AddProp("Path", name)
-				o.AddProp("Pattern", pattern)
-				out = append(out, o)
-			}
+	// 正则预编译一次：默认大小写不敏感（加 (?i)），-CaseSensitive 时原样
+	var re *regexp.Regexp
+	if !simple {
+		p := pattern
+		if !caseSensitive {
+			p = "(?i)" + pattern
 		}
+		re, _ = regexp.Compile(p)
+	}
+	matchLine := func(line string) bool {
+		if simple {
+			if caseSensitive {
+				return strings.Contains(line, pattern)
+			}
+			return strings.Contains(strings.ToLower(line), strings.ToLower(pattern))
+		}
+		return re != nil && re.MatchString(line)
+	}
+	emit := func(name string, num int64, line string) {
+		o := object.Object("Microsoft.PowerShell.Commands.MatchInfo", nil)
+		o.AddProp("LineNumber", num)
+		o.AddProp("Line", line)
+		o.AddProp("Path", name)
+		o.AddProp("Pattern", pattern)
+		out = append(out, o)
 	}
 	if path != "" {
 		full, derr := resolvePath(c, path)
@@ -159,14 +154,26 @@ func cmdSelectString(c *Context) ([]*object.PSObject, error) {
 		if err != nil {
 			return errf(c, "Select-String : 找不到路径 %s。", path)
 		}
-		scan(path, string(data))
+		// 文件输入逐行扫描，空行也计入行号（对齐 PowerShell）
+		for i, line := range strings.Split(strings.TrimSuffix(string(data), "\n"), "\n") {
+			if matchLine(line) {
+				emit(path, int64(i+1), line)
+			}
+		}
 	} else if v := c.Args.Get("InputObject"); v != nil {
-		for _, it := range v.ArrayItems() {
-			scan("", it.String())
+		// 管道/参数输入：每个对象整体作为一行参与匹配，LineNumber 是对象在流中的序号
+		for n, it := range v.ArrayItems() {
+			line := it.String()
+			if matchLine(line) {
+				emit("", int64(n+1), line)
+			}
 		}
 	} else {
-		for _, o := range c.Input {
-			scan("", o.String())
+		for n, o := range c.Input {
+			line := o.String()
+			if matchLine(line) {
+				emit("", int64(n+1), line)
+			}
 		}
 	}
 	return out, nil

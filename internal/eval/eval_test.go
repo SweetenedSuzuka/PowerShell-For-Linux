@@ -734,6 +734,16 @@ func TestSelectStringCase(t *testing.T) {
 	wantStr(t, `"HELLO" | Select-String "hello" -SimpleMatch | ForEach-Object { $_.Line }`, "HELLO")
 }
 
+// TestSelectStringLineNumber 验证 LineNumber 编号：管道输入按对象序号（未匹配也占号），文件输入逐行且空行计入。
+func TestSelectStringLineNumber(t *testing.T) {
+	// 管道单行对象：LineNumber 是对象在流中的序号
+	wantStr(t, `"a","b","c" | Select-String "." | ForEach-Object { "$($_.LineNumber):$($_.Line)" }`, "1:a", "2:b", "3:c")
+	// 未匹配的对象也占号
+	wantStr(t, `"x","b","c" | Select-String "[bc]" | ForEach-Object { "$($_.LineNumber):$($_.Line)" }`, "2:b", "3:c")
+	// 多行字符串整体作为一个匹配单位
+	wantStr(t, "(\"line1`nlineX`nline3\" | Select-String \"lineX\").Count", "1")
+}
+
 // TestGroupObjectCase 验证 Group-Object 默认大小写不敏感合并，-CaseSensitive 才分组。
 func TestGroupObjectCase(t *testing.T) {
 	// 默认不敏感：apple/Apple/APPLE 合并为一组，Name 取首次原值

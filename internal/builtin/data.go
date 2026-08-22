@@ -6,6 +6,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"hash/crc32"
 	"os"
 	"sort"
 	"strings"
@@ -516,24 +517,78 @@ func cmdTeeObject(c *Context) ([]*object.PSObject, error) {
 	return c.Input, nil
 }
 
+// hexTypeLabel 是 Format-Hex 标签里的类型名（短名与全名）。
+func hexTypeLabel(o *object.PSObject) (string, string) {
+	switch o.TypeName {
+	case "String":
+		return "String", "System.String"
+	case "Int":
+		return "Int32", "System.Int32"
+	case "Double":
+		return "Double", "System.Double"
+	case "Boolean":
+		return "Boolean", "System.Boolean"
+	}
+	return o.TypeName, o.TypeName
+}
+
+// formatHexSegment 把一段字节按 PowerShell 格式渲染：16 位偏移、固定宽字节区、ASCII 对照列。
+func formatHexSegment(sb *strings.Builder, data []byte) {
+	sb.WriteString("          Offset Bytes                                           Ascii\n")
+	sb.WriteString("                 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n")
+	sb.WriteString("          ------ ----------------------------------------------- -----\n")
+	for i := 0; i < len(data); i += 16 {
+		end := i + 16
+		if end > len(data) {
+			end = len(data)
+		}
+		fmt.Fprintf(sb, "%016X ", i)
+		for j := i; j < i+16; j++ {
+			if j < end {
+				fmt.Fprintf(sb, "%02X ", data[j])
+			} else {
+				sb.WriteString("   ")
+			}
+		}
+		for j := i; j < end; j++ {
+			if data[j] >= 0x20 && data[j] < 0x7F {
+				sb.WriteByte(data[j])
+			} else {
+				sb.WriteString(".")
+			}
+		}
+		sb.WriteString("\n")
+	}
+}
+
 func cmdFormatHex(c *Context) ([]*object.PSObject, error) {
 	var sb strings.Builder
-	for _, o := range inputItems(c) {
-		data := []byte(o.String())
-		// 16 字节一行
-		for i := 0; i < len(data); i += 16 {
-			end := i + 16
-			if end > len(data) {
-				end = len(data)
-			}
-			fmt.Fprintf(&sb, "%08x  ", i)
-			for j := i; j < end; j++ {
-				fmt.Fprintf(&sb, "%02x ", data[j])
-			}
-			sb.WriteString("\n")
+	emit := func(label string, short, full string, data []byte) {
+		if full == "" {
+			fmt.Fprintf(&sb, "\n   Label: %s\n\n", label)
+		} else {
+			sum := fmt.Sprintf("%08X", crc32.ChecksumIEEE([]byte(label+full)))
+			fmt.Fprintf(&sb, "\n   Label: %s (%s) <%s>\n\n", label, full, sum)
 		}
+		formatHexSegment(&sb, data)
 	}
-	return []*object.PSObject{object.Str(strings.TrimRight(sb.String(), "\n"))}, nil
+	if path, _ := c.Args.Str("Path"); path != "" {
+		full, derr := resolvePath(c, path)
+		if derr != nil {
+			return errf(c, "%v", derr)
+		}
+		data, err := os.ReadFile(full)
+		if err != nil {
+			return errf(c, "Format-Hex : 找不到路径 %s。", path)
+		}
+		emit(path, "", "", data)
+		return []*object.PSObject{object.Str(strings.Trim(sb.String(), "\n"))}, nil
+	}
+	for _, o := range inputItems(c) {
+		short, full := hexTypeLabel(o)
+		emit(short, short, full, []byte(o.String()))
+	}
+	return []*object.PSObject{object.Str(strings.Trim(sb.String(), "\n"))}, nil
 }
 
 func cmdJoinString(c *Context) ([]*object.PSObject, error) {
@@ -682,7 +737,8 @@ func init() {
 		{Name: "Append", Switch: true},
 	}, cmdTeeObject)
 	Register("Format-Hex", []ParamSpec{
-		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "InputObject", Type: "object"},
 	}, cmdFormatHex)
 	Register("Join-String", []ParamSpec{
 		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},

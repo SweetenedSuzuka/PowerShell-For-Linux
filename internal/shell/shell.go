@@ -107,6 +107,8 @@ func New(style Style, stdout, stderr io.Writer, stdin io.Reader) *Session {
 		HostIn:    stdin,
 	}
 	s.Aliases = buildAliases(style)
+	// DateTime 默认渲染跟随界面语言（zh 中文格式，其余使用 C 区域格式）
+	object.SetDateTimeLang(string(s.Lang))
 	return s
 }
 

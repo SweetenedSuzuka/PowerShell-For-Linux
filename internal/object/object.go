@@ -442,8 +442,25 @@ func formatFloat(v float64) string {
 	return s
 }
 
+// dateTimeLang 决定 DateTime 默认渲染的区域："zh" 用中文格式，其余用 C 区域格式。
+// 由 shell 包按界面语言设置，object 包不反向依赖。
+var dateTimeLang string
+
+// SetDateTimeLang 设置 DateTime 默认渲染的语言（"zh" 或其它）。
+func SetDateTimeLang(lang string) { dateTimeLang = lang }
+
+// weekdayZh 是星期的中文名（Go 布局没有中文占位符，自行映射）。
+var weekdayZh = map[time.Weekday]string{
+	time.Sunday: "星期日", time.Monday: "星期一", time.Tuesday: "星期二",
+	time.Wednesday: "星期三", time.Thursday: "星期四", time.Friday: "星期五",
+	time.Saturday: "星期六",
+}
+
 func formatDateTime(t time.Time) string {
-	return t.Format("2006/1/2 15:04:05")
+	if dateTimeLang == "zh" {
+		return t.Format("2006年1月2日") + weekdayZh[t.Weekday()] + t.Format(" 15:04:05")
+	}
+	return t.Format("Monday, 2 January 2006 15:04:05")
 }
 
 func hashtableString(entries []HashEntry) string {

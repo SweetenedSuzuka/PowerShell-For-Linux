@@ -342,8 +342,9 @@ func TestFunctionAndParams(t *testing.T) {
 }
 
 func TestArraysAndHashtables(t *testing.T) {
+	// @(...) 元素解析优先级低于逗号：1,2,3 在元素内先成数组（Flatten 摊平后语义与平铺一致）
 	d := dump(parseOK(t, "$a = @(1, 2, 3)"))
-	if !strings.Contains(d, "set(a = [num(1),num(2),num(3)]") {
+	if !strings.Contains(d, "set(a = [[num(1),num(2),num(3)]") {
 		t.Fatalf("数组解析失败: %s", d)
 	}
 	d = dump(parseOK(t, "$h = @{ Name = 'x'; Count = 2 }"))

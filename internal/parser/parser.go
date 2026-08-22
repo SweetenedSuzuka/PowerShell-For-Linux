@@ -1194,8 +1194,25 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 						p.incomplete = true
 						break
 					}
-					// 元素用高于逗号优先级的解析，避免元素内部忽略逗号分隔符
-					items = append(items, p.parseBinaryExpr(29, false))
+					// 元素解析优先级低于逗号（28），使 "x","y" | cmd 先成数组再进管道，与 PowerShell 一致
+					item := p.parseBinaryExpr(27, false)
+					// 元素内可以是管道：@("x" | ForEach-Object { ... })
+					if p.cur().Type == TkPunct && p.cur().Text == "|" {
+						pipe := &ast.Pipeline{Expr: item}
+						for p.cur().Type == TkPunct && p.cur().Text == "|" {
+							p.advance()
+							p.skipNewlines()
+							elem := p.parsePipelineElement()
+							if c, ok := elem.(*ast.Command); ok {
+								pipe.Commands = append(pipe.Commands, c)
+							} else {
+								p.fail("管道右侧必须是命令")
+								break
+							}
+						}
+						item = &ast.PipelineExpr{Pipeline: pipe}
+					}
+					items = append(items, item)
 					if p.cur().Type == TkPunct && p.cur().Text == "," {
 						p.advance()
 					}

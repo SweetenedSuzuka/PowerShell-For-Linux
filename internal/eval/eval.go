@@ -654,6 +654,10 @@ func (e *Evaluator) evalIndex(i *ast.Index) *object.PSObject {
 		}
 		return object.Null()
 	}
+	// 标量（非集合）索引：[0] 返回自身，其余下标 $null（对齐 PowerShell 的标量索引语义）
+	if n, ok := idx.AsInt(); ok && n == 0 {
+		return base
+	}
 	return object.Null()
 }
 

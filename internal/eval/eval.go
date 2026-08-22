@@ -554,7 +554,7 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 				}
 				return object.DateTime(t.AddDate(0, int(n), 0))
 			case "toshortdatestring":
-				// 固定 en-US 风格（与 PowerShell on Linux 默认区域性一致）
+				// 使用 en-US 格式
 				return object.Str(t.Format("1/2/2006"))
 			case "tolongdatestring":
 				return object.Str(t.Format("Monday, January 2, 2006"))

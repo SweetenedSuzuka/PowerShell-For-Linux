@@ -537,7 +537,8 @@ func cmdFormatHex(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdJoinString(c *Context) ([]*object.PSObject, error) {
-	sep := " "
+	// 默认分隔符是空串（与 PowerShell 一致）
+	sep := ""
 	if s, ok := c.Args.Str("Separator"); ok {
 		sep = s
 	}

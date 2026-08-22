@@ -172,7 +172,7 @@ var commonParams = map[string]bool{
 	"inputobject": true, "encoding": true,
 }
 
-// commonSwitchParams 是开关型常见参数：不取值，后跟的值仍按位置参数处理（与 PowerShell 一致）。
+// commonSwitchParams 是开关型常见参数：不取值，后跟的值仍按位置参数处理。
 var commonSwitchParams = map[string]bool{
 	"verbose": true, "debug": true, "whatif": true, "confirm": true,
 }

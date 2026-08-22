@@ -101,7 +101,7 @@ func cmdConvertFromCsv(c *Context) ([]*object.PSObject, error) {
 
 func cmdConvertToJson(c *Context) ([]*object.PSObject, error) {
 	items := inputItems(c)
-	// -Depth 限制嵌套展开深度（默认 2，对齐 PowerShell）
+	// -Depth 限制嵌套展开深度（默认 2）
 	depth := 2
 	if d, ok := c.Args.Int("Depth"); ok && d >= 0 {
 		depth = int(d)
@@ -129,7 +129,7 @@ func cmdConvertToJson(c *Context) ([]*object.PSObject, error) {
 }
 
 // writeJSON 把 PSObject 序列化为美化 JSON（2 空格缩进），保持对象/哈希表的键序。
-// remaining 为剩余可展开深度；到 0 时数组/对象不再展开（对齐 PowerShell 的 -Depth 截断）。
+// remaining 为剩余可展开深度；到 0 时数组/对象不再展开。
 func writeJSON(buf *bytes.Buffer, o *object.PSObject, indent, remaining int) {
 	if o == nil || o.IsNull() {
 		buf.WriteString("null")
@@ -592,7 +592,7 @@ func cmdFormatHex(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdJoinString(c *Context) ([]*object.PSObject, error) {
-	// 默认分隔符是空串（与 PowerShell 一致）
+	// 默认分隔符是空串
 	sep := ""
 	if s, ok := c.Args.Str("Separator"); ok {
 		sep = s

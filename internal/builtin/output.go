@@ -154,7 +154,7 @@ func cmdSelectString(c *Context) ([]*object.PSObject, error) {
 		if err != nil {
 			return errf(c, "Select-String : 找不到路径 %s。", path)
 		}
-		// 文件输入逐行扫描，空行也计入行号（对齐 PowerShell）
+		// 文件输入逐行扫描，空行也计入行号
 		for i, line := range strings.Split(strings.TrimSuffix(string(data), "\n"), "\n") {
 			if matchLine(line) {
 				emit(path, int64(i+1), line)

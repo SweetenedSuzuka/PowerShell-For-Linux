@@ -226,7 +226,7 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		}
 		return e.evalValue(v.Else)
 	case *ast.ArrayLit:
-		// @(...) 对齐 PowerShell：
+		// @(...) ：
 		//   唯一元素 → “确保是数组”：元素输出流直接作为结果（@($arr) 得到 $arr 的元素）。
 		//   多个元素 → 各语句输出依次收集，数组值整体占一位（@(@("a"),"b") 内层数组保留）。
 		//   管道元素 → 每项输出各占一位（@("x" | ForEach-Object { ... })）。
@@ -350,9 +350,12 @@ func (e *Evaluator) memberProp(base *object.PSObject, prop string) *object.PSObj
 	if v, ok := base.PropValue(prop); ok {
 		return v
 	}
-	// 标量也提供 Count/Length = 1（PowerShell 语义）
+	// Count/Length：有值标量为 1，$null 为 0
 	switch strings.ToLower(prop) {
 	case "count", "length":
+		if base.IsNull() {
+			return object.Int(0)
+		}
 		return object.Int(1)
 	}
 	return object.Null()
@@ -634,7 +637,7 @@ func (e *Evaluator) evalIndex(i *ast.Index) *object.PSObject {
 	}
 	if base.IsArray() {
 		items := base.ArrayItems()
-		// 多下标（$a[1..2]、$a[0,2]、$a[1..2,0]）：下标表达式是数组时逐元素取值，嵌套数组展平，越界补 $null（对齐 PowerShell 的索引语义）。
+		// 多下标（$a[1..2]、$a[0,2]、$a[1..2,0]）：下标表达式是数组时逐元素取值，嵌套数组展平，越界补 $null。
 		if idx.IsArray() {
 			return indexSelect(idx, func(n int64) *object.PSObject {
 				return arrayItemAt(items, n)
@@ -670,7 +673,7 @@ func (e *Evaluator) evalIndex(i *ast.Index) *object.PSObject {
 		}
 		return object.Null()
 	}
-	// 标量（非集合）索引：[0] 返回自身，其余下标 $null（对齐 PowerShell 的标量索引语义）
+	// 标量（非集合）索引：[0] 返回自身，其余下标 $null
 	if n, ok := idx.AsInt(); ok && n == 0 {
 		return base
 	}
@@ -678,7 +681,7 @@ func (e *Evaluator) evalIndex(i *ast.Index) *object.PSObject {
 }
 
 // indexSelect 按下标数组（范围/逗号表达式）逐元素取值；
-// 单个结果展开为标量，多个结果组成数组（对齐 PowerShell）。
+// 单个结果展开为标量，多个结果组成数组。
 func indexSelect(idx *object.PSObject, pick func(n int64) *object.PSObject) *object.PSObject {
 	var sel []*object.PSObject
 	for _, id := range flattenIndices(idx) {
@@ -705,7 +708,7 @@ func flattenIndices(idx *object.PSObject) []int64 {
 	return out
 }
 
-// arrayItemAt 取数组元素：负数从末尾数，越界返回 $null（对齐 PowerShell）。
+// arrayItemAt 取数组元素：负数从末尾数，越界返回 $null。
 func arrayItemAt(items []*object.PSObject, n int64) *object.PSObject {
 	if n < 0 {
 		n = int64(len(items)) + n
@@ -767,7 +770,7 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 	case "*":
 		return mulOp(l, r)
 	case "/":
-		// 除数为零报错并置 $?=false（对齐 PowerShell：1/0 → 尝试除以零）
+		// 除数为零报错并置 $?=false
 		if rf, ok := r.AsFloat(); ok && rf == 0 {
 			e.writeError(fmt.Errorf("尝试除以零"))
 			return object.Null()
@@ -960,7 +963,7 @@ func buildMatches(re *regexp.Regexp, s string, idx []int) *object.PSObject {
 	return object.Hashtable(entries)
 }
 
-// caseSensitiveEq 大小写敏感相等（-ceq）。对齐 PowerShell：右操作数按左操作数类型转换，左为数字则两边按数字，左为字符串则两边按字符串，左为 $null 则只与 $null 相等。
+// caseSensitiveEq 大小写敏感相等（-ceq）。右操作数按左操作数类型转换，左为数字则两边按数字，左为字符串则两边按字符串，左为 $null 则只与 $null 相等。
 func caseSensitiveEq(l, r *object.PSObject) bool {
 	switch l.TypeName {
 	case "Int", "Double", "Boolean":
@@ -1000,7 +1003,7 @@ func caseSensitiveOrder(l, r *object.PSObject) int {
 	return strings.Compare(l.String(), r.String())
 }
 
-// compareEq 相等判断（-eq）。对齐 PowerShell：右操作数按左操作数类型转换，左为数字则两边按数字，左为字符串则两边按字符串，左为 $null 则只与 $null 相等。
+// compareEq 相等判断（-eq）。右操作数按左操作数类型转换，左为数字则两边按数字，左为字符串则两边按字符串，左为 $null 则只与 $null 相等。
 func compareEq(l, r *object.PSObject) bool {
 	switch l.TypeName {
 	case "Int", "Double", "Boolean":
@@ -1020,7 +1023,7 @@ func compareEq(l, r *object.PSObject) bool {
 	return strings.EqualFold(l.String(), r.String())
 }
 
-// compareOrder 判断 -lt/-le/-gt/-ge 的顺序。对齐 PowerShell：右操作数按左操作数类型参与比较——左为数字则两边按数字（5 -lt "10" 为 True），左为字符串则两边按字符串（"5" -lt "10" 是字典序比较，结果为 False）。
+// compareOrder 判断 -lt/-le/-gt/-ge 的顺序。右操作数按左操作数类型参与比较——左为数字则两边按数字（5 -lt "10" 为 True），左为字符串则两边按字符串（"5" -lt "10" 是字典序比较，结果为 False）。
 func compareOrder(l, r *object.PSObject) int {
 	switch l.TypeName {
 	case "Int", "Double", "Boolean":
@@ -1327,7 +1330,7 @@ func splitOp(l, r *object.PSObject) *object.PSObject {
 	if err != nil {
 		re = regexp.MustCompile(regexp.QuoteMeta(delim))
 	}
-	// n>0 时最多分 n 段、末段保留未分割剩余；n=0 或负数不限（对齐 PowerShell）
+	// n>0 时最多分 n 段、末段保留未分割剩余；n=0 或负数不限
 	n := -1
 	if maxN > 0 {
 		n = maxN

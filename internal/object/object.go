@@ -281,8 +281,11 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 			}
 		}
 	}
-	// 标量也提供 Count/Length = 1（PowerShell 语义，与 eval 成员访问一致）
+	// Count/Length：有值标量为 1，$null 为 0
 	if strings.EqualFold(name, "Count") || strings.EqualFold(name, "Length") {
+		if o.IsNull() {
+			return Int(0), true
+		}
 		return Int(1), true
 	}
 	return nil, false

@@ -96,7 +96,7 @@ func (e *Evaluator) execStatement(n ast.Node) []*object.PSObject {
 }
 
 // execThrow 抛出一个终止错误：构造错误记录（Message + Exception）后以 flowError 信号上抛。
-// 无表达式时消息为 ScriptHalted（对齐 PowerShell throw 的默认行为）。
+// 无表达式时消息为 ScriptHalted（对应 PowerShell throw 的默认消息）。
 func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 	msg := "ScriptHalted"
 	if v.Value != nil {
@@ -126,7 +126,7 @@ func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 			if !catchMatches(cc.TypeName, sig.value) {
 				continue
 			}
-			// catch 块不推独立作用域（对齐 PowerShell）：普通变量赋值穿透，只有 $_ 是临时绑定，块结束恢复原值。
+			// catch 块不推独立作用域：普通变量赋值穿透，只有 $_ 是临时绑定，块结束恢复原值。
 			sc := e.scopes[len(e.scopes)-1]
 			oldUS, hadUS := sc["_"]
 			sc["_"] = sig.value

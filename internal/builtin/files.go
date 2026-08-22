@@ -142,7 +142,7 @@ func cmdGetItem(c *Context) ([]*object.PSObject, error) {
 func cmdSetLocation(c *Context) ([]*object.PSObject, error) {
 	path := firstPathArg(c)
 	if path == "" {
-		// 无参数时回主目录（与 PowerShell 一致）
+		// 无参数时回主目录
 		if h, err := os.UserHomeDir(); err == nil {
 			c.Shell.Cwd = h
 		}
@@ -206,7 +206,7 @@ func cmdGetContent(c *Context) ([]*object.PSObject, error) {
 		if len(lines) == 1 && lines[0] == "" {
 			lines = nil
 		}
-		// -TotalCount / -Tail 对每个文件分别生效（与 PowerShell 一致）
+		// -TotalCount / -Tail 对每个文件分别生效
 		if total, ok := c.Args.Int("TotalCount"); ok && total >= 0 {
 			if int(total) < len(lines) {
 				lines = lines[:total]

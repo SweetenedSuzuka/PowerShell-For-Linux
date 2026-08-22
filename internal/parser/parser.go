@@ -923,7 +923,7 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 			}
 			lhs = &ast.ArrayLit{Items: items}
 		case "?":
-			// 三元运算符 cond ? 真 : 假（右结合，对齐 PowerShell）
+			// 三元运算符 cond ? 真 : 假（右结合）
 			p.advance()
 			ifExpr := p.parseBinaryExpr(prec, argMode)
 			sep := p.cur()
@@ -971,7 +971,7 @@ func (p *Parser) binaryOpInfo(t lexer.Token) (string, int) {
 		}
 	case TkWord:
 		if t.Text == ".." {
-			return "..", 45 // 范围绑定比算术更紧（对齐 PowerShell：1..3 -gt 1 先成范围）
+			return "..", 45 // 范围绑定比算术更严格：1..3 -gt 1 先成范围再过滤
 		}
 		if t.Text == "?" {
 			return "?", 5 // 三元运算符（Where-Object 别名的 ? 只在命令位置出现）
@@ -1194,7 +1194,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 						p.incomplete = true
 						break
 					}
-					// 元素解析优先级低于逗号（28），使 "x","y" | cmd 先成数组再进管道，与 PowerShell 一致
+					// 元素解析优先级低于逗号（28），使 "x","y" | cmd 先成数组再进管道
 					item := p.parseBinaryExpr(27, false)
 					// 元素内可以是管道：@("x" | ForEach-Object { ... })
 					if p.cur().Type == TkPunct && p.cur().Text == "|" {

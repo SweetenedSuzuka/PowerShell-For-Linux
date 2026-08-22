@@ -24,7 +24,7 @@ import (
 
 func cmdGetDate(c *Context) ([]*object.PSObject, error) {
 	now := time.Now()
-	// -Date 指定日期时间（本地时区，无时区信息时按本地解析，对齐 PowerShell）
+	// -Date 指定日期时间（本地时区，无时区信息时按本地解析）
 	if d, ok := c.Args.Str("Date"); ok && d != "" {
 		if t, err := parseDateArg(d); err == nil {
 			now = t
@@ -301,19 +301,50 @@ func cmdSetAlias(c *Context) ([]*object.PSObject, error) {
 
 func cmdGetProcess(c *Context) ([]*object.PSObject, error) {
 	name, _ := c.Args.Str("Name")
+	var ids []int
+	if v := c.Args.Get("Id"); v != nil {
+		// -Id 支持单个 PID、逗号分隔串与 PID 数组
+		for _, it := range v.ArrayItems() {
+			for _, f := range strings.Split(it.String(), ",") {
+				if n, err := strconv.Atoi(strings.TrimSpace(f)); err == nil {
+					ids = append(ids, n)
+				}
+			}
+		}
+	}
 	procs, err := listProcesses()
 	if err != nil {
 		return []*object.PSObject{object.Process(os.Getpid(), "powershell", 0, 0)}, nil
 	}
 	var out []*object.PSObject
 	for _, pr := range procs {
+		if len(ids) > 0 {
+			// -Id 按 PID 精确匹配；不存在的 PID 报非终止错误
+			for _, id := range ids {
+				if pr.pid == id {
+					out = append(out, object.Process(pr.pid, pr.name, pr.cpu, pr.mem))
+				}
+			}
+			continue
+		}
 		if name != "" && !strings.Contains(strings.ToLower(pr.name), strings.ToLower(name)) {
 			continue
 		}
 		out = append(out, object.Process(pr.pid, pr.name, pr.cpu, pr.mem))
 	}
+	if len(ids) > 0 && len(out) < len(ids) {
+		c.Shell.LastSuccess = false
+		fmt.Fprintf(c.Stderr, "%s : 找不到进程标识符为 %s 的进程。\n", c.Shell.StyleName(), c.Args.Get("Id").String())
+	}
+	// 无筛选却无结果时回退当前进程；带 -Id/-Name 查询无结果则报错并返回空
 	if len(out) == 0 {
-		return []*object.PSObject{object.Process(os.Getpid(), "powershell", 0, 0)}, nil
+		if name != "" {
+			c.Shell.LastSuccess = false
+			fmt.Fprintf(c.Stderr, "%s : 找不到名为 \"%s\" 的进程。\n", c.Shell.StyleName(), name)
+		}
+		if name == "" && len(ids) == 0 {
+			return []*object.PSObject{object.Process(os.Getpid(), "powershell", 0, 0)}, nil
+		}
 	}
 	return out, nil
 }
@@ -628,6 +659,7 @@ func init() {
 	}, cmdSetAlias)
 	Register("Get-Process", []ParamSpec{
 		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
+		{Name: "Id", Type: "string"},
 	}, cmdGetProcess)
 	Register("Get-Uptime", nil, cmdGetUptime)
 	Register("Get-Variable", []ParamSpec{

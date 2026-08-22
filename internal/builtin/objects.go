@@ -287,7 +287,7 @@ func cmdGroupObject(c *Context) ([]*object.PSObject, error) {
 	}
 	var out []*object.PSObject
 	for _, k := range order {
-		// 组成员放 Group 属性（对齐 PowerShell 的 GroupInfo.Group），Value 保持空，避免对象被当成集合。
+		// 组成员放 Group 属性（对应 PowerShell 的 GroupInfo.Group 属性），Value 保持空以免被当成集合。
 		g := object.Object("GroupInfo", nil)
 		g.AddProp("Group", groups[k])
 		g.AddProp("Name", firstName[k])

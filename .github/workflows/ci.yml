@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+
+      - name: 编译
+        run: CGO_ENABLED=0 go build -o powershell .
+
+      - name: 静态检查
+        run: go vet ./...
+
+      - name: 单元测试
+        run: go test ./... -v
+
+      - name: 内容核验（指令参考.md 示例逐条运行）
+        run: |
+          ./powershell -NoLogo -NoProfile -File test/核验.ps1 2>/dev/null | tee "$RUNNER_TEMP/verify.log"
+          grep -q "失败 0" "$RUNNER_TEMP/verify.log"

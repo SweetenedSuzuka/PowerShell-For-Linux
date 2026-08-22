@@ -228,7 +228,13 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 	case *ast.ArrayLit:
 		items := make([]*object.PSObject, 0, len(v.Items))
 		for _, it := range v.Items {
-			items = append(items, e.evalValue(it))
+			val := e.evalValue(it)
+			// @(...) 元素按输出流摊平（@($arr) 得到元素本身）；逗号列表不摊平，内嵌数组保持
+			if v.Flatten {
+				items = append(items, unwrapOutput(val)...)
+			} else {
+				items = append(items, val)
+			}
 		}
 		return object.Array(items)
 	case *ast.HashtableLit:

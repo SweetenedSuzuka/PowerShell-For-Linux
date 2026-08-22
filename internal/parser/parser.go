@@ -1200,7 +1200,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 						p.advance()
 					}
 				}
-				return &ast.ArrayLit{Items: items}
+				return &ast.ArrayLit{Items: items, Flatten: true}
 			}
 			if nt.Type == TkPunct && nt.Text == "{" {
 				p.advance() // @

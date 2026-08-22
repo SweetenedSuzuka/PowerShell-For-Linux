@@ -388,6 +388,15 @@ Write-Output "== Get-Process 真值（仅 Linux） =="
 $p1 = Get-Process | Where-Object { $_.Id -eq 1 }
 $results += T "Get-Process 真值" (($p1.CPU -gt 0) -and ($p1.Memory -gt 0))
 
+Write-Output "== 标量索引 =="
+
+# 103. 标量变量 [0] 返回自身，非零下标返回 $null
+$scalar = [pscustomobject]@{ tag = "t" }
+$results += T "标量索引自身" (($scalar[0].tag -eq "t") -and ($scalar[5] -eq $null))
+# 104. GroupInfo 不被当集合：[0] 是组对象本身，成员在 Group 属性
+$gi = "x","y","x" | Group-Object
+$results += T "GroupInfo 索引不穿透" ((@($gi).Count -eq 2) -and ($gi[0].Name -eq "x") -and ($gi[0].Group -join ",") -eq "x,x")
+
 # == 结尾统计 ==
 Write-Output ""
 $failN = 0

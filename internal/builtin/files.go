@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"powershell/internal/lang"
 	"powershell/internal/object"
 	"powershell/internal/shell"
 )
@@ -127,7 +128,7 @@ func cmdGetItem(c *Context) ([]*object.PSObject, error) {
 		for _, p := range expanded {
 			info, err := os.Stat(p)
 			if err != nil {
-				return errf(c, "Get-Item : 找不到路径 %s。", p)
+				return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, p))
 			}
 			if info.IsDir() {
 				out = append(out, object.DirInfo(p, info))
@@ -157,7 +158,7 @@ func cmdSetLocation(c *Context) ([]*object.PSObject, error) {
 	}
 	info, err := os.Stat(newPath)
 	if err != nil || !info.IsDir() {
-		return errf(c, "Set-Location : 找不到路径 %s，因为该路径不存在。", path)
+		return errf(c, "%s", lang.T(lang.MsgPathNotFoundForSet, path))
 	}
 	c.Shell.Cwd = filepath.Clean(newPath)
 	return nil, nil
@@ -195,7 +196,7 @@ func cmdGetContent(c *Context) ([]*object.PSObject, error) {
 		}
 		data, err := os.ReadFile(full)
 		if err != nil {
-			return errf(c, "Get-Content : 找不到路径 %s。", path)
+			return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, path))
 		}
 		text := string(data)
 		if raw {
@@ -246,7 +247,7 @@ func cmdSetContent(c *Context) ([]*object.PSObject, error) {
 	}
 	enc, _ := c.Args.Str("Encoding")
 	if err := os.WriteFile(full, encodeText(enc, sb.String(), true), 0o644); err != nil {
-		return errf(c, "Set-Content : 无法写入 %s。", path)
+		return errf(c, "%s", lang.T(lang.MsgCannotWrite, path))
 	}
 	return nil, nil
 }
@@ -268,7 +269,7 @@ func cmdAddContent(c *Context) ([]*object.PSObject, error) {
 	}
 	f, err := os.OpenFile(full, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0o644)
 	if err != nil {
-		return errf(c, "Add-Content : 无法打开 %s。", path)
+		return errf(c, "%s", lang.T(lang.MsgCannotOpen, path))
 	}
 	defer f.Close()
 	for _, o := range content {
@@ -313,7 +314,7 @@ func cmdNewItem(c *Context) ([]*object.PSObject, error) {
 		}
 	}
 	if err != nil {
-		return errf(c, "New-Item : 无法创建 %s：%v", path, err)
+		return errf(c, "%s", lang.T(lang.MsgCannotCreate, path, err))
 	}
 	if info, e := os.Stat(full); e == nil {
 		if info.IsDir() {
@@ -351,7 +352,7 @@ func cmdRemoveItem(c *Context) ([]*object.PSObject, error) {
 				}
 			}
 			if err != nil && !force {
-				return errf(c, "Remove-Item : 无法删除 %s：%v", p, err)
+				return errf(c, "%s", lang.T(lang.MsgCannotDelete, p, err))
 			}
 		}
 	}
@@ -415,13 +416,13 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 			return errf(c, "%v", derr)
 		}
 		if info, err := os.Stat(destFull); err != nil || !info.IsDir() {
-			return errf(c, "%s : 复制多个源时目标 %s 必须是已存在的目录。", label, dest)
+			return errf(c, "%s", lang.T(lang.MsgCopyDestNotDir, dest))
 		}
 	}
 	for _, srcFull := range srcFulls {
 		info, err := os.Stat(srcFull)
 		if err != nil {
-			return errf(c, "%s : 找不到路径 %s。", label, srcFull)
+			return errf(c, "%s : %s", label, lang.T(lang.MsgPathNotFoundFmt, srcFull))
 		}
 		destFull, derr := resolvePath(c, dest)
 		if derr != nil {
@@ -435,7 +436,7 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 				return errf(c, "%s : %v", label, err)
 			}
 		} else if info.IsDir() {
-			return errf(c, "%s : 目录 %s 需要 -Recurse。", label, srcFull)
+			return errf(c, "%s : %s", label, lang.T(lang.MsgCopyNeedsRecurse, srcFull))
 		} else {
 			if err := copyFile(srcFull, destFull); err != nil {
 				return errf(c, "%s : %v", label, err)
@@ -493,7 +494,7 @@ func cmdRenameItem(c *Context) ([]*object.PSObject, error) {
 	}
 	newPath := filepath.Join(filepath.Dir(old), newName)
 	if err := os.Rename(old, newPath); err != nil {
-		return errf(c, "Rename-Item : 无法重命名 %s：%v", path, err)
+		return errf(c, "%s", lang.T(lang.MsgCannotRename, path, err))
 	}
 	return nil, nil
 }

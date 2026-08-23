@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"powershell/internal/ast"
+	"powershell/internal/lang"
 	"powershell/internal/object"
 )
 
@@ -30,37 +31,13 @@ func (s Style) String() string {
 	return "PowerShell 7"
 }
 
-// Lang 是界面语言：中文用 "zh"，其余用 "en"。
-type Lang string
+// Lang 是界面语言，直接沿用 lang 包的类型。
+type Lang = lang.Lang
 
 const (
-	LangZh Lang = "zh"
-	LangEn Lang = "en"
+	LangZh = lang.LangZh
+	LangEn = lang.LangEn
 )
-
-// detectLang 按 POSIX / GNU gettext 约定读取系统语言：依次看 LANGUAGE、LC_ALL、LC_MESSAGES、LANG。
-// 语言码以 zh 开头算中文，其余算英文。
-func detectLang() Lang {
-	for _, k := range []string{"LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG"} {
-		v := os.Getenv(k)
-		if v == "" || v == "C" || v == "POSIX" {
-			continue
-		}
-		if strings.HasPrefix(languageCode(v), "zh") {
-			return LangZh
-		}
-		return LangEn
-	}
-	return LangEn
-}
-
-// languageCode 取 locale 的语言码（zh_CN.UTF-8 → zh；LANGUAGE 多个值取第一个）。
-func languageCode(locale string) string {
-	if i := strings.IndexAny(locale, "_@:-."); i >= 0 {
-		return locale[:i]
-	}
-	return locale
-}
 
 // Function 是用户定义函数。
 type Function struct {
@@ -73,7 +50,7 @@ type Function struct {
 // Session 是一次解释器会话的全部状态。
 type Session struct {
 	Style         Style
-	Lang          Lang                        // 界面语言：zh / en
+	Lang          Lang                        // 界面语言（lang 包的语言码）
 	Vars          map[string]*object.PSObject // 用户显式变量
 	Aliases       map[string]string
 	Functions     map[string]*Function
@@ -99,7 +76,7 @@ func New(style Style, stdout, stderr io.Writer, stdin io.Reader) *Session {
 	}
 	s := &Session{
 		Style:     style,
-		Lang:      detectLang(),
+		Lang:      lang.Detect(),
 		Vars:      map[string]*object.PSObject{},
 		Functions: map[string]*Function{},
 		Cwd:       cwd,
@@ -108,8 +85,8 @@ func New(style Style, stdout, stderr io.Writer, stdin io.Reader) *Session {
 		HostIn:    stdin,
 	}
 	s.Aliases = buildAliases(style)
-	// DateTime 默认渲染跟随界面语言（zh 中文格式，其余使用 C 区域格式）
-	object.SetDateTimeLang(string(s.Lang))
+	// 会话语言即全局界面语言，提示文案与日期渲染都按它取
+	lang.SetCurrent(s.Lang)
 	return s
 }
 
@@ -142,7 +119,7 @@ func IsReadOnlyVar(name string) bool {
 // SetVar 设置变量；只读自动变量拒绝修改。
 func (s *Session) SetVar(name string, val *object.PSObject) error {
 	if IsReadOnlyVar(name) {
-		return fmt.Errorf("无法对只读变量 $%s 赋值", name)
+		return fmt.Errorf("%s", lang.T(lang.MsgReadonlyVar, name))
 	}
 	s.Vars[name] = val
 	return nil
@@ -261,13 +238,25 @@ func (s *Session) OSName() string {
 	return runtime.GOOS
 }
 
-// cultureObject 构造 CultureInfo 对象（LCID/Name/DisplayName），区域随界面语言。
+// cultureObject 构造 CultureInfo 对象（LCID/Name/DisplayName），区域取值由调用方按界面语言选定。
 func cultureObject(name string, lcid int64, display string) *object.PSObject {
 	c := object.Object("System.Globalization.CultureInfo", name)
 	c.AddProp("LCID", lcid)
 	c.AddProp("Name", name)
 	c.AddProp("DisplayName", display)
 	return c
+}
+
+// CultureObject 返回当前界面语言对应的 CultureInfo，Get-Culture 与 $Host.CurrentCulture 共用这一份。
+// 各语言的区域数据在此登记：语言码 → 名称、LCID、显示名；未登记的语言回退默认语言的 zh-CN。
+func (s *Session) CultureObject() *object.PSObject {
+	switch s.Lang {
+	case LangZh:
+		return cultureObject("zh-CN", 2052, "中文（中国）")
+	case LangEn:
+		return cultureObject("en-US", 1033, "English (United States)")
+	}
+	return cultureObject("zh-CN", 2052, "中文（中国）")
 }
 
 // newUUID 生成随机 UUID v4。
@@ -282,7 +271,7 @@ func newUUID() string {
 		b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], b[11], b[12], b[13], b[14], b[15])
 }
 
-// HostObject 构造 $Host 对象：InstanceId 为本会话的随机 UUID，区域随界面语言。
+// HostObject 构造 $Host 对象：InstanceId 为本会话的随机 UUID，区域随界面语言（未登记的语言回退默认语言）。
 func (s *Session) HostObject() *object.PSObject {
 	h := object.Object("System.Management.Automation.Internal.Host.InternalHost", nil)
 	h.AddProp("Name", "ConsoleHost")
@@ -290,13 +279,9 @@ func (s *Session) HostObject() *object.PSObject {
 	ui := object.Object("System.Management.Automation.Internal.Host.InternalHostUserInterface", nil)
 	ui.AddProp("SupportsVirtualTerminal", true)
 	h.AddProp("UI", ui)
-	if s.Lang == LangZh {
-		h.AddProp("CurrentCulture", cultureObject("zh-CN", 2052, "中文（中国）"))
-		h.AddProp("CurrentUICulture", cultureObject("zh-CN", 2052, "中文（中国）"))
-	} else {
-		h.AddProp("CurrentCulture", cultureObject("en-US", 1033, "English (United States)"))
-		h.AddProp("CurrentUICulture", cultureObject("en-US", 1033, "English (United States)"))
-	}
+	culture := s.CultureObject()
+	h.AddProp("CurrentCulture", culture)
+	h.AddProp("CurrentUICulture", culture)
 	return h
 }
 
@@ -414,7 +399,7 @@ func DrivePath(p string) (string, error) {
 		return p, nil
 	}
 	if !strings.EqualFold(p[:1], "C") {
-		return "", fmt.Errorf("不支持的盘符 %s:。Linux 上只用 C 盘表示系统盘，没有其它盘的概念。", strings.ToUpper(p[:1]))
+		return "", fmt.Errorf("%s", lang.T(lang.MsgDriveUnsupported, strings.ToUpper(p[:1])))
 	}
 	rest := strings.TrimLeft(p[2:], `/\`)
 	rest = strings.ReplaceAll(rest, `\`, `/`)

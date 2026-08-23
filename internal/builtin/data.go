@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"powershell/internal/ast"
+	"powershell/internal/lang"
 	"powershell/internal/object"
 )
 
@@ -579,7 +580,7 @@ func cmdFormatHex(c *Context) ([]*object.PSObject, error) {
 		}
 		data, err := os.ReadFile(full)
 		if err != nil {
-			return errf(c, "Format-Hex : 找不到路径 %s。", path)
+			return errf(c, "%s", lang.T(lang.MsgFormatHexNotFound, path))
 		}
 		emit(path, "", "", data)
 		return []*object.PSObject{object.Str(strings.Trim(sb.String(), "\n"))}, nil

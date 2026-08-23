@@ -7,6 +7,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"powershell/internal/lang"
 )
 
 // LookPath 在 PATH 中查找可执行文件；带路径分隔符的名字直接判定。
@@ -41,6 +43,6 @@ func Exec(dir, program string, argv []string, stdin io.Reader, stdout, stderr io
 	if ee, ok := err.(*exec.ExitError); ok {
 		return ee.ExitCode()
 	}
-	fmt.Fprintf(stderr, "无法执行命令 %s：%v\n", program, err)
+	fmt.Fprintf(stderr, "%s\n", lang.T(lang.MsgExternalExecFail, program, err))
 	return 127
 }

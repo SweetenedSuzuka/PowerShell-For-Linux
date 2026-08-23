@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"powershell/internal/lang"
 	"powershell/internal/object"
 	"powershell/internal/shell"
 )
@@ -40,14 +41,14 @@ func runSystemctl(c *Context, action, unit string) int {
 
 func cmdGetService(c *Context) ([]*object.PSObject, error) {
 	if _, err := exec.LookPath("systemctl"); err != nil {
-		return errf(c, "Get-Service : 需要 systemd（systemctl）。")
+		return errf(c, "%s", lang.T(lang.MsgServiceNeedSystemd))
 	}
 	out, err := exec.Command("systemctl", "list-units", "--type=service", "--all", "--no-pager").Output()
 	if err != nil {
 		// 尝试 sudo
 		out, err = exec.Command("sudo", "systemctl", "list-units", "--type=service", "--all", "--no-pager").Output()
 		if err != nil {
-			return errf(c, "Get-Service : 无法读取服务列表。")
+			return errf(c, "%s", lang.T(lang.MsgServiceListFail))
 		}
 	}
 	var result []*object.PSObject
@@ -180,14 +181,8 @@ func cmdSetTimeZone(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdGetCulture(c *Context) ([]*object.PSObject, error) {
-	lang := os.Getenv("LANG")
-	if lang == "" {
-		lang = "en-US"
-	}
-	o := object.Object("System.Globalization.CultureInfo", nil)
-	o.AddProp("Name", lang)
-	o.AddProp("DisplayName", lang)
-	return []*object.PSObject{o}, nil
+	// 区域按界面语言的登记表返回，未登记的语言回退 zh-CN（与 $Host.CurrentCulture 一致）
+	return []*object.PSObject{c.Shell.CultureObject()}, nil
 }
 
 func cmdTestConnection(c *Context) ([]*object.PSObject, error) {
@@ -200,7 +195,7 @@ func cmdTestConnection(c *Context) ([]*object.PSObject, error) {
 		count = strconv.FormatInt(n, 10)
 	}
 	if _, err := exec.LookPath("ping"); err != nil {
-		return errf(c, "Test-Connection : 找不到 ping 命令。")
+		return errf(c, "%s", lang.T(lang.MsgPingNotFound))
 	}
 	code := runExternalRaw(c, "ping", []string{"-c", count, host})
 	return []*object.PSObject{object.Bool(code == 0)}, nil

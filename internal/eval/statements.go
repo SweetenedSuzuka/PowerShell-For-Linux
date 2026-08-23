@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"powershell/internal/ast"
+	"powershell/internal/lang"
 	"powershell/internal/object"
 	"powershell/internal/shell"
 )
@@ -65,7 +66,7 @@ func (e *Evaluator) execStatement(n ast.Node) []*object.PSObject {
 		return nil
 	case *ast.ParamBlock:
 		// 脚本/函数体开头的 param() 已被解析器提取；这里说明出现在别处的 param 不合法
-		e.writeError(fmt.Errorf("param 语句只能在函数或脚本中使用"))
+		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgParamOnlyInFunc)))
 		return nil
 	case *ast.Break:
 		panic(&flowSignal{kind: flowBreak})

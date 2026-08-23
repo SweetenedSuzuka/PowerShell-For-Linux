@@ -15,6 +15,7 @@ import (
 	"powershell/internal/ast"
 	"powershell/internal/builtin"
 	"powershell/internal/external"
+	"powershell/internal/lang"
 	"powershell/internal/object"
 	"powershell/internal/shell"
 )
@@ -156,7 +157,7 @@ func (e *Evaluator) lookupVar(name, scope string) *object.PSObject {
 // setVar 按作用域修饰符写变量：script/global 写全局（scopes[0]），local 与默认写当前（栈顶）。
 func (e *Evaluator) setVar(name, scope string, val *object.PSObject) error {
 	if shell.IsReadOnlyVar(name) {
-		return fmt.Errorf("无法对只读变量 $%s 赋值。", name)
+		return fmt.Errorf("%s", lang.T(lang.MsgReadonlyVar, name))
 	}
 	if scope == "script" || scope == "global" {
 		e.scopes[0][name] = val
@@ -772,14 +773,14 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 	case "/":
 		// 除数为零报错并置 $?=false
 		if rf, ok := r.AsFloat(); ok && rf == 0 {
-			e.writeError(fmt.Errorf("尝试除以零"))
+			e.writeError(fmt.Errorf("%s", lang.T(lang.MsgDivideByZero)))
 			return object.Null()
 		}
 		return numOp(l, r, func(a, b float64) float64 { return a / b })
 	case "%":
 		// 模数为零同样报错
 		if rf, ok := r.AsFloat(); ok && rf == 0 {
-			e.writeError(fmt.Errorf("尝试除以零"))
+			e.writeError(fmt.Errorf("%s", lang.T(lang.MsgDivideByZero)))
 			return object.Null()
 		}
 		return numOp(l, r, func(a, b float64) float64 { return math.Mod(a, b) })
@@ -1181,7 +1182,7 @@ func (e *Evaluator) formatOp(f, args *object.PSObject) *object.PSObject {
 		}
 		idx, err := strconv.Atoi(strings.TrimSpace(alignPart))
 		if err != nil || idx < 0 || idx >= len(items) {
-			e.writeError(fmt.Errorf("格式串占位符 %q 越界（参数个数 %d）", inner, len(items)))
+			e.writeError(fmt.Errorf("%s", lang.T(lang.MsgFormatIndexOut, inner, len(items))))
 			return object.Null()
 		}
 		s := formatArg(items[idx], spec)

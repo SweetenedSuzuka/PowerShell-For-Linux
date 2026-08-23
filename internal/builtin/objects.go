@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"powershell/internal/ast"
+	"powershell/internal/lang"
 	"powershell/internal/object"
 )
 
@@ -438,7 +439,7 @@ func cmdNewObject(c *Context) ([]*object.PSObject, error) {
 		}
 		return []*object.PSObject{object.PSCustomObject(entries)}, nil
 	default:
-		return errf(c, "New-Object : 不支持的类型 %s。", tn)
+		return errf(c, "%s", lang.T(lang.MsgNewObjectBadType, tn))
 	}
 }
 

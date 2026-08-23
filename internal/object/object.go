@@ -12,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"powershell/internal/lang"
 )
 
 // PSObject 是 PowerShell 对象。
@@ -445,25 +447,20 @@ func formatFloat(v float64) string {
 	return s
 }
 
-// dateTimeLang 决定 DateTime 默认渲染的区域："zh" 用中文格式，其余用 C 区域格式。
-// 由 shell 包按界面语言设置，object 包不反向依赖。
-var dateTimeLang string
-
-// SetDateTimeLang 设置 DateTime 默认渲染的语言（"zh" 或其它）。
-func SetDateTimeLang(lang string) { dateTimeLang = lang }
+// formatDateTime 按界面语言渲染 DateTime。
+// 各语言的日期格式在此函数登记，尚未登记格式的语言回退默认语言的中文格式。
+func formatDateTime(t time.Time) string {
+	if lang.Current() == lang.LangEn {
+		return t.Format("Monday, 2 January 2006 15:04:05")
+	}
+	return t.Format("2006年1月2日") + weekdayZh[t.Weekday()] + t.Format(" 15:04:05")
+}
 
 // weekdayZh 是星期的中文名（Go 布局没有中文占位符，自行映射）。
 var weekdayZh = map[time.Weekday]string{
 	time.Sunday: "星期日", time.Monday: "星期一", time.Tuesday: "星期二",
 	time.Wednesday: "星期三", time.Thursday: "星期四", time.Friday: "星期五",
 	time.Saturday: "星期六",
-}
-
-func formatDateTime(t time.Time) string {
-	if dateTimeLang == "zh" {
-		return t.Format("2006年1月2日") + weekdayZh[t.Weekday()] + t.Format(" 15:04:05")
-	}
-	return t.Format("Monday, 2 January 2006 15:04:05")
 }
 
 func hashtableString(entries []HashEntry) string {

@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"powershell/internal/ast"
+	"powershell/internal/lang"
 	"powershell/internal/object"
 	"powershell/internal/shell"
 )
@@ -224,7 +225,7 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 				continue
 			}
 			if sp == nil {
-				return nil, fmt.Errorf("找不到与参数名称 \"-%s\" 匹配的参数。", slot.Name)
+				return nil, fmt.Errorf("%s", lang.T(lang.MsgBindNoParam, slot.Name))
 			}
 			if sp.Switch {
 				if slot.Inline {
@@ -246,12 +247,12 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 				continue
 			}
 			if sp == nil {
-				return nil, fmt.Errorf("找不到与参数名称 \"-%s\" 匹配的参数。", slot.Name)
+				return nil, fmt.Errorf("%s", lang.T(lang.MsgBindNoParam, slot.Name))
 			}
 			if sp.Switch {
 				ba.Switches[sp.Name] = true
 			} else {
-				return nil, fmt.Errorf("参数 \"-%s\" 缺少值。", slot.Name)
+				return nil, fmt.Errorf("%s", lang.T(lang.MsgBindSwitchNoValue, slot.Name))
 			}
 		}
 	}

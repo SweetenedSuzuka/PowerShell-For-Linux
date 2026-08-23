@@ -11,6 +11,7 @@ import (
 	"powershell/internal/ast"
 	"powershell/internal/builtin"
 	"powershell/internal/external"
+	"powershell/internal/lang"
 	"powershell/internal/object"
 	"powershell/internal/parser"
 	"powershell/internal/shell"
@@ -253,7 +254,7 @@ func (e *Evaluator) applyRedirects(cmd *ast.Command, out []*object.PSObject) []*
 		}
 		f, err := os.OpenFile(target, flags, 0o644)
 		if err != nil {
-			e.writeError(fmt.Errorf("无法写入重定向目标 %s：%v", target, err))
+			e.writeError(fmt.Errorf("%s", lang.T(lang.MsgRedirectWrite, target, err)))
 			continue
 		}
 		_, _ = f.WriteString(buf.String())
@@ -356,7 +357,7 @@ func (e *Evaluator) externalArgv(cmd *ast.Command) (string, []string) {
 }
 
 func (e *Evaluator) notFound(name string) {
-	fmt.Fprintf(e.hostErr, "%s : 无法将“%s”项识别为 cmdlet、函数、脚本文件或可运行程序的名称。\n", e.Session.StyleName(), name)
+	fmt.Fprintf(e.hostErr, "%s : %s\n", e.Session.StyleName(), lang.T(lang.MsgCommandNotFound, name))
 	e.Session.LastSuccess = false
 }
 
@@ -472,12 +473,12 @@ func (e *Evaluator) RunScriptFileStreaming(path string, args []*object.PSObject,
 func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(objs []*object.PSObject)) []*object.PSObject {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		e.writeError(fmt.Errorf("无法读取脚本 %s：%v", path, err))
+		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgScriptReadFail, path, err)))
 		return nil
 	}
 	res := parser.Parse(string(data))
 	if res.Error != nil {
-		e.writeError(fmt.Errorf("脚本 %s 解析错误：%v", path, res.Error))
+		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgScriptParseFail, path, res.Error)))
 		return nil
 	}
 	abs, _ := filepath.Abs(path)

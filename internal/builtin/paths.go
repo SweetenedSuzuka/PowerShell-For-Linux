@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"powershell/internal/lang"
 	"powershell/internal/object"
 )
 
@@ -131,7 +132,7 @@ func cmdPushLocation(c *Context) ([]*object.PSObject, error) {
 			return errf(c, "%v", derr)
 		}
 		if info, err := os.Stat(newPath); err != nil || !info.IsDir() {
-			return errf(c, "Push-Location : 找不到路径 %s。", path)
+			return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, path))
 		}
 		target = filepath.Clean(newPath)
 	}
@@ -161,7 +162,7 @@ func cmdClearContent(c *Context) ([]*object.PSObject, error) {
 	}
 	for _, p := range paths {
 		if err := os.WriteFile(p, nil, 0o644); err != nil {
-			return errf(c, "Clear-Content : 无法清空 %s。", p)
+			return errf(c, "%s", lang.T(lang.MsgCannotClear, p))
 		}
 	}
 	return nil, nil
@@ -189,7 +190,7 @@ func cmdSetItem(c *Context) ([]*object.PSObject, error) {
 		return nil, nil
 	}
 	if err := os.WriteFile(full, []byte(value.String()), 0o644); err != nil {
-		return errf(c, "Set-Item : 无法写入 %s。", path)
+		return errf(c, "%s", lang.T(lang.MsgCannotWrite, path))
 	}
 	return nil, nil
 }
@@ -207,7 +208,7 @@ func cmdClearItem(c *Context) ([]*object.PSObject, error) {
 		return nil, nil
 	}
 	if err := os.WriteFile(full, nil, 0o644); err != nil {
-		return errf(c, "Clear-Item : 无法清空 %s。", path)
+		return errf(c, "%s", lang.T(lang.MsgCannotClear, path))
 	}
 	return nil, nil
 }
@@ -223,7 +224,7 @@ func cmdGetItemProperty(c *Context) ([]*object.PSObject, error) {
 	}
 	info, err := os.Stat(full)
 	if err != nil {
-		return errf(c, "Get-ItemProperty : 找不到路径 %s。", path)
+		return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, path))
 	}
 	o := object.Object("System.Management.Automation.PSCustomObject", nil)
 	o.AddProp("Name", info.Name())
@@ -241,7 +242,7 @@ func cmdGetItemProperty(c *Context) ([]*object.PSObject, error) {
 			}
 		}
 		if len(kept) == 0 {
-			return errf(c, "Get-ItemProperty : 路径 %s 不存在属性 %s。", path, nameFilter)
+			return errf(c, "%s", lang.T(lang.MsgPropNotFound, path, nameFilter))
 		}
 		o.Props = kept
 	}
@@ -263,7 +264,7 @@ func cmdSetItemProperty(c *Context) ([]*object.PSObject, error) {
 			return errf(c, "%v", derr)
 		}
 		if err := os.Chtimes(full, time.Now(), time.Now()); err != nil {
-			return errf(c, "Set-ItemProperty : 找不到路径 %s。", path)
+			return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, path))
 		}
 	}
 	return nil, nil

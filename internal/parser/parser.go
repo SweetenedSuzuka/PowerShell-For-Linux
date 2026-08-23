@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"powershell/internal/ast"
+	"powershell/internal/lang"
 	"powershell/internal/lexer"
 )
 
@@ -80,9 +81,10 @@ func (p *Parser) advance() lexer.Token {
 	return t
 }
 
-func (p *Parser) fail(format string, args ...any) {
+// fail 记录第一条解析错误，后续错误不覆盖。消息已由 lang.T 填好参数。
+func (p *Parser) fail(msg string) {
 	if p.err == nil {
-		p.err = fmt.Errorf(format, args...)
+		p.err = fmt.Errorf("%s", msg)
 	}
 }
 
@@ -94,7 +96,7 @@ func (p *Parser) expectPunct(text string) lexer.Token {
 		return t
 	}
 	if !(t.Type == TkPunct && t.Text == text) {
-		p.fail("期望 '%s'，实际遇到 %s", text, p.describe(t))
+		p.fail(lang.T(lang.MsgParseExpectText, text, p.describe(t)))
 		return t
 	}
 	return p.advance()
@@ -108,7 +110,7 @@ func (p *Parser) expectWord(what string) string {
 		return ""
 	}
 	if t.Type != TkWord {
-		p.fail("期望 %s，实际遇到 %s", what, p.describe(t))
+		p.fail(lang.T(lang.MsgParseExpectWhat, what, p.describe(t)))
 		return ""
 	}
 	p.advance()
@@ -119,25 +121,25 @@ func (p *Parser) expectWord(what string) string {
 func (p *Parser) describe(t lexer.Token) string {
 	switch t.Type {
 	case TkEOF:
-		return "输入结束"
+		return lang.T(lang.MsgTokEOF)
 	case TkNewline:
-		return "换行"
+		return lang.T(lang.MsgTokNewline)
 	case TkWord:
-		return fmt.Sprintf("“%s”", t.Text)
+		return lang.T(lang.MsgTokWord, t.Text)
 	case TkNumber:
-		return fmt.Sprintf("数字 %s", t.Text)
+		return lang.T(lang.MsgTokNumber, t.Text)
 	case TkString:
-		return "字符串"
+		return lang.T(lang.MsgTokString)
 	case TkVariable:
 		return fmt.Sprintf("$%s", t.Text)
 	case TkBraceVar:
 		return fmt.Sprintf("${%s}", t.Text)
 	case TkDashWord:
-		return fmt.Sprintf("- %s", t.Text)
+		return fmt.Sprintf("-%s", t.Text)
 	case TkOp:
-		return fmt.Sprintf("运算符 %s", t.Text)
+		return lang.T(lang.MsgTokOp, t.Text)
 	case TkPunct:
-		return fmt.Sprintf("“%s”", t.Text)
+		return lang.T(lang.MsgTokWord, t.Text)
 	}
 	return "token"
 }
@@ -190,7 +192,7 @@ func (p *Parser) parseStatementList(term byte) *ast.StatementList {
 		if nt.Type == TkPunct && len(nt.Text) == 1 && nt.Text[0] == term {
 			continue
 		}
-		p.fail("语句后出现意外的 token：%s", p.describe(nt))
+		p.fail(lang.T(lang.MsgParseUnexpectedAfter, p.describe(nt)))
 		break
 	}
 	return list
@@ -263,10 +265,10 @@ func (p *Parser) parseStatement() ast.Node {
 		case strings.EqualFold(t.Text, "throw"):
 			return p.parseThrow()
 		case strings.EqualFold(t.Text, "catch"):
-			p.fail("catch 必须跟在 try 之后")
+			p.fail(lang.T(lang.MsgParseCatchAfterTry))
 			return nil
 		case strings.EqualFold(t.Text, "finally"):
-			p.fail("finally 必须跟在 try 之后")
+			p.fail(lang.T(lang.MsgParseFinallyAfterTry))
 			return nil
 		}
 	}
@@ -310,7 +312,7 @@ func (p *Parser) parseAssign() *ast.Assign {
 	p.advance()
 	opTok := p.cur()
 	if opTok.Type != TkOp {
-		p.fail("期望赋值运算符")
+		p.fail(lang.T(lang.MsgParseAssignOp))
 		return nil
 	}
 	p.advance()
@@ -329,7 +331,7 @@ func (p *Parser) parseBlock() *ast.Block {
 		return &ast.Block{}
 	}
 	if !(t.Type == TkPunct && t.Text == "{") {
-		p.fail("期望 '{'，实际遇到 %s", p.describe(t))
+		p.fail(lang.T(lang.MsgParseExpectBrace, p.describe(t)))
 		return nil
 	}
 	p.advance()
@@ -437,14 +439,14 @@ func (p *Parser) parseForEach() ast.Node {
 	p.expectPunct("(")
 	varTok := p.cur()
 	if varTok.Type != TkVariable && varTok.Type != TkBraceVar {
-		p.fail("foreach 需要循环变量")
+		p.fail(lang.T(lang.MsgParseForeachVar))
 		return nil
 	}
 	p.advance()
 	// in 关键字
 	inTok := p.cur()
 	if !(inTok.Type == TkWord && strings.EqualFold(inTok.Text, "in")) {
-		p.fail("foreach 需要 'in'")
+		p.fail(lang.T(lang.MsgParseForeachIn))
 		return nil
 	}
 	p.advance()
@@ -468,7 +470,7 @@ func (p *Parser) parseDoWhile() ast.Node {
 	body := p.parseBlock()
 	w := p.cur()
 	if !(w.Type == TkWord && strings.EqualFold(w.Text, "while")) {
-		p.fail("do 需要 while (cond)")
+		p.fail(lang.T(lang.MsgParseDoWhile))
 		return &ast.DoWhile{Body: body}
 	}
 	p.advance()
@@ -569,7 +571,7 @@ func (p *Parser) parseParamList() []ast.FunctionParam {
 			break
 		}
 		if t.Type != TkVariable && t.Type != TkBraceVar {
-			p.fail("函数参数应为 $变量名")
+			p.fail(lang.T(lang.MsgParseFuncParam))
 			break
 		}
 		param := ast.FunctionParam{Name: t.Text}
@@ -590,7 +592,7 @@ func (p *Parser) parseParamList() []ast.FunctionParam {
 func (p *Parser) parseParamBlock() ast.Node {
 	p.advance() // param
 	if p.cur().Type != TkPunct || p.cur().Text != "(" {
-		p.fail("param 需要参数列表 (...) ")
+		p.fail(lang.T(lang.MsgParseParamList))
 		return &ast.ParamBlock{}
 	}
 	p.advance() // (
@@ -600,7 +602,7 @@ func (p *Parser) parseParamBlock() ast.Node {
 
 func (p *Parser) parseFunction(filter bool) ast.Node {
 	p.advance() // function / filter
-	name := p.expectWord("函数名")
+	name := p.expectWord(lang.T(lang.MsgParseFuncName))
 	fn := &ast.FunctionDef{Name: name, Filter: filter}
 	if p.cur().Type == TkPunct && p.cur().Text == "(" {
 		p.advance()
@@ -645,7 +647,7 @@ func (p *Parser) parsePipeline() *ast.Pipeline {
 		if c, ok := cmd.(*ast.Command); ok {
 			pipe.Commands = append(pipe.Commands, c)
 		} else {
-			p.fail("管道右侧必须是命令")
+			p.fail(lang.T(lang.MsgParsePipeRightCmd))
 			break
 		}
 	}
@@ -741,7 +743,7 @@ func (p *Parser) parseCommand() *ast.Command {
 				// 比较运算符：把最后一个位置实参并入比较表达式（-Property Length -gt 100 这类由命名参数接住的情况由 parseExpression 的贪心合并自然处理）。
 				// 这里只处理位置实参。
 				if len(cmd.Positional) == 0 {
-					p.fail("意外的比较运算符 -%s", t.Text)
+					p.fail(lang.T(lang.MsgParseCmpOp, t.Text))
 					break
 				}
 				lhs := cmd.Positional[len(cmd.Positional)-1]
@@ -885,7 +887,7 @@ func (p *Parser) parseExpression(argMode bool) ast.Node {
 			if c, ok := elem.(*ast.Command); ok {
 				pipe.Commands = append(pipe.Commands, c)
 			} else {
-				p.fail("管道右侧必须是命令")
+				p.fail(lang.T(lang.MsgParsePipeRightCmd))
 				break
 			}
 		}
@@ -928,7 +930,7 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 			ifExpr := p.parseBinaryExpr(prec, argMode)
 			sep := p.cur()
 			if !(sep.Type == TkWord && sep.Text == ":") && sep.Type != TkColon {
-				p.fail("三元运算符缺少 ':'")
+				p.fail(lang.T(lang.MsgParseTernaryColon))
 				break
 			}
 			p.advance()
@@ -1081,7 +1083,7 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 				p.advance()
 				return &ast.Increment{Var: vr.Name, Scope: vr.Scope, Op: t.Text}
 			}
-			p.fail("增量/减量运算符只能用于变量")
+			p.fail(lang.T(lang.MsgParseIncDecVar))
 			break
 		}
 		break
@@ -1125,9 +1127,9 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 		return &ast.BareWord{Value: "."}
 	case TkDashWord:
 		if lexer.IsComparisonOp("-" + t.Text) {
-			p.fail("运算符 -%s 缺少左操作数", t.Text)
+			p.fail(lang.T(lang.MsgParseOpMissingLeft, t.Text))
 		} else {
-			p.fail("意外的参数 -%s", t.Text)
+			p.fail(lang.T(lang.MsgParseUnexpectedArg, t.Text))
 		}
 		p.advance()
 		return &ast.BareWord{Value: t.Text}
@@ -1147,11 +1149,11 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 			return &ast.Unary{Op: t.Text, Operand: p.parseUnary(argMode)}
 		}
 		if t.Text == "<" {
-			p.fail("PowerShell 不支持 '<' 输入重定向")
+			p.fail(lang.T(lang.MsgParseInputRedirect))
 		} else if t.Text == ">" || t.Text == ">>" {
-			p.fail("重定向 '>' 只能用在命令之后")
+			p.fail(lang.T(lang.MsgParseRedirectAfterCmd))
 		} else {
-			p.fail("意外的运算符 %s", t.Text)
+			p.fail(lang.T(lang.MsgParseUnexpectedOp, t.Text))
 		}
 		p.advance()
 		return &ast.BareWord{Value: ""}
@@ -1170,7 +1172,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 					if c, ok := elem.(*ast.Command); ok {
 						pipe.Commands = append(pipe.Commands, c)
 					} else {
-						p.fail("管道右侧必须是命令")
+						p.fail(lang.T(lang.MsgParsePipeRightCmd))
 						break
 					}
 				}
@@ -1206,7 +1208,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 							if c, ok := elem.(*ast.Command); ok {
 								pipe.Commands = append(pipe.Commands, c)
 							} else {
-								p.fail("管道右侧必须是命令")
+								p.fail(lang.T(lang.MsgParsePipeRightCmd))
 								break
 							}
 						}
@@ -1237,13 +1239,13 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 			p.advance() // [
 			name := p.cur()
 			if name.Type != TkWord {
-				p.fail("类型字面量需要类型名")
+				p.fail(lang.T(lang.MsgParseTypeLiteralName))
 				p.advance()
 				return &ast.BareWord{Value: ""}
 			}
 			p.advance()
 			if !(p.cur().Type == TkPunct && p.cur().Text == "]") {
-				p.fail("类型字面量需要 ']'")
+				p.fail(lang.T(lang.MsgParseTypeLiteralRbracket))
 				return &ast.BareWord{Value: ""}
 			}
 			p.advance()
@@ -1252,14 +1254,14 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 					p.advance() // @
 					return &ast.TypeCast{TypeName: name.Text, Expr: p.parseHashtable()}
 				}
-				p.fail("[pscustomobject] 需要后跟 @{...}")
+				p.fail(lang.T(lang.MsgParsePSCustomObject))
 				return &ast.BareWord{Value: ""}
 			}
-			p.fail("不支持类型字面量 [...]")
+			p.fail(lang.T(lang.MsgParseTypeLiteral))
 			return &ast.BareWord{Value: ""}
 		}
 	}
-	p.fail("意外的 token：%s", p.describe(t))
+	p.fail(lang.T(lang.MsgParseUnexpectedToken, p.describe(t)))
 	return &ast.BareWord{Value: ""}
 }
 
@@ -1341,7 +1343,7 @@ func (p *Parser) parseHashtable() ast.Node {
 		key := p.parseValueExpr() // 键：值表达式（不合并、不作命令）
 		sep := p.cur()
 		if !(sep.Type == TkOp && (sep.Text == "=" || sep.Text == ":")) {
-			p.fail("哈希表项需要 '=' 或 ':'")
+			p.fail(lang.T(lang.MsgParseHashEntry))
 			break
 		}
 		p.advance()

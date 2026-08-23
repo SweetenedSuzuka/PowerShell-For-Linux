@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strings"
 
+	"powershell/internal/lang"
 	"powershell/internal/object"
 )
 
@@ -34,7 +35,7 @@ func cmdWriteError(c *Context) ([]*object.PSObject, error) {
 			parts = append(parts, o.String())
 		}
 	}
-	fmt.Fprintf(c.Stderr, "错误: %s\n", strings.Join(parts, " "))
+	fmt.Fprintf(c.Stderr, "%s %s\n", lang.T(lang.MsgWriteErrorPrefix), strings.Join(parts, " "))
 	c.Shell.LastSuccess = false
 	return nil, nil
 }
@@ -64,7 +65,7 @@ func cmdOutFile(c *Context) ([]*object.PSObject, error) {
 	}
 	f, err := os.OpenFile(full, flags, 0o644)
 	if err != nil {
-		return errf(c, "Out-File : 无法写入 %s。", path)
+		return errf(c, "%s", lang.T(lang.MsgCannotWrite, path))
 	}
 	defer f.Close()
 	enc, _ := c.Args.Str("Encoding")
@@ -152,7 +153,7 @@ func cmdSelectString(c *Context) ([]*object.PSObject, error) {
 		}
 		data, err := os.ReadFile(full)
 		if err != nil {
-			return errf(c, "Select-String : 找不到路径 %s。", path)
+			return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, path))
 		}
 		// 文件输入逐行扫描，空行也计入行号
 		for i, line := range strings.Split(strings.TrimSuffix(string(data), "\n"), "\n") {

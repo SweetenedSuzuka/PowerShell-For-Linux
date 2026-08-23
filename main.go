@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"powershell/internal/eval"
+	"powershell/internal/lang"
 	"powershell/internal/object"
 	"powershell/internal/parser"
 	"powershell/internal/repl"
@@ -34,7 +35,7 @@ func run(args []string) int {
 	fs.BoolVar(help, "Help", false, "显示帮助")
 
 	if err := fs.Parse(args); err != nil {
-		fmt.Fprintln(os.Stderr, "参数解析失败。")
+		fmt.Fprintln(os.Stderr, lang.T(lang.MsgFlagParseFail))
 		return 2
 	}
 

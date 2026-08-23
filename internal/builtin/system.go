@@ -16,6 +16,7 @@ import (
 	"strings"
 	"time"
 
+	"powershell/internal/lang"
 	"powershell/internal/object"
 	"powershell/internal/shell"
 )
@@ -50,7 +51,7 @@ func parseDateArg(s string) (time.Time, error) {
 			return t, nil
 		}
 	}
-	return time.Time{}, fmt.Errorf("无法解析日期时间：%s", s)
+	return time.Time{}, fmt.Errorf("%s", lang.T(lang.MsgDateParseFail, s))
 }
 
 // dotnetToGoLayout 把 .NET 日期格式串转换为 Go 布局（yyyy→2006、MM→01、dd→02、HH→15 等）。
@@ -156,16 +157,16 @@ func cmdGetHelp(c *Context) ([]*object.PSObject, error) {
 	}
 	if len(matched) == 0 {
 		if alias, ok := c.Shell.ResolveAlias(name); ok {
-			fmt.Fprintf(c.Stdout, "别名 %s → %s\n\n", name, canonicalName(alias))
+			fmt.Fprintf(c.Stdout, "%s\n\n", lang.T(lang.MsgHelpAliasTo, name, canonicalName(alias)))
 			return nil, nil
 		}
-		fmt.Fprintf(c.Stdout, "找不到名为 %s 的帮助。\n", name)
+		fmt.Fprintf(c.Stdout, "%s\n", lang.T(lang.MsgHelpNotFound, name))
 		return nil, nil
 	}
 	for _, n := range matched {
 		display := canonicalName(n)
-		fmt.Fprintf(c.Stdout, "名称\n    %s\n\n", display)
-		fmt.Fprintf(c.Stdout, "语法\n    %s", display)
+		fmt.Fprintf(c.Stdout, "%s\n    %s\n\n", lang.T(lang.MsgHelpNameHeader), display)
+		fmt.Fprintf(c.Stdout, "%s\n    %s", lang.T(lang.MsgHelpSyntaxHeader), display)
 		for _, sp := range Spec(n) {
 			fmt.Fprintf(c.Stdout, " [-%s", sp.Name)
 			if !sp.Switch {
@@ -175,7 +176,7 @@ func cmdGetHelp(c *Context) ([]*object.PSObject, error) {
 		}
 		fmt.Fprintln(c.Stdout)
 		fmt.Fprintln(c.Stdout)
-		fmt.Fprintf(c.Stdout, "别名\n    %s\n\n", aliasesOf(c.Shell, display))
+		fmt.Fprintf(c.Stdout, "%s\n    %s\n\n", lang.T(lang.MsgHelpAliasHeader), aliasesOf(c.Shell, display))
 	}
 	return nil, nil
 }
@@ -334,13 +335,13 @@ func cmdGetProcess(c *Context) ([]*object.PSObject, error) {
 	}
 	if len(ids) > 0 && len(out) < len(ids) {
 		c.Shell.LastSuccess = false
-		fmt.Fprintf(c.Stderr, "%s : 找不到进程标识符为 %s 的进程。\n", c.Shell.StyleName(), c.Args.Get("Id").String())
+		fmt.Fprintf(c.Stderr, "%s : %s\n", c.Shell.StyleName(), lang.T(lang.MsgProcIdNotFound, c.Args.Get("Id").String()))
 	}
 	// 无筛选却无结果时回退当前进程；带 -Id/-Name 查询无结果则报错并返回空
 	if len(out) == 0 {
 		if name != "" {
 			c.Shell.LastSuccess = false
-			fmt.Fprintf(c.Stderr, "%s : 找不到名为 \"%s\" 的进程。\n", c.Shell.StyleName(), name)
+			fmt.Fprintf(c.Stderr, "%s : %s\n", c.Shell.StyleName(), lang.T(lang.MsgProcNameNotFound, name))
 		}
 		if name == "" && len(ids) == 0 {
 			return []*object.PSObject{object.Process(os.Getpid(), "powershell", 0, 0)}, nil
@@ -360,7 +361,7 @@ func listProcesses() ([]procEntry, error) {
 	if runtime.GOOS == "linux" {
 		return listLinuxProcs()
 	}
-	return nil, fmt.Errorf("不支持")
+	return nil, fmt.Errorf("%s", lang.T(lang.MsgUnsupported))
 }
 
 // clockTicks 是内核每秒的时钟滴答数（/proc/stat 时间字段单位），Linux 用户态 ABI 固定 100。
@@ -500,9 +501,9 @@ func cmdSetPSVersion(c *Context) ([]*object.PSObject, error) {
 	case strings.HasPrefix(ver, "7"):
 		c.Shell.SetStyle(shell.StyleCore)
 	default:
-		return errf(c, "Set-PSVersion : 不支持的版本 %q（请用 5.1 或 7.x）", ver)
+		return errf(c, "%s", lang.T(lang.MsgPSVersionBad, ver))
 	}
-	fmt.Fprintf(c.Stdout, "已切换到 %s 风格。\n", c.Shell.StyleName())
+	fmt.Fprintf(c.Stdout, "%s\n", lang.T(lang.MsgPSVersionSet, c.Shell.StyleName()))
 	return nil, nil
 }
 
@@ -598,7 +599,7 @@ func cmdGetFileHash(c *Context) ([]*object.PSObject, error) {
 		}
 		hash, err := computeHash(algorithm, data)
 		if err != nil {
-			return errf(c, "Get-FileHash : 不支持的算法 %s", algorithm)
+			return errf(c, "%s", lang.T(lang.MsgHashAlgoUnsupported, algorithm))
 		}
 		o := object.Object("Microsoft.PowerShell.Utility.FileHash", nil)
 		o.AddProp("Algorithm", strings.ToUpper(algorithm))
@@ -624,7 +625,7 @@ func computeHash(algorithm string, data []byte) (string, error) {
 		sum := sha512.Sum512(data)
 		return fmt.Sprintf("%x", sum), nil
 	}
-	return "", fmt.Errorf("不支持")
+	return "", fmt.Errorf("%s", lang.T(lang.MsgUnsupported))
 }
 
 // AllCmdletNames 列出全部内置 cmdlet 名（Get-Command / 补全用）。

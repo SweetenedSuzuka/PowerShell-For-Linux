@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"powershell/internal/lang"
 	"powershell/internal/object"
 )
 
@@ -17,7 +18,7 @@ func cmdNewVariable(c *Context) ([]*object.PSObject, error) {
 		return nil, nil
 	}
 	if _, exists := c.Shell.Vars[name]; exists && !c.Args.Switch("Force") {
-		return errf(c, "New-Variable : 变量 $%s 已存在。", name)
+		return errf(c, "%s", lang.T(lang.MsgVarExists, name))
 	}
 	if val == nil {
 		val = object.Null()
@@ -51,7 +52,7 @@ func cmdNewAlias(c *Context) ([]*object.PSObject, error) {
 		return nil, nil
 	}
 	if _, exists := c.Shell.Aliases[name]; exists && !c.Args.Switch("Force") {
-		return errf(c, "New-Alias : 别名 %s 已存在。", name)
+		return errf(c, "%s", lang.T(lang.MsgAliasExists, name))
 	}
 	c.Shell.SetAlias(name, value)
 	return nil, nil
@@ -148,13 +149,13 @@ func cmdGetHost(c *Context) ([]*object.PSObject, error) {
 
 func cmdWriteVerbose(c *Context) ([]*object.PSObject, error) {
 	msg := strings.Join(namedOrPosArgs(c, "Message"), " ")
-	fmt.Fprintf(c.Stderr, "详细: %s\n", msg)
+	fmt.Fprintf(c.Stderr, "%s %s\n", lang.T(lang.MsgWriteVerbosePrefix), msg)
 	return nil, nil
 }
 
 func cmdWriteWarning(c *Context) ([]*object.PSObject, error) {
 	msg := strings.Join(namedOrPosArgs(c, "Message"), " ")
-	fmt.Fprintf(c.Stderr, "警告: %s\n", msg)
+	fmt.Fprintf(c.Stderr, "%s %s\n", lang.T(lang.MsgWriteWarningPrefix), msg)
 	return nil, nil
 }
 
@@ -166,7 +167,7 @@ func cmdWriteInformation(c *Context) ([]*object.PSObject, error) {
 
 func cmdWriteDebug(c *Context) ([]*object.PSObject, error) {
 	msg := strings.Join(namedOrPosArgs(c, "Message"), " ")
-	fmt.Fprintf(c.Stderr, "调试: %s\n", msg)
+	fmt.Fprintf(c.Stderr, "%s %s\n", lang.T(lang.MsgWriteDebugPrefix), msg)
 	return nil, nil
 }
 

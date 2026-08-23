@@ -597,11 +597,56 @@ func cmdJoinString(c *Context) ([]*object.PSObject, error) {
 	if s, ok := c.Args.Str("Separator"); ok {
 		sep = s
 	}
+	prop, _ := c.Args.Str("Property")
+	format, _ := c.Args.Str("FormatString")
+	prefix, _ := c.Args.Str("OutputPrefix")
+	suffix, _ := c.Args.Str("OutputSuffix")
+	doubleQuote := c.Args.Switch("DoubleQuote")
+	singleQuote := c.Args.Switch("SingleQuote")
 	var parts []string
 	for _, o := range inputItems(c) {
-		parts = append(parts, o.String())
+		v := o
+		// -Property 取该属性的值转文本
+		if prop != "" {
+			if pv, ok := o.PropValue(prop); ok {
+				v = pv
+			}
+		}
+		text := v.String()
+		switch {
+		case doubleQuote:
+			text = `"` + text + `"`
+		case singleQuote:
+			text = "'" + text + "'"
+		case format != "":
+			// 单遍解析复合格式：{{ 与 }} 为字面花括号，{0} 为当前对象
+			var fb strings.Builder
+			for i := 0; i < len(format); {
+				if format[i] == '{' && i+1 < len(format) && format[i+1] == '{' {
+					fb.WriteByte('{')
+					i += 2
+					continue
+				}
+				if format[i] == '}' && i+1 < len(format) && format[i+1] == '}' {
+					fb.WriteByte('}')
+					i += 2
+					continue
+				}
+				if format[i] == '{' {
+					if end := strings.IndexByte(format[i:], '}'); end > 0 {
+						fb.WriteString(v.String())
+						i += end + 1
+						continue
+					}
+				}
+				fb.WriteByte(format[i])
+				i++
+			}
+			text = fb.String()
+		}
+		parts = append(parts, text)
 	}
-	return []*object.PSObject{object.Str(strings.Join(parts, sep))}, nil
+	return []*object.PSObject{object.Str(prefix + strings.Join(parts, sep) + suffix)}, nil
 }
 
 func cmdAddMember(c *Context) ([]*object.PSObject, error) {
@@ -742,7 +787,13 @@ func init() {
 	}, cmdFormatHex)
 	Register("Join-String", []ParamSpec{
 		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
-		{Name: "Separator", Type: "string"},
+		{Name: "Separator", Position: 1, PositionSet: true, Type: "string"},
+		{Name: "Property", Type: "string"},
+		{Name: "FormatString", Type: "string"},
+		{Name: "OutputPrefix", Type: "string"},
+		{Name: "OutputSuffix", Type: "string"},
+		{Name: "DoubleQuote", Switch: true},
+		{Name: "SingleQuote", Switch: true},
 	}, cmdJoinString)
 	Register("Add-Member", []ParamSpec{
 		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},

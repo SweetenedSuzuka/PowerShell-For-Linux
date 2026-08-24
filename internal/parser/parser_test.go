@@ -453,3 +453,23 @@ func TestErrors(t *testing.T) {
 		t.Fatal("未闭合括号应报错或标记不完整")
 	}
 }
+
+// TestSwitchNewlineBraceTerminates 验证 switch 的分支解析在出错后必然终止，不失去响应。
+// expectPunct 失败时不消费 token，分支循环若不检查 p.err 会无限追加 Cases。
+func TestSwitchNewlineBraceTerminates(t *testing.T) {
+	for _, src := range []string{
+		"switch (2)\n{ default { \"d\" } }",
+		"switch ($x)\n{",
+		"switch ($x)\n{ \"a\" { 1 }",
+	} {
+		Parse(src) // 解析挂起时测试超时失败
+	}
+	for _, src := range []string{
+		"switch (2) { default { \"d\" } }",
+	} {
+		res := Parse(src)
+		if res.Error != nil || res.Incomplete || len(res.List.Statements) != 1 {
+			t.Fatalf("%q 应可完整解析，实际 err=%v", src, res.Error)
+		}
+	}
+}

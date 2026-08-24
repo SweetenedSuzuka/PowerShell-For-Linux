@@ -533,6 +533,9 @@ func (p *Parser) parseSwitch() ast.Node {
 	p.expectPunct(")")
 	p.expectPunct("{")
 	for {
+		if p.err != nil {
+			break
+		}
 		p.skipNewlinesAndSemicolons()
 		t := p.cur()
 		if t.Type == TkPunct && t.Text == "}" {

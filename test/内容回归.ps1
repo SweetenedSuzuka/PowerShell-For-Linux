@@ -402,6 +402,15 @@ $results += T "Join-String 默认分隔符" (((1..3 | Join-String) -eq "123") -a
 $aa = 1,2,3
 $results += T "@() 摊平与管道" ((@($aa).Count -eq 3) -and (@(1,2 | ForEach-Object { $_ * 10 }) -join ",") -eq "10,20")
 
+Write-Output "== 解析终止性 =="
+
+# 107. switch 与 { 之间换行的输入能解析或报错后正常返回，不失去响应
+# 该写法当前报"期望 '{'"，断言只保证子进程退出而非卡死
+$root = Split-Path (Split-Path $PSCommandPath)
+$nlSrc = "switch (2)`n{ default { 'd' } }"
+sh -c "echo '$nlSrc' | $root/powershell -NoLogo -NoProfile -Command -" 2>$null >$null
+$results += T "switch 换行大括号不失去响应" ($LASTEXITCODE -eq 0)
+
 # == 结尾统计 ==
 Write-Output ""
 $failN = 0

@@ -451,6 +451,23 @@ do
 }
 while ($mDo -lt 3)
 $results += T "大括号换行 do/while" (($mDo -eq 3))
+# 111. 行尾运算符与括号内的表达式跨行续写
+$mSum = 1 +
+    2 +
+    3
+$mParen = (
+    10 +
+    20
+)
+$results += T "表达式跨行续行" (($mSum -eq 6) -and ($mParen -eq 30))
+# 112. 链式运算符 && 允许写在行尾跨行续写
+$mFile = "test/tmp/chain.txt"
+New-Item -ItemType Directory -Force test/tmp >$null
+Remove-Item $mFile -Force 2>$null
+Set-Content $mFile "L" &&
+    Add-Content $mFile "R"
+$results += T "链式运算符跨行" (((Get-Content $mFile) -join ",") -eq "L,R")
+Remove-Item $mFile -Force 2>$null
 
 # == 结尾统计 ==
 Write-Output ""

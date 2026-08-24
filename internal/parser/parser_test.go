@@ -618,3 +618,36 @@ func TestStringSubexprPropagatesState(t *testing.T) {
 		t.Fatalf("合法插值应不受影响，实际 err=%v", res.Error)
 	}
 }
+
+// TestExpressionLineContinuation 验证行尾是二元运算符/逗号/赋值号时语句在下一行继续，
+// 括号与下标内部换行自由，链式运算符可跨行；无运算符的换行仍是语句边界。
+func TestExpressionLineContinuation(t *testing.T) {
+	for _, src := range []string{
+		"1 +\n2",
+		"1 +\n\n2",
+		"$x =\n5",
+		"( 1 +\n2 )",
+		"\n(1 + 2)\n",
+		"$m = 1,\n2",
+		`"{0}" -f\n1`,
+		"$c = $true ?\n\"y\" :\n\"n\"",
+		"$s = \"ab\"; $s[\n0]",
+		"echo a &&\necho b",
+		"echo a ||\necho b",
+		"Get-ChildItem |\nMeasure-Object",
+	} {
+		res := Parse(src)
+		if res.Error != nil {
+			t.Fatalf("%q 应支持跨行续写，实际 err=%v", src, res.Error)
+		}
+	}
+	// 行尾没有运算符时换行仍是语句边界：两条独立语句
+	res := Parse("$x = 5\necho done")
+	if res.Error != nil || len(res.List.Statements) != 2 {
+		t.Fatalf("无运算符结尾的换行应分隔两条语句，实际 err=%v 条数=%d", res.Error, len(res.List.Statements))
+	}
+	// 截断输入仍标记不完整供 REPL 续行
+	if res := Parse("1 +"); !res.Incomplete {
+		t.Fatal("行尾悬挂运算符加 EOF 应标记不完整")
+	}
+}

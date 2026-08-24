@@ -279,15 +279,17 @@ func (p *Parser) parseStatement() ast.Node {
 }
 
 // parseStatementPipeline 解析管道，并处理 PowerShell 7 的 && / || 链。
+// 链式运算符允许写在行尾，右操作数从下一行继续。
 func (p *Parser) parseStatementPipeline() ast.Node {
 	var stmt ast.Node = p.parsePipeline()
 	for {
-		t := p.cur()
+		t := p.peekPastNewlines()
 		if t.Type == TkOp && (t.Text == "&&" || t.Text == "||") {
-			op := t.Text
+			p.skipNewlines()
 			p.advance()
+			p.skipNewlines()
 			right := p.parsePipeline()
-			stmt = &ast.Chain{Left: stmt, Right: right, Op: op}
+			stmt = &ast.Chain{Left: stmt, Right: right, Op: t.Text}
 			continue
 		}
 		break
@@ -316,6 +318,8 @@ func (p *Parser) parseAssign() *ast.Assign {
 		return nil
 	}
 	p.advance()
+	// 赋值号在行尾时语句在下一行继续，与 PowerShell 排版一致
+	p.skipNewlines()
 	value := p.parseExpression(false)
 	scope, name := splitScopeName(target)
 	return &ast.Assign{Target: name, Scope: scope, Op: opTok.Text, Value: value}
@@ -911,7 +915,8 @@ func (p *Parser) parseExpression(argMode bool) ast.Node {
 	}
 	if !argMode && p.cur().Type == TkWord {
 		nt := p.peekAt(1)
-		isBinary := (nt.Type == TkDashWord && lexer.IsComparisonOp("-"+nt.Text)) ||
+		_, dashPrec := p.binaryOpInfo(nt)
+		isBinary := (nt.Type == TkDashWord && dashPrec >= 0) ||
 			(nt.Type == TkOp && (nt.Text == "+" || nt.Text == "-" || nt.Text == "*" || nt.Text == "/" || nt.Text == "%"))
 		if !isBinary {
 			// 语句作表达式：$x = switch (...) {...} / $x = if (...) {...}
@@ -970,12 +975,14 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 			items := []ast.Node{lhs}
 			for p.cur().Type == TkPunct && p.cur().Text == "," {
 				p.advance()
+				p.skipNewlines()
 				items = append(items, p.parseBinaryExpr(prec+1, argMode))
 			}
 			lhs = &ast.ArrayLit{Items: items}
 		case "?":
 			// 三元运算符 cond ? 真 : 假（右结合）
 			p.advance()
+			p.skipNewlines()
 			ifExpr := p.parseBinaryExpr(prec, argMode)
 			sep := p.cur()
 			if !(sep.Type == TkWord && sep.Text == ":") && sep.Type != TkColon {
@@ -983,20 +990,25 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 				break
 			}
 			p.advance()
+			p.skipNewlines()
 			elseExpr := p.parseBinaryExpr(prec, argMode)
 			lhs = &ast.Ternary{Cond: lhs, If: ifExpr, Else: elseExpr}
 		case "-f":
 			// 格式运算符：RHS 是逗号分隔的参数列表（如 "{0} {1}" -f 1,2）。
 			// 参数项含范围但排除算术（-f 比算术绑定更紧："{0}" -f 5 * 2 先格式化再乘）
 			p.advance()
+			p.skipNewlines()
 			items := []ast.Node{p.parseBinaryExpr(41, argMode)}
 			for p.cur().Type == TkPunct && p.cur().Text == "," {
 				p.advance()
+				p.skipNewlines()
 				items = append(items, p.parseBinaryExpr(41, argMode))
 			}
 			lhs = &ast.Binary{Op: op, L: lhs, R: &ast.ArrayLit{Items: items}}
 		default:
 			p.advance()
+			// 行尾是二元运算符时语句在下一行继续，与 PowerShell 排版一致
+			p.skipNewlines()
 			rhs := p.parseBinaryExpr(prec+1, argMode)
 			lhs = &ast.Binary{Op: op, L: lhs, R: rhs}
 		}
@@ -1125,7 +1137,9 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 		}
 		if t.Type == TkPunct && t.Text == "[" {
 			p.advance()
+			p.skipNewlines()
 			idx := p.parseExpression(false)
+			p.skipNewlines()
 			p.expectPunct("]")
 			e = &ast.Index{Base: e, Index: idx}
 			continue
@@ -1178,7 +1192,9 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 		p.advance()
 		return &ast.BareWord{Value: "."}
 	case TkDashWord:
-		if lexer.IsComparisonOp("-" + t.Text) {
+		// 判定机制与 parseBinaryTail 一致：
+		// 能作二元运算符的才报缺左操作数，其余（如只有一元用法的 -not）按意外参数处理。
+		if _, prec := p.binaryOpInfo(t); prec >= 0 {
 			p.fail(lang.T(lang.MsgParseOpMissingLeft, t.Text))
 		} else {
 			p.fail(lang.T(lang.MsgParseUnexpectedArg, t.Text))
@@ -1213,6 +1229,8 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 		switch t.Text {
 		case "(":
 			p.advance()
+			// 括号内部换行自由，与 PowerShell 排版一致
+			p.skipNewlines()
 			inner := p.parseExpression(false)
 			// 括号内可以是管道：expr | cmd | ...
 			if p.cur().Type == TkPunct && p.cur().Text == "|" {
@@ -1230,6 +1248,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 				}
 				inner = &ast.PipelineExpr{Pipeline: pipe}
 			}
+			p.skipNewlines()
 			p.expectPunct(")")
 			return &ast.Paren{Inner: inner}
 		case "@":

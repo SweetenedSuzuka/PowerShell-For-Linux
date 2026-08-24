@@ -1,5 +1,7 @@
 # PowerShell For Linux
 
+中文 | [English](README.en.md)
+
 > 众所周知，PowerShell是使用最广泛的命令行Shell之一。  
 > 但是明明在Windows上无需依赖即可使用，在Linux上它却必须安装.NET。  
 > 这太不符合Linux精神了。

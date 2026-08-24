@@ -511,3 +511,40 @@ func TestBinaryOpsInCommandArgs(t *testing.T) {
 		t.Fatalf("管道加 -like 合并应可解析，实际 err=%v", res.Error)
 	}
 }
+
+// TestBraceNewlineLayout 验证块语句的大括号允许另起一行书写，与 PowerShell 排版一致。
+// 分号不能代替大括号；} 后的换行只有在其后是 catch/else/elseif/finally 时才被消费，不影响后续独立语句。
+func TestBraceNewlineLayout(t *testing.T) {
+	for _, src := range []string{
+		"if ($true)\n{ \"x\" }",
+		"if ($true)\n{ 1 }\nelseif ($false)\n{ 2 }\nelse\n{ 3 }",
+		"foreach ($i in 1..2)\n{ $i }",
+		"while ($false)\n{ 1 }",
+		"do\n{ 1 }\nwhile ($false)",
+		"for ($i = 0; $i -lt 1; $i++)\n{ }",
+		"switch (2)\n{ default { \"d\" } }",
+		"function f\n{ \"x\" }",
+		"filter ff\n{ $_ }",
+		"try\n{ throw \"e\" }\ncatch\n{ \"c\" }",
+		"try { }\ncatch [System.Exception]\n{ }\nfinally\n{ 1 }",
+	} {
+		res := Parse(src)
+		if res.Error != nil || res.Incomplete {
+			t.Fatalf("%q 应可完整解析，实际 err=%v", src, res.Error)
+		}
+	}
+	// if 块后换行再写独立语句应解析为两条语句，换行不被 else 检查误吃
+	res := Parse("if ($true)\n{ 1 }\necho done")
+	if res.Error != nil || len(res.List.Statements) != 2 {
+		t.Fatalf("if 块后的独立语句应解析为两条语句，实际 err=%v 条数=%d", res.Error, len(res.List.Statements))
+	}
+	// 分号与缺大括号的写法仍拒绝
+	for _, src := range []string{
+		"if ($true); { \"x\" }",
+		"if ($true)\necho x",
+	} {
+		if r := Parse(src); r.Error == nil {
+			t.Fatalf("%q 应报解析错误（缺少块大括号）", src)
+		}
+	}
+}

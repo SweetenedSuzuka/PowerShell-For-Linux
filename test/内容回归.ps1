@@ -404,12 +404,53 @@ $results += T "@() 摊平与管道" ((@($aa).Count -eq 3) -and (@(1,2 | ForEach-
 
 Write-Output "== 解析终止性 =="
 
-# 107. switch 与 { 之间换行的输入能解析或报错后正常返回，不失去响应
-# 该写法当前报"期望 '{'"，进程以退出码 1 结束；断言只保证退出而非卡死（退出码 124 是超时标记）
+# 107. switch 与 { 之间换行的写法可正常解析执行
 $root = Split-Path (Split-Path $PSCommandPath)
-$nlSrc = "switch (2)`n{ default { 'd' } }"
-sh -c "echo '$nlSrc' | $root/powershell -NoLogo -NoProfile -Command -" 2>$null >$null
-$results += T "switch 换行大括号不失去响应" ($LASTEXITCODE -eq 1)
+$nlSrc = "switch (2)`n{ default { 42 } }"
+$nlOut = sh -c "echo '$nlSrc' | $root/powershell -NoLogo -NoProfile -Command -" 2>$null
+$results += T "switch 换行大括号可解析" (($nlOut -join "") -eq "42")
+
+Write-Output "== 排版兼容 =="
+
+# 108. 块大括号允许另起一行书写（if/elseif/else）
+$mIf = ""
+if ($true)
+{
+    $mIf = "then"
+}
+elseif ($false)
+{
+    $mIf = "elseif"
+}
+else
+{
+    $mIf = "else"
+}
+$results += T "大括号换行 if/elseif/else" (($mIf -eq "then"))
+# 109. try/catch/finally 的大括号换行书写
+$mCatch = ""
+$mFinally = ""
+try
+{
+    throw "e"
+}
+catch
+{
+    $mCatch = "caught"
+}
+finally
+{
+    $mFinally = "fin"
+}
+$results += T "大括号换行 try/catch/finally" (($mCatch -eq "caught") -and ($mFinally -eq "fin"))
+# 110. do/while 的 while 允许写在 } 的下一行
+$mDo = 0
+do
+{
+    $mDo++
+}
+while ($mDo -lt 3)
+$results += T "大括号换行 do/while" (($mDo -eq 3))
 
 # == 结尾统计 ==
 Write-Output ""

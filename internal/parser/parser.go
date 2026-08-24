@@ -325,6 +325,8 @@ func (p *Parser) parseBlock() *ast.Block {
 	if p.err != nil {
 		return nil
 	}
+	// 块语句的大括号允许另起一行书写，与 PowerShell 排版一致；分号不能代替大括号，故只跳过换行。
+	p.skipNewlines()
 	t := p.cur()
 	if t.Type == TkEOF {
 		p.incomplete = true
@@ -359,8 +361,9 @@ func (p *Parser) parseIf() ast.Node {
 	}
 	node := &ast.If{Branches: []ast.IfBranch{br}}
 	for {
-		t := p.cur()
+		t := p.peekPastNewlines()
 		if t.Type == TkWord && strings.EqualFold(t.Text, "elseif") {
+			p.skipNewlines()
 			p.advance()
 			eb := ast.IfBranch{}
 			p.expectPunct("(")
@@ -371,6 +374,7 @@ func (p *Parser) parseIf() ast.Node {
 			continue
 		}
 		if t.Type == TkWord && strings.EqualFold(t.Text, "else") {
+			p.skipNewlines()
 			p.advance()
 			node.Else = p.parseBlock()
 		}
@@ -389,8 +393,9 @@ func (p *Parser) parseTry() ast.Node {
 		return node
 	}
 	for {
-		t := p.cur()
+		t := p.peekPastNewlines()
 		if t.Type == TkWord && strings.EqualFold(t.Text, "catch") {
+			p.skipNewlines()
 			p.advance()
 			cc := ast.CatchClause{}
 			if p.cur().Type == TkPunct && p.cur().Text == "[" {
@@ -412,6 +417,7 @@ func (p *Parser) parseTry() ast.Node {
 			continue
 		}
 		if t.Type == TkWord && strings.EqualFold(t.Text, "finally") {
+			p.skipNewlines()
 			p.advance()
 			node.Finally = p.parseBlock()
 			if p.err != nil {
@@ -468,11 +474,13 @@ func (p *Parser) parseWhile() ast.Node {
 func (p *Parser) parseDoWhile() ast.Node {
 	p.advance() // do
 	body := p.parseBlock()
-	w := p.cur()
+	// while 允许写在 } 的下一行
+	w := p.peekPastNewlines()
 	if !(w.Type == TkWord && strings.EqualFold(w.Text, "while")) {
 		p.fail(lang.T(lang.MsgParseDoWhile))
 		return &ast.DoWhile{Body: body}
 	}
+	p.skipNewlines()
 	p.advance()
 	p.expectPunct("(")
 	cond := p.parseExpression(false)
@@ -531,6 +539,8 @@ func (p *Parser) parseSwitch() ast.Node {
 	p.expectPunct("(")
 	node.Value = p.parseExpression(false)
 	p.expectPunct(")")
+	// switch 的大括号允许另起一行书写，与 PowerShell 排版一致
+	p.skipNewlines()
 	p.expectPunct("{")
 	for {
 		if p.err != nil {
@@ -657,10 +667,22 @@ func (p *Parser) parsePipeline() *ast.Pipeline {
 	return pipe
 }
 
+// skipNewlines 跳过换行 token。
 func (p *Parser) skipNewlines() {
 	for p.cur().Type == TkNewline {
 		p.advance()
 	}
+}
+
+// peekPastNewlines 返回从当前位置跳过若干换行后的 token，不消费任何 token。
+// 用于判断 } 之后的换行后面是不是 catch/else/elseif/finally 这类延续关键字；
+// 只有命中时才真正消费换行，避免吃掉语句分隔符导致外层误判。
+func (p *Parser) peekPastNewlines() lexer.Token {
+	i := p.pos
+	for i < len(p.toks)-1 && p.toks[i].Type == TkNewline {
+		i++
+	}
+	return p.toks[i]
 }
 
 // parsePipelineElement 解析管道的一个元素：可能是命令，也可能是纯表达式。

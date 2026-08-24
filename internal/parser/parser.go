@@ -742,9 +742,10 @@ func (p *Parser) parseCommand() *ast.Command {
 		}
 		// 命名参数 / 开关
 		if t.Type == TkDashWord {
-			if lexer.IsComparisonOp("-" + t.Text) {
-				// 比较运算符：把最后一个位置实参并入比较表达式（-Property Length -gt 100 这类由命名参数接住的情况由 parseExpression 的贪心合并自然处理）。
-				// 这里只处理位置实参。
+			// 二元运算符（比较、逻辑、成员测试等）：把最后一个位置实参并入运算表达式，
+			// 后续 token 由 parseBinaryTail 消费。判定依据与 parseBinaryTail 一致，都是 binaryOpInfo；
+			// 不在表里的词（如 -not，它只有一元用法）按普通命名参数处理。
+			if _, prec := p.binaryOpInfo(t); prec >= 0 {
 				if len(cmd.Positional) == 0 {
 					p.fail(lang.T(lang.MsgParseCmpOp, t.Text))
 					break
@@ -1054,6 +1055,9 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 				p.advance() // (
 				var args []ast.Node
 				for {
+					if p.err != nil {
+						break
+					}
 					p.skipNewlinesAndSemicolons()
 					if p.cur().Type == TkPunct && p.cur().Text == ")" {
 						p.advance()
@@ -1190,6 +1194,9 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 				p.advance() // (
 				var items []ast.Node
 				for {
+					if p.err != nil {
+						break
+					}
 					p.skipNewlinesAndSemicolons()
 					if p.cur().Type == TkPunct && p.cur().Text == ")" {
 						p.advance()
@@ -1333,6 +1340,9 @@ func (p *Parser) parseHashtable() ast.Node {
 	p.advance() // {
 	ht := &ast.HashtableLit{}
 	for {
+		if p.err != nil {
+			break
+		}
 		p.skipNewlinesAndSemicolons()
 		t := p.cur()
 		if t.Type == TkPunct && t.Text == "}" {

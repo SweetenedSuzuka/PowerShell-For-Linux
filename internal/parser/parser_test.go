@@ -473,3 +473,41 @@ func TestSwitchNewlineBraceTerminates(t *testing.T) {
 		}
 	}
 }
+
+// TestParserLoopsTerminate 验证命令实参、数组元素、方法实参、哈希表条目四个循环必然终止。
+// 命令实参环的二元运算符分支与三个集合环都依赖子解析器推进，遇到不消费 token 的失败路径会原地空转。
+func TestParserLoopsTerminate(t *testing.T) {
+	// -not 只有一元用法，不在 binaryOpInfo 表里，按普通命名参数解析
+	res := Parse("echo a -not")
+	if res.Error != nil || res.Incomplete {
+		t.Fatalf("echo a -not 应可解析（-not 按命名参数），实际 err=%v", res.Error)
+	}
+	res = Parse("echo a -not b")
+	if res.Error != nil || res.Incomplete {
+		t.Fatalf("echo a -not b 应可解析，实际 err=%v", res.Error)
+	}
+	// 三个集合环遇不消费 token 的失败路径应报错退出而非空转
+	for _, src := range []string{
+		"@( ] )",
+		"@(1, }",
+		"$s = \"x\"; $s.m(])",
+		"@{ a = > }",
+	} {
+		res := Parse(src) // 解析挂起时测试超时失败
+		if res.Error == nil {
+			t.Fatalf("%q 应报解析错误", src)
+		}
+	}
+}
+
+// TestBinaryOpsInCommandArgs 验证命令实参位置的二元运算符合并不受 -not 处理调整影响。
+func TestBinaryOpsInCommandArgs(t *testing.T) {
+	res := Parse("Where-Object Length -gt 100")
+	if res.Error != nil {
+		t.Fatalf("Where-Object Length -gt 100 应可解析，实际 err=%v", res.Error)
+	}
+	res = Parse("Get-ChildItem | Where-Object Name -like \"a*\"")
+	if res.Error != nil {
+		t.Fatalf("管道加 -like 合并应可解析，实际 err=%v", res.Error)
+	}
+}

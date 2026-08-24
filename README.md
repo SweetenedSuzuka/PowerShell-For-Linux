@@ -1,8 +1,8 @@
 # PowerShell For Linux
 
 > 众所周知，PowerShell是使用最广泛的命令行Shell之一。  
-> 但是它却不能在Linux上使用。  
-> 凭什么只有Windows能用PowerShell？  
+> 但是明明在Windows上无需依赖即可使用，在Linux上它却必须安装.NET。  
+> 这太不符合Linux精神了。
 > 因此，为了解决这个问题，我们制作了这款PowerShell For Linux。  
 > ~~有这么好的项目进入Linux生态，猫听了连夜换成HarmonyOS。~~
 
@@ -133,7 +133,7 @@ powershell -File 脚本.ps1
 ```sh
 go test ./...                                           # 单元测试
 ./powershell -NoLogo -NoProfile -File test/核验.ps1     # 逐条核验参考文档里的示例
-./powershell -NoLogo -NoProfile -File test/内容回归.ps1  # 内容级回归：检查输出的实际内容
+./powershell -NoLogo -NoProfile -File test/内容回归.ps1  # 回归测试脚本
 ```
 
 ## 项目结构

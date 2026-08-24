@@ -23,6 +23,10 @@ func (e *Evaluator) RunSource(src string) ([]*object.PSObject, error) {
 	if res.Error != nil {
 		return nil, res.Error
 	}
+	// 一次性入口拒绝执行不完整语句
+	if res.Incomplete {
+		return nil, fmt.Errorf("%s", lang.T(lang.MsgIncompleteInput))
+	}
 	var out []*object.PSObject
 	for _, st := range res.List.Statements {
 		out = append(out, e.EvalStatement(st)...)
@@ -479,6 +483,11 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 	res := parser.Parse(string(data))
 	if res.Error != nil {
 		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgScriptParseFail, path, res.Error)))
+		return nil
+	}
+	// 截断的脚本拒绝执行，避免静默跑掉前半段
+	if res.Incomplete {
+		e.writeError(fmt.Errorf("%s : %s", path, lang.T(lang.MsgIncompleteInput)))
 		return nil
 	}
 	abs, _ := filepath.Abs(path)

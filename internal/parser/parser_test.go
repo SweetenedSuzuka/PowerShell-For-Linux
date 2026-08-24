@@ -548,3 +548,28 @@ func TestBraceNewlineLayout(t *testing.T) {
 		}
 	}
 }
+
+// TestIncompleteInputsFlagged 验证跨行构造在输入截断时标记不完整而非报错或崩溃。
+// REPL 依赖该标记进入续行；一次性入口据此拒绝执行残缺语句。
+func TestIncompleteInputsFlagged(t *testing.T) {
+	for _, src := range []string{
+		"function f\n",
+		"filter ff\n",
+		"try { \"x\" }\n",
+		"do\n{ 1 }\n",
+		"try\n{\nthrow \"e\"\n}\ncatch\n[System.Exception]\n",
+	} {
+		res := Parse(src)
+		if res.Error != nil || !res.Incomplete {
+			t.Fatalf("%q 应标记不完整，实际 err=%v incomplete=%v", src, res.Error, res.Incomplete)
+		}
+	}
+}
+
+// TestCatchTypeFilterNewline 验证 catch 的 [类型] 过滤允许另起一行书写。
+func TestCatchTypeFilterNewline(t *testing.T) {
+	res := Parse("try\n{\nthrow \"e\"\n}\ncatch\n[System.Exception]\n{ \"c\" }")
+	if res.Error != nil || res.Incomplete || len(res.List.Statements) != 1 {
+		t.Fatalf("catch 类型过滤换行应可完整解析，实际 err=%v", res.Error)
+	}
+}

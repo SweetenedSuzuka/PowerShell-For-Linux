@@ -55,6 +55,7 @@ const (
 	MsgCommandNotFound
 	MsgScriptReadFail
 	MsgScriptParseFail
+	MsgIncompleteInput
 
 	// ---- builtin：cmdlet 报错与提示 ----
 	MsgBindNoParam

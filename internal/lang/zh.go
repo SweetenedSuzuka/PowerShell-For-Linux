@@ -67,6 +67,7 @@ var zh = map[Msg]string{
 	MsgCommandNotFound: "无法将“%s”项识别为 cmdlet、函数、脚本文件或可运行程序的名称。",
 	MsgScriptReadFail:  "无法读取脚本 %s：%v",
 	MsgScriptParseFail: "脚本 %s 解析错误：%v",
+	MsgIncompleteInput: "输入不完整：缺少块结尾或续行内容。",
 
 	// ---- builtin ----
 	MsgBindNoParam:         "找不到与参数名称 \"-%s\" 匹配的参数。",

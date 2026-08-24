@@ -329,8 +329,9 @@ func (p *Parser) parseBlock() *ast.Block {
 	p.skipNewlines()
 	t := p.cur()
 	if t.Type == TkEOF {
+		// Body 必须非 nil：parseFunction 与求值端都会解引用 Body.Statements
 		p.incomplete = true
-		return &ast.Block{}
+		return &ast.Block{Body: &ast.StatementList{}}
 	}
 	if !(t.Type == TkPunct && t.Text == "{") {
 		p.fail(lang.T(lang.MsgParseExpectBrace, p.describe(t)))
@@ -392,12 +393,23 @@ func (p *Parser) parseTry() ast.Node {
 	if p.err != nil {
 		return node
 	}
+	hasHandler := false
 	for {
 		t := p.peekPastNewlines()
+		if t.Type == TkEOF {
+			// catch/finally 可以写在后续行且可以有多个；一个都没有时输入视为未完，
+			// 已有处理器则语句完整（EOF 只是不再有更多 catch）
+			if !hasHandler {
+				p.incomplete = true
+			}
+			break
+		}
 		if t.Type == TkWord && strings.EqualFold(t.Text, "catch") {
 			p.skipNewlines()
 			p.advance()
 			cc := ast.CatchClause{}
+			// 类型过滤允许另起一行书写
+			p.skipNewlines()
 			if p.cur().Type == TkPunct && p.cur().Text == "[" {
 				p.advance()
 				tn := p.cur()
@@ -414,11 +426,13 @@ func (p *Parser) parseTry() ast.Node {
 				return node
 			}
 			node.Catches = append(node.Catches, cc)
+			hasHandler = true
 			continue
 		}
 		if t.Type == TkWord && strings.EqualFold(t.Text, "finally") {
 			p.skipNewlines()
 			p.advance()
+			hasHandler = true
 			node.Finally = p.parseBlock()
 			if p.err != nil {
 				return node
@@ -476,6 +490,11 @@ func (p *Parser) parseDoWhile() ast.Node {
 	body := p.parseBlock()
 	// while 允许写在 } 的下一行
 	w := p.peekPastNewlines()
+	if w.Type == TkEOF {
+		// while 可能写在后续行：输入到此为止视为未完，交由流式入口继续等待或拒绝
+		p.incomplete = true
+		return &ast.DoWhile{Body: body}
+	}
 	if !(w.Type == TkWord && strings.EqualFold(w.Text, "while")) {
 		p.fail(lang.T(lang.MsgParseDoWhile))
 		return &ast.DoWhile{Body: body}

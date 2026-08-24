@@ -142,6 +142,11 @@ func executeOnce(sess *shell.Session, ev *eval.Evaluator, src string) int {
 		fmt.Fprintf(os.Stderr, "%s : %v\n", sess.StyleName(), res.Error)
 		return 1
 	}
+	// 仅交互续行状态允许不完整的语句，一次性交互拒绝执行不完整的输入
+	if res.Incomplete {
+		fmt.Fprintf(os.Stderr, "%s : %s\n", sess.StyleName(), lang.T(lang.MsgIncompleteInput))
+		return 1
+	}
 	// 逐语句执行并格式化，保证与 Write-Host/Format-* 等直写命令的顺序一致
 	for _, st := range res.List.Statements {
 		objs := ev.EvalStatement(st)

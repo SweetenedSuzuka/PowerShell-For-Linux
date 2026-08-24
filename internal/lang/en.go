@@ -67,6 +67,7 @@ Switch style at runtime:
 	MsgCommandNotFound: "The term '%s' is not recognized as the name of a cmdlet, function, script file, or runnable program.",
 	MsgScriptReadFail:  "Cannot read script %s: %v",
 	MsgScriptParseFail: "Parse error in script %s: %v",
+	MsgIncompleteInput: "Incomplete input: missing a block terminator or continuation.",
 
 	// ---- builtin ----
 	MsgBindNoParam:         "A parameter cannot be found that matches parameter name '-%s'.",

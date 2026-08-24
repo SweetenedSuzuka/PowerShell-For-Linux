@@ -401,8 +401,8 @@ func (p *Parser) parseTry() ast.Node {
 	for {
 		t := p.peekPastNewlines()
 		if t.Type == TkEOF {
-			// catch/finally 可以写在后续行且可以有多个；一个都没有时输入视为未完，
-			// 已有处理器则语句完整（EOF 只是不再有更多 catch）
+			// catch/finally 可以写在后续行且可以有多个。
+			// 一个都没有时当作输入未完成处理，已有处理器则语句完整，EOF 只是不再有更多 catch。
 			if !hasHandler {
 				p.incomplete = true
 			}
@@ -791,9 +791,8 @@ func (p *Parser) parseCommand() *ast.Command {
 		}
 		// 命名参数 / 开关
 		if t.Type == TkDashWord {
-			// 二元运算符（比较、逻辑、成员测试等）：把最后一个位置实参并入运算表达式，
-			// 后续 token 由 parseBinaryTail 消费。判定依据与 parseBinaryTail 一致，都是 binaryOpInfo；
-			// 不在表里的词（如 -not，它只有一元用法）按普通命名参数处理。
+			// 二元运算符（比较、逻辑、成员测试等）会把最后一个位置实参并入运算表达式，后续 token 由 parseBinaryTail 消费。
+			// 判定依据与 parseBinaryTail 一致，都是 binaryOpInfo；不在表里的词（如只有一元用法的 -not）按普通命名参数处理。
 			if _, prec := p.binaryOpInfo(t); prec >= 0 {
 				if len(cmd.Positional) == 0 {
 					p.fail(lang.T(lang.MsgParseCmpOp, t.Text))
@@ -1455,7 +1454,7 @@ func (p *Parser) stringFromParts(parts []lexer.StringPart) ast.Node {
 				nodes = append(nodes, &ast.VarRef{Name: name, Scope: scope})
 			}
 		case lexer.PartSubexpr:
-			// 子表达式是独立解析过程，其错误与未完状态必须并入外层，
+			// 子表达式是独立解析过程，其错误与未完状态必须并入外层。
 			// 否则插值会静默丢弃解析失败的语句或执行截断的残缺语句。
 			sub := Parse(part.Text)
 			if sub.Error != nil {

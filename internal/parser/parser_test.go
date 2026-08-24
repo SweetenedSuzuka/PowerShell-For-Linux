@@ -619,7 +619,7 @@ func TestStringSubexprPropagatesState(t *testing.T) {
 	}
 }
 
-// TestExpressionLineContinuation 验证行尾是二元运算符/逗号/赋值号时语句在下一行继续，
+// TestExpressionLineContinuation 验证行尾为二元运算符/逗号/赋值号时语句在下一行继续。
 // 括号与下标内部换行自由，链式运算符可跨行；无运算符的换行仍是语句边界。
 func TestExpressionLineContinuation(t *testing.T) {
 	for _, src := range []string{

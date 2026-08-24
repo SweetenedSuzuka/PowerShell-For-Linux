@@ -161,6 +161,13 @@ func cmdClearContent(c *Context) ([]*object.PSObject, error) {
 		return errf(c, "%v", derr)
 	}
 	for _, p := range paths {
+		// Clear-Content 只清空已存在的文件，不存在时报错而非创建空文件
+		if _, err := os.Stat(p); err != nil {
+			return errf(c, "%s", lang.T(lang.MsgPathNotFoundForSet, p))
+		}
+		if wiOut, skip := whatIfSkip(c, "Clear-Content", p); skip {
+			return wiOut, nil
+		}
 		if err := os.WriteFile(p, nil, 0o644); err != nil {
 			return errf(c, "%s", lang.T(lang.MsgCannotClear, p))
 		}
@@ -186,8 +193,15 @@ func cmdSetItem(c *Context) ([]*object.PSObject, error) {
 		return errf(c, "%v", derr)
 	}
 	info, err := os.Stat(full)
-	if err == nil && info.IsDir() {
+	if err != nil {
+		// Set-Item 只改写已存在的项，不存在时报错而非创建空文件
+		return errf(c, "%s", lang.T(lang.MsgPathNotFoundForSet, path))
+	}
+	if info.IsDir() {
 		return nil, nil
+	}
+	if wiOut, skip := whatIfSkip(c, "Set-Item", full); skip {
+		return wiOut, nil
 	}
 	if err := os.WriteFile(full, []byte(value.String()), 0o644); err != nil {
 		return errf(c, "%s", lang.T(lang.MsgCannotWrite, path))
@@ -204,8 +218,16 @@ func cmdClearItem(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
-	if info, err := os.Stat(full); err == nil && info.IsDir() {
+	info, err := os.Stat(full)
+	if err != nil {
+		// Clear-Item 只清空已存在的项，不存在时报错而非创建空文件
+		return errf(c, "%s", lang.T(lang.MsgPathNotFoundForSet, path))
+	}
+	if info.IsDir() {
 		return nil, nil
+	}
+	if wiOut, skip := whatIfSkip(c, "Clear-Item", full); skip {
+		return wiOut, nil
 	}
 	if err := os.WriteFile(full, nil, 0o644); err != nil {
 		return errf(c, "%s", lang.T(lang.MsgCannotClear, path))

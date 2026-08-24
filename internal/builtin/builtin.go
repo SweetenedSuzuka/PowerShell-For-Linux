@@ -218,7 +218,10 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 			if sp == nil && commonParams[strings.ToLower(slot.Name)] {
 				// 开关型常见参数（-Verbose 等）的值退回位置参数（-Verbose foo 中 foo 是位置实参）。
 				// 取值型常见参数（-ErrorAction 等）的值被参数消费，直接忽略。
-				if commonSwitchParams[strings.ToLower(slot.Name)] {
+				// WhatIf/Confirm 记录为开关供 cmdlet 读取；-WhatIf:$false 的内联布尔照常生效。
+				if strings.EqualFold(slot.Name, "whatif") || strings.EqualFold(slot.Name, "confirm") {
+					ba.Switches[slot.Name] = inlineSwitchBool(val)
+				} else if commonSwitchParams[strings.ToLower(slot.Name)] {
 					ba.Positional = append(ba.Positional, val)
 					ba.PositionalNode = append(ba.PositionalNode, node)
 				}
@@ -244,6 +247,8 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 		case ast.ArgSwitch:
 			sp := findSpec(slot.Name)
 			if sp == nil && commonParams[strings.ToLower(slot.Name)] {
+				// WhatIf/Confirm 记录进开关表，cmdlet 据此跳过实际变更
+				ba.Switches[slot.Name] = true
 				continue
 			}
 			if sp == nil {

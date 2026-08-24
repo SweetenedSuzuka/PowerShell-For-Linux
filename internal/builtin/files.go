@@ -245,6 +245,9 @@ func cmdSetContent(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
+	if wiOut, skip := whatIfSkip(c, "Set-Content", full); skip {
+		return wiOut, nil
+	}
 	enc, _ := c.Args.Str("Encoding")
 	if err := os.WriteFile(full, encodeText(enc, sb.String(), true), 0o644); err != nil {
 		return errf(c, "%s", lang.T(lang.MsgCannotWrite, path))
@@ -266,6 +269,9 @@ func cmdAddContent(c *Context) ([]*object.PSObject, error) {
 	full, derr := resolvePath(c, path)
 	if derr != nil {
 		return errf(c, "%v", derr)
+	}
+	if wiOut, skip := whatIfSkip(c, "Add-Content", full); skip {
+		return wiOut, nil
 	}
 	f, err := os.OpenFile(full, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0o644)
 	if err != nil {
@@ -291,6 +297,9 @@ func cmdNewItem(c *Context) ([]*object.PSObject, error) {
 	full, derr := resolvePath(c, path)
 	if derr != nil {
 		return errf(c, "%v", derr)
+	}
+	if wiOut, skip := whatIfSkip(c, "New-Item", full); skip {
+		return wiOut, nil
 	}
 	var err error
 	if strings.EqualFold(itemType, "Directory") {
@@ -337,6 +346,9 @@ func cmdRemoveItem(c *Context) ([]*object.PSObject, error) {
 			info, err := os.Stat(full)
 			if err != nil {
 				continue
+			}
+			if wiOut, skip := whatIfSkip(c, "Remove-Item", full); skip {
+				return wiOut, nil
 			}
 			if info.IsDir() {
 				if recurse {
@@ -424,6 +436,9 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 		if err != nil {
 			return errf(c, "%s : %s", label, lang.T(lang.MsgPathNotFoundFmt, srcFull))
 		}
+		if wiOut, skip := whatIfSkip(c, label, srcFull); skip {
+			return wiOut, nil
+		}
 		destFull, derr := resolvePath(c, dest)
 		if derr != nil {
 			return errf(c, "%v", derr)
@@ -493,6 +508,13 @@ func cmdRenameItem(c *Context) ([]*object.PSObject, error) {
 		return errf(c, "%v", derr)
 	}
 	newPath := filepath.Join(filepath.Dir(old), newName)
+	// 目标已存在时拒绝重命名（os.Rename 会静默覆盖，PowerShell 会抛出错误）
+	if _, err := os.Lstat(newPath); err == nil {
+		return errf(c, "%s", lang.T(lang.MsgRenameDestExists, newPath))
+	}
+	if wiOut, skip := whatIfSkip(c, "Rename-Item", old); skip {
+		return wiOut, nil
+	}
 	if err := os.Rename(old, newPath); err != nil {
 		return errf(c, "%s", lang.T(lang.MsgCannotRename, path, err))
 	}

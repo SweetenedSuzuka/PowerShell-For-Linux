@@ -87,6 +87,8 @@ var zh = map[Msg]string{
 	MsgCopyDestNotDir:      "复制多个源时目标 %s 必须是已存在的目录。",
 	MsgCopyNeedsRecurse:    "目录 %s 需要 -Recurse。",
 	MsgCannotRename:        "无法重命名 %s：%v",
+	MsgRenameDestExists:    "无法重命名为 %s，因为该项已存在。",
+	MsgWhatIfPerform:       "What if: 对目标“%s”执行 %s。",
 	MsgCannotClear:         "无法清空 %s。",
 	MsgPropNotFound:        "路径 %s 不存在属性 %s。",
 	MsgVarExists:           "变量 $%s 已存在。",

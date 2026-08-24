@@ -87,6 +87,8 @@ Switch style at runtime:
 	MsgCopyDestNotDir:      "Destination %s must be an existing directory when copying multiple sources.",
 	MsgCopyNeedsRecurse:    "Directory %s requires -Recurse.",
 	MsgCannotRename:        "Cannot rename %s: %v",
+	MsgRenameDestExists:    "Cannot rename to %s because it already exists.",
+	MsgWhatIfPerform:       "What if: On target '%s', run %s.",
 	MsgCannotClear:         "Cannot clear %s.",
 	MsgPropNotFound:        "Path %s does not have property '%s'.",
 	MsgVarExists:           "A variable with name $%s already exists.",

@@ -192,6 +192,31 @@ func TestBindCommonParamConsumed(t *testing.T) {
 	want(t, args, "Value", "v")
 }
 
+// TestBindWhatIfRecorded WhatIf/Confirm 开关记录进 Switches 供 cmdlet 读取，内联布尔生效。
+func TestBindWhatIfRecorded(t *testing.T) {
+	args, err := bind(t, "Remove-Item a -WhatIf")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !args.Switch("WhatIf") {
+		t.Fatal("-WhatIf 应记录进开关表")
+	}
+	args, err = bind(t, "Remove-Item a -Confirm")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !args.Switch("Confirm") {
+		t.Fatal("-Confirm 应记录进开关表")
+	}
+	args, err = bind(t, "Remove-Item a -WhatIf:$false")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if args.Switch("WhatIf") {
+		t.Fatal("-WhatIf:$false 应记录为假")
+	}
+}
+
 // TestBindUnknownNamed 未知命名参数报错。
 func TestBindUnknownNamed(t *testing.T) {
 	_, err := bind(t, "Set-Content -NoSuch x")

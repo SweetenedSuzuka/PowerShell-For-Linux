@@ -75,6 +75,8 @@ const (
 	MsgCopyDestNotDir
 	MsgCopyNeedsRecurse
 	MsgCannotRename
+	MsgRenameDestExists
+	MsgWhatIfPerform
 	MsgCannotClear
 	MsgPropNotFound
 	MsgVarExists

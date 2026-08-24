@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"powershell/internal/lang"
 	"powershell/internal/object"
 	"powershell/internal/shell"
 )
@@ -119,6 +120,19 @@ func errf(c *Context, format string, args ...any) ([]*object.PSObject, error) {
 	fmt.Fprintf(c.Stderr, "%s : %s\n", c.Shell.StyleName(), msg)
 	c.Shell.LastSuccess = false
 	return nil, nil
+}
+
+// whatIfSkip 处理 -WhatIf：命中时返回逐目标的预演输出并报告应跳过实际变更。
+// 输出以返回值交付而非直写 stdout，保证管道与变量捕获等常规输出路径可用。
+func whatIfSkip(c *Context, cmdlet string, targets ...string) ([]*object.PSObject, bool) {
+	if !c.Args.Switch("WhatIf") {
+		return nil, false
+	}
+	var out []*object.PSObject
+	for _, t := range targets {
+		out = append(out, object.Str(lang.T(lang.MsgWhatIfPerform, t, cmdlet)))
+	}
+	return out, true
 }
 
 // pathList 汇总管道输入或 -Path / 位置参数中的路径列表（数组摊平，支持"可多个"）。

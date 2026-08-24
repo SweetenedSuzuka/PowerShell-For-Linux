@@ -172,8 +172,8 @@ func TestStringOps(t *testing.T) {
 	wantStr(t, `"a,b,c".Split(",")[1]`, "b")
 }
 
-// TestRangeIndex 验证范围/逗号多下标索引：$a[1..2]、$a[0,2]、
-// 负数从末尾数、嵌套下标展平、越界补 $null、字符串范围索引。
+// TestRangeIndex 验证范围/逗号多下标索引的取值形态。
+// 覆盖$a[1..2]、$a[0,2]、负数从末尾数、嵌套下标展平、越界补 $null、字符串范围索引。
 func TestRangeIndex(t *testing.T) {
 	// 范围下标：逐元素取值
 	wantStr(t, "$a = 1,2,3,4; $a[1..2]", "2", "3")
@@ -478,7 +478,6 @@ func TestTryScriptPropagation(t *testing.T) {
 	// 顶层逐语句（REPL 语义）：未捕获错误打印到 stderr（io.Discard），会话继续执行后续语句
 	wantStr(t, "\"前\"; throw \"停\"; \"后\"", "前", "后")
 }
-
 
 func TestScriptParam(t *testing.T) {
 	dir := t.TempDir()

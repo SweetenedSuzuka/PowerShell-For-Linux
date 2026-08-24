@@ -28,6 +28,7 @@ Switch style at runtime:
 	MsgParseExpectWhat:          "Expected %s, got %s",
 	MsgParseUnexpectedAfter:     "Unexpected token after statement: %s",
 	MsgParseCatchAfterTry:       "catch must follow try",
+	MsgParseTryMissingHandler:   "The Try statement is missing its Catch or Finally block.",
 	MsgParseFinallyAfterTry:     "finally must follow try",
 	MsgParseAssignOp:            "Expected an assignment operator",
 	MsgParseExpectBrace:         "Expected '{', got %s",

@@ -439,6 +439,10 @@ func (p *Parser) parseTry() ast.Node {
 			}
 			break
 		}
+		// try 语句必须有 catch 或 finally：后面跟的是其它内容而一个处理器都没有时按解析错误处理。
+		if !hasHandler {
+			p.fail(lang.T(lang.MsgParseTryMissingHandler))
+		}
 		break
 	}
 	return node
@@ -1432,7 +1436,15 @@ func (p *Parser) stringFromParts(parts []lexer.StringPart) ast.Node {
 				nodes = append(nodes, &ast.VarRef{Name: name, Scope: scope})
 			}
 		case lexer.PartSubexpr:
+			// 子表达式是独立解析过程，其错误与未完状态必须并入外层，
+			// 否则插值会静默丢弃解析失败的语句或执行截断的残缺语句。
 			sub := Parse(part.Text)
+			if sub.Error != nil {
+				p.fail(sub.Error.Error())
+			}
+			if sub.Incomplete {
+				p.incomplete = true
+			}
 			nodes = append(nodes, &ast.SubExpr{Body: sub.List})
 		}
 	}

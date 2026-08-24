@@ -573,3 +573,48 @@ func TestCatchTypeFilterNewline(t *testing.T) {
 		t.Fatalf("catch 类型过滤换行应可完整解析，实际 err=%v", res.Error)
 	}
 }
+
+// TestTryRequiresHandler 验证 try 语句必须有 catch 或 finally：
+// 输入在 try 体后截断时标记不完整，后面跟其它内容时按解析错误处理。
+func TestTryRequiresHandler(t *testing.T) {
+	res := Parse("try { \"x\" }\n")
+	if res.Error != nil || !res.Incomplete {
+		t.Fatalf("try 体后截断应标记不完整，实际 err=%v incomplete=%v", res.Error, res.Incomplete)
+	}
+	for _, src := range []string{
+		"try { echo X } \necho done",
+		"try { echo X }; echo done",
+		"if ($true) { try { 1 } }",
+	} {
+		if r := Parse(src); r.Error == nil {
+			t.Fatalf("%q 应报解析错误（try 缺少 catch/finally）", src)
+		}
+	}
+	for _, src := range []string{
+		"try { 1 } catch { 2 }",
+		"try { 1 } finally { 2 }",
+		"try { 1 } catch [System.Exception] { 2 } finally { 3 }\necho done",
+	} {
+		r := Parse(src)
+		if r.Error != nil || r.Incomplete {
+			t.Fatalf("%q 应可完整解析，实际 err=%v incomplete=%v", src, r.Error, r.Incomplete)
+		}
+	}
+}
+
+// TestStringSubexprPropagatesState 验证双引号串内 $() 子表达式的解析状态并入外层：
+// 子语句解析失败时报错、截断时标记不完整，不再静默丢弃或提前执行。
+func TestStringSubexprPropagatesState(t *testing.T) {
+	res := Parse(`Write-Output "a$(do x)b"`)
+	if res.Error == nil {
+		t.Fatal("子表达式内解析失败的语句应使外层报错")
+	}
+	res = Parse(`"$side$(try { "SIDE" })"`)
+	if res.Error != nil || !res.Incomplete {
+		t.Fatalf("子表达式截断应标记外层不完整，实际 err=%v incomplete=%v", res.Error, res.Incomplete)
+	}
+	res = Parse(`$s = "a$(echo hi)b"; $s`)
+	if res.Error != nil || res.Incomplete {
+		t.Fatalf("合法插值应不受影响，实际 err=%v", res.Error)
+	}
+}

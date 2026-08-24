@@ -482,11 +482,14 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 	}
 	res := parser.Parse(string(data))
 	if res.Error != nil {
+		// 脚本没有执行任何语句视作失败：置失败退出码，让 -File 与脚本调用方凭退出码感知
+		e.Session.LastExit = 1
 		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgScriptParseFail, path, res.Error)))
 		return nil
 	}
 	// 截断的脚本拒绝执行，避免静默跑掉前半段
 	if res.Incomplete {
+		e.Session.LastExit = 1
 		e.writeError(fmt.Errorf("%s : %s", path, lang.T(lang.MsgIncompleteInput)))
 		return nil
 	}

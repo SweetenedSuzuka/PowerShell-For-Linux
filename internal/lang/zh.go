@@ -28,6 +28,7 @@ var zh = map[Msg]string{
 	MsgParseExpectWhat:          "期望 %s，实际遇到 %s",
 	MsgParseUnexpectedAfter:     "语句后出现意外的 token：%s",
 	MsgParseCatchAfterTry:       "catch 必须跟在 try 之后",
+	MsgParseTryMissingHandler:   "try 语句缺少 catch 或 finally 块。",
 	MsgParseFinallyAfterTry:     "finally 必须跟在 try 之后",
 	MsgParseAssignOp:            "期望赋值运算符",
 	MsgParseExpectBrace:         "期望 '{'，实际遇到 %s",

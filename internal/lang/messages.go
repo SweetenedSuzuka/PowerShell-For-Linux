@@ -16,6 +16,7 @@ const (
 	MsgParseExpectWhat
 	MsgParseUnexpectedAfter
 	MsgParseCatchAfterTry
+	MsgParseTryMissingHandler
 	MsgParseFinallyAfterTry
 	MsgParseAssignOp
 	MsgParseExpectBrace

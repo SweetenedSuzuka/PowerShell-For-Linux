@@ -85,7 +85,7 @@ func New(style Style, stdout, stderr io.Writer, stdin io.Reader) *Session {
 		HostIn:    stdin,
 	}
 	s.Aliases = buildAliases(style)
-	// 会话语言即全局界面语言，提示文案与日期渲染都按它取
+	// 会话语言即全局界面语言，提示文本与日期渲染都按它取
 	lang.SetCurrent(s.Lang)
 	return s
 }

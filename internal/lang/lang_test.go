@@ -57,14 +57,14 @@ func TestLanguageCode(t *testing.T) {
 	}
 }
 
-// TestT 取文案：按当前语言查表填参，缺条目回退默认语言表。
+// TestT 取文本：按当前语言查表填参，缺条目回退默认语言表。
 func TestT(t *testing.T) {
 	SetCurrent(LangZh)
 	if got := T(MsgDivideByZero); got != "尝试除以零" {
-		t.Errorf("默认语言文案 = %q", got)
+		t.Errorf("默认语言文本 = %q", got)
 	}
 	SetCurrent(LangEn)
 	if got := T(MsgPathNotFoundFmt, "/nope"); got != "Cannot find path '/nope'." {
-		t.Errorf("英文文案 = %q", got)
+		t.Errorf("英文文本 = %q", got)
 	}
 }

@@ -1,7 +1,7 @@
-// Package lang 提供界面语言选择与提示文案。
+// Package lang 提供界面语言选择与提示文本。
 // 界面语言按照优先顺序依次匹配环境变量的 LANGUAGE、LC_ALL、LC_MESSAGES、LANG 来决定，把每个变量的候选 locale 串成一条有序列表。
 // 以第一个成功匹配的已注册语言为准，全部未命中时使用中文。
-// 文案按语言分文件存放，每种语言一张表，如 zh.go、en.go。新增语言就新建一个文件定义表并在 catalogs 里注册，该语言暂缺的条目在取用时自动回退默认语言。
+// 文本按语言分文件存放，每种语言一张表，如 zh.go、en.go。新增语言就新建一个文件定义表并在 catalogs 里注册，该语言暂缺的条目在取用时自动回退默认语言。
 package lang
 
 import (
@@ -27,7 +27,7 @@ func Current() Lang { return current }
 // SetCurrent 设置当前界面语言（shell.New 启动时调用，让会话与全局保持一致）。
 func SetCurrent(l Lang) { current = l }
 
-// catalogs 注册各语言的文案表。新增语言：新建对应文件定义一张表，这里加一行注册。
+// catalogs 注册各语言的文本表。新增语言：新建对应文件定义一张表，这里加一行注册。
 var catalogs = map[Lang]map[Msg]string{
 	LangZh: zh,
 	LangEn: en,
@@ -60,7 +60,7 @@ func Detect() Lang {
 	return defaultLang
 }
 
-// langRegistered 报告某语言码是否已注册文案表。
+// langRegistered 报告某语言码是否已注册文本表。
 func langRegistered(l Lang) bool {
 	_, ok := catalogs[l]
 	return ok
@@ -74,7 +74,7 @@ func languageCode(locale string) string {
 	return locale
 }
 
-// T 取当前语言的文案并填入参数；当前语言表没有这一条时回退默认语言表。
+// T 取当前语言的文本并填入参数；当前语言表没有这一条时回退默认语言表。
 // 实参顺序以默认语言表为准，其它语言语序不同的改写措辞去对齐它，不用位置占位符。
 func T(m Msg, args ...any) string {
 	s, ok := catalogs[current][m]

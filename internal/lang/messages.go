@@ -1,6 +1,6 @@
 package lang
 
-// Msg 是提示文案的编号。文案本体按语言放在各语言表文件里（zh.go、en.go）。
+// Msg 是提示文本的编号。文本本体按语言放在各语言表文件里（zh.go、en.go）。
 type Msg int
 
 const (

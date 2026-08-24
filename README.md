@@ -8,7 +8,7 @@
 
 **在 Linux 上运行的 PowerShell 风格解释器。**
 
-把 PowerShell 的命令、对象管道和脚本搬到 Linux 上，操作的是真实的 Linux 文件系统。
+把 PowerShell 的命令、对象管道和脚本搬到 Linux 上，操作的是真实的 Linux 文件系统。  
 支持 Windows PowerShell 5.X 与 7.X 两套命令格式。
 
 **仅依赖 Go 标准库，零第三方依赖。**
@@ -21,27 +21,27 @@
 
 ## 特性
 
-- **对象管道** —— 命令之间正常传递对象，`Where-Object`、`Sort-Object`、`Select-Object`、`ForEach-Object` 等照常可用。
-- **双命令格式** —— 5.X 和 7.X 的横幅、`$PSVersionTable`、别名、自动变量随切换联动。
-- **多语言支持** —— 横幅、帮助与报错信息会按系统变量 `LANGUAGE`/`LC_ALL`/`LC_MESSAGES`/`LANG` 依次匹配界面语言；目前支持中文和英语，未被支持的语言会使用默认的中文。
-- **外部命令透传** —— 没内置的命令直接在系统 PATH 里执行，退出码写进 `$LASTEXITCODE`。
-- **114 个内置命令** —— 覆盖文件、路径、进程、服务、系统信息、JSON/CSV 转换、格式化等。
-- **脚本与语法** —— `.ps1` 脚本可直接执行；变量、字符串、运算符、控制流、函数齐全。
-- **行编辑** —— 历史、Tab 补全、多行续行。
-- **零外部依赖** —— 静态二进制，目标机不用装任何额外的东西。
+- **对象管道** —— 命令之间正常传递对象，`Where-Object`、`Sort-Object`、`Select-Object`、`ForEach-Object` 等照常可用。  
+- **双命令格式** —— 5.X 和 7.X 的横幅、`$PSVersionTable`、别名、自动变量随切换联动。  
+- **多语言支持** —— 横幅、帮助与报错信息会按系统变量 `LANGUAGE`/`LC_ALL`/`LC_MESSAGES`/`LANG` 依次匹配界面语言；目前支持中文和英语，未被支持的语言会使用默认的中文，日期显示与区域信息跟随语言设置。  
+- **外部命令透传** —— 没内置的命令直接在系统 PATH 里执行，退出码写进 `$LASTEXITCODE`。  
+- **支持 115 个 cmdlet 命令** —— 支持 115 个内置 cmdlet 以及它们的 77 个别名，覆盖文件、路径、进程、服务、系统信息、JSON/CSV 转换、格式化等。  
+- **脚本与语法** —— `.ps1` 脚本可直接执行；对象、字符串与日期的方法可直接调用；支持 `try/catch/finally`、`throw`、脚本块、`param()` 参数声明、作用域修饰符（`$script:`/`$global:`/`$local:`）、`switch` 分支等语言特性。  
+- **行编辑** —— 历史、Tab 补全、多行续行。  
+- **零外部依赖** —— 静态二进制，目标机不用装任何额外的东西。  
 
 ## 实现方式
 
 将 PowerShell 的命令分为两类，其中一部分映射为对应的 Linux 命令，另一部分用 Go 实现，实现在 Linux 上使用 PowerShell 风格的命令控制系统。
 
-- **Go 原生复现** —— 对象管道本身，以及文件、路径、格式化、JSON/CSV、对象操作这些命令（如 `Get-ChildItem`、`Where-Object`、`ConvertTo-Json` 等），在 Go 里直接产出、消费对象。
-- **映射系统命令** —— 系统层面的操作直接调用 Linux 上的原生工具：
-  - `Get-Service` → `systemctl`
-  - `Test-Connection` → `ping`
-  - `Get/Set-Clipboard` → `xclip`/`xsel`
-  - `Set-TimeZone` → `timedatectl`
-  - `Set-Date` → `date`
-  - 诸如此类，需要 root 的自动加 `sudo`。
+- **Go 原生复现** —— 对象管道本身，以及文件、路径、格式化、JSON/CSV、对象操作这些命令（如 `Get-ChildItem`、`Where-Object`、`ConvertTo-Json` 等），在 Go 里直接产生和使用对象。  
+- **映射系统命令** —— 系统层面的操作直接调用 Linux 上的原生工具：  
+  - `Get-Service` → `systemctl`  
+  - `Test-Connection` → `ping`  
+  - `Get/Set-Clipboard` → `xclip`/`xsel`  
+  - `Set-TimeZone` → `timedatectl`  
+  - `Set-Date` → `date`  
+  - 诸如此类，需要 root 的自动加 `sudo`。  
 - **其它命令** —— 直接透传执行系统 PATH 里的命令（`sudo`、`mkdir`、`grep` 照常能用）。
 
 ## 构建
@@ -87,7 +87,7 @@ powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <命令>] [-File <�
 
 ## 内置命令
 
-内置 114 个命令。每条命令的用法、版本和发行版要求，以及它对应 bash 的什么写法，见 [docs/指令参考.md](docs/指令参考.md)。
+内置 115 个 cmdlet 命令，外加 77 个别名。每条命令的用法、版本和发行版要求，以及它对应 bash 的什么写法，见 [docs/指令参考.md](docs/指令参考.md)。  
 逐参数、逐字段的映射规则见 [docs/指令详解.md](docs/指令详解.md)。
 
 ## 脚本
@@ -99,7 +99,9 @@ powershell -File 脚本.ps1
 ```
 
 或进入命令行后运行 `.\脚本.ps1`。
-支持变量、字符串、运算符、控制流（`if/foreach/while/do-while/for/switch`）、函数等。
+
+支持范围详见 `docs/` 下的文档。  
+总体来说，组成脚本的指令行为和原版 PowerShell 一致，或者出入不是很大（如一些直接映射为 bash 指令的命令行输出可能存在差异），通常都可以执行。
 
 ## 管道与重定向
 
@@ -129,8 +131,9 @@ powershell -File 脚本.ps1
 ## 测试
 
 ```sh
-go test ./...                                  # 单元测试
-./powershell -NoLogo -NoProfile -File test/核验.ps1   # 逐条核验参考文档里的示例
+go test ./...                                           # 单元测试
+./powershell -NoLogo -NoProfile -File test/核验.ps1     # 逐条核验参考文档里的示例
+./powershell -NoLogo -NoProfile -File test/内容回归.ps1  # 内容级回归：检查输出的实际内容
 ```
 
 ## 项目结构
@@ -147,6 +150,7 @@ powershellForLinux/
 │   ├── eval/            # 求值器：表达式、语句、管道、命令调度
 │   ├── builtin/         # 内置 cmdlet（Go 实现 + 映射系统命令）
 │   ├── object/          # 对象模型（PSObject）与格式化输出
+│   ├── lang/            # 多语言文本
 │   ├── shell/           # 会话状态：变量、别名、5.X/7.X 风格、横幅、提示符
 │   ├── external/        # 外部命令透传
 │   └── repl/            # 交互式 REPL（行编辑、历史、补全）
@@ -157,11 +161,8 @@ powershellForLinux/
 │   └── 未实现指令.md     # 未实现指令清单及原因
 └── test/
     ├── 核验.ps1          # 逐条核验参考文档里的示例
+    ├── 内容回归.ps1      # 回归测试脚本
     ├── 功能演示.ps1      # 语言特性演示
     ├── 格式测试5.ps1     # 5.X 命令格式测试
     └── 格式测试7.ps1     # 7.X 命令格式测试
 ```
-
-## 许可
-
-MIT

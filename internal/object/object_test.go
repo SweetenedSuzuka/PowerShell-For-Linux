@@ -105,7 +105,7 @@ func TestHashtableVirtualProps(t *testing.T) {
 	if v, ok := h.PropValue("Count"); !ok || v.String() != "2" {
 		t.Errorf("Count 取不到或值错：%v %v", v, ok)
 	}
-	// 哈希表没有 Length，应走标量兜底返回 1
+	// 哈希表没有 Length 属性，按有值标量返回 1
 	if v, ok := h.PropValue("Length"); !ok || v.String() != "1" {
 		t.Errorf("Length 取不到或值错：%v %v", v, ok)
 	}

@@ -125,7 +125,7 @@ func TestBindScriptBlockLazy(t *testing.T) {
 	}
 }
 
-// TestBindExcessPositional 超出规格槽位数的实参留在 Positional 兜底。
+// TestBindExcessPositional 验证超出规格槽位数的实参保留在 Positional 里。
 func TestBindExcessPositional(t *testing.T) {
 	args, err := bind(t, "Copy-Item a b c")
 	if err != nil {

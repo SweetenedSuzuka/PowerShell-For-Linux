@@ -124,7 +124,7 @@ func tableColumns(objs []*PSObject) (labels []string, aligns []string) {
 			return labels, aligns
 		}
 	}
-	// 兜底：用第一个对象的属性名作为列（如 Select-Object 的自定义对象）
+	// 对象没有表格列定义时用第一个对象的属性名作为列（如 Select-Object 的自定义对象）
 	if len(objs) > 0 && len(objs[0].Props) > 0 {
 		labels = make([]string, 0, len(objs[0].Props))
 		aligns = make([]string, 0, len(objs[0].Props))

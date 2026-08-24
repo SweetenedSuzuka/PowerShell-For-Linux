@@ -364,7 +364,7 @@ func TestStatementAsExpression(t *testing.T) {
 	wantStr(t, "$i = 0; $wv = while ($i -lt 3) { $i; $i++ }; $wv -join ','", "0,1,2")
 }
 
-// TestStderrRedirectKeepsOutput 验证 2> 重定向不影响 stdout 输出（此前 applyRedirects 一律吞掉）。
+// TestStderrRedirectKeepsOutput 验证 2> 重定向不影响 stdout 输出（此前 applyRedirects 把输出一并丢弃）。
 func TestStderrRedirectKeepsOutput(t *testing.T) {
 	// 2>$null 只丢弃错误流，输出照常（内置与函数各一例）
 	wantStr(t, `Write-Output "w" 2>$null`, "w")

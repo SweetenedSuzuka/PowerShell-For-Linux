@@ -378,7 +378,7 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 	}
 	// 目标：-Destination（命名或位置）
 	dest, _ := c.Args.Str("Destination")
-	// 超量位置实参兜底（本项目多源写法 Copy-Item a b c → 复制 a、b 到 c）：
+	// 多源写法 Copy-Item a b c 复制 a、b 到 c，超出槽位的实参在此处处理：
 	// 目标由位置映射时末位实参提升为目标，Path 与映射到 Destination 的值都并入源；
 	// 目标显式命名时剩余实参全部并入源（如 Copy-Item a b -Destination d）。
 	if len(c.Args.Positional) > 0 {

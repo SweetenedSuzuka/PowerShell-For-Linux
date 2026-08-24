@@ -39,7 +39,7 @@ type flowSignal struct {
 	out   []*object.PSObject // panic 前已产生的输出（传播时保留，如 throw 前循环的输出）
 }
 
-// RecoverError 提取 panic 值里的终止错误（供 main.go -File 顶层兜底打印）。
+// RecoverError 提取 panic 值里的终止错误，供 main.go 在 -File 顶层打印。
 // 非错误 panic 返回 nil，交由调用方继续传播。
 func RecoverError(r any) error {
 	if fs, ok := r.(*flowSignal); ok && fs.kind == flowError {

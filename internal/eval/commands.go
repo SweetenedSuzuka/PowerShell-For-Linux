@@ -513,8 +513,8 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 				e.ExitRequested = true
 				e.ExitCode = sig.code
 			case flowError:
-				// 未捕获的终止错误：中止脚本并向上传播（调用方 try 可捕获；
-				// 顶层由 EvalStatement/main.go 兜底打印）；panic 前已产生的输出一并携带
+				// 未捕获的终止错误：中止脚本并向上传播，调用方的 try 可以捕获；
+				// 传到最外层时由 EvalStatement/main.go 打印。panic 前已产生的输出一并携带。
 				sig.out = all
 				panic(sig)
 			}

@@ -505,6 +505,23 @@ sh -c "echo n | $root/powershell -NoLogo -NoProfile -Command 'Remove-Item test/t
 $results += T "-Confirm 应答 n 后保留" ((Test-Path test/tmp/cfb.txt) -eq $true)
 Remove-Item test/tmp/cfb.txt -Force 2>$null
 
+Write-Output "== 类型字面量 =="
+
+# 118. 强制转换基础形态
+$results += T "类型转换 int/string/double" (([int]"42" -eq 42) -and ([string]42 -eq "42") -and ([double]"1.5" -eq 1.5))
+# 119. datetime 转换取字段
+$d = [datetime]"2020-01-02"
+$results += T "datetime 转换取 Year" (($d.Year -eq 2020))
+# 120. -is/-as 直接接类型字面量
+$results += T "-is/-as 接类型字面量" ((1 -is [int]) -and ("a" -isnot [int]) -and ("7" -as [int] -eq 7))
+# 121. 转换失败报错且后续语句继续执行
+$rTl = ""
+[int]"abc"
+if ($?) { $rTl = "no" } else { $rTl = "yes" }
+Set-Content test/tmp/tl-after.txt "ran"
+$results += T "转换失败报错且继续执行" (($rTl -eq "yes") -and ((Get-Content test/tmp/tl-after.txt) -eq "ran"))
+Remove-Item test/tmp/tl-after.txt -Force 2>$null
+
 # == 结尾统计 ==
 Write-Output ""
 $failN = 0

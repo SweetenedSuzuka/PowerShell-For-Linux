@@ -259,13 +259,18 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		return object.Hashtable(entries)
 	case *ast.TypeCast:
 		// [pscustomobject]@{...}：哈希表条目变属性
-		expr := e.evalValue(v.Expr)
 		if strings.EqualFold(v.TypeName, "pscustomobject") {
+			expr := e.evalValue(v.Expr)
 			if entries, ok := expr.Value.([]object.HashEntry); ok {
 				return object.PSCustomObject(entries)
 			}
+			return expr
 		}
-		return expr
+		// 无操作数的类型字面量：求值为类型名，供 -is/-as 与变量保存消费
+		if v.Expr == nil {
+			return object.Str(strings.ToLower(v.TypeName))
+		}
+		return e.convertValue(e.evalValue(v.Expr), v.TypeName)
 	case *ast.MemberAccess:
 		base := e.evalValue(v.Base)
 		return e.memberProp(base, v.Prop)
@@ -1364,30 +1369,32 @@ func replaceOp(l, r *object.PSObject) *object.PSObject {
 func typeIs(l, r *object.PSObject) bool {
 	name := strings.ToLower(r.String())
 	switch name {
-	case "int":
+	case "int", "int32", "int64", "long":
 		return l.TypeName == "Int"
 	case "string":
 		return l.TypeName == "String"
 	case "bool", "boolean":
 		return l.TypeName == "Boolean"
-	case "double":
+	case "double", "float", "single":
 		return l.TypeName == "Double"
 	case "array", "object[]":
 		return l.IsArray()
 	case "hashtable":
 		return l.TypeName == "Hashtable"
+	case "datetime":
+		return l.TypeName == "DateTime"
 	}
 	return false
 }
 
 func asOp(l, r *object.PSObject) *object.PSObject {
 	switch strings.ToLower(r.String()) {
-	case "int":
+	case "int", "int32", "int64", "long":
 		if n, ok := l.AsInt(); ok {
 			return object.Int(n)
 		}
 		return object.Null()
-	case "double", "float":
+	case "double", "float", "single":
 		if n, ok := l.AsFloat(); ok {
 			return object.Float(n)
 		}
@@ -1396,10 +1403,80 @@ func asOp(l, r *object.PSObject) *object.PSObject {
 		return object.Str(l.String())
 	case "bool":
 		return object.Bool(l.Truthy())
-	case "array":
+	case "datetime":
+		if v, ok := parseDatetimeValue(l); ok {
+			return v
+		}
+		return object.Null()
+	case "array", "object[]":
+		if l.IsArray() {
+			return l
+		}
 		return object.Array(l.ArrayItems())
 	}
 	return l
+}
+
+// convertValue 把值转换为方括号里声明的类型；数组后缀对每个元素分别转换。
+// 无法转换时写非终止错误并返回 $null（与除零的既有错误风格一致）。
+func (e *Evaluator) convertValue(v *object.PSObject, typeName string) *object.PSObject {
+	norm := strings.ToLower(typeName)
+	if strings.HasSuffix(norm, "[]") {
+		elem := strings.TrimSuffix(norm, "[]")
+		items := make([]*object.PSObject, 0, len(v.ArrayItems()))
+		for _, it := range v.ArrayItems() {
+			items = append(items, e.convertScalar(it, elem))
+		}
+		return object.Array(items)
+	}
+	return e.convertScalar(v, norm)
+}
+
+// convertScalar 单值转换：target 为归一化小写类型名，未知类型报"无法找到类型"。
+func (e *Evaluator) convertScalar(v *object.PSObject, target string) *object.PSObject {
+	switch target {
+	case "int", "int32", "int64", "long":
+		if n, ok := v.AsInt(); ok {
+			return object.Int(n)
+		}
+	case "string":
+		return object.Str(v.String())
+	case "double", "float", "single":
+		if f, ok := v.AsFloat(); ok {
+			return object.Float(f)
+		}
+	case "bool", "boolean":
+		return object.Bool(v.Truthy())
+	case "hashtable":
+		if _, ok := v.Value.([]object.HashEntry); ok {
+			return v
+		}
+	case "datetime":
+		if dv, ok := parseDatetimeValue(v); ok {
+			return dv
+		}
+	case "void":
+		return object.Null()
+	default:
+		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgTypeUnknown, target)))
+		return object.Null()
+	}
+	e.writeError(fmt.Errorf("%s", lang.T(lang.MsgConvertFail, v.String(), target)))
+	return object.Null()
+}
+
+// parseDatetimeValue 从 DateTime 原值或常见格式的字符串构造时间对象。
+func parseDatetimeValue(v *object.PSObject) (*object.PSObject, bool) {
+	if v.TypeName == "DateTime" {
+		return v, true
+	}
+	s := v.String()
+	for _, layout := range []string{time.RFC3339, "2006-01-02 15:04:05", "2006-01-02", "15:04:05"} {
+		if t, err := time.Parse(layout, s); err == nil {
+			return object.DateTime(t), true
+		}
+	}
+	return nil, false
 }
 
 func bitOp(l, r *object.PSObject, fn func(a, b int64) int64) *object.PSObject {

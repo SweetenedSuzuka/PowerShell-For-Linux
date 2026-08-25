@@ -1320,7 +1320,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 			item := p.parseExpression(false)
 			return &ast.ArrayLit{Items: []ast.Node{item}}
 		case "[":
-			// 类型字面量：目前只支持 [pscustomobject]@{...} 构造自定义对象
+			// 类型字面量与强制转换：[int]、[int[]]、[System.Int32]、[int]$x、[pscustomobject]@{...}
 			p.advance() // [
 			name := p.cur()
 			if name.Type != TkWord {
@@ -1328,22 +1328,44 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 				p.advance()
 				return &ast.BareWord{Value: ""}
 			}
+			typeName := name.Text
 			p.advance()
+			// [T][] 的数组后缀可叠加（如 int[][]），逐对消费紧贴的方括号
+			for p.cur().Type == TkPunct && p.cur().Text == "[" && p.peekAt(1).Type == TkPunct && p.peekAt(1).Text == "]" {
+				p.advance()
+				p.advance()
+				typeName += "[]"
+			}
+			if p.cur().Type == TkEOF {
+				p.incomplete = true
+				return &ast.BareWord{Value: ""}
+			}
 			if !(p.cur().Type == TkPunct && p.cur().Text == "]") {
 				p.fail(lang.T(lang.MsgParseTypeLiteralRbracket))
 				return &ast.BareWord{Value: ""}
 			}
 			p.advance()
-			if strings.EqualFold(name.Text, "pscustomobject") {
-				if p.cur().Type == TkPunct && p.cur().Text == "@" {
-					p.advance() // @
-					return &ast.TypeCast{TypeName: name.Text, Expr: p.parseHashtable()}
-				}
-				p.fail(lang.T(lang.MsgParsePSCustomObject))
-				return &ast.BareWord{Value: ""}
+			// [pscustomobject]@{...} 构造自定义对象，两种模式都保留既有行为
+			if strings.EqualFold(typeName, "pscustomobject") && p.cur().Type == TkPunct && p.cur().Text == "@" {
+				p.advance() // @
+				return &ast.TypeCast{TypeName: typeName, Expr: p.parseHashtable()}
 			}
-			p.fail(lang.T(lang.MsgParseTypeLiteral))
-			return &ast.BareWord{Value: ""}
+			// 实参模式：类型字面量按裸词字符串处理（如 Write-Output [int] 原样输出）
+			if argMode {
+				return &ast.BareWord{Value: "[" + typeName + "]"}
+			}
+			// 后面紧跟操作数时是强制转换，否则是类型字面量本身（求值为类型名，供 -is/-as 消费）
+			operandStart := false
+			switch p.cur().Type {
+			case TkVariable, TkBraceVar, TkNumber, TkString:
+				operandStart = true
+			case TkPunct:
+				operandStart = p.cur().Text == "(" || p.cur().Text == "@" || p.cur().Text == "{"
+			}
+			if !operandStart {
+				return &ast.TypeCast{TypeName: typeName}
+			}
+			return &ast.TypeCast{TypeName: typeName, Expr: p.parseUnary(argMode)}
 		}
 	}
 	p.fail(lang.T(lang.MsgParseUnexpectedToken, p.describe(t)))

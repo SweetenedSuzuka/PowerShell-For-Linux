@@ -37,8 +37,8 @@ const (
 	MsgParseUnexpectedOp
 	MsgParseTypeLiteralName
 	MsgParseTypeLiteralRbracket
-	MsgParsePSCustomObject
-	MsgParseTypeLiteral
+	MsgConvertFail
+	MsgTypeUnknown
 	MsgParseUnexpectedToken
 	MsgParseHashEntry
 	MsgTokEOF

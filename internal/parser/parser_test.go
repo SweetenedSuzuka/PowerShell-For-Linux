@@ -232,6 +232,18 @@ func writeNode(sb *strings.Builder, n ast.Node) {
 		sb.WriteString("$(")
 		writeNode(sb, v.Body)
 		sb.WriteString(")")
+	case *ast.TypeCast:
+		if v.Expr == nil {
+			sb.WriteString("type(")
+			sb.WriteString(v.TypeName)
+			sb.WriteString(")")
+		} else {
+			sb.WriteString("cast(")
+			sb.WriteString(v.TypeName)
+			sb.WriteString(",")
+			writeNode(sb, v.Expr)
+			sb.WriteString(")")
+		}
 	default:
 		sb.WriteString("?")
 	}
@@ -599,6 +611,38 @@ func TestTryRequiresHandler(t *testing.T) {
 		if r.Error != nil || r.Incomplete {
 			t.Fatalf("%q 应可完整解析，实际 err=%v incomplete=%v", src, r.Error, r.Incomplete)
 		}
+	}
+}
+
+
+// TestTypeLiterals 验证类型字面量与强制转换的解析形态：
+// 无操作数为类型字面量，紧跟操作数为强制转换，数组后缀并入类型名，实参位置保持裸词字符串。
+func TestTypeLiterals(t *testing.T) {
+	cases := []struct {
+		src  string
+		want string
+	}{
+		{"[int]", "stmt[expr(type(int))]"},
+		{"[System.Int32]", "stmt[expr(type(System.Int32))]"},
+		{"[int[]]", "stmt[expr(type(int[]))]"},
+		{"[int]\"42\"", `stmt[expr(cast(int,str(42)))]`},
+		{"[int]$x", "stmt[expr(cast(int,$x))]"},
+		{"[int](1 + 2)", "stmt[expr(cast(int,((num(1) + num(2)))))]"},
+		{"[int[]](1, 2)", "stmt[expr(cast(int[],([num(1),num(2)])))]"},
+		{"Write-Output [int]", "stmt[cmd(Write-Output word([int]))]"},
+	}
+	for _, tc := range cases {
+		d := dump(parseOK(t, tc.src))
+		if d != tc.want {
+			t.Fatalf("解析 %q 得到 %s 想要 %s", tc.src, d, tc.want)
+		}
+	}
+	// 缺类型名与缺右括号仍报错/标不完整
+	if res := Parse("[123]"); res.Error == nil {
+		t.Fatal("[123] 应报错（类型字面量需要类型名）")
+	}
+	if res := Parse("[int"); !res.Incomplete {
+		t.Fatal("[int 截断应标记不完整")
 	}
 }
 

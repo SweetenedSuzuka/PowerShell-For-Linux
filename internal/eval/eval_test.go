@@ -668,6 +668,36 @@ func TestDateTimeMethods(t *testing.T) {
 	wantStr(t, `(Get-Date -Date "1601-01-01T00:00:00Z").ToFileTime()`, "0")
 }
 
+// TestTypeCasts 验证方括号强制转换的基础类型与数组后缀、失败报错、[void] 丢弃结果。
+func TestTypeCasts(t *testing.T) {
+	wantStr(t, `[int]"42"`, "42")
+	wantStr(t, `[int]$true`, "1")
+	wantStr(t, `[double]"1.5"`, "1.5")
+	wantStr(t, `[string]42`, "42")
+	wantStr(t, `[bool]""`, "False")
+	wantStr(t, `[bool]"a"`, "True")
+	wantStr(t, `[void](1 + 1)`)
+	wantStr(t, `$d = [datetime]"2020-01-02"; $d.Year`, "2020")
+	wantStr(t, `$h = @{a = 1}; ([hashtable]$h)["a"]`, "1")
+	wantStr(t, `$a = [int[]](1, 2, "3"); $a -join ","`, "1,2,3")
+	// -is / -as 直接消费类型字面量
+	wantStr(t, `1 -is [int]`, "True")
+	wantStr(t, `"a" -is [int]`, "False")
+	wantStr(t, `1 -isnot [string]`, "True")
+	wantStr(t, `"7" -as [int]`, "7")
+	// 变量保存类型字面量后再用
+	wantStr(t, `$t = [double]; "1.5" -as $t`, "1.5")
+	// 转换失败：写错误、返回空，后续语句继续执行
+	wantStr(t, `[int]"abc"`)
+	wantStr(t, `[int]"abc"; "继续"`, "继续")
+}
+
+// TestTypeLiteralValue 类型字面量本身求值为类型名。
+func TestTypeLiteralValue(t *testing.T) {
+	wantStr(t, "[int]", "int")
+	wantStr(t, "$t = [datetime]; $t", "datetime")
+}
+
 // TestPSCustomObjectLiteral 验证 [pscustomobject]@{...} 构造自定义对象（条目变属性）。
 func TestPSCustomObjectLiteral(t *testing.T) {
 	wantStr(t, `$p = [pscustomobject]@{a = 1; b = "x"}; $p.a`, "1")

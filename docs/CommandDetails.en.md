@@ -1402,6 +1402,13 @@ Notation:
 - `$cond ? $true : $false` (7): true condition takes the true branch, else the false branch; right-associative (`$a ? $b : $c ? $d : $e` equals `$a ? $b : ($c ? $d : $e)`).
 - Both are genuine PowerShell 7 syntax; this program sets no style gate, so they work equally under style 5.X.
 
+### Type literals and casts
+- `[int]"42"` converts the value to an integer; decimal or non-numeric strings raise an error (in bash, truncation is usually done with `$((10#$x))`).
+- Supported types: `int`, `double`, `string`, `bool`, `datetime`, `hashtable`, `array`, `void`; convert array elements one by one with `int[]`.
+- `[datetime]"2020-01-02"` produces a date object; `.Year` and other fields work afterwards.
+- `[void](command or expression)` runs it and discards the output, like bash's `> /dev/null`.
+- A type name can be stored on its own: `$t = [int]`, then `5 -is $t` tests the type; `"7" -as [double]` yields an empty value instead of an error when conversion fails.
+
 ### Member access and hashtable properties
 - `$x.property` fetches members, chaining `$x.a.b` supported alongside method calls `$x.M(...)` (a parenthesis hugging the last segment marks a method).
 - Hashtables resolve members "keys before properties": same-named keys win, built-in properties come only after the key misses. Keys are case-insensitive.

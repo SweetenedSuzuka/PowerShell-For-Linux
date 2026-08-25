@@ -51,6 +51,7 @@ var zh = map[Msg]string{
 	MsgParseTypeLiteralRbracket: "类型字面量需要 ']'",
 	MsgConvertFail:              "无法将值“%s”转换为类型“%s”。",
 	MsgTypeUnknown:              "无法找到类型 %s。",
+	MsgStaticMemberNotFound:     "类型 %s 中不存在成员 %s。",
 	MsgParseUnexpectedToken:     "意外的 token：%s",
 	MsgParseHashEntry:           "哈希表项需要 '=' 或 ':'",
 	MsgTokEOF:                   "输入结束",

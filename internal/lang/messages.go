@@ -39,6 +39,7 @@ const (
 	MsgParseTypeLiteralRbracket
 	MsgConvertFail
 	MsgTypeUnknown
+	MsgStaticMemberNotFound
 	MsgParseUnexpectedToken
 	MsgParseHashEntry
 	MsgTokEOF

@@ -232,6 +232,22 @@ func writeNode(sb *strings.Builder, n ast.Node) {
 		sb.WriteString("$(")
 		writeNode(sb, v.Body)
 		sb.WriteString(")")
+	case *ast.StaticMember:
+		sb.WriteString("static(")
+		sb.WriteString(v.TypeName)
+		sb.WriteString("::")
+		sb.WriteString(v.Name)
+		if v.Args != nil {
+			sb.WriteString("(")
+			for i, a := range v.Args {
+				if i > 0 {
+					sb.WriteString(",")
+				}
+				writeNode(sb, a)
+			}
+			sb.WriteString(")")
+		}
+		sb.WriteString(")")
 	case *ast.TypeCast:
 		if v.Expr == nil {
 			sb.WriteString("type(")
@@ -630,6 +646,9 @@ func TestTypeLiterals(t *testing.T) {
 		{"[int](1 + 2)", "stmt[expr(cast(int,((num(1) + num(2)))))]"},
 		{"[int[]](1, 2)", "stmt[expr(cast(int[],([num(1),num(2)])))]"},
 		{"Write-Output [int]", "stmt[cmd(Write-Output word([int]))]"},
+		{"[math]::Sqrt(4)", "stmt[expr(static(math::Sqrt(num(4))))]"},
+		{"[datetime]::Now", "stmt[expr(static(datetime::Now))]"},
+		{"[guid]::NewGuid()", "stmt[expr(static(guid::NewGuid()))]"},
 	}
 	for _, tc := range cases {
 		d := dump(parseOK(t, tc.src))

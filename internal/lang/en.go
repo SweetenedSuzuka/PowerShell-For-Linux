@@ -51,6 +51,7 @@ Switch style at runtime:
 	MsgParseTypeLiteralRbracket: "Type literal requires ']'",
 	MsgConvertFail:              "Cannot convert value \"%s\" to type \"%s\".",
 	MsgTypeUnknown:              "Unable to find type %s.",
+	MsgStaticMemberNotFound:     "Type %s does not have a member %s.",
 	MsgParseUnexpectedToken:     "Unexpected token: %s",
 	MsgParseHashEntry:           "Hashtable entry requires '=' or ':'",
 	MsgTokEOF:                   "end of input",

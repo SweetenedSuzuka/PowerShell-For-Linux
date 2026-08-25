@@ -692,6 +692,30 @@ func TestTypeCasts(t *testing.T) {
 	wantStr(t, `[int]"abc"; "继续"`, "继续")
 }
 
+// TestStaticMembers 验证 [类型]::成员 的静态属性与静态方法分派。
+func TestStaticMembers(t *testing.T) {
+	wantStr(t, "[math]::Sqrt(4)", "2")
+	wantStr(t, "[math]::Floor(1.9)", "1")
+	wantStr(t, "[math]::Ceiling(1.1)", "2")
+	wantStr(t, "[math]::Abs(-3)", "3")
+	wantStr(t, "[math]::Round(2.5)", "2")
+	wantStr(t, "[math]::Pow(2, 10)", "1024")
+	wantStr(t, "[math]::Max(1, 2)", "2")
+	wantStr(t, "[math]::Min(1, 2)", "1")
+	wantStr(t, `[string]::IsNullOrEmpty("")`, "True")
+	wantStr(t, `[string]::IsNullOrEmpty("a")`, "False")
+	wantStr(t, `[string]::IsNullOrWhiteSpace("  ")`, "True")
+	wantStr(t, `[string]::Join("-", 1, 2)`, "1-2")
+	wantStr(t, `$arr = 1,2; [string]::Join(",", $arr)`, "1,2")
+	wantStr(t, `[string]::Concat("a", 1, "b")`, "a1b")
+	wantStr(t, `[string]::Format("{0}+{1}", 1, 2)`, "1+2")
+	wantStr(t, `[datetime]::Now.Year -gt 2000`, "True")
+	wantStr(t, "$g = [guid]::NewGuid(); $g.ToString().Length", "36")
+	// 未注册成员报非终止错误，后续语句继续执行
+	wantStr(t, "[math]::NoSuch(1); \"继续\"", "继续")
+	// 未注册成员报错且后续语句继续执行
+}
+
 // TestTypeLiteralValue 类型字面量本身求值为类型名。
 func TestTypeLiteralValue(t *testing.T) {
 	wantStr(t, "[int]", "int")

@@ -144,6 +144,66 @@ func (p *Parser) describe(t lexer.Token) string {
 	return "token"
 }
 
+// parseCallArgs 解析括号内的逗号分隔实参列表；进入时当前 token 是 "("。
+// 零实参也返回非 nil 空切片，供调用方区分"无括号的属性形态"。
+func (p *Parser) parseCallArgs() []ast.Node {
+	p.advance()
+	args := []ast.Node{}
+	for {
+		if p.err != nil {
+			break
+		}
+		p.skipNewlinesAndSemicolons()
+		if p.cur().Type == TkPunct && p.cur().Text == ")" {
+			p.advance()
+			break
+		}
+		if p.cur().Type == TkEOF {
+			p.incomplete = true
+			break
+		}
+		args = append(args, p.parseBinaryExpr(29, false))
+		if p.cur().Type == TkPunct && p.cur().Text == "," {
+			p.advance()
+		}
+	}
+	return args
+}
+
+// finishStaticMember 完成 [类型]::成员 的静态成员节点；进入时当前 token 是成员名。
+// 成员名为空或以冒号开头按解析错误处理。
+// 成员名可带点分尾链（如 ::Now.Year，词法器把点并入裸字），拆成逐段成员访问；尾链末段紧跟括号时按方法调用解析，实参挂到末段。
+func (p *Parser) finishStaticMember(typeName, member string) ast.Node {
+	p.advance() // 消费成员名
+	if member == "" || strings.HasPrefix(member, ":") {
+		p.fail(lang.T(lang.MsgParseTypeLiteralName))
+		return &ast.BareWord{Value: ""}
+	}
+	segs := strings.Split(member, ".")
+	sm := &ast.StaticMember{TypeName: typeName, Name: segs[0]}
+	var node ast.Node = sm
+	isMethod := false
+	var methodArgs []ast.Node
+	if p.cur().Type == TkPunct && p.cur().Text == "(" {
+		isMethod = true
+		methodArgs = p.parseCallArgs()
+	}
+	if len(segs) > 1 {
+		for _, seg := range segs[1 : len(segs)-1] {
+			node = &ast.MemberAccess{Base: node, Prop: seg}
+		}
+		last := segs[len(segs)-1]
+		if isMethod {
+			node = &ast.MethodCall{Base: node, Name: last, Args: methodArgs}
+		} else {
+			node = &ast.MemberAccess{Base: node, Prop: last}
+		}
+	} else if isMethod {
+		sm.Args = methodArgs
+	}
+	return node
+}
+
 func (p *Parser) isStatementEnd(t lexer.Token) bool {
 	return t.Type == TkEOF || t.Type == TkNewline ||
 		(t.Type == TkPunct && (t.Text == ";" || t.Text == "}"))
@@ -1350,9 +1410,13 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 				p.advance() // @
 				return &ast.TypeCast{TypeName: typeName, Expr: p.parseHashtable()}
 			}
-			// 实参模式：类型字面量按裸词字符串处理（如 Write-Output [int] 原样输出）
+			// 实参模式：类型字面量与静态成员都按裸词字符串处理（如 Write-Output [int] 原样输出）
 			if argMode {
 				return &ast.BareWord{Value: "[" + typeName + "]"}
+			}
+			// 词法器把 :: 与成员名并成一个裸词（[math]::Sqrt → "math"、"]"、"::Sqrt"），在此拆出静态成员名；带括号为方法调用，否则为静态属性。
+			if p.cur().Type == TkWord && strings.HasPrefix(p.cur().Text, "::") {
+				return p.finishStaticMember(typeName, strings.TrimPrefix(p.cur().Text, "::"))
 			}
 			// 后面紧跟操作数时是强制转换，否则是类型字面量本身（求值为类型名，供 -is/-as 消费）
 			operandStart := false

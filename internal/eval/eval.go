@@ -271,6 +271,16 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 			return object.Str(strings.ToLower(v.TypeName))
 		}
 		return e.convertValue(e.evalValue(v.Expr), v.TypeName)
+	case *ast.StaticMember:
+		var argv []*object.PSObject
+		for _, a := range v.Args {
+			argv = append(argv, e.evalValue(a))
+		}
+		if val, ok := e.staticMember(v.TypeName, v.Name, argv); ok {
+			return val
+		}
+		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgStaticMemberNotFound, strings.ToLower(strings.TrimPrefix(strings.ToLower(v.TypeName), "system.")), v.Name)))
+		return object.Null()
 	case *ast.MemberAccess:
 		base := e.evalValue(v.Base)
 		return e.memberProp(base, v.Prop)
@@ -630,6 +640,10 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 				return object.Int(int64(len(entries)))
 			}
 		}
+	}
+	// 未注册 ToString 的类型走通用兜底：返回显示字符串
+	if strings.EqualFold(m.Name, "tostring") && len(args) == 0 {
+		return object.Str(base.String())
 	}
 	return object.Null()
 }

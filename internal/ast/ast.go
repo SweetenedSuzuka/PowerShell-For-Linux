@@ -244,6 +244,14 @@ type TypeCast struct {
 	Expr     Node
 }
 
+// StaticMember 是静态成员访问：[类型]::名称。
+// Args 为 nil 表示静态属性；非 nil（含空切片）表示带参的静态方法调用。
+type StaticMember struct {
+	TypeName string
+	Name     string
+	Args     []Node
+}
+
 // Paren 是括号表达式。
 type Paren struct{ Inner Node }
 

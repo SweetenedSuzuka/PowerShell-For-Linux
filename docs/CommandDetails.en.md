@@ -1408,6 +1408,7 @@ Notation:
 - `[datetime]"2020-01-02"` produces a date object; `.Year` and other fields work afterwards.
 - `[void](command or expression)` runs it and discards the output, like bash's `> /dev/null`.
 - A type name can be stored on its own: `$t = [int]`, then `5 -is $t` tests the type; `"7" -as [double]` yields an empty value instead of an error when conversion fails.
+- `[Type]::Member` calls static methods and properties (no bash equivalent): `[math]::Sqrt(4)` gives 2, `[math]::Floor(1.9)` gives 1, `[math]::Round(2.5)` gives 2 (banker's rounding), `[math]::Pow(2, 10)` gives 1024; `[string]::Join(",", 1, 2)` gives `1,2`, `[string]::Format("{0}-{1}", "a", "b")` gives `a-b`; `[datetime]::Now.Year` reads the current year; `[guid]::NewGuid()` generates a random GUID.
 
 ### Member access and hashtable properties
 - `$x.property` fetches members, chaining `$x.a.b` supported alongside method calls `$x.M(...)` (a parenthesis hugging the last segment marks a method).

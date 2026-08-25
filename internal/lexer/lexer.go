@@ -217,7 +217,7 @@ func (l *Lexer) nextTok0() Token {
 		return Token{Type: TkNewline, Text: "\n", Line: startLine, Col: startCol, Adjacent: adj}
 	}
 
-	// 注释：'#' 到行尾（若 # 是裸字的一部分如 a#b，则由裸字扫描吃掉）
+	// 注释：'#' 到行尾；若 # 是裸字的一部分（如 a#b），则归入裸字
 	if c == '#' {
 		for l.peek() != 0 && l.peek() != '\n' {
 			l.next()
@@ -487,7 +487,7 @@ func parseFloat(s string) float64 {
 
 func (l *Lexer) lexVariable(adj bool) Token {
 	startLine, startCol := l.line, l.col
-	l.next()             // 吃掉 '$'
+	l.next()             // 消费 '$'
 	if l.peek() == '?' { // $? 上次命令成功与否
 		l.next()
 		return Token{Type: TkVariable, Text: "?", Line: startLine, Col: startCol, Adjacent: adj}
@@ -517,7 +517,7 @@ func (l *Lexer) lexVariable(adj bool) Token {
 
 func (l *Lexer) lexString(quote byte, adj bool) Token {
 	startLine, startCol := l.line, l.col
-	l.next() // 吃掉引号
+	l.next() // 消费引号
 	if quote == '\'' {
 		// 单引号字面串，'' 转义为 '
 		var sb strings.Builder
@@ -681,7 +681,7 @@ func (l *Lexer) lexDash(adj bool) Token {
 		return l.lexNumber(adj)
 	}
 	if isLetter(l.peekAt(1)) || l.peekAt(1) == '?' {
-		l.next() // 吃掉 '-'
+		l.next() // 消费 '-'
 		var sb strings.Builder
 		for {
 			c := l.peek()

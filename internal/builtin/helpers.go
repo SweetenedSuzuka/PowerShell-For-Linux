@@ -178,7 +178,7 @@ func confirmSkip(c *Context, operation string, target string, yesAll, noAll *boo
 }
 
 // readLineBytes 从 r 逐字节读到换行为止；ok 为 false 表示流已结束且没有读到换行。
-// 逐字节读取不做缓冲，避免一次多读吞掉后续提示所需的输入。
+// 读取不做缓冲，后续提示所需的输入不会被提前消费。
 func readLineBytes(r io.Reader) (string, bool) {
 	var sb []byte
 	b := make([]byte, 1)

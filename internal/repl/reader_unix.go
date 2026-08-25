@@ -174,7 +174,7 @@ func (e *unixEditor) handleEscape(prompt string, buf *[]rune, pos *int) {
 		*pos = len(*buf)
 		e.redraw(prompt, *buf, *pos)
 	case '3': // Delete
-		_, _ = e.br.ReadByte() // 吃掉 '~'
+		_, _ = e.br.ReadByte() // 消费 '~'
 		if *pos < len(*buf) {
 			*buf = append((*buf)[:*pos], (*buf)[*pos+1:]...)
 			e.redraw(prompt, *buf, *pos)

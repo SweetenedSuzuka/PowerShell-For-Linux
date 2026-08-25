@@ -500,7 +500,7 @@ func TestParserLoopsTerminate(t *testing.T) {
 	}
 }
 
-// TestBinaryOpsInCommandArgs 验证命令实参位置的二元运算符合并不受 -not 处理调整影响。
+// TestBinaryOpsInCommandArgs 验证命令实参位置的二元运算符按 binaryOpInfo 合并，-not 按命名参数处理。
 func TestBinaryOpsInCommandArgs(t *testing.T) {
 	res := Parse("Where-Object Length -gt 100")
 	if res.Error != nil {
@@ -603,7 +603,7 @@ func TestTryRequiresHandler(t *testing.T) {
 }
 
 // TestStringSubexprPropagatesState 验证双引号串内 $() 子表达式的解析状态并入外层：
-// 子语句解析失败时报错、截断时标记不完整，不再静默丢弃或提前执行。
+// 子语句解析失败时报错，截断时标记不完整，插值结果不含残缺语句。
 func TestStringSubexprPropagatesState(t *testing.T) {
 	res := Parse(`Write-Output "a$(do x)b"`)
 	if res.Error == nil {

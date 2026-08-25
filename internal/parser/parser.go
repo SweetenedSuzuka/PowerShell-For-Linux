@@ -279,13 +279,12 @@ func (p *Parser) parseStatement() ast.Node {
 }
 
 // parseStatementPipeline 解析管道，并处理 PowerShell 7 的 && / || 链。
-// 链式运算符允许写在行尾，右操作数从下一行继续。
+// 链式运算符写在行尾时右操作数从下一行继续；行首出现的 && / || 属语法错误，到此断句。
 func (p *Parser) parseStatementPipeline() ast.Node {
 	var stmt ast.Node = p.parsePipeline()
 	for {
-		t := p.peekPastNewlines()
+		t := p.cur()
 		if t.Type == TkOp && (t.Text == "&&" || t.Text == "||") {
-			p.skipNewlines()
 			p.advance()
 			p.skipNewlines()
 			right := p.parsePipeline()
@@ -703,7 +702,7 @@ func (p *Parser) skipNewlines() {
 
 // peekPastNewlines 返回从当前位置跳过若干换行后的 token，不消费任何 token。
 // 用于判断 } 之后的换行后面是不是 catch/else/elseif/finally 这类延续关键字；
-// 只有命中时才真正消费换行，避免吃掉语句分隔符导致外层误判。
+// 只有命中时才消费这些换行，语句分隔符不受影响。
 func (p *Parser) peekPastNewlines() lexer.Token {
 	i := p.pos
 	for i < len(p.toks)-1 && p.toks[i].Type == TkNewline {
@@ -806,7 +805,7 @@ func (p *Parser) parseCommand() *ast.Command {
 			}
 			name, val, hasVal := strings.Cut(t.Text, ":")
 			if hasVal {
-				p.advance() // 吃掉 -Name: 本体（含冒号）
+				p.advance() // 消费 -Name: 本体（含冒号）
 				// -Name:$var / -Name:5 / -Name:"str"：$、引号不是 dash word 字符，词法器会把冒号后的内联值拆成独立 token（紧贴冒号）。
 				// 用该 token 的原始文本作为内联值，保证 -Recurse:$true 等语义正确。
 				// 仅合并单个 token 能完整表示的值；表达式（括号等）跨多 token，不合并。
@@ -974,14 +973,18 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 			items := []ast.Node{lhs}
 			for p.cur().Type == TkPunct && p.cur().Text == "," {
 				p.advance()
-				p.skipNewlines()
+				if !argMode {
+					p.skipNewlines()
+				}
 				items = append(items, p.parseBinaryExpr(prec+1, argMode))
 			}
 			lhs = &ast.ArrayLit{Items: items}
 		case "?":
 			// 三元运算符 cond ? 真 : 假（右结合）
 			p.advance()
-			p.skipNewlines()
+			if !argMode {
+				p.skipNewlines()
+			}
 			ifExpr := p.parseBinaryExpr(prec, argMode)
 			sep := p.cur()
 			if !(sep.Type == TkWord && sep.Text == ":") && sep.Type != TkColon {
@@ -989,25 +992,34 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 				break
 			}
 			p.advance()
-			p.skipNewlines()
+			if !argMode {
+				p.skipNewlines()
+			}
 			elseExpr := p.parseBinaryExpr(prec, argMode)
 			lhs = &ast.Ternary{Cond: lhs, If: ifExpr, Else: elseExpr}
 		case "-f":
 			// 格式运算符：RHS 是逗号分隔的参数列表（如 "{0} {1}" -f 1,2）。
 			// 参数项含范围但排除算术（-f 比算术绑定更紧："{0}" -f 5 * 2 先格式化再乘）
 			p.advance()
-			p.skipNewlines()
+			if !argMode {
+				p.skipNewlines()
+			}
 			items := []ast.Node{p.parseBinaryExpr(41, argMode)}
 			for p.cur().Type == TkPunct && p.cur().Text == "," {
 				p.advance()
-				p.skipNewlines()
+				if !argMode {
+					p.skipNewlines()
+				}
 				items = append(items, p.parseBinaryExpr(41, argMode))
 			}
 			lhs = &ast.Binary{Op: op, L: lhs, R: &ast.ArrayLit{Items: items}}
 		default:
 			p.advance()
-			// 行尾是二元运算符时语句在下一行继续，与 PowerShell 排版一致
-			p.skipNewlines()
+			// 表达式模式下行尾是二元运算符时语句在下一行继续，与 PowerShell 排版一致；
+			// 实参模式（命令参数位）的换行仍是参数分隔，不跨行
+			if !argMode {
+				p.skipNewlines()
+			}
 			rhs := p.parseBinaryExpr(prec+1, argMode)
 			lhs = &ast.Binary{Op: op, L: lhs, R: rhs}
 		}

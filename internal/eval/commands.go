@@ -487,7 +487,7 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgScriptParseFail, path, res.Error)))
 		return nil
 	}
-	// 截断的脚本拒绝执行，避免静默跑掉前半段
+	// 截断的脚本在此拒绝执行，前半段语句不会运行
 	if res.Incomplete {
 		e.Session.LastExit = 1
 		e.writeError(fmt.Errorf("%s : %s", path, lang.T(lang.MsgIncompleteInput)))
@@ -526,7 +526,8 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 				e.ExitCode = sig.code
 			case flowError:
 				// 未捕获的终止错误：中止脚本并向上传播，调用方的 try 可以捕获；
-				// 传到最外层时由 EvalStatement/main.go 打印。panic 前已产生的输出一并携带。
+				// 传到最外层时由 EvalStatement/main.go 打印。
+				// panic 前已产生的输出一并携带。
 				sig.out = all
 				panic(sig)
 			}

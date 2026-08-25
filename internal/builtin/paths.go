@@ -179,6 +179,9 @@ func cmdClearContent(c *Context) ([]*object.PSObject, error) {
 			return errf(c, "%s", lang.T(lang.MsgCannotClear, p))
 		}
 	}
+	if out, ok := wi.result(); ok {
+		return out, nil
+	}
 	return nil, nil
 }
 

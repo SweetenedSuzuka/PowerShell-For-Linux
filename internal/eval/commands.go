@@ -2,6 +2,7 @@ package eval
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -294,13 +295,26 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 	}
 	sc := e.scopes[len(e.scopes)-1]
 	bound := map[string]bool{}
+	// bind 把实参按形参标注转换后落位；无法转换时报告失败，本次调用不再执行函数体
+	bind := func(p ast.FunctionParam, v *object.PSObject) bool {
+		cv, ok := e.bindParamValue(p, v)
+		if !ok {
+			return false
+		}
+		sc[p.Name] = cv
+		bound[p.Name] = true
+		return true
+	}
 	for _, p := range fn.Params {
+		var val *object.PSObject
+		have := false
 		if namedSwitch[p.Name] {
-			sc[p.Name] = object.Bool(true)
-			bound[p.Name] = true
+			val, have = object.Bool(true), true
 		} else if v, ok := namedVals[p.Name]; ok {
-			sc[p.Name] = v
-			bound[p.Name] = true
+			val, have = v, true
+		}
+		if have && !bind(p, val) {
+			return nil
 		}
 	}
 	pi := 0
@@ -309,10 +323,14 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 			continue
 		}
 		if pi < len(posVals) {
-			sc[p.Name] = posVals[pi]
+			if !bind(p, posVals[pi]) {
+				return nil
+			}
 			pi++
 		} else if p.Default != nil {
-			sc[p.Name] = e.evalValue(p.Default)
+			if !bind(p, e.evalValue(p.Default)) {
+				return nil
+			}
 		} else {
 			sc[p.Name] = object.Null()
 		}
@@ -508,7 +526,11 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 	// param() 块：脚本开头的参数声明，按实参绑定后从语句里剔除
 	if len(stmts) > 0 {
 		if pb, ok := stmts[0].(*ast.ParamBlock); ok {
-			e.bindScriptParams(pb.Params, args)
+			if !e.bindScriptParams(pb.Params, args) {
+				// 实参与形参声明不符视作脚本没有执行任何语句，置失败退出码供调用方感知
+				e.Session.LastExit = 1
+				return nil
+			}
 			stmts = stmts[1:]
 		}
 	}
@@ -539,22 +561,70 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 	return all
 }
 
+// bindParamValue 把实参转换成形参 [类型] 标注声明的类型；未标注原样返回。
+// 数组类型把单值包成单元素数组后逐元素转换。
+// ok 为 false 表示无法转换，错误已写出，调用方不再执行被调方。
+func (e *Evaluator) bindParamValue(p ast.FunctionParam, v *object.PSObject) (*object.PSObject, bool) {
+	if p.TypeName == "" {
+		return v, true
+	}
+	norm := strings.ToLower(p.TypeName)
+	if strings.HasSuffix(norm, "[]") {
+		elem := strings.TrimSuffix(norm, "[]")
+		items := make([]*object.PSObject, 0, len(v.ArrayItems()))
+		for _, it := range v.ArrayItems() {
+			out, err := convertTarget(it, elem)
+			if err != nil {
+				e.writeBindError(err, it, p.Name, elem)
+				return nil, false
+			}
+			items = append(items, out)
+		}
+		return object.Array(items), true
+	}
+	out, err := convertTarget(v, norm)
+	if err != nil {
+		e.writeBindError(err, v, p.Name, norm)
+		return nil, false
+	}
+	return out, true
+}
+
+// writeBindError 写参数绑定错误：类型未注册报"无法找到类型"，否则报实参转换失败。
+func (e *Evaluator) writeBindError(err error, v *object.PSObject, param, target string) {
+	if errors.Is(err, errTypeUnknown) {
+		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgTypeUnknown, target)))
+		return
+	}
+	e.writeError(fmt.Errorf("%s", lang.T(lang.MsgBindConvertFail, v.String(), param, target)))
+}
+
 // bindScriptParams 按 param() 声明把脚本实参绑到当前作用域（脚本不推独立作用域，变量可见性等价调用点：控制台调用留在会话，函数内调用随函数销毁）。
 // 位置实参依次落位，缺的用默认值或 $null，剩余实参保留在 $args。
-func (e *Evaluator) bindScriptParams(params []ast.FunctionParam, args []*object.PSObject) {
+// 返回 false 表示有实参无法转换成形参声明的类型（错误已写出），调用方不再执行脚本。
+func (e *Evaluator) bindScriptParams(params []ast.FunctionParam, args []*object.PSObject) bool {
 	sc := e.scopes[len(e.scopes)-1]
 	bound := 0
 	for _, p := range params {
 		if bound < len(args) {
-			sc[p.Name] = args[bound]
+			cv, ok := e.bindParamValue(p, args[bound])
+			if !ok {
+				return false
+			}
+			sc[p.Name] = cv
 			bound++
 		} else if p.Default != nil {
-			sc[p.Name] = e.evalValue(p.Default)
+			cv, ok := e.bindParamValue(p, e.evalValue(p.Default))
+			if !ok {
+				return false
+			}
+			sc[p.Name] = cv
 		} else {
 			sc[p.Name] = object.Null()
 		}
 	}
 	e.Session.Args = args[bound:]
+	return true
 }
 
 // runScriptFile 作为命令调用脚本（.\foo.ps1）。

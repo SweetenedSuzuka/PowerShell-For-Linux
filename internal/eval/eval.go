@@ -2,6 +2,7 @@
 package eval
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"math"
@@ -1448,36 +1449,47 @@ func (e *Evaluator) convertValue(v *object.PSObject, typeName string) *object.PS
 
 // convertScalar 单值转换：target 为归一化小写类型名，未知类型报"无法找到类型"。
 func (e *Evaluator) convertScalar(v *object.PSObject, target string) *object.PSObject {
+	out, err := convertTarget(v, target)
+	if err != nil {
+		e.writeError(err)
+		return object.Null()
+	}
+	return out
+}
+
+// convertTarget 单值转换尝试；无法转换或目标类型未注册时返回错误说明。
+func convertTarget(v *object.PSObject, target string) (*object.PSObject, error) {
 	switch target {
 	case "int", "int32", "int64", "long":
 		if n, ok := v.AsInt(); ok {
-			return object.Int(n)
+			return object.Int(n), nil
 		}
 	case "string":
-		return object.Str(v.String())
+		return object.Str(v.String()), nil
 	case "double", "float", "single":
 		if f, ok := v.AsFloat(); ok {
-			return object.Float(f)
+			return object.Float(f), nil
 		}
 	case "bool", "boolean":
-		return object.Bool(v.Truthy())
+		return object.Bool(v.Truthy()), nil
 	case "hashtable":
 		if _, ok := v.Value.([]object.HashEntry); ok {
-			return v
+			return v, nil
 		}
 	case "datetime":
 		if dv, ok := parseDatetimeValue(v); ok {
-			return dv
+			return dv, nil
 		}
 	case "void":
-		return object.Null()
+		return object.Null(), nil
 	default:
-		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgTypeUnknown, target)))
-		return object.Null()
+		return nil, errTypeUnknown
 	}
-	e.writeError(fmt.Errorf("%s", lang.T(lang.MsgConvertFail, v.String(), target)))
-	return object.Null()
+	return nil, fmt.Errorf("%s", lang.T(lang.MsgConvertFail, v.String(), target))
 }
+
+// errTypeUnknown 表示目标类型未注册，区别于值无法转换成已注册类型。
+var errTypeUnknown = errors.New("type unknown")
 
 // parseDatetimeValue 从 DateTime 原值或常见格式的字符串构造时间对象。
 func parseDatetimeValue(v *object.PSObject) (*object.PSObject, bool) {

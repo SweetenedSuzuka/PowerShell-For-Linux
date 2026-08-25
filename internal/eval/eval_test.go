@@ -412,6 +412,57 @@ func TestParamBlock(t *testing.T) {
 	wantStr(t, "param($z)")
 }
 
+// TestParamTypeAnnotations 验证形参 [类型] 标注：
+// 位置与命名实参、默认值都经类型转换，数组标注把单值包成单元素数组，无法转换时不执行被调方。
+func TestParamTypeAnnotations(t *testing.T) {
+	// 位置实参转换成声明类型
+	wantStr(t, `function Fti([int]$x) { $x -is [int] }; Fti '42'`, "True")
+	// 命名实参同样转换
+	wantStr(t, `function Ftn([int]$n) { $n -is [int] }; Ftn -n '33'`, "True")
+	// 默认值也经类型转换
+	wantStr(t, `function Ftd([int]$y = '5') { $y -is [int] }; Ftd`, "True")
+	// double 标注
+	wantStr(t, `function Ftw([double]$v) { $v }; Ftw '2.5'`, "2.5")
+	// 数组标注把单值包成单元素数组
+	wantStr(t, `function Fta([int[]]$a) { $a.Count; $a[0] -is [int] }; Fta 5`, "1", "True")
+	// 数组实参逐元素转换
+	wantStr(t, `function Ftb([string[]]$s) { $s.Count; $s[1] }; Ftb 1,2,3`, "3", "2")
+	// 未标注的形参保持原值不转换
+	wantStr(t, "function Ftu($x) { $x -is [string] }; Ftu '42'", "True")
+	// 无法转换时不执行函数体，后续语句继续
+	wantStr(t, `function Ftf([int]$x) { "body" }; Ftf 'abc'; "after"`, "after")
+	// 绑定失败置 $? 为 false
+	wantStr(t, `function Ftq([int]$x) { "b" }; Ftq 'abc'; if ($?) { "yes" } else { "no" }`, "no")
+}
+
+// TestScriptParamTypeAnnotations 验证脚本 param() 的类型标注：
+// 可转换实参转成声明类型，无法转换时脚本主体不再执行并置失败退出码。
+func TestScriptParamTypeAnnotations(t *testing.T) {
+	dir := t.TempDir()
+	okPath := filepath.Join(dir, "ok.ps1")
+	if err := os.WriteFile(okPath, []byte("param([int]$n)\n$n\n$n -is [int]\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	sess := shell.New(shell.StyleCore, io.Discard, io.Discard, strings.NewReader(""))
+	ev := New(sess, strings.NewReader(""), io.Discard, io.Discard)
+	out := ev.RunScriptFile(okPath, []*object.PSObject{object.Str("11")})
+	if got := strs(out); len(got) != 2 || got[0] != "11" || got[1] != "True" {
+		t.Fatalf("脚本类型标注 → %v，想要 [11 True]", got)
+	}
+
+	badPath := filepath.Join(dir, "bad.ps1")
+	if err := os.WriteFile(badPath, []byte("param([int]$n)\n\"不应输出\"\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	out = ev.RunScriptFile(badPath, []*object.PSObject{object.Str("abc")})
+	if got := strs(out); len(got) != 0 {
+		t.Fatalf("绑定失败脚本应无输出，实际 %v", got)
+	}
+	if sess.LastExit != 1 {
+		t.Fatalf("绑定失败应置失败退出码 1，实际 %d", sess.LastExit)
+	}
+}
+
 // TestTryCatchFinally 验证 try/catch/finally + throw：
 // 基本捕获、$_ 绑定、finally 恒执行、类型过滤、函数/循环传播、return 顺序、try 作表达式。
 func TestTryCatchFinally(t *testing.T) {

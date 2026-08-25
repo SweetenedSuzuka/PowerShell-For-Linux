@@ -151,10 +151,11 @@ type Exit struct {
 	Code Node
 }
 
-// FunctionParam 是函数参数（含默认值）。
+// FunctionParam 是函数参数（含可选类型标注与默认值）。
 type FunctionParam struct {
-	Name    string
-	Default Node
+	TypeName string // 方括号里的类型名，空为未标注；数组后缀 [] 并入名字
+	Name     string
+	Default  Node
 }
 
 // ParamBlock 是 param(...) 参数声明块，只能出现在脚本或函数体开头。

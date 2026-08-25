@@ -655,7 +655,7 @@ func (p *Parser) parseSwitch() ast.Node {
 }
 
 // parseParamList 解析参数列表（param(...) 块与 function f(...) 括号形式共用）。
-// 进入时当前位置已越过 '('；'$名' 后可选 '= 默认值'，逗号分隔。
+// 进入时当前位置已越过 '('；每个形参为可选 '[类型]' 标注加 '$名'，其后可选 '= 默认值'，逗号分隔。
 func (p *Parser) parseParamList() []ast.FunctionParam {
 	var params []ast.FunctionParam
 	for {
@@ -669,11 +669,46 @@ func (p *Parser) parseParamList() []ast.FunctionParam {
 			p.incomplete = true
 			break
 		}
+		param := ast.FunctionParam{}
+		if t.Type == TkPunct && t.Text == "[" {
+			p.advance()
+			tn := p.cur()
+			if tn.Type == TkEOF {
+				p.incomplete = true
+				break
+			}
+			if tn.Type != TkWord {
+				p.fail(lang.T(lang.MsgParseParamTypeName))
+				break
+			}
+			param.TypeName = tn.Text
+			p.advance()
+			// 数组后缀可叠加（如 int[][]），逐对消费紧贴的方括号
+			for p.cur().Type == TkPunct && p.cur().Text == "[" && p.peekAt(1).Type == TkPunct && p.peekAt(1).Text == "]" {
+				p.advance()
+				p.advance()
+				param.TypeName += "[]"
+			}
+			if p.cur().Type == TkEOF {
+				p.incomplete = true
+				break
+			}
+			if !(p.cur().Type == TkPunct && p.cur().Text == "]") {
+				p.fail(lang.T(lang.MsgParseParamTypeRbracket))
+				break
+			}
+			p.advance()
+			t = p.cur()
+			if t.Type == TkEOF {
+				p.incomplete = true
+				break
+			}
+		}
 		if t.Type != TkVariable && t.Type != TkBraceVar {
 			p.fail(lang.T(lang.MsgParseFuncParam))
 			break
 		}
-		param := ast.FunctionParam{Name: t.Text}
+		param.Name = t.Text
 		p.advance()
 		if p.cur().Type == TkOp && p.cur().Text == "=" {
 			p.advance()

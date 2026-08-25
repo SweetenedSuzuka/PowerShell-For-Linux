@@ -665,6 +665,58 @@ func TestTypeLiterals(t *testing.T) {
 	}
 }
 
+// TestParamTypeAnnotations 验证形参 [类型] 标注的解析：
+// 标注写入 FunctionParam.TypeName 且数组后缀并入名字，缺类型名或缺 ']' 报错，截断标不完整。
+func TestParamTypeAnnotations(t *testing.T) {
+	cases := map[string]string{
+		"function f([int]$x) { $x }":           "int",
+		"function f([System.Int32]$x) { $x }":  "System.Int32",
+		"function f([int[]]$a) { $a }":         "int[]",
+		"function f([int[][]]$m) { $m }":       "int[][]",
+		"function f([int]$x = 5) { $x }":       "int",
+		"function g { param([string]$s) $s }":  "string",
+		"function g { param([int[]]$a) $a }":   "int[]",
+	}
+	for src, want := range cases {
+		res := Parse(src)
+		if res.Error != nil || res.Incomplete {
+			t.Fatalf("%q 应完整解析，实际 err=%v incomplete=%v", src, res.Error, res.Incomplete)
+		}
+		var fd *ast.FunctionDef
+		for _, st := range res.List.Statements {
+			if f, ok := st.(*ast.FunctionDef); ok {
+				fd = f
+			}
+		}
+		if fd == nil || len(fd.Params) == 0 || fd.Params[0].TypeName != want {
+			t.Fatalf("%q 首个形参的类型标注应为 %q", src, want)
+		}
+	}
+	// 无标注的形参 TypeName 为空
+	res := Parse("function h($a, [int]$b) { $a + $b }")
+	if res.Error != nil {
+		t.Fatalf("混合标注应可解析：%v", res.Error)
+	}
+	fd := res.List.Statements[0].(*ast.FunctionDef)
+	if fd.Params[0].TypeName != "" || fd.Params[1].TypeName != "int" {
+		t.Fatalf("混合标注解析错误：%q 与 %q", fd.Params[0].TypeName, fd.Params[1].TypeName)
+	}
+	// 标注缺类型名报错
+	if r := Parse("function f([123]$x) { $x }"); r.Error == nil {
+		t.Fatal("形参标注缺类型名应报错")
+	}
+	// 缺 ']' 报错
+	if r := Parse("function f([int$x) { $x }"); r.Error == nil {
+		t.Fatal("形参标注缺 ']' 应报错")
+	}
+	// 截断标不完整：类型名未完、']' 未到、变量未到三处
+	for _, src := range []string{"function f([int", "function f([int]", "function g { param([int"} {
+		if r := Parse(src); !r.Incomplete {
+			t.Fatalf("%q 截断应标记不完整", src)
+		}
+	}
+}
+
 // TestStringSubexprPropagatesState 验证双引号串内 $() 子表达式的解析状态并入外层：
 // 子语句解析失败时报错，截断时标记不完整，插值结果不含残缺语句。
 func TestStringSubexprPropagatesState(t *testing.T) {

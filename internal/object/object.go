@@ -209,7 +209,7 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 					return en.Value, true
 				}
 			}
-			// 键未命中时才落到内置属性（真实 PowerShell 键优先于属性）。
+			// 键未命中时才落到内置属性（PowerShell 键优先于属性）。
 			// Count 返回条目数；Keys/Values 返回按插入顺序排列的数组。
 			switch strings.ToLower(name) {
 			case "count":

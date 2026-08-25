@@ -245,8 +245,16 @@ func cmdSetContent(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
-	if wiOut, skip := whatIfSkip(c, "Set-Content", full); skip {
-		return wiOut, nil
+	var wi whatIfCollector
+	wi.cmdlet = "Set-Content"
+	wi.c = c
+	var yesAll, noAll bool
+	if wi.hit(full) {
+		out, _ := wi.result()
+		return out, nil
+	}
+	if confirmSkip(c, "Set-Content", full, &yesAll, &noAll) {
+		return nil, nil
 	}
 	enc, _ := c.Args.Str("Encoding")
 	if err := os.WriteFile(full, encodeText(enc, sb.String(), true), 0o644); err != nil {
@@ -270,8 +278,16 @@ func cmdAddContent(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
-	if wiOut, skip := whatIfSkip(c, "Add-Content", full); skip {
-		return wiOut, nil
+	var wi whatIfCollector
+	wi.cmdlet = "Add-Content"
+	wi.c = c
+	var yesAll, noAll bool
+	if wi.hit(full) {
+		out, _ := wi.result()
+		return out, nil
+	}
+	if confirmSkip(c, "Add-Content", full, &yesAll, &noAll) {
+		return nil, nil
 	}
 	f, err := os.OpenFile(full, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0o644)
 	if err != nil {
@@ -298,8 +314,16 @@ func cmdNewItem(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
-	if wiOut, skip := whatIfSkip(c, "New-Item", full); skip {
-		return wiOut, nil
+	var wi whatIfCollector
+	wi.cmdlet = "New-Item"
+	wi.c = c
+	var yesAll, noAll bool
+	if wi.hit(full) {
+		out, _ := wi.result()
+		return out, nil
+	}
+	if confirmSkip(c, "New-Item", full, &yesAll, &noAll) {
+		return nil, nil
 	}
 	var err error
 	if strings.EqualFold(itemType, "Directory") {
@@ -337,6 +361,10 @@ func cmdNewItem(c *Context) ([]*object.PSObject, error) {
 func cmdRemoveItem(c *Context) ([]*object.PSObject, error) {
 	recurse := c.Args.Switch("Recurse")
 	force := c.Args.Switch("Force")
+	var wi whatIfCollector
+	wi.cmdlet = "Remove-Item"
+	wi.c = c
+	var yesAll, noAll bool
 	for _, p := range pathList(c) {
 		fulls, derr := expandWildcard(c, p)
 		if derr != nil {
@@ -347,8 +375,11 @@ func cmdRemoveItem(c *Context) ([]*object.PSObject, error) {
 			if err != nil {
 				continue
 			}
-			if wiOut, skip := whatIfSkip(c, "Remove-Item", full); skip {
-				return wiOut, nil
+			if wi.hit(full) {
+				continue
+			}
+			if confirmSkip(c, "Remove-Item", full, &yesAll, &noAll) {
+				continue
 			}
 			if info.IsDir() {
 				if recurse {
@@ -368,6 +399,9 @@ func cmdRemoveItem(c *Context) ([]*object.PSObject, error) {
 			}
 		}
 	}
+	if out, ok := wi.result(); ok {
+		return out, nil
+	}
 	return nil, nil
 }
 
@@ -376,6 +410,10 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 	if move {
 		label = "Move-Item"
 	}
+	var wi whatIfCollector
+	wi.cmdlet = label
+	wi.c = c
+	var yesAll, noAll bool
 	recurse := c.Args.Switch("Recurse")
 	// 源路径：命名/位置 -Path（数组摊平）优先，其次管道输入
 	var paths []string
@@ -436,8 +474,11 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 		if err != nil {
 			return errf(c, "%s : %s", label, lang.T(lang.MsgPathNotFoundFmt, srcFull))
 		}
-		if wiOut, skip := whatIfSkip(c, label, srcFull); skip {
-			return wiOut, nil
+		if wi.hit(srcFull) {
+			continue
+		}
+		if confirmSkip(c, label, srcFull, &yesAll, &noAll) {
+			continue
 		}
 		destFull, derr := resolvePath(c, dest)
 		if derr != nil {
@@ -460,6 +501,9 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 		if move {
 			_ = os.RemoveAll(srcFull)
 		}
+	}
+	if out, ok := wi.result(); ok {
+		return out, nil
 	}
 	return nil, nil
 }
@@ -512,8 +556,16 @@ func cmdRenameItem(c *Context) ([]*object.PSObject, error) {
 	if _, err := os.Lstat(newPath); err == nil {
 		return errf(c, "%s", lang.T(lang.MsgRenameDestExists, newPath))
 	}
-	if wiOut, skip := whatIfSkip(c, "Rename-Item", old); skip {
-		return wiOut, nil
+	var wi whatIfCollector
+	wi.cmdlet = "Rename-Item"
+	wi.c = c
+	var yesAll, noAll bool
+	if wi.hit(old) {
+		out, _ := wi.result()
+		return out, nil
+	}
+	if confirmSkip(c, "Rename-Item", old, &yesAll, &noAll) {
+		return nil, nil
 	}
 	if err := os.Rename(old, newPath); err != nil {
 		return errf(c, "%s", lang.T(lang.MsgCannotRename, path, err))

@@ -34,7 +34,7 @@ func firstCommand(t *testing.T, src string) *ast.Command {
 	return nil
 }
 
-// bind 用真实求值器做参数绑定（走 eval → builtin 的完整接口路径）。
+// bind 通过 eval → builtin 的完整接口路径执行参数绑定。
 func bind(t *testing.T, src string) (*builtin.BoundArgs, error) {
 	t.Helper()
 	cmd := firstCommand(t, src)

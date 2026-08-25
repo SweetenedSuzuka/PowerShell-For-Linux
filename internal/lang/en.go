@@ -89,6 +89,7 @@ Switch style at runtime:
 	MsgCannotRename:        "Cannot rename %s: %v",
 	MsgRenameDestExists:    "Cannot rename to %s because it already exists.",
 	MsgWhatIfPerform:       "What if: On target '%s', run %s.",
+	MsgConfirmPrompt:       "Confirm\nOperation: %s\nTarget: %s\n[Y] Yes [A] Yes to All [N] No [L] No to All [?] Help (default is \"Y\"): ",
 	MsgCannotClear:         "Cannot clear %s.",
 	MsgPropNotFound:        "Path %s does not have property '%s'.",
 	MsgVarExists:           "A variable with name $%s already exists.",

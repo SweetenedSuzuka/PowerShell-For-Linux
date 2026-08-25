@@ -2,6 +2,7 @@ package builtin
 
 import (
 	"fmt"
+	"io"
 	"path/filepath"
 	"strings"
 	"time"
@@ -122,17 +123,77 @@ func errf(c *Context, format string, args ...any) ([]*object.PSObject, error) {
 	return nil, nil
 }
 
-// whatIfSkip 处理 -WhatIf：命中时返回逐目标的预演输出并报告应跳过实际变更。
-// 输出以返回值交付而非直写 stdout，保证管道与变量捕获等常规输出路径可用。
-func whatIfSkip(c *Context, cmdlet string, targets ...string) ([]*object.PSObject, bool) {
-	if !c.Args.Switch("WhatIf") {
-		return nil, false
+// whatIfCollector 累计 -WhatIf 的预演输出；多目标命令跨循环收集后一并返回。
+type whatIfCollector struct {
+	c      *Context
+	cmdlet string
+	out    []*object.PSObject
+}
+
+// hit 报告本目标是否命中 -WhatIf；命中时登记预演行并指示跳过实际变更。
+func (w *whatIfCollector) hit(target string) bool {
+	if !w.c.Args.Switch("WhatIf") {
+		return false
 	}
-	var out []*object.PSObject
-	for _, t := range targets {
-		out = append(out, object.Str(lang.T(lang.MsgWhatIfPerform, t, cmdlet)))
+	w.out = append(w.out, object.Str(lang.T(lang.MsgWhatIfPerform, target, w.cmdlet)))
+	return true
+}
+
+// result 返回收集到的预演输出；没有任何命中时 ok 为 false。
+func (w *whatIfCollector) result() ([]*object.PSObject, bool) {
+	return w.out, len(w.out) > 0
+}
+
+// confirmSkip 处理 -Confirm：需要确认时提示用户选择，返回是否应跳过本次变更。
+// yesAll 与 noAll 由调用方在同一命令的多目标循环间传递，使 A/L 的选择覆盖后续目标。
+// 输入结束（EOF）按拒绝处理；未指定 -Confirm 且此前没有全部性选择时直接执行。
+func confirmSkip(c *Context, operation string, target string, yesAll, noAll *bool) bool {
+	if *noAll {
+		return true
 	}
-	return out, true
+	if *yesAll || !c.Args.Switch("Confirm") {
+		return false
+	}
+	for {
+		fmt.Fprint(c.Stdout, lang.T(lang.MsgConfirmPrompt, operation, target))
+		answer, ok := readLineBytes(c.Stdin)
+		if !ok {
+			// 流结束没有等到回答：按拒绝处理
+			return true
+		}
+		switch answer {
+		case "", "y", "yes":
+			return false
+		case "a", "all":
+			*yesAll = true
+			return false
+		case "n", "no":
+			return true
+		case "l":
+			*noAll = true
+			return true
+		}
+		// 其余输入不进行识别，重新提示
+	}
+}
+
+// readLineBytes 从 r 逐字节读到换行为止；ok 为 false 表示流已结束且没有读到换行。
+// 逐字节读取不做缓冲，避免一次多读吞掉后续提示所需的输入。
+func readLineBytes(r io.Reader) (string, bool) {
+	var sb []byte
+	b := make([]byte, 1)
+	for {
+		n, err := r.Read(b)
+		if n == 0 || err != nil {
+			return strings.TrimSpace(string(sb)), false
+		}
+		if b[0] == '\n' {
+			return strings.TrimSpace(string(sb)), true
+		}
+		if b[0] != '\r' {
+			sb = append(sb, b[0])
+		}
+	}
 }
 
 // pathList 汇总管道输入或 -Path / 位置参数中的路径列表（数组摊平，支持"可多个"）。

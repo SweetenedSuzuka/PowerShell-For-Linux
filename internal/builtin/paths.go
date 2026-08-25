@@ -160,13 +160,20 @@ func cmdClearContent(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
+	var wi whatIfCollector
+	wi.cmdlet = "Clear-Content"
+	wi.c = c
+	var yesAll, noAll bool
 	for _, p := range paths {
 		// Clear-Content 只清空已存在的文件，不存在时报错而非创建空文件
 		if _, err := os.Stat(p); err != nil {
 			return errf(c, "%s", lang.T(lang.MsgPathNotFoundForSet, p))
 		}
-		if wiOut, skip := whatIfSkip(c, "Clear-Content", p); skip {
-			return wiOut, nil
+		if wi.hit(p) {
+			continue
+		}
+		if confirmSkip(c, "Clear-Content", p, &yesAll, &noAll) {
+			continue
 		}
 		if err := os.WriteFile(p, nil, 0o644); err != nil {
 			return errf(c, "%s", lang.T(lang.MsgCannotClear, p))
@@ -200,8 +207,16 @@ func cmdSetItem(c *Context) ([]*object.PSObject, error) {
 	if info.IsDir() {
 		return nil, nil
 	}
-	if wiOut, skip := whatIfSkip(c, "Set-Item", full); skip {
-		return wiOut, nil
+	var wi whatIfCollector
+	wi.cmdlet = "Set-Item"
+	wi.c = c
+	var yesAll, noAll bool
+	if wi.hit(full) {
+		out, _ := wi.result()
+		return out, nil
+	}
+	if confirmSkip(c, "Set-Item", full, &yesAll, &noAll) {
+		return nil, nil
 	}
 	if err := os.WriteFile(full, []byte(value.String()), 0o644); err != nil {
 		return errf(c, "%s", lang.T(lang.MsgCannotWrite, path))
@@ -226,8 +241,16 @@ func cmdClearItem(c *Context) ([]*object.PSObject, error) {
 	if info.IsDir() {
 		return nil, nil
 	}
-	if wiOut, skip := whatIfSkip(c, "Clear-Item", full); skip {
-		return wiOut, nil
+	var wi whatIfCollector
+	wi.cmdlet = "Clear-Item"
+	wi.c = c
+	var yesAll, noAll bool
+	if wi.hit(full) {
+		out, _ := wi.result()
+		return out, nil
+	}
+	if confirmSkip(c, "Clear-Item", full, &yesAll, &noAll) {
+		return nil, nil
 	}
 	if err := os.WriteFile(full, nil, 0o644); err != nil {
 		return errf(c, "%s", lang.T(lang.MsgCannotClear, path))

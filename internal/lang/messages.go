@@ -77,6 +77,7 @@ const (
 	MsgCannotRename
 	MsgRenameDestExists
 	MsgWhatIfPerform
+	MsgConfirmPrompt
 	MsgCannotClear
 	MsgPropNotFound
 	MsgVarExists

@@ -495,6 +495,15 @@ $rSi = ((-not (Test-Path test/tmp/no-such-si.txt)) -and ((Get-Content test/tmp/s
 $results += T "Clear 系不存在路径报错" ($rCc -and $rCi)
 $results += T "Set-Item 不存在路径报错" ($rSi)
 Remove-Item test/tmp/cc.err,test/tmp/ci.err,test/tmp/si.err -Force 2>$null
+# 116. Remove-Item -Confirm 应答 y 后执行删除
+"cfa" | Set-Content test/tmp/cfa.txt
+sh -c "echo y | $root/powershell -NoLogo -NoProfile -Command 'Remove-Item test/tmp/cfa.txt -Confirm'" 2>$null >$null
+$results += T "-Confirm 应答 y 后删除" ((Test-Path test/tmp/cfa.txt) -eq $false)
+# 117. Remove-Item -Confirm 应答 n 后保留
+"cf-b" | Set-Content test/tmp/cfb.txt
+sh -c "echo n | $root/powershell -NoLogo -NoProfile -Command 'Remove-Item test/tmp/cfb.txt -Confirm'" 2>$null >$null
+$results += T "-Confirm 应答 n 后保留" ((Test-Path test/tmp/cfb.txt) -eq $true)
+Remove-Item test/tmp/cfb.txt -Force 2>$null
 
 # == 结尾统计 ==
 Write-Output ""

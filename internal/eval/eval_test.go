@@ -513,7 +513,7 @@ func TestHashtableAndSubexpr(t *testing.T) {
 }
 
 func TestHashtableProps(t *testing.T) {
-	// 对照真实 PowerShell 语义：Count 返回条目数，键优先于属性
+	// 对照 PowerShell 语义：Count 返回条目数，键优先于属性
 	wantStr(t, "@{a=1;b=2}.Count", "2")
 	wantStr(t, "@{}.Count", "0")
 	wantStr(t, "@{Count=5;x=1}.Count", "5")

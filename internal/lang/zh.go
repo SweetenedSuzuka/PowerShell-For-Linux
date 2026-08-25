@@ -89,6 +89,7 @@ var zh = map[Msg]string{
 	MsgCannotRename:        "无法重命名 %s：%v",
 	MsgRenameDestExists:    "无法重命名为 %s，因为该项已存在。",
 	MsgWhatIfPerform:       "What if: 对目标“%s”执行 %s。",
+	MsgConfirmPrompt:       "确认\n操作：%s\n目标：%s\n[Y] 是 [A] 全部是 [N] 否 [L] 全部否 [?] 帮助（默认为“Y”）: ",
 	MsgCannotClear:         "无法清空 %s。",
 	MsgPropNotFound:        "路径 %s 不存在属性 %s。",
 	MsgVarExists:           "变量 $%s 已存在。",

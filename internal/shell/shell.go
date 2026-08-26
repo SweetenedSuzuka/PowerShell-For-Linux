@@ -41,10 +41,13 @@ const (
 
 // Function 是用户定义函数。
 type Function struct {
-	Name   string
-	Params []ast.FunctionParam
-	Body   *ast.Block
-	Filter bool
+	Name    string
+	Params  []ast.FunctionParam
+	Body    *ast.Block
+	Filter  bool
+	Begin   *ast.Block // begin 命名块，nil 为未声明
+	Process *ast.Block // process 命名块，nil 为未声明
+	End     *ast.Block // end 命名块，nil 为未声明
 }
 
 // Session 是一次解释器会话的全部状态。

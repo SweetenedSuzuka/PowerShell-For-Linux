@@ -183,10 +183,13 @@ type Throw struct {
 
 // FunctionDef 是 function / filter 定义。
 type FunctionDef struct {
-	Name   string
-	Params []FunctionParam
-	Body   *Block
-	Filter bool
+	Name    string
+	Params  []FunctionParam
+	Body    *Block
+	Filter  bool
+	Begin   *Block // 体开头的 begin 块，nil 为未声明
+	Process *Block // 体开头的 process 块，nil 为未声明
+	End     *Block // 体开头的 end 块，nil 为未声明
 }
 
 // Block 是 { ... } 语句块。
@@ -306,7 +309,12 @@ type Index struct {
 }
 
 // ScriptBlock 是脚本块 { ... }。
-type ScriptBlock struct{ Body *StatementList }
+type ScriptBlock struct {
+	Body    *StatementList
+	Begin   *Block // 体开头的 begin 块，nil 为未声明
+	Process *Block // 体开头的 process 块，nil 为未声明
+	End     *Block // 体开头的 end 块，nil 为未声明
+}
 
 // PipelineExpr 是作为表达式出现的管道（$(...) 内部）。
 type PipelineExpr struct{ Pipeline *Pipeline }

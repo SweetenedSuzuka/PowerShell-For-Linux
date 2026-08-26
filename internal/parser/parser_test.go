@@ -743,6 +743,49 @@ func TestInvokeCommand(t *testing.T) {
 	}
 }
 
+// TestNamedBlocks 验证函数体 begin/process/end 命名块的解析：
+// 三块拆进 FunctionDef 对应字段、可乱序、filter 同样接受；裸语句与命名块混写、重复块名报错。
+func TestNamedBlocks(t *testing.T) {
+	res := Parse("function f { begin { 1 } process { 2 } end { 3 } }")
+	if res.Error != nil || res.Incomplete {
+		t.Fatalf("三块应完整解析，实际 err=%v incomplete=%v", res.Error, res.Incomplete)
+	}
+	fn := res.List.Statements[0].(*ast.FunctionDef)
+	if fn.Begin == nil || fn.Process == nil || fn.End == nil {
+		t.Fatalf("三块都应拆进对应字段：begin=%v process=%v end=%v", fn.Begin != nil, fn.Process != nil, fn.End != nil)
+	}
+	if len(fn.Body.Body.Statements) != 0 {
+		t.Fatalf("命名块应从体里剔除，实际残留 %d 条", len(fn.Body.Body.Statements))
+	}
+	// 块乱序
+	res = Parse("function h { end { 'e' } begin { 'b' } }")
+	if res.Error != nil {
+		t.Fatalf("块乱序应可解析：%v", res.Error)
+	}
+	fn = res.List.Statements[0].(*ast.FunctionDef)
+	if fn.Begin == nil || fn.End == nil || fn.Process != nil {
+		t.Fatalf("乱序两块的拆分结果错误：begin=%v process=%v end=%v", fn.Begin != nil, fn.Process != nil, fn.End != nil)
+	}
+	// filter 带命名块
+	res = Parse("filter g { process { 9 } }")
+	if res.Error != nil {
+		t.Fatalf("filter 带命名块应可解析：%v", res.Error)
+	}
+	// 裸语句在命名块之后报错
+	if r := Parse("function m { begin { 1 } 'bare' }"); r.Error == nil {
+		t.Fatal("命名块后接裸语句应报错")
+	}
+	// 重复块名报错
+	if r := Parse("function d { begin { 1 } begin { 2 } }"); r.Error == nil {
+		t.Fatal("重复的 begin 块应报错")
+	}
+	// 裸字 begin 不接大括号时按普通命令处理（不报错）
+	res = Parse("function n { begin -x }")
+	if res.Error != nil {
+		t.Fatalf("裸字 begin 不接大括号应按普通命令解析：%v", res.Error)
+	}
+}
+
 // TestStringSubexprPropagatesState 验证双引号串内 $() 子表达式的解析状态并入外层：
 // 子语句解析失败时报错，截断时标记不完整，插值结果不含残缺语句。
 func TestStringSubexprPropagatesState(t *testing.T) {

@@ -51,6 +51,8 @@ var zh = map[Msg]string{
 	MsgParseTypeLiteralRbracket: "类型字面量需要 ']'",
 	MsgParseParamTypeName:       "形参类型标注需要类型名",
 	MsgParseParamTypeRbracket:   "形参类型标注需要 ']'",
+	MsgParseNamedBlockPosition:  "begin/process/end 块必须连续出现在函数体开头",
+	MsgParseNamedBlockDuplicate: "函数体中重复的 %s 块",
 	MsgConvertFail:              "无法将值“%s”转换为类型“%s”。",
 	MsgTypeUnknown:              "无法找到类型 %s。",
 	MsgStaticMemberNotFound:     "类型 %s 中不存在成员 %s。",

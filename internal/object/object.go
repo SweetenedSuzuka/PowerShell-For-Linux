@@ -121,9 +121,9 @@ func Error(msg string) *PSObject {
 	return o
 }
 
-// ScriptBlock 创建脚本块对象，Value 存语句列表供 & 调用与 .Invoke 执行。
-func ScriptBlock(body *ast.StatementList) *PSObject {
-	return &PSObject{TypeName: "ScriptBlock", Value: body}
+// ScriptBlock 创建脚本块对象，Value 存脚本块节点供 & 调用与 .Invoke 执行。
+func ScriptBlock(sb *ast.ScriptBlock) *PSObject {
+	return &PSObject{TypeName: "ScriptBlock", Value: sb}
 }
 
 // Object 创建带属性的普通对象。
@@ -436,8 +436,10 @@ func (o *PSObject) String() string {
 		return formatDateTime(v)
 	case versionParts:
 		return v.String()
-	case *ast.StatementList:
+	case *ast.ScriptBlock:
 		// 脚本块对象：语句列表不还原源码，显示占位
+		return "{ ... }"
+	case *ast.StatementList:
 		return "{ ... }"
 	}
 	return fmt.Sprintf("%v", o.Value)

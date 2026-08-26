@@ -51,6 +51,8 @@ Switch style at runtime:
 	MsgParseTypeLiteralRbracket: "Type literal requires ']'",
 	MsgParseParamTypeName:       "Parameter type annotation requires a type name",
 	MsgParseParamTypeRbracket:   "Parameter type annotation requires ']'",
+	MsgParseNamedBlockPosition:  "begin/process/end blocks must appear together at the start of a function body",
+	MsgParseNamedBlockDuplicate: "Duplicate %s block in function body",
 	MsgConvertFail:              "Cannot convert value \"%s\" to type \"%s\".",
 	MsgTypeUnknown:              "Unable to find type %s.",
 	MsgStaticMemberNotFound:     "Type %s does not have a member %s.",

@@ -59,6 +59,7 @@ type Evaluator struct {
 	hostErr       io.Writer
 	scopes        []map[string]*object.PSObject // 变量作用域栈，scopes[0] 为全局
 	inCapture     int                           // 进入捕获模式（函数/脚本块/子表达式）计数
+	inPipeline    int                           // 命令处于管道输入位的层数（>0 表示本次调用有管道输入，哪怕为零项）
 	ExitRequested bool                          // 是否遇到 exit 语句
 	ExitCode      int                           // exit 码
 }
@@ -290,7 +291,7 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 	case *ast.Index:
 		return e.evalIndex(v)
 	case *ast.ScriptBlock:
-		return object.ScriptBlock(v.Body)
+		return object.ScriptBlock(v)
 	case *ast.SubExpr:
 		e.inCapture++
 		out, sig := e.runStatements(v.Body.Statements)
@@ -648,8 +649,8 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 	case "ScriptBlock":
 		// .Invoke(实参...) 执行脚本块，输出收集成数组返回
 		if strings.EqualFold(m.Name, "invoke") {
-			if body, ok := base.Value.(*ast.StatementList); ok {
-				out := e.invokeScriptBlock(body, callArgs{posVals: args, namedVals: map[string]*object.PSObject{}, namedSwitch: map[string]bool{}}, nil)
+			if node, ok := base.Value.(*ast.ScriptBlock); ok {
+				out := e.invokeScriptBlock(node, callArgs{posVals: args, namedVals: map[string]*object.PSObject{}, namedSwitch: map[string]bool{}}, nil)
 				return object.Array(out)
 			}
 		}

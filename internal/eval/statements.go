@@ -62,7 +62,7 @@ func (e *Evaluator) execStatement(n ast.Node) []*object.PSObject {
 	case *ast.Switch:
 		return e.execSwitch(v)
 	case *ast.FunctionDef:
-		e.Session.Functions[v.Name] = &shell.Function{Name: v.Name, Params: v.Params, Body: v.Body, Filter: v.Filter}
+		e.Session.Functions[v.Name] = &shell.Function{Name: v.Name, Params: v.Params, Body: v.Body, Filter: v.Filter, Begin: v.Begin, Process: v.Process, End: v.End}
 		return nil
 	case *ast.ParamBlock:
 		// 脚本/函数体开头的 param() 已被解析器提取；这里说明出现在别处的 param 不合法

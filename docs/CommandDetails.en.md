@@ -1418,6 +1418,14 @@ Notation:
 - `$block.Invoke(args...)` also runs the script block and collects its output into an array: `{ 1; 2 }.Invoke()` gives an array holding 1 and 2.
 - A script block sees the caller's variables (dynamic scoping consistent with PowerShell); throw inside the block can be caught by the caller's try/catch.
 
+### Function begin/process/end blocks and filter
+- A function body may start with named blocks: `function f { begin { ... } process { ... } end { ... } }`. begin runs once first, process runs once per pipeline item (`$_` binds the current item), and end runs last; the three blocks may appear in any order but must sit together at the top of the body — mixing bare statements with named blocks or repeating a block name is an error.
+- Called without a pipeline, process runs once with `$null`; when the pipeline supplies zero items begin/end still run and process does not.
+- `param()` declarations coexist with named blocks; parameters are visible inside all three blocks.
+- `return` inside process ends only the current item's handling and moves to the next; `return` inside begin/end ends the whole function.
+- `filter f { ... }` is a single-block function: the Body acts as process, binding `$_` per item; it can also carry begin/process/end named blocks.
+- `break`/`continue` inside a named block has no enclosing loop and propagates up the call stack to stop the current execution span (consistent with PowerShell).
+
 ### Member access and hashtable properties
 - `$x.property` fetches members, chaining `$x.a.b` supported alongside method calls `$x.M(...)` (a parenthesis hugging the last segment marks a method).
 - Hashtables resolve members "keys before properties": same-named keys win, built-in properties come only after the key misses. Keys are case-insensitive.

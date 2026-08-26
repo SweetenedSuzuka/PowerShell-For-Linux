@@ -46,6 +46,8 @@ func (e *Evaluator) EvalStatements(list *ast.StatementList) []*object.PSObject {
 			e.ExitCode = sig.code
 		case flowError:
 			e.writeError(fmt.Errorf("%s", sig.value.String()))
+		case flowBreak, flowContinue:
+			// 无所属循环的 break/continue 终止当前语句序列（与 PowerShell 一致），已产生的输出保留
 		}
 	}
 	return out
@@ -61,6 +63,8 @@ func (e *Evaluator) EvalStatement(st ast.Node) []*object.PSObject {
 			e.ExitCode = sig.code
 		case flowError:
 			e.writeError(fmt.Errorf("%s", sig.value.String()))
+		case flowBreak, flowContinue:
+			// 无所属循环的 break/continue 只终止本条语句（与 PowerShell 一致）
 		}
 	}
 	return out
@@ -80,7 +84,14 @@ func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 	}
 	for i, cmd := range pipe.Commands {
 		isLast := i == len(pipe.Commands)-1
+		hasInput := pipe.Expr != nil || i > 0
+		if hasInput {
+			e.inPipeline++
+		}
 		cur = flattenPipelineList(e.execCommand(cmd, cur, isLast))
+		if hasInput {
+			e.inPipeline--
+		}
 	}
 	return cur
 }
@@ -294,6 +305,9 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 		sc["input"] = object.Array(input)
 	}
 
+	if fn.Begin != nil || fn.Process != nil || fn.End != nil || fn.Filter {
+		return e.callFunctionNamedBlocks(fn, input)
+	}
 	out, sig := e.runStatements(fn.Body.Body.Statements)
 	if sig != nil {
 		switch sig.kind {
@@ -303,6 +317,62 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 		case flowExit, flowError:
 			panic(sig)
 		}
+	}
+	return out
+}
+
+// callFunctionNamedBlocks 按 begin/process/end 语义执行带命名块（或 filter）的函数：
+// begin 先跑一次；有管道输入时 process 对每项执行并把 $_ 绑到该项，无输入时以 $null 跑一次；
+// filter 无 Process 块时 Body 即 process。end 最后跑一次。
+// process 里的 return 只结束当前项的处理，继续下一项；begin/end 里的 return 结束整个函数。
+// break/continue 在命名块里没有所属循环，沿调用栈上抛（与 PowerShell 一致），由外层循环捕获。
+func (e *Evaluator) callFunctionNamedBlocks(fn *shell.Function, input []*object.PSObject) []*object.PSObject {
+	var out []*object.PSObject
+	// runBlock 执行一个块，stop 为 true 表示不再继续后续阶段
+	runBlock := func(body *ast.Block, inProcess bool) (stop bool) {
+		o, sig := e.runStatements(body.Body.Statements)
+		out = append(out, o...)
+		if sig == nil {
+			return false
+		}
+		switch sig.kind {
+		case flowReturn:
+			// return 在 process 里只结束本次；在 begin/end 里结束函数
+			return !inProcess
+		case flowBreak, flowContinue:
+			sig.out = out
+			panic(sig)
+		case flowExit, flowError:
+			panic(sig)
+		}
+		return false
+	}
+	if fn.Begin != nil {
+		if runBlock(fn.Begin, false) {
+			return out
+		}
+	}
+	process := fn.Process
+	if process == nil && fn.Filter {
+		process = fn.Body
+	}
+	if process != nil {
+		items := input
+		if e.inPipeline == 0 {
+			// 直调（无管道）：process 以 $null 跑一次
+			e.scopes[len(e.scopes)-1]["_"] = object.Null()
+			runBlock(process, true)
+		} else {
+			for _, item := range items {
+				e.scopes[len(e.scopes)-1]["_"] = item
+				if runBlock(process, true) {
+					break
+				}
+			}
+		}
+	}
+	if fn.End != nil {
+		runBlock(fn.End, false)
 	}
 	return out
 }
@@ -394,9 +464,9 @@ func (e *Evaluator) execInvoke(cmd *ast.Command, input []*object.PSObject, isLas
 		return nil
 	}
 	target := e.evalValue(cmd.Positional[targetIdx])
-	if sb, ok := target.Value.(*ast.StatementList); ok {
+	if node, ok := target.Value.(*ast.ScriptBlock); ok {
 		ca := e.evalCallArgs(cmd, rest)
-		return e.applyRedirects(cmd, e.invokeScriptBlock(sb, ca, input))
+		return e.applyRedirects(cmd, e.invokeScriptBlock(node, ca, input))
 	}
 	// 非脚本块目标按名字分发：改写成以目标字符串为名的普通命令，剔除已消费的目标实参
 	nameCmd := rewriteWithoutPositional(cmd, targetIdx)
@@ -432,8 +502,9 @@ func rewriteWithoutPositional(cmd *ast.Command, drop int) *ast.Command {
 	return nc
 }
 
-// invokeScriptBlock 以函数语义执行脚本块：块体开头的 param() 提取为形参声明，实参绑定、$args、$input 与函数调用同一套规则。
-func (e *Evaluator) invokeScriptBlock(body *ast.StatementList, ca callArgs, input []*object.PSObject) []*object.PSObject {
+// invokeScriptBlock 以函数语义执行脚本块：实参绑定、$args、$input 与函数调用同一套规则；
+// 带命名块时按 begin/process/end 语义执行（直调 process 以 $null 跑一次），与函数一致。
+func (e *Evaluator) invokeScriptBlock(node *ast.ScriptBlock, ca callArgs, input []*object.PSObject) []*object.PSObject {
 	e.pushScope()
 	defer e.popScope()
 	e.inCapture++
@@ -441,7 +512,7 @@ func (e *Evaluator) invokeScriptBlock(body *ast.StatementList, ca callArgs, inpu
 
 	var params []ast.FunctionParam
 	// 块体开头的 param() 声明从体里提取
-	stmts := body.Statements
+	stmts := node.Body.Statements
 	if len(stmts) > 0 {
 		if pb, ok := stmts[0].(*ast.ParamBlock); ok {
 			params = pb.Params
@@ -458,6 +529,10 @@ func (e *Evaluator) invokeScriptBlock(body *ast.StatementList, ca callArgs, inpu
 		sc["input"] = object.Array(input)
 	}
 
+	if node.Begin != nil || node.Process != nil || node.End != nil {
+		fn := &shell.Function{Params: params, Body: &ast.Block{Body: node.Body}, Begin: node.Begin, Process: node.Process, End: node.End}
+		return e.callFunctionNamedBlocks(fn, input)
+	}
 	out, sig := e.runStatements(stmts)
 	if sig != nil {
 		switch sig.kind {
@@ -665,6 +740,9 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 				// panic 前已产生的输出一并携带。
 				sig.out = all
 				panic(sig)
+			case flowBreak, flowContinue:
+				// 无所属循环的 break/continue 终止脚本的当前语句序列（与 PowerShell 一致）
+				return all
 			}
 		}
 		if e.ExitRequested {

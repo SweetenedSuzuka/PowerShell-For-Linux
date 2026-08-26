@@ -742,15 +742,141 @@ func (p *Parser) parseFunction(filter bool) ast.Node {
 		p.advance()
 		fn.Params = p.parseParamList()
 	}
-	fn.Body = p.parseBlock()
-	// param() 块：函数体开头的参数声明，提取进 Params 并从体里剔除
-	if fn.Body != nil && len(fn.Body.Body.Statements) > 0 {
-		if pb, ok := fn.Body.Body.Statements[0].(*ast.ParamBlock); ok {
-			fn.Params = append(fn.Params, pb.Params...)
-			fn.Body.Body.Statements = fn.Body.Body.Statements[1:]
+	fn.Body = p.parseBlockNamed(fn)
+	return fn
+}
+
+// parseBlockNamed 解析函数体大括号，体头按 begin/process/end 命名块拆进 fn。
+// 命名块必须连续出现在体开头，其后出现裸语句或重复块名报错。
+func (p *Parser) parseBlockNamed(fn *ast.FunctionDef) *ast.Block {
+	if p.err != nil {
+		return nil
+	}
+	p.skipNewlines()
+	t := p.cur()
+	if t.Type == TkEOF {
+		p.incomplete = true
+		return &ast.Block{Body: &ast.StatementList{}}
+	}
+	if !(t.Type == TkPunct && t.Text == "{") {
+		p.fail(lang.T(lang.MsgParseExpectBrace, p.describe(t)))
+		return nil
+	}
+	p.advance()
+	body := &ast.Block{Body: p.parseFunctionStatements(fn, nil)}
+	if p.err != nil {
+		return body
+	}
+	if p.cur().Type == TkPunct && p.cur().Text == "}" {
+		p.advance()
+	} else if p.cur().Type == TkEOF {
+		p.incomplete = true
+	}
+	return body
+}
+
+// parseFunctionStatements 解析函数体/脚本块体的语句列表：开头连续的 begin/process/end 命名块拆进目标，其余语句照常。
+// 命名块的形态是裸字 begin/process/end 后紧跟 { ... }；裸字后不是大括号时按普通命令处理。
+func (p *Parser) parseFunctionStatements(fn *ast.FunctionDef, sb *ast.ScriptBlock) *ast.StatementList {
+	list := &ast.StatementList{}
+	if p.cur().Type == TkWord && strings.EqualFold(p.cur().Text, "param") {
+		nt := p.peekAt(1)
+		if nt.Type == TkPunct && nt.Text == "(" {
+			pb := p.parseParamBlock().(*ast.ParamBlock)
+			if fn != nil {
+				fn.Params = append(fn.Params, pb.Params...)
+			} else {
+				list.Statements = append(list.Statements, pb)
+			}
+			p.skipNewlinesAndSemicolons()
 		}
 	}
-	return fn
+	sawNamed := false
+	for {
+		p.skipNewlinesAndSemicolons()
+		t := p.cur()
+		if t.Type == TkEOF || (t.Type == TkPunct && t.Text == "}") {
+			break
+		}
+		if name := namedBlockKeyword(t); name != "" {
+			nt := p.peekAt(1)
+			isBlock := nt.Type == TkPunct && nt.Text == "{"
+			if !isBlock {
+				// 裸字 begin 等不接大括号：按普通命令语句回主路径
+				list.Statements = append(list.Statements, p.parseStatement())
+				if p.err != nil {
+					break
+				}
+				continue
+			}
+			slots := slotsOf(fn, sb)
+			var slot **ast.Block
+			switch name {
+			case "begin":
+				slot = slots.begin
+			case "process":
+				slot = slots.process
+			default:
+				slot = slots.end
+			}
+			if *slot != nil {
+				p.fail(lang.T(lang.MsgParseNamedBlockDuplicate, name))
+				break
+			}
+			p.advance() // 消费块名，parseBlock 从 { 开始
+			*slot = p.parseBlock()
+			sawNamed = true
+			continue
+		}
+		if sawNamed {
+			p.fail(lang.T(lang.MsgParseNamedBlockPosition))
+			break
+		}
+		stmt := p.parseStatement()
+		if p.err != nil || stmt == nil {
+			break
+		}
+		list.Statements = append(list.Statements, stmt)
+		nt := p.cur()
+		if nt.Type == TkEOF {
+			break
+		}
+		if nt.Type == TkNewline || (nt.Type == TkPunct && nt.Text == ";") {
+			continue
+		}
+		if nt.Type == TkPunct && nt.Text == "}" {
+			continue
+		}
+		p.fail(lang.T(lang.MsgParseUnexpectedAfter, p.describe(nt)))
+		break
+	}
+	return list
+}
+
+// blockSlots 汇总函数或脚本块的三个命名块槽位。
+type blockSlots struct{ begin, process, end **ast.Block }
+
+func slotsOf(fn *ast.FunctionDef, sb *ast.ScriptBlock) blockSlots {
+	if fn != nil {
+		return blockSlots{&fn.Begin, &fn.Process, &fn.End}
+	}
+	return blockSlots{&sb.Begin, &sb.Process, &sb.End}
+}
+
+// namedBlockKeyword 返回 token 对应的命名块名（begin/process/end），其余返回空。
+func namedBlockKeyword(t lexer.Token) string {
+	if t.Type != TkWord {
+		return ""
+	}
+	switch strings.ToLower(t.Text) {
+	case "begin":
+		return "begin"
+	case "process":
+		return "process"
+	case "end":
+		return "end"
+	}
+	return ""
 }
 
 // ---- 管道与命令 ----
@@ -1544,13 +1670,15 @@ func (p *Parser) parseVariable(t lexer.Token) ast.Node {
 
 func (p *Parser) parseScriptBlockExpr() ast.Node {
 	p.advance() // {
-	body := p.parseStatementList('}')
+	sb := &ast.ScriptBlock{}
+	body := p.parseFunctionStatements(nil, sb)
 	if p.cur().Type == TkPunct && p.cur().Text == "}" {
 		p.advance()
 	} else if p.cur().Type == TkEOF {
 		p.incomplete = true
 	}
-	return &ast.ScriptBlock{Body: body}
+	sb.Body = body
+	return sb
 }
 
 // parseValueExpr 解析"值表达式"：不做裸字合并、不做命令检测（哈希表键等场景用）。

@@ -39,6 +39,8 @@ const (
 	MsgParseTypeLiteralRbracket
 	MsgParseParamTypeName
 	MsgParseParamTypeRbracket
+	MsgParseNamedBlockPosition
+	MsgParseNamedBlockDuplicate
 	MsgConvertFail
 	MsgTypeUnknown
 	MsgStaticMemberNotFound

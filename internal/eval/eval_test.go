@@ -495,6 +495,42 @@ func TestInvokeOperator(t *testing.T) {
 	wantStr(t, `&; "after"`, "after")
 }
 
+// TestNamedBlocks 验证函数的 begin/process/end 命名块与 filter：
+// 三段顺序、直调 process 以 $null 跑一次、process 逐项绑 $_、return 只结束本次、零输入跳过 process、块可乱序。
+func TestNamedBlocks(t *testing.T) {
+	// 三块齐全：begin 一次 → process 逐项 → end 一次
+	wantStr(t, `function T1 { begin { "b" } process { "p:$_" } end { "e" } }; 1,2,3 | T1`, "b", "p:1", "p:2", "p:3", "e")
+	// 直调：无管道输入，process 以 $null 跑一次
+	wantStr(t, `function T2 { begin { "b" } process { "p" } end { "e" } }; T2`, "b", "p", "e")
+	// 只有 process：管道逐项、直调跑一次
+	wantStr(t, `function P1 { process { "p:$_" } }; 1,2 | P1`, "p:1", "p:2")
+	wantStr(t, `function P2 { process { "p" } }; P2`, "p")
+	// 块乱序仍按 begin/process/end 顺序执行
+	wantStr(t, `function O1 { end { "e" } begin { "b" } process { "x:$_" } }; 9 | O1`, "b", "x:9", "e")
+	// 零输入：begin/end 跑，process 不跑
+	wantStr(t, `$a = @(); function Z1 { begin { "zb" } process { "zp:$_" } end { "ze" } }; $r = @($a | Z1); $r.Count`, "2")
+	// param 与命名块共存，形参在 process 内可用
+	wantStr(t, `function Q1([int]$mul) { process { $_ * $mul } }; 1,2,3 | Q1 -mul 10`, "10", "20", "30")
+	// filter 的 Body 即 process
+	wantStr(t, `filter F1 { "f:$_" }; 1,2 | F1`, "f:1", "f:2")
+	wantStr(t, `filter F2 { "f" }; F2`, "f")
+	// filter 也可带命名块
+	wantStr(t, `filter F3 { begin { "fb" } process { "fp:$_" } }; 1 | F3`, "fb", "fp:1")
+}
+
+// TestNamedBlocksControlFlow 验证命名块内的 return/break/continue：
+// process 里 return 只结束本次；break/continue 无所属循环时沿调用栈上抛终止当前语句序列。
+func TestNamedBlocksControlFlow(t *testing.T) {
+	// process 内 return 跳过本次剩余语句，继续下一项
+	wantStr(t, `function R1 { process { if ($_ -eq 2) { return }; "r:$_" } }; 1,2,3 | R1`, "r:1", "r:3")
+	// begin 内 return 结束整个函数（end 不再跑）
+	wantStr(t, `function R2 { begin { "b"; return } process { "p" } end { "e" } }; R2`, "b")
+	// process 内 break 上抛：中断外层循环体，循环后的语句继续
+	wantStr(t, `function B1 { process { if ($_ -eq 2) { break }; "b:$_" } }; foreach ($i in 1..2) { 1,2,3 | B1; "inner" }; "after"`, "b:1", "after")
+	// process 内 continue 上抛：终止当前语句（REPL 逐语句模式下后续语句照常）
+	wantStr(t, `"start"; function C1 { process { if ($_ -eq 1) { continue }; "c:$_" } }; (1,2,3 | C1); "next"`, "start", "next")
+}
+
 // TestTryCatchFinally 验证 try/catch/finally + throw：
 // 基本捕获、$_ 绑定、finally 恒执行、类型过滤、函数/循环传播、return 顺序、try 作表达式。
 func TestTryCatchFinally(t *testing.T) {

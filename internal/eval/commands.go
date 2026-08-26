@@ -406,7 +406,7 @@ func (e *Evaluator) execInvoke(cmd *ast.Command, input []*object.PSObject, isLas
 
 // rewriteWithoutPositional 复制命令并剔除指定下标的位置实参，其余实参重建子列表与 ArgOrder 下标。
 func rewriteWithoutPositional(cmd *ast.Command, drop int) *ast.Command {
-	nc := &ast.Command{Name: cmd.Name}
+	nc := &ast.Command{Name: cmd.Name, Redirs: cmd.Redirs}
 	var pos []ast.Node
 	var named []ast.NamedArg
 	var sws []string

@@ -43,6 +43,7 @@ const (
 	MsgTypeUnknown
 	MsgStaticMemberNotFound
 	MsgBindConvertFail
+	MsgInvokeTargetMissing
 	MsgParseUnexpectedToken
 	MsgParseHashEntry
 	MsgTokEOF

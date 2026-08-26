@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"powershell/internal/ast"
 	"powershell/internal/lang"
 )
 
@@ -120,9 +121,9 @@ func Error(msg string) *PSObject {
 	return o
 }
 
-// ScriptBlock 创建脚本块对象。
-func ScriptBlock(src string) *PSObject {
-	return &PSObject{TypeName: "ScriptBlock", Value: src}
+// ScriptBlock 创建脚本块对象，Value 存语句列表供 & 调用与 .Invoke 执行。
+func ScriptBlock(body *ast.StatementList) *PSObject {
+	return &PSObject{TypeName: "ScriptBlock", Value: body}
 }
 
 // Object 创建带属性的普通对象。
@@ -435,6 +436,9 @@ func (o *PSObject) String() string {
 		return formatDateTime(v)
 	case versionParts:
 		return v.String()
+	case *ast.StatementList:
+		// 脚本块对象：语句列表不还原源码，显示占位
+		return "{ ... }"
 	}
 	return fmt.Sprintf("%v", o.Value)
 }

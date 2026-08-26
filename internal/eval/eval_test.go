@@ -463,6 +463,38 @@ func TestScriptParamTypeAnnotations(t *testing.T) {
 	}
 }
 
+// TestInvokeOperator 验证 & 调用运算符：
+// 脚本块直调、变量持块、param 形参、$args、return 顺序、作表达式、throw 可捕获、动态作用域、按名字调命令。
+func TestInvokeOperator(t *testing.T) {
+	// 基本执行与多输出
+	wantStr(t, `& { "a"; "b" }`, "a", "b")
+	// 变量持有脚本块后调用
+	wantStr(t, `$sb = { param($x) $x * 2 }; & $sb 21`, "42")
+	// 块体开头 param() 提取为形参，多余实参进 $args
+	wantStr(t, `$sb2 = { param($x) "x=$x args=$args" }; & $sb2 1 2 3`, "x=1 args=2 3")
+	// 无 param 时实参全进 $args
+	wantStr(t, `& { "n=$($args.Count)" } e1 e2`, "n=2")
+	// return 前的输出保留，return 后不再执行
+	wantStr(t, `& { "before"; return "val"; "after" }`, "before", "val")
+	// 作表达式（赋值右侧）
+	wantStr(t, `$v = & { 6 * 7 }; $v`, "42")
+	// 块内 throw 可被调用方捕获
+	wantStr(t, `try { & { throw "blk" } } catch { "caught: $($_.Message)" }`, "caught: blk")
+	// 动态作用域：块内可见外层变量
+	wantStr(t, `$outer = 10; & { $outer }`, "10")
+	// 管道输入进 $input（$_ 不绑定），输出时逐项枚举
+	wantStr(t, `1,2 | & { $input }`, "1", "2")
+	// 变量持命令名按名字分发
+	wantStr(t, `$c = "Write-Output"; & $c hi`, "hi")
+	// 字符串字面量目标
+	wantStr(t, `& 'Write-Output' hi`, "hi")
+	// .Invoke 执行并把输出收集成数组
+	wantStr(t, `$sb3 = { 1; 2 }; $r = $sb3.Invoke(); $r.Count`, "2")
+	wantStr(t, `$sb4 = { param($a,$b) $a + $b }; $sb4.Invoke(5,6)`, "11")
+	// 目标缺失报错且后续语句继续
+	wantStr(t, `&; "after"`, "after")
+}
+
 // TestTryCatchFinally 验证 try/catch/finally + throw：
 // 基本捕获、$_ 绑定、finally 恒执行、类型过滤、函数/循环传播、return 顺序、try 作表达式。
 func TestTryCatchFinally(t *testing.T) {

@@ -717,6 +717,32 @@ func TestParamTypeAnnotations(t *testing.T) {
 	}
 }
 
+// TestInvokeCommand 验证 & 调用命令的解析形态：
+// 目标与实参收进 Name 为 & 的命令节点，目标可为变量或字符串字面量。
+func TestInvokeCommand(t *testing.T) {
+	cases := map[string]string{
+		`& { 1 }`:                   "cmd(& sb{stmt[expr(num(1))]})",
+		"& $sb":                     "cmd(& $sb)",
+		`& 'Get-ChildItem' -Name x`: "cmd(& str(Get-ChildItem) -Name:word(x))",
+		`& $f 1 2`:                  "cmd(& $f num(1) num(2))",
+		"1,2 | & { $_ }":            "cmd(& sb{stmt[expr($_)]})",
+	}
+	for src := range cases {
+		res := Parse(src)
+		if res.Error != nil || res.Incomplete {
+			t.Fatalf("%q 应可完整解析，实际 err=%v incomplete=%v", src, res.Error, res.Incomplete)
+		}
+		d := dump(parseOK(t, src))
+		if !strings.Contains(d, cases[src]) {
+			t.Fatalf("%q 的形态应含 %q，实际 %s", src, cases[src], d)
+		}
+	}
+	// & 后无目标标不完整
+	if res := Parse("&"); !res.Incomplete {
+		t.Fatal("& 截断应标记不完整")
+	}
+}
+
 // TestStringSubexprPropagatesState 验证双引号串内 $() 子表达式的解析状态并入外层：
 // 子语句解析失败时报错，截断时标记不完整，插值结果不含残缺语句。
 func TestStringSubexprPropagatesState(t *testing.T) {

@@ -111,7 +111,11 @@ func flattenOutput(o *object.PSObject) []*object.PSObject {
 }
 
 // execCommand 调度一条命令：别名 → 函数 → 内置 → 脚本 → 外部。
+// Name 为 "&" 的是调用命令：目标求值为脚本块时执行脚本块，否则按名字走常规分发。
 func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLast bool) []*object.PSObject {
+	if cmd.Name == "&" {
+		return e.execInvoke(cmd, input, isLast)
+	}
 	name := cmd.Name
 	// 递归解析别名链（New-Alias foo ls; foo 也生效）；带深度上限防环
 	for i := 0; i < 8; i++ {
@@ -279,66 +283,12 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 	e.inCapture++
 	defer func() { e.inCapture-- }()
 
-	// 求值实参
-	var posVals []*object.PSObject
-	namedVals := map[string]*object.PSObject{}
-	namedSwitch := map[string]bool{}
-	for _, slot := range cmd.ArgOrder {
-		switch slot.Kind {
-		case ast.ArgPositional:
-			posVals = append(posVals, e.evalValue(cmd.Positional[slot.Index]))
-		case ast.ArgNamed:
-			namedVals[slot.Name] = e.evalValue(cmd.Named[slot.Index].Value)
-		case ast.ArgSwitch:
-			namedSwitch[slot.Name] = true
-		}
+	ca := e.evalCallArgs(cmd, cmd.ArgOrder)
+	extra, ok := e.bindParams(fn.Params, ca)
+	if !ok {
+		return nil
 	}
 	sc := e.scopes[len(e.scopes)-1]
-	bound := map[string]bool{}
-	// bind 把实参按形参标注转换后落位；无法转换时报告失败，本次调用不再执行函数体
-	bind := func(p ast.FunctionParam, v *object.PSObject) bool {
-		cv, ok := e.bindParamValue(p, v)
-		if !ok {
-			return false
-		}
-		sc[p.Name] = cv
-		bound[p.Name] = true
-		return true
-	}
-	for _, p := range fn.Params {
-		var val *object.PSObject
-		have := false
-		if namedSwitch[p.Name] {
-			val, have = object.Bool(true), true
-		} else if v, ok := namedVals[p.Name]; ok {
-			val, have = v, true
-		}
-		if have && !bind(p, val) {
-			return nil
-		}
-	}
-	pi := 0
-	for _, p := range fn.Params {
-		if bound[p.Name] {
-			continue
-		}
-		if pi < len(posVals) {
-			if !bind(p, posVals[pi]) {
-				return nil
-			}
-			pi++
-		} else if p.Default != nil {
-			if !bind(p, e.evalValue(p.Default)) {
-				return nil
-			}
-		} else {
-			sc[p.Name] = object.Null()
-		}
-	}
-	var extra []*object.PSObject
-	for ; pi < len(posVals); pi++ {
-		extra = append(extra, posVals[pi])
-	}
 	sc["args"] = object.Array(extra)
 	if len(input) > 0 {
 		sc["input"] = object.Array(input)
@@ -349,6 +299,169 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 		switch sig.kind {
 		case flowReturn:
 			// return 前的输出（如 try/finally 沿途写入的）一并保留
+			return append(out, unwrapOutput(sig.value)...)
+		case flowExit, flowError:
+			panic(sig)
+		}
+	}
+	return out
+}
+
+// callArgs 是求值后的调用实参：位置值、命名值与开关名。
+type callArgs struct {
+	posVals     []*object.PSObject
+	namedVals   map[string]*object.PSObject
+	namedSwitch map[string]bool
+}
+
+// evalCallArgs 按源码顺序求值一条命令的实参。
+func (e *Evaluator) evalCallArgs(cmd *ast.Command, slots []ast.ArgItem) callArgs {
+	ca := callArgs{namedVals: map[string]*object.PSObject{}, namedSwitch: map[string]bool{}}
+	for _, slot := range slots {
+		switch slot.Kind {
+		case ast.ArgPositional:
+			ca.posVals = append(ca.posVals, e.evalValue(cmd.Positional[slot.Index]))
+		case ast.ArgNamed:
+			ca.namedVals[slot.Name] = e.evalValue(cmd.Named[slot.Index].Value)
+		case ast.ArgSwitch:
+			ca.namedSwitch[slot.Name] = true
+		}
+	}
+	return ca
+}
+
+// bindParams 按形参声明把调用实参落位到当前作用域：命名与开关优先，其余使用位置实参，缺的用默认值或 $null。
+// 返回剩余位置实参与绑定是否成功；失败时错误已写出，调用方不再执行被调方。
+func (e *Evaluator) bindParams(params []ast.FunctionParam, ca callArgs) ([]*object.PSObject, bool) {
+	sc := e.scopes[len(e.scopes)-1]
+	bound := map[string]bool{}
+	bind := func(p ast.FunctionParam, v *object.PSObject) bool {
+		cv, ok := e.bindParamValue(p, v)
+		if !ok {
+			return false
+		}
+		sc[p.Name] = cv
+		bound[p.Name] = true
+		return true
+	}
+	for _, p := range params {
+		var val *object.PSObject
+		have := false
+		if ca.namedSwitch[p.Name] {
+			val, have = object.Bool(true), true
+		} else if v, ok := ca.namedVals[p.Name]; ok {
+			val, have = v, true
+		}
+		if have && !bind(p, val) {
+			return nil, false
+		}
+	}
+	pi := 0
+	for _, p := range params {
+		if bound[p.Name] {
+			continue
+		}
+		if pi < len(ca.posVals) {
+			if !bind(p, ca.posVals[pi]) {
+				return nil, false
+			}
+			pi++
+		} else if p.Default != nil {
+			if !bind(p, e.evalValue(p.Default)) {
+				return nil, false
+			}
+		} else {
+			sc[p.Name] = object.Null()
+		}
+	}
+	return ca.posVals[pi:], true
+}
+
+// execInvoke 执行 & 调用命令：首个位置实参是调用目标。
+// 目标为脚本块时按函数语义执行（param 形参、$args、$input、动态作用域）；其余目标转成名字后走常规命令分发。
+func (e *Evaluator) execInvoke(cmd *ast.Command, input []*object.PSObject, isLast bool) []*object.PSObject {
+	targetIdx := -1
+	var rest []ast.ArgItem
+	for _, slot := range cmd.ArgOrder {
+		if slot.Kind == ast.ArgPositional && targetIdx < 0 {
+			targetIdx = slot.Index
+			continue
+		}
+		rest = append(rest, slot)
+	}
+	if targetIdx < 0 {
+		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgInvokeTargetMissing)))
+		return nil
+	}
+	target := e.evalValue(cmd.Positional[targetIdx])
+	if sb, ok := target.Value.(*ast.StatementList); ok {
+		ca := e.evalCallArgs(cmd, rest)
+		return e.applyRedirects(cmd, e.invokeScriptBlock(sb, ca, input))
+	}
+	// 非脚本块目标按名字分发：改写成以目标字符串为名的普通命令，剔除已消费的目标实参
+	nameCmd := rewriteWithoutPositional(cmd, targetIdx)
+	nameCmd.Name = target.String()
+	return e.execCommand(nameCmd, input, isLast)
+}
+
+// rewriteWithoutPositional 复制命令并剔除指定下标的位置实参，其余实参重建子列表与 ArgOrder 下标。
+func rewriteWithoutPositional(cmd *ast.Command, drop int) *ast.Command {
+	nc := &ast.Command{Name: cmd.Name}
+	var pos []ast.Node
+	var named []ast.NamedArg
+	var sws []string
+	for _, slot := range cmd.ArgOrder {
+		switch slot.Kind {
+		case ast.ArgPositional:
+			if slot.Index == drop {
+				continue
+			}
+			nc.ArgOrder = append(nc.ArgOrder, ast.ArgItem{Kind: ast.ArgPositional, Index: len(pos)})
+			pos = append(pos, cmd.Positional[slot.Index])
+		case ast.ArgNamed:
+			nc.ArgOrder = append(nc.ArgOrder, ast.ArgItem{Kind: ast.ArgNamed, Name: slot.Name, Index: len(named), Inline: slot.Inline})
+			named = append(named, cmd.Named[slot.Index])
+		case ast.ArgSwitch:
+			nc.ArgOrder = append(nc.ArgOrder, ast.ArgItem{Kind: ast.ArgSwitch, Name: slot.Name, Index: len(sws)})
+			sws = append(sws, cmd.Switches[slot.Index])
+		}
+	}
+	nc.Positional = pos
+	nc.Named = named
+	nc.Switches = sws
+	return nc
+}
+
+// invokeScriptBlock 以函数语义执行脚本块：块体开头的 param() 提取为形参声明，实参绑定、$args、$input 与函数调用同一套规则。
+func (e *Evaluator) invokeScriptBlock(body *ast.StatementList, ca callArgs, input []*object.PSObject) []*object.PSObject {
+	e.pushScope()
+	defer e.popScope()
+	e.inCapture++
+	defer func() { e.inCapture-- }()
+
+	var params []ast.FunctionParam
+	// 块体开头的 param() 声明从体里提取
+	stmts := body.Statements
+	if len(stmts) > 0 {
+		if pb, ok := stmts[0].(*ast.ParamBlock); ok {
+			params = pb.Params
+			stmts = stmts[1:]
+		}
+	}
+	sc := e.scopes[len(e.scopes)-1]
+	extra, ok := e.bindParams(params, ca)
+	if !ok {
+		return nil
+	}
+	sc["args"] = object.Array(extra)
+	if len(input) > 0 {
+		sc["input"] = object.Array(input)
+	}
+
+	out, sig := e.runStatements(stmts)
+	if sig != nil {
+		switch sig.kind {
+		case flowReturn:
 			return append(out, unwrapOutput(sig.value)...)
 		case flowExit, flowError:
 			panic(sig)

@@ -807,7 +807,7 @@ func (p *Parser) peekPastNewlines() lexer.Token {
 }
 
 // parsePipelineElement 解析管道的一个元素：可能是命令，也可能是纯表达式。
-// 裸字开头的元素一律按命令解析。
+// 裸字开头的元素一律按命令解析；& 开头按调用命令解析。
 // 比较/算术运算符由命令参数内部的合并逻辑处理，例如 Where-Object Length -gt 100 中的 -gt 会与前置裸字参数合并成比较表达式。
 func (p *Parser) parsePipelineElement() ast.Node {
 	t := p.cur()
@@ -815,10 +815,28 @@ func (p *Parser) parsePipelineElement() ast.Node {
 		p.incomplete = true
 		return &ast.BareWord{Value: ""}
 	}
+	if t.Type == TkOp && t.Text == "&" {
+		return p.parseInvokeCommand()
+	}
 	if t.Type == TkWord {
 		return p.parseCommand()
 	}
 	return p.parseExpression(false)
+}
+
+// parseInvokeCommand 解析 & 调用命令：& 目标 实参...。
+// 目标与实参收进 Name 为 "&" 的命令节点，求值期按目标值分发到脚本块或按名字分发到命令。
+func (p *Parser) parseInvokeCommand() *ast.Command {
+	p.advance() // &
+	cmd := &ast.Command{Name: "&"}
+	cmd.RawParts = append(cmd.RawParts, "&")
+	if p.cur().Type == TkEOF || p.cur().Type == TkNewline {
+		// 只有 & 没有目标：语句在此截断
+		p.incomplete = true
+		return cmd
+	}
+	p.collectCommandArgs(cmd)
+	return cmd
 }
 
 // rawSpan 返回 [开始 token, 当前前一 token] 的原始源码片段。
@@ -843,7 +861,12 @@ func (p *Parser) parseCommand() *ast.Command {
 	cmd.Name = nameTok.Text
 	cmd.RawParts = append(cmd.RawParts, nameTok.Raw)
 	p.advance()
+	p.collectCommandArgs(cmd)
+	return cmd
+}
 
+// collectCommandArgs 收集命令的实参、开关与重定向，直到语句终止符。
+func (p *Parser) collectCommandArgs(cmd *ast.Command) {
 	for {
 		t := p.cur()
 		if p.err != nil {
@@ -962,7 +985,6 @@ func (p *Parser) parseCommand() *ast.Command {
 			cmd.RawParts = append(cmd.RawParts, raw)
 		}
 	}
-	return cmd
 }
 
 // parseInlineExpr 解析 -Name:Value 的内联值。
@@ -1187,6 +1209,10 @@ func (p *Parser) parseUnary(argMode bool) ast.Node {
 		}
 		p.advance()
 		return &ast.Unary{Op: t.Text, Operand: p.parseUnary(argMode)}
+	}
+	// & 调用进表达式：赋值右侧、子表达式等场景与语句位同一形态
+	if t.Type == TkOp && t.Text == "&" && !isLoneOpArg("&", p.peekAt(1)) {
+		return p.parseInvokeCommand()
 	}
 	return p.parsePostfix(argMode)
 }

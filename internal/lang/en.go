@@ -55,6 +55,7 @@ Switch style at runtime:
 	MsgTypeUnknown:              "Unable to find type %s.",
 	MsgStaticMemberNotFound:     "Type %s does not have a member %s.",
 	MsgBindConvertFail:          "Cannot convert argument \"%s\" for parameter %s to the declared type \"%s\".",
+	MsgInvokeTargetMissing:      "The call operator & requires a call target.",
 	MsgParseUnexpectedToken:     "Unexpected token: %s",
 	MsgParseHashEntry:           "Hashtable entry requires '=' or ':'",
 	MsgTokEOF:                   "end of input",

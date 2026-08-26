@@ -290,7 +290,7 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 	case *ast.Index:
 		return e.evalIndex(v)
 	case *ast.ScriptBlock:
-		return object.ScriptBlock("{ ... }")
+		return object.ScriptBlock(v.Body)
 	case *ast.SubExpr:
 		e.inCapture++
 		out, sig := e.runStatements(v.Body.Statements)
@@ -328,6 +328,10 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		return object.Int(n)
 	case *ast.PipelineExpr:
 		out := e.evalPipeline(v.Pipeline)
+		return wrapSingle(out)
+	case *ast.Command:
+		// 表达式位的命令节点（& 调用进赋值右侧、子表达式等）：按单元素管道执行
+		out := e.evalPipeline(&ast.Pipeline{Commands: []*ast.Command{v}})
 		return wrapSingle(out)
 	case *ast.PropertyRef:
 		return object.Null()
@@ -639,6 +643,14 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 		case "count":
 			if entries, ok := base.Value.([]object.HashEntry); ok {
 				return object.Int(int64(len(entries)))
+			}
+		}
+	case "ScriptBlock":
+		// .Invoke(实参...) 执行脚本块，输出收集成数组返回
+		if strings.EqualFold(m.Name, "invoke") {
+			if body, ok := base.Value.(*ast.StatementList); ok {
+				out := e.invokeScriptBlock(body, callArgs{posVals: args, namedVals: map[string]*object.PSObject{}, namedSwitch: map[string]bool{}}, nil)
+				return object.Array(out)
 			}
 		}
 	}

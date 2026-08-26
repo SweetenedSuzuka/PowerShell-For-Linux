@@ -1411,6 +1411,13 @@ Notation:
 - `[Type]::Member` calls static methods and properties (no bash equivalent): `[math]::Sqrt(4)` gives 2, `[math]::Floor(1.9)` gives 1, `[math]::Round(2.5)` gives 2 (banker's rounding), `[math]::Pow(2, 10)` gives 1024; `[string]::Join(",", 1, 2)` gives `1,2`, `[string]::Format("{0}-{1}", "a", "b")` gives `a-b`; `[datetime]::Now.Year` reads the current year; `[guid]::NewGuid()` generates a random GUID.
 - Parameters can declare a type: `function f([int]$x)`, or `param([int]$n)` at the top of a script; positional arguments, named arguments, and default values all convert under the same rules as type literals, and an `[int[]]` annotation wraps a single value into a one-element array; when an argument cannot be converted an error is reported and the function body or script body does not run (no bash equivalent).
 
+### Script blocks and the call operator &
+- `{ ... }` is a script block: a statement sequence stored before it runs. Save it as a value (`$sb = { ... }`) or pass it to script-block parameters (such as `Where-Object { ... }`); it displays as `{ ... }`.
+- `& target args...` runs the call target: with a script block as the target it executes with function semantics — a leading `param()` declares parameters, positional/named arguments and default values bind under the same rules as functions, extra arguments land in `$args`, and pipeline input enters through `$input`; with a command-name string it calls that command by name (no direct bash equivalent, conceptually close to `eval "cmd args"`). A missing call target after `&` is an error.
+- `$sb = { param($x) $x * 2 }; & $sb 21` gives 42; `& { "a"; return "v"; "b" }` gives `a`, `v`.
+- `$block.Invoke(args...)` also runs the script block and collects its output into an array: `{ 1; 2 }.Invoke()` gives an array holding 1 and 2.
+- A script block sees the caller's variables (dynamic scoping consistent with PowerShell); throw inside the block can be caught by the caller's try/catch.
+
 ### Member access and hashtable properties
 - `$x.property` fetches members, chaining `$x.a.b` supported alongside method calls `$x.M(...)` (a parenthesis hugging the last segment marks a method).
 - Hashtables resolve members "keys before properties": same-named keys win, built-in properties come only after the key misses. Keys are case-insensitive.

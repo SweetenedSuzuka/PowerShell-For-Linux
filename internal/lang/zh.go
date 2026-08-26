@@ -55,6 +55,7 @@ var zh = map[Msg]string{
 	MsgTypeUnknown:              "无法找到类型 %s。",
 	MsgStaticMemberNotFound:     "类型 %s 中不存在成员 %s。",
 	MsgBindConvertFail:          "无法把实参“%s”转换成形参 %s 声明的类型“%s”。",
+	MsgInvokeTargetMissing:      "调用运算符 & 需要调用目标。",
 	MsgParseUnexpectedToken:     "意外的 token：%s",
 	MsgParseHashEntry:           "哈希表项需要 '=' 或 ':'",
 	MsgTokEOF:                   "输入结束",

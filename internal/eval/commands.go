@@ -86,12 +86,11 @@ func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 		isLast := i == len(pipe.Commands)-1
 		hasInput := pipe.Expr != nil || i > 0
 		if hasInput {
+			// defer 配对递减：命令以 panic 上抛控制流信号时计数随栈展开归位
 			e.inPipeline++
+			defer func() { e.inPipeline-- }()
 		}
 		cur = flattenPipelineList(e.execCommand(cmd, cur, isLast))
-		if hasInput {
-			e.inPipeline--
-		}
 	}
 	return cur
 }
@@ -314,6 +313,10 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 		case flowReturn:
 			// return 前的输出（如 try/finally 沿途写入的）一并保留
 			return append(out, unwrapOutput(sig.value)...)
+		case flowBreak, flowContinue:
+			// 函数体内没有所属循环，break/continue 沿调用栈上抛（与 PowerShell 一致）
+			sig.out = out
+			panic(sig)
 		case flowExit, flowError:
 			panic(sig)
 		}
@@ -538,6 +541,10 @@ func (e *Evaluator) invokeScriptBlock(node *ast.ScriptBlock, ca callArgs, input 
 		switch sig.kind {
 		case flowReturn:
 			return append(out, unwrapOutput(sig.value)...)
+		case flowBreak, flowContinue:
+			// 脚本块体内没有所属循环，break/continue 沿调用栈上抛（与 PowerShell 一致）
+			sig.out = out
+			panic(sig)
 		case flowExit, flowError:
 			panic(sig)
 		}

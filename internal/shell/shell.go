@@ -62,8 +62,9 @@ type Session struct {
 	History       []string
 	HistoryFile   string // 历史文件路径（空则不持久化）
 	LastExit      int
-	LastSuccess   bool             // $?
-	Matches       *object.PSObject // $Matches：最近一次标量 -match 的捕获组，未匹配过为 nil
+	LastSuccess   bool               // $?
+	ErrorRecords  []*object.PSObject // $Error：本会话累积的错误记录，最新在前
+	Matches       *object.PSObject   // $Matches：最近一次标量 -match 的捕获组，未匹配过为 nil
 	PSCommandPath string
 	Args          []*object.PSObject // 脚本/函数实参（$args）
 	HostOut       io.Writer
@@ -119,6 +120,36 @@ func IsReadOnlyVar(name string) bool {
 	return false
 }
 
+// maxErrorRecords 是 $Error 的容量上限（对应 PowerShell 的 $MaximumErrorCount 默认值）。
+const maxErrorRecords = 256
+
+// ErrorViewMarker 标记一个数组对象是 $Error 的动态视图（eval 层的 Clear/RemoveAt 据此落到记录本体）。
+const ErrorViewMarker = "__ErrorView"
+
+// RecordError 构造一条错误记录并累积进会话，最新在前；超出容量时丢弃最旧的。
+func (s *Session) RecordError(msg string) *object.PSObject {
+	rec := object.Error(msg)
+	s.ErrorRecords = append([]*object.PSObject{rec}, s.ErrorRecords...)
+	if len(s.ErrorRecords) > maxErrorRecords {
+		s.ErrorRecords = s.ErrorRecords[:maxErrorRecords]
+	}
+	return rec
+}
+
+// ClearErrorRecords 清空已累积的错误记录。
+func (s *Session) ClearErrorRecords() {
+	s.ErrorRecords = nil
+}
+
+// RemoveErrorRecord 删除指定下标的错误记录；下标越界返回 false。
+func (s *Session) RemoveErrorRecord(idx int64) bool {
+	if idx < 0 || int(idx) >= len(s.ErrorRecords) {
+		return false
+	}
+	s.ErrorRecords = append(s.ErrorRecords[:idx], s.ErrorRecords[idx+1:]...)
+	return true
+}
+
 // SetVar 设置变量；只读自动变量拒绝修改。
 func (s *Session) SetVar(name string, val *object.PSObject) error {
 	if IsReadOnlyVar(name) {
@@ -154,6 +185,11 @@ func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 			return object.Null(), true
 		}
 		return s.Matches, true
+	case "Error":
+		arr := object.Array(s.ErrorRecords)
+		// 标记为 $Error 的动态视图：Clear/RemoveAt 等方法经 Session 落到 ErrorRecords 本体
+		arr.AddProp(ErrorViewMarker, object.Str("1"))
+		return arr, true
 	case "PSCommandPath":
 		if s.PSCommandPath != "" {
 			return object.Str(s.PSCommandPath), true

@@ -115,10 +115,11 @@ func expandWildcard(c *Context, pattern string) ([]string, error) {
 	return matches, nil
 }
 
-// errf 构造一条格式化错误（写 stderr）并标记 $? 为 false。
+// errf 构造一条格式化错误（写 stderr）、累积进 $Error 并标记 $? 为 false。
 func errf(c *Context, format string, args ...any) ([]*object.PSObject, error) {
 	msg := fmt.Sprintf(format, args...)
 	fmt.Fprintf(c.Stderr, "%s : %s\n", c.Shell.StyleName(), msg)
+	c.Shell.RecordError(msg)
 	c.Shell.LastSuccess = false
 	return nil, nil
 }

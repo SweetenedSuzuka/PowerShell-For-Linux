@@ -531,6 +531,28 @@ func TestNamedBlocksControlFlow(t *testing.T) {
 	wantStr(t, `"start"; function C1 { process { if ($_ -eq 1) { continue }; "c:$_" } }; (1,2,3 | C1); "next"`, "start", "next")
 }
 
+// TestErrorVariable 验证 $Error 自动变量：
+// 非终止错误与 throw 都累积、最新在 [0]、被 catch 的错误也进、Clear/RemoveAt 落到记录本体。
+func TestErrorVariable(t *testing.T) {
+	// 非终止错误累积，[0] 是最新
+	wantStr(t, `[int]"abc"; $Error.Count`, "1")
+	wantStr(t, `[int]"abc"; [int]"def"; $Error.Count; $Error[0].Message`,
+		"2", `无法将值“def”转换为类型“int”。`)
+	// throw 与被捕获的错误都进 $Error
+	wantStr(t, `try { throw "boom" } catch { "in=$($Error.Count)" }; "after=$($Error.Count)"; $Error[0].Message`,
+		"in=1", "after=1", "boom")
+	// 无错误时为空数组
+	wantStr(t, `$Error.Count`, "0")
+	// Clear 清空本体
+	wantStr(t, `[int]"abc"; $Error.Clear(); $Error.Count`, "0")
+	// RemoveAt 删除指定下标
+	wantStr(t, `[int]"abc"; [int]"def"; $Error.RemoveAt(0); $Error.Count; $Error[0].Message`,
+		"1", `无法将值“abc”转换为类型“int”。`)
+	// 参数绑定失败同样累积
+	wantStr(t, `function F([int]$k) { "never" }; F 'bad'; $Error.Count; $Error[0].Message`,
+		"1", `无法把实参“bad”转换成形参 k 声明的类型“int”。`)
+}
+
 // TestTryCatchFinally 验证 try/catch/finally + throw：
 // 基本捕获、$_ 绑定、finally 恒执行、类型过滤、函数/循环传播、return 顺序、try 作表达式。
 func TestTryCatchFinally(t *testing.T) {

@@ -169,12 +169,14 @@ func (e *Evaluator) setVar(name, scope string, val *object.PSObject) error {
 	return nil
 }
 
-// writeError 把错误写到 stderr 并标记 $? 为 false。
+// writeError 把错误写到 stderr、累积进 $Error 并标记 $? 为 false。
 func (e *Evaluator) writeError(err error) {
 	if err == nil {
 		return
 	}
-	fmt.Fprintf(e.hostErr, "%s : %v\n", e.Session.StyleName(), err)
+	msg := err.Error()
+	fmt.Fprintf(e.hostErr, "%s : %s\n", e.Session.StyleName(), msg)
+	e.Session.RecordError(msg)
 	e.Session.LastSuccess = false
 }
 
@@ -629,6 +631,23 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 				}
 			}
 			return object.Bool(false)
+		case "clear":
+			// $Error.Clear()：带动态视图标记的数组把清空落到会话的错误记录本体
+			if _, ok := base.PropValue(shell.ErrorViewMarker); ok {
+				e.Session.ClearErrorRecords()
+			}
+			return object.Null()
+		case "removeat":
+			// $Error.RemoveAt(n)：同样落到会话的错误记录本体；越界报错
+			if _, ok := base.PropValue(shell.ErrorViewMarker); ok {
+				if idx, ok := arg(0).AsInt(); ok {
+					if !e.Session.RemoveErrorRecord(idx) {
+						e.writeError(fmt.Errorf("%s", lang.T(lang.MsgIndexOutOfRange)))
+					}
+					return object.Null()
+				}
+				return object.Null()
+			}
 		}
 	case "Hashtable":
 		switch strings.ToLower(m.Name) {

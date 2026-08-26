@@ -594,6 +594,26 @@ function Nb3([int]$m) { process { $_ * $m } }
 $nb6 = 1,2,3 | Nb3 -m 10
 $results += T "param 与 process 共存" (($nb6 -join ",") -eq "10,20,30")
 
+Write-Output "== \$Error 自动变量 =="
+
+# 137. 非终止错误累积，[0] 是最新
+[int]"err-a"
+[int]"err-b"
+$results += T '$Error 累积与顺序' (($Error.Count -ge 2) -and ($Error[0].Message -like "*err-b*"))
+# 138. throw 与被捕获的错误都进 $Error
+$ec1 = $Error.Count
+try { throw "ev-x" } catch {}
+$results += T "throw 进 Error" (($Error.Count -eq $ec1 + 1) -and ($Error[0].Message -eq "ev-x"))
+# 139. Clear 清空本体
+$Error.Clear()
+$results += T 'Error.Clear 清空' (($Error.Count -eq 0))
+# 140. RemoveAt 删除指定下标
+[int]"err-c"
+[int]"err-d"
+$Error.RemoveAt(0)
+$results += T "Error.RemoveAt" (($Error.Count -eq 1) -and ($Error[0].Message -like "*err-c*"))
+$Error.Clear()
+
 # == 结尾统计 ==
 Write-Output ""
 $failN = 0

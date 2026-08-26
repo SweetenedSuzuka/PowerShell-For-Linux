@@ -1392,6 +1392,12 @@ Notation:
 - Failed matches, array left values, and `-notmatch` all leave `$Matches` untouched (preserving the previous value); never having matched, `$Matches` is `$null`.
 - Differences: named groups support only `(?<name>...)` (internally converted to Go's `(?P<name>...)`); `(?'name'...)` and lookarounds like `(?<=...)` aren't supported by Go regexes.
 
+### Error variable $Error
+- Every error reported in the session (non-terminating errors, throw, parameter binding failures) appends a record to the automatic variable `$Error`, newest at `$Error[0]`; errors caught by try/catch are recorded too.
+- Array methods work: `.Count` for the number of records; `.Clear()` empties the list; `.RemoveAt(n)` removes the record at an index. Capacity is capped at 256 records, with the oldest dropped beyond that.
+- `$Error[0].Message` reads the message text of the most recent error.
+- No bash equivalent; conceptually close to collecting every command's stderr into an inspectable list.
+
 ### Format operator -f
 - `"template {0} {1}" -f value1, value2`: fills placeholders from later values per .NET-style format strings, spiritually bash's printf.
 - Supports `{N}`, `{N,width}` (space-aligned, negative width left-aligns), `{N:spec}`; spec accepts `D`/`Dk` (decimal, k digits zero-padded), `X`/`x` (hexadecimal), `Fk` (k decimal places), `Nk` (thousands separators + k decimal places); unknown specs degrade to the plain string.

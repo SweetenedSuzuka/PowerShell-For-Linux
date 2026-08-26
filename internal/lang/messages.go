@@ -58,6 +58,7 @@ const (
 	// ---- eval：求值与脚本 ----
 	MsgDivideByZero
 	MsgFormatIndexOut
+	MsgIndexOutOfRange
 	MsgParamOnlyInFunc
 	MsgRedirectWrite
 	MsgCommandNotFound

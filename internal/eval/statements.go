@@ -96,7 +96,7 @@ func (e *Evaluator) execStatement(n ast.Node) []*object.PSObject {
 	return nil
 }
 
-// execThrow 抛出一个终止错误：构造错误记录（Message + Exception）后以 flowError 信号上抛。
+// execThrow 抛出一个终止错误：构造错误记录（Message + Exception）、累积进 $Error 后以 flowError 信号上抛。
 // 无表达式时消息为 ScriptHalted（对应 PowerShell throw 的默认消息）。
 func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 	msg := "ScriptHalted"
@@ -106,7 +106,7 @@ func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 			msg = val.String()
 		}
 	}
-	rec := object.Error(msg)
+	rec := e.Session.RecordError(msg)
 	exc := object.Object("System.RuntimeException", msg)
 	exc.AddProp("Message", object.Str(msg))
 	rec.AddProp("Exception", exc)

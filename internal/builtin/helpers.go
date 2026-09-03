@@ -115,9 +115,41 @@ func expandWildcard(c *Context, pattern string) ([]string, error) {
 	return matches, nil
 }
 
-// errf 构造一条格式化错误（写 stderr）、累积进 $Error 并标记 $? 为 false。
+// TerminatingError 携带已累积进 $Error 的错误记录，通知求值器把本次错误转为终止错误上抛。
+type TerminatingError struct {
+	Record *object.PSObject
+}
+
+// Error 返回错误文本。
+func (e *TerminatingError) Error() string { return e.Record.String() }
+
+// parseErrorAction 把 -ErrorAction 的取值归一化为小写，未知取值返回 false。
+func parseErrorAction(s string) (string, bool) {
+	switch strings.ToLower(s) {
+	case "continue", "silentlycontinue", "stop", "inquire", "ignore":
+		return strings.ToLower(s), true
+	}
+	return "", false
+}
+
+// errf 按本次调用的 -ErrorAction 分发错误。
+// Continue 显示并记录，SilentlyContinue 只记录不显示，Ignore 不显示也不记录。
+// Stop 与 Inquire 记录后转为终止错误（Inquire 在非交互场景按终止错误处理）。
 func errf(c *Context, format string, args ...any) ([]*object.PSObject, error) {
 	msg := fmt.Sprintf(format, args...)
+	switch strings.ToLower(c.Args.ErrorAction) {
+	case "silentlycontinue":
+		c.Shell.RecordError(msg)
+		c.Shell.LastSuccess = false
+		return nil, nil
+	case "ignore":
+		c.Shell.LastSuccess = false
+		return nil, nil
+	case "stop", "inquire":
+		rec := c.Shell.RecordError(msg)
+		c.Shell.LastSuccess = false
+		return nil, &TerminatingError{Record: rec}
+	}
 	fmt.Fprintf(c.Stderr, "%s : %s\n", c.Shell.StyleName(), msg)
 	c.Shell.RecordError(msg)
 	c.Shell.LastSuccess = false

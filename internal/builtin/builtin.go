@@ -47,6 +47,7 @@ type BoundArgs struct {
 	NamedNode      map[string]ast.Node
 	Switches       map[string]bool
 	PosMapped      map[string]bool // 参数名 → 是否由位置实参中心化映射而来（cmdlet 区分"显式命名"与"位置"用）
+	ErrorAction    string          // -ErrorAction 的归一化取值（小写），空为未指定，按 Continue 处理
 }
 
 // Pos 取第 i 个位置参数（越界返回 nil）。
@@ -217,8 +218,16 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 			}
 			if sp == nil && commonParams[strings.ToLower(slot.Name)] {
 				// 开关型常见参数（-Verbose 等）的值退回位置参数（-Verbose foo 中 foo 是位置实参）。
-				// 取值型常见参数（-ErrorAction 等）的值被参数消费，直接忽略。
+				// 取值型常见参数的值被参数消费：-ErrorAction 记入绑定供错误分发，其余直接忽略。
 				// WhatIf/Confirm 记录为开关供 cmdlet 读取；-WhatIf:$false 的内联布尔照常生效。
+				if strings.EqualFold(slot.Name, "erroraction") {
+					action, ok := parseErrorAction(val.String())
+					if !ok {
+						return nil, fmt.Errorf("%s", lang.T(lang.MsgBindErrorActionInvalid, val.String()))
+					}
+					ba.ErrorAction = action
+					continue
+				}
 				if strings.EqualFold(slot.Name, "whatif") || strings.EqualFold(slot.Name, "confirm") {
 					ba.Switches[slot.Name] = inlineSwitchBool(val)
 				} else if commonSwitchParams[strings.ToLower(slot.Name)] {
@@ -247,6 +256,10 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 		case ast.ArgSwitch:
 			sp := findSpec(slot.Name)
 			if sp == nil && commonParams[strings.ToLower(slot.Name)] {
+				// 不带值的 -ErrorAction 按缺值报绑定错误。
+				if strings.EqualFold(slot.Name, "erroraction") {
+					return nil, fmt.Errorf("%s", lang.T(lang.MsgBindSwitchNoValue, slot.Name))
+				}
 				// WhatIf/Confirm 记录进开关表，cmdlet 据此跳过实际变更
 				ba.Switches[slot.Name] = true
 				continue

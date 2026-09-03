@@ -69,6 +69,7 @@ const (
 	// ---- builtin：cmdlet 报错与提示 ----
 	MsgBindNoParam
 	MsgBindSwitchNoValue
+	MsgBindErrorActionInvalid
 	MsgWriteErrorPrefix
 	MsgWriteVerbosePrefix
 	MsgWriteWarningPrefix

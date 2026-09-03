@@ -553,6 +553,58 @@ func TestErrorVariable(t *testing.T) {
 		"1", `无法把实参“bad”转换成形参 k 声明的类型“int”。`)
 }
 
+// TestErrorAction 验证 -ErrorAction：默认继续、SilentlyContinue 与 Ignore 压住显示、Stop 转终止错误可被捕获、无效取值报绑定错误。
+func TestErrorAction(t *testing.T) {
+	// 默认 Continue：记录并置 $? 为 false，后续语句继续（$? 用 if 读取，直接读会被表达式语句先置位）
+	wantStr(t, `Get-Item 不存在XYZ123; $Error.Count`, "1")
+	wantStr(t, `Get-Item 不存在XYZ123; if ($?) { "ok" } else { "fail" }`, "fail")
+	// SilentlyContinue：仍记录仍置失败，只是不显示
+	wantStr(t, `Get-Item 不存在XYZ123 -ErrorAction SilentlyContinue; $Error.Count`, "1")
+	wantStr(t, `Get-Item 不存在XYZ123 -ErrorAction SilentlyContinue; if ($?) { "ok" } else { "fail" }`, "fail")
+	// Ignore：不记录，只置失败
+	wantStr(t, `Get-Item 不存在XYZ123 -ErrorAction Ignore; $Error.Count`, "0")
+	wantStr(t, `Get-Item 不存在XYZ123 -ErrorAction Ignore; if ($?) { "ok" } else { "fail" }`, "fail")
+	// Inquire 在非交互场景按终止错误处理
+	wantStr(t, `try { Get-Item 不存在XYZ123 -ErrorAction Inquire } catch { "caught" }; $Error.Count`, "caught", "1")
+	// Stop：转为终止错误，可被 try/catch 捕获，只记一次
+	wantStr(t, `try { Get-Item 不存在XYZ123 -ErrorAction Stop } catch { "caught" }; $Error.Count`, "caught", "1")
+	// Stop 中断 try 体后续语句
+	wantStr(t, `try { Get-Item 不存在XYZ123 -ErrorAction Stop; "after" } catch { "caught" }`, "caught")
+	// 取值大小写不敏感
+	wantStr(t, `try { Get-Item 不存在XYZ123 -ErrorAction stop } catch { "caught" }`, "caught")
+	// 无效取值按绑定错误报告
+	wantStr(t, `Get-Item foo -ErrorAction Bogus; $Error.Count`, "1")
+	wantStr(t, `Get-Item foo -ErrorAction Bogus; if ($?) { "ok" } else { "fail" }`, "fail")
+	// 不带值的 -ErrorAction 按缺值报绑定错误
+	wantStr(t, `Get-Item foo -ErrorAction; $Error.Count`, "1")
+}
+
+// TestErrorActionOutput 验证显示侧：默认 Continue 写 stderr，SilentlyContinue 与 Ignore 不写。
+func TestErrorActionOutput(t *testing.T) {
+	runWithStderr := func(src string) string {
+		var errBuf bytes.Buffer
+		sess := shell.New(shell.StyleCore, io.Discard, &errBuf, strings.NewReader(""))
+		ev := New(sess, strings.NewReader(""), io.Discard, &errBuf)
+		res := parser.Parse(src)
+		if res.Error != nil {
+			t.Fatalf("解析错误 %q: %v", src, res.Error)
+		}
+		for _, st := range res.List.Statements {
+			ev.EvalStatement(st)
+		}
+		return errBuf.String()
+	}
+	if out := runWithStderr(`Get-Item 不存在XYZ123`); out == "" {
+		t.Error("默认 Continue 应写 stderr")
+	}
+	if out := runWithStderr(`Get-Item 不存在XYZ123 -ErrorAction SilentlyContinue`); out != "" {
+		t.Errorf("SilentlyContinue 不应写 stderr，得到 %q", out)
+	}
+	if out := runWithStderr(`Get-Item 不存在XYZ123 -ErrorAction Ignore`); out != "" {
+		t.Errorf("Ignore 不应写 stderr，得到 %q", out)
+	}
+}
+
 // TestTryCatchFinally 验证 try/catch/finally + throw：
 // 基本捕获、$_ 绑定、finally 恒执行、类型过滤、函数/循环传播、return 顺序、try 作表达式。
 func TestTryCatchFinally(t *testing.T) {

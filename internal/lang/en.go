@@ -79,8 +79,9 @@ Switch style at runtime:
 	MsgIncompleteInput: "Incomplete input: missing a block terminator or continuation.",
 
 	// ---- builtin ----
-	MsgBindNoParam:         "A parameter cannot be found that matches parameter name '-%s'.",
-	MsgBindSwitchNoValue:   "Missing an argument for parameter '-%s'.",
+	MsgBindNoParam:            "A parameter cannot be found that matches parameter name '-%s'.",
+	MsgBindSwitchNoValue:      "Missing an argument for parameter '-%s'.",
+	MsgBindErrorActionInvalid: "The value \"%s\" for parameter '-ErrorAction' is invalid. Valid values are Continue, SilentlyContinue, Stop, Inquire, Ignore.",
 	MsgWriteErrorPrefix:    "ERROR:",
 	MsgWriteVerbosePrefix:  "VERBOSE:",
 	MsgWriteWarningPrefix:  "WARNING:",

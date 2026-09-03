@@ -613,6 +613,34 @@ $results += T 'Error.Clear 清空' (($Error.Count -eq 0))
 $Error.RemoveAt(0)
 $results += T "Error.RemoveAt" (($Error.Count -eq 1) -and ($Error[0].Message -like "*err-c*"))
 $Error.Clear()
+# 141. -ErrorAction 默认继续：记录并继续
+$ea0 = $Error.Count
+Get-Item 不存在EA123
+$results += T "ErrorAction 默认继续" (($Error.Count -eq $ea0 + 1))
+# 142. SilentlyContinue：记录但不显示
+$ea1 = $Error.Count
+Get-Item 不存在EA123 -ErrorAction SilentlyContinue
+$results += T "ErrorAction SilentlyContinue 记录" (($Error.Count -eq $ea1 + 1))
+# 143. Ignore：不记录
+$ea2 = $Error.Count
+Get-Item 不存在EA123 -ErrorAction Ignore
+$results += T "ErrorAction Ignore 不记录" (($Error.Count -eq $ea2))
+# 144. Stop：转终止错误可捕获，只记一次
+$ea3 = $Error.Count
+$eaCaught = try { Get-Item 不存在EA123 -ErrorAction Stop; "no" } catch { "yes" }
+$results += T "ErrorAction Stop 可捕获" (($eaCaught -eq "yes") -and ($Error.Count -eq $ea3 + 1))
+# 145. Stop 中断 try 体后续语句
+$eaAfter = try { Get-Item 不存在EA123 -ErrorAction Stop; "after" } catch { "caught" }
+$results += T "ErrorAction Stop 中断后续" ($eaAfter -eq "caught")
+# 146. 无效取值报绑定错误
+$ea4 = $Error.Count
+Get-Item foo -ErrorAction Bogus
+$results += T "ErrorAction 无效值报错" (($Error.Count -eq $ea4 + 1))
+# 147. Inquire 在非交互场景按终止错误处理
+$ea5 = $Error.Count
+$eaIn = try { Get-Item 不存在EA123 -ErrorAction Inquire; "no" } catch { "yes" }
+$results += T "ErrorAction Inquire 终止" (($eaIn -eq "yes") -and ($Error.Count -eq $ea5 + 1))
+$Error.Clear()
 
 # == 结尾统计 ==
 Write-Output ""

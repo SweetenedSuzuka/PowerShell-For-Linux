@@ -120,6 +120,21 @@ func flattenOutput(o *object.PSObject) []*object.PSObject {
 	return []*object.PSObject{o}
 }
 
+// builtinError 处理内置 cmdlet 返回的错误。
+// -ErrorAction Stop 转为终止错误上抛，其余记为非终止错误。
+func (e *Evaluator) builtinError(args *builtin.BoundArgs, err error) {
+	var term *builtin.TerminatingError
+	if errors.As(err, &term) && term.Record != nil {
+		panic(&flowSignal{kind: flowError, value: term.Record})
+	}
+	if strings.EqualFold(args.ErrorAction, "stop") {
+		rec := e.Session.RecordError(err.Error())
+		e.Session.LastSuccess = false
+		panic(&flowSignal{kind: flowError, value: rec})
+	}
+	e.writeError(err)
+}
+
 // execCommand 调度一条命令：别名 → 函数 → 内置 → 脚本 → 外部。
 // Name 为 "&" 的是调用命令：目标求值为脚本块时执行脚本块，否则按名字走常规分发。
 func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLast bool) []*object.PSObject {
@@ -162,7 +177,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 				closer.Close()
 			}
 			if err != nil {
-				e.writeError(err)
+				e.builtinError(args, err)
 				return nil
 			}
 			return e.applyRedirects(cmd, out)
@@ -174,7 +189,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		}
 		out, err := fn(ctx)
 		if err != nil {
-			e.writeError(err)
+			e.builtinError(args, err)
 			return nil
 		}
 		return e.applyRedirects(cmd, out)

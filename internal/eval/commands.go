@@ -161,16 +161,17 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		if w, closer := e.stderrRedirectTarget(cmd); w != nil {
 			oldErr := e.hostErr
 			e.hostErr = w
+			// 先恢复后关闭：关闭先行、恢复后行。
+			defer func() { e.hostErr = oldErr }()
+			if closer != nil {
+				defer closer.Close()
+			}
 			ctx := &builtin.Context{
 				Shell: e.Session, Engine: e,
 				Stdout: e.hostOut, Stderr: e.hostErr, Stdin: e.stdin,
 				Args: args, Input: input,
 			}
 			out, err := fn(ctx)
-			e.hostErr = oldErr
-			if closer != nil {
-				closer.Close()
-			}
 			if err != nil {
 				e.builtinError(args, err)
 				return nil

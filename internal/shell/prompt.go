@@ -25,11 +25,6 @@ func (s *Session) ContinuationPrompt() string {
 	return ">>"
 }
 
-// PromptString 返回提示符文本。
-func (s *Session) PromptString() string {
-	return s.Prompt()
-}
-
 // Usage 返回用法说明文本（-Help）。
 func (s *Session) Usage() string {
 	var b strings.Builder

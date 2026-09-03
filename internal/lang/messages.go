@@ -115,4 +115,6 @@ const (
 	// ---- external 与 main ----
 	MsgExternalExecFail
 	MsgFlagParseFail
+	MsgExecutionPolicyInvalid
+	MsgReadHostNonInteractive
 )

@@ -71,7 +71,7 @@ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o powershell .
 ## 用法
 
 ```text
-powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <命令>] [-File <脚本>]
+powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <命令>] [-File <脚本>] [-NoExit] [-NonInteractive] [-ExecutionPolicy <策略>] [-WorkingDirectory <目录>]
 ```
 
 | 选项 | 说明 |
@@ -81,6 +81,10 @@ powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <命令>] [-File <�
 | `-File <脚本>` | 执行 `.ps1` 脚本后退出 |
 | `-NoLogo` | 不显示启动横幅 |
 | `-NoProfile` | 不加载启动脚本 |
+| `-NoExit` | 执行后进入交互，不退出 |
+| `-NonInteractive` | 非交互运行：确认提示直接拒绝，读取输入报错 |
+| `-ExecutionPolicy <策略>` | 执行策略（只校验取值，不限制执行） |
+| `-WorkingDirectory <目录>` | 启动目录 |
 | `-?` / `-Help` | 显示帮助 |
 
 运行时切命令格式：`Set-PSVersion 5.1`（切到 5.X）、`Set-PSVersion 7`（切回 7.X）。

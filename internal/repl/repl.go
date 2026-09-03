@@ -64,7 +64,7 @@ func Run(sess *shell.Session, ev *eval.Evaluator, showBanner bool, in *os.File, 
 
 func (r *REPL) loop() {
 	for {
-		prompt := r.Session.Prompt() + " "
+		prompt := r.promptText() + " "
 		if r.pending != "" {
 			prompt = r.Session.ContinuationPrompt() + " "
 		}
@@ -125,6 +125,49 @@ func (r *REPL) loop() {
 	}
 }
 
+// promptText 返回主提示符：定义了 prompt 函数时调函数取值，失败回默认。
+func (r *REPL) promptText() (text string) {
+	text = r.Session.Prompt()
+	if !hasPromptFunc(r.Session) {
+		return text
+	}
+	res := parser.Parse("prompt\n")
+	if res.Error != nil || res.Incomplete || len(res.List.Statements) == 0 {
+		return text
+	}
+	var b strings.Builder
+	func() {
+		defer func() {
+			if recover() == nil {
+				return
+			}
+			b.Reset()
+		}()
+		for _, st := range res.List.Statements {
+			for _, o := range r.Eval.EvalStatement(st) {
+				b.WriteString(o.String())
+			}
+		}
+	}()
+	if b.Len() == 0 {
+		return text
+	}
+	return b.String()
+}
+
+// hasPromptFunc 报告会话是否定义了 prompt 函数（名大小写不限）。
+func hasPromptFunc(sess *shell.Session) bool {
+	if _, ok := sess.Functions["prompt"]; ok {
+		return true
+	}
+	for n := range sess.Functions {
+		if strings.EqualFold(n, "prompt") {
+			return true
+		}
+	}
+	return false
+}
+
 // ---- Tab 补全 ----
 
 func (r *REPL) complete(buf string) []string {
@@ -148,6 +191,10 @@ func (r *REPL) complete(buf string) []string {
 		return nil // 纯空白行：无词可补
 	}
 	lastTok := fields[len(fields)-1]
+	// 参数名补全（末词以 - 开头，按首词命令的规格参数加通用参数枚举）
+	if strings.HasPrefix(lastTok, "-") {
+		return r.completeParam(fields[0], lastTok)
+	}
 	if len(fields) == 1 {
 		var out []string
 		for _, n := range builtin.AllCmdletNames() {
@@ -169,6 +216,34 @@ func (r *REPL) complete(buf string) []string {
 	}
 	// 文件路径补全
 	return completePath(r.Session, lastTok)
+}
+
+// completeParam 补全指定命令的参数名（规格参数在前，通用参数在后，去重）。
+func (r *REPL) completeParam(cmd, prefix string) []string {
+	name := cmd
+	if resolved, ok := r.Session.ResolveAlias(cmd); ok {
+		name = resolved
+	}
+	if _, ok := builtin.Lookup(name); !ok {
+		return nil
+	}
+	want := strings.ToLower(strings.TrimPrefix(prefix, "-"))
+	seen := map[string]bool{}
+	var out []string
+	add := func(n string) {
+		key := strings.ToLower(n)
+		if strings.HasPrefix(key, want) && !seen[key] {
+			seen[key] = true
+			out = append(out, "-"+n+" ")
+		}
+	}
+	for _, sp := range builtin.Spec(name) {
+		add(sp.Name)
+	}
+	for _, n := range builtin.CommonParamNames() {
+		add(n)
+	}
+	return out
 }
 
 func completePath(sess *shell.Session, tok string) []string {

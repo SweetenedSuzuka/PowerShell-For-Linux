@@ -6,7 +6,7 @@ var zh = map[Msg]string{
 	MsgBannerDesktop: "Linux PowerShell by SweetenedSuzuka\n版权没有(C) MacroHard Corporation。无法保留所有权利。\n\n尝试新的跨平台 PowerShell https://aka.ms/pscore6\n别想了，你试不了……等等，PowerShell 7好像还真支持Linux。",
 	MsgBannerCore:    "PowerShell For Linux by SweetenedSuzuka\n版权没有(C) MacroHard Corporation。无法保留所有权利。\n\n输入 help 查看帮助。",
 	MsgUsage: `用法:
-  powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <命令>] [-File <脚本>]
+  powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <命令>] [-File <脚本>] [-NoExit] [-NonInteractive] [-ExecutionPolicy <策略>] [-WorkingDirectory <目录>]
 
 参数:
   -Version <5.1|7>  选择 PowerShell 风格（5.X 或 7.X）
@@ -14,6 +14,10 @@ var zh = map[Msg]string{
   -NoProfile        不加载启动脚本
   -Command <命令>   执行命令后退出（- 表示从 stdin 读取）
   -File <脚本>      执行 .ps1 脚本后退出
+  -NoExit           执行后进入交互，不退出
+  -NonInteractive   非交互运行：确认提示直接拒绝，读取输入报错
+  -ExecutionPolicy <策略>  执行策略（只校验取值，不限制执行）
+  -WorkingDirectory <目录>  启动目录
   -Help, -?         显示本帮助
 
 运行时切换风格:
@@ -127,4 +131,6 @@ var zh = map[Msg]string{
 	// ---- external 与 main ----
 	MsgExternalExecFail: "无法执行命令 %s：%v",
 	MsgFlagParseFail:    "参数解析失败。",
+	MsgExecutionPolicyInvalid: "不支持的执行策略 %s。",
+	MsgReadHostNonInteractive: "非交互运行时不能读取输入。",
 }

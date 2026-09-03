@@ -71,7 +71,7 @@ Once installed, type `powershell` to enter the shell. The prompt is the Windows-
 ## Usage
 
 ```text
-powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <command>] [-File <script>]
+powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <command>] [-File <script>] [-NoExit] [-NonInteractive] [-ExecutionPolicy <policy>] [-WorkingDirectory <dir>]
 ```
 
 | Option | Description |
@@ -81,6 +81,10 @@ powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <command>] [-File <
 | `-File <script>` | Execute a `.ps1` script, then exit |
 | `-NoLogo` | Skip the startup banner |
 | `-NoProfile` | Do not load the profile script |
+| `-NoExit` | Stay interactive after running, do not exit |
+| `-NonInteractive` | Run non-interactively: confirmation prompts are declined, input reads fail |
+| `-ExecutionPolicy <policy>` | Execution policy (value checked only, nothing restricted) |
+| `-WorkingDirectory <dir>` | Start in this directory |
 | `-?` / `-Help` | Show help |
 
 Switch format at runtime: `Set-PSVersion 5.1` (to 5.X), `Set-PSVersion 7` (back to 7.X).

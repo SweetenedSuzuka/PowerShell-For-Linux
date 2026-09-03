@@ -31,6 +31,10 @@ func run(args []string) int {
 	file := fs.String("File", "", "执行 .ps1 脚本后退出")
 	noLogo := fs.Bool("NoLogo", false, "不显示启动横幅")
 	noProfile := fs.Bool("NoProfile", false, "不加载启动脚本")
+	noExit := fs.Bool("NoExit", false, "执行后进入交互，不退出")
+	nonInteractive := fs.Bool("NonInteractive", false, "非交互运行：确认提示直接拒绝，读取输入报错")
+	executionPolicy := fs.String("ExecutionPolicy", "", "执行策略（只校验取值，不限制执行）")
+	workingDirectory := fs.String("WorkingDirectory", "", "启动目录")
 	help := fs.Bool("?", false, "显示帮助")
 	fs.BoolVar(help, "Help", false, "显示帮助")
 
@@ -49,11 +53,31 @@ func run(args []string) int {
 
 	sess := shell.New(style, os.Stdout, os.Stderr, os.Stdin)
 	ev := eval.New(sess, os.Stdin, os.Stdout, os.Stderr)
+	sess.NonInteractive = *nonInteractive
 
 	// 帮助
 	if *help || fs.NArg() > 0 && (fs.Arg(0) == "-?" || fs.Arg(0) == "-Help" || fs.Arg(0) == "-h") {
 		fmt.Fprint(os.Stdout, sess.Usage())
 		return 0
+	}
+
+	// 执行策略：只校验取值（Linux 上 PowerShell 同样不限制执行，未知取值报错）
+	if *executionPolicy != "" {
+		switch strings.ToLower(*executionPolicy) {
+		case "allsigned", "bypass", "default", "remotesigned", "restricted", "unrestricted", "undefined":
+		default:
+			fmt.Fprintf(os.Stderr, "%s\n", lang.T(lang.MsgExecutionPolicyInvalid, *executionPolicy))
+			return 2
+		}
+	}
+
+	// 启动目录：不存在报错后继续（对齐 PowerShell）
+	if *workingDirectory != "" {
+		if err := os.Chdir(*workingDirectory); err != nil {
+			fmt.Fprintf(os.Stderr, "%s : %s\n", sess.StyleName(), lang.T(lang.MsgPathNotFoundFmt, *workingDirectory))
+		} else {
+			sess.Cwd, _ = os.Getwd()
+		}
 	}
 
 	// 启动脚本：默认加载 $HOME/.config/powershell/profile.ps1（-NoProfile 跳过）
@@ -85,10 +109,13 @@ func run(args []string) int {
 				_ = object.FormatOutput(os.Stdout, objs)
 			})
 		}()
+		code := exitCode(ev, sess)
 		if failed {
-			return 1
+			code = 1
 		}
-		return exitCode(ev, sess)
+		if !*noExit {
+			return code
+		}
 	}
 
 	// -Command
@@ -104,11 +131,15 @@ func run(args []string) int {
 		} else {
 			src = *command
 		}
-		return executeOnce(sess, ev, src)
+		// -NoExit：执行后进入交互，不直接返回退出码。
+		if !*noExit {
+			return executeOnce(sess, ev, src)
+		}
+		executeOnce(sess, ev, src)
 	}
 
-	// 交互式 REPL：Linux 上从根目录进入（提示符 PS C:\>）
-	if runtime.GOOS == "linux" {
+	// 交互式 REPL：Linux 上从根目录进入（提示符 PS C:\>，指定启动目录除外）
+	if runtime.GOOS == "linux" && *workingDirectory == "" {
 		_ = os.Chdir("/")
 	}
 	sess.Cwd, _ = os.Getwd()

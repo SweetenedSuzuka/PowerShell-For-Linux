@@ -179,6 +179,10 @@ func cmdOutHost(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdReadHost(c *Context) ([]*object.PSObject, error) {
+	// 非交互运行不能读输入，直接报错。
+	if c.Shell.NonInteractive {
+		return nil, fmt.Errorf("%s", lang.T(lang.MsgReadHostNonInteractive))
+	}
 	prompt, _ := c.Args.Str("Prompt")
 	if prompt != "" {
 		fmt.Fprint(c.Stdout, prompt)

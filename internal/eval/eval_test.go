@@ -423,6 +423,86 @@ func TestStderrRedirectRestoredAfterExecutePanic(t *testing.T) {
 	}
 }
 
+// TestReadStripsUTF8BOM 验证读文件与读脚本去掉 UTF-8 BOM。
+func TestReadStripsUTF8BOM(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	// Get-Content：首行无头码
+	txtPath := filepath.Join(dir, "b.txt")
+	data := append([]byte{0xEF, 0xBB, 0xBF}, []byte("hi\nsecond\n")...)
+	if err := os.WriteFile(txtPath, data, 0644); err != nil {
+		t.Fatal(err)
+	}
+	wantStr(t, `Get-Content b.txt -TotalCount 1`, "hi")
+	// 脚本：带头码照常解析执行
+	psPath := filepath.Join(dir, "b.ps1")
+	psData := append([]byte{0xEF, 0xBB, 0xBF}, []byte("Write-Output 'ok'\n")...)
+	if err := os.WriteFile(psPath, psData, 0644); err != nil {
+		t.Fatal(err)
+	}
+	sess := shell.New(shell.StyleCore, io.Discard, io.Discard, strings.NewReader(""))
+	ev := New(sess, strings.NewReader(""), io.Discard, io.Discard)
+	if got := strs(ev.RunScriptFile(psPath, nil)); len(got) != 1 || got[0] != "ok" {
+		t.Fatalf("BOM 脚本 → %v，想要 [ok]", got)
+	}
+}
+
+// TestAddContentEncoding 验证追加尊重 -Encoding，旧文件不重复写 BOM。
+func TestAddContentEncoding(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	runEval(t, `Add-Content -Encoding utf8BOM e.txt 'a'`)
+	runEval(t, `Add-Content -Encoding utf8BOM e.txt 'b'`)
+	data, err := os.ReadFile(filepath.Join(dir, "e.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := append([]byte{0xEF, 0xBB, 0xBF}, []byte("a\nb\n")...)
+	if string(data) != string(want) {
+		t.Fatalf("追加两次应只有一个 BOM，实际 % x", data)
+	}
+}
+
+// TestNonInteractive 验证 -NonInteractive 语义：读取输入报错，确认提示直接拒绝。
+func TestNonInteractive(t *testing.T) {
+	newEv := func() (*shell.Session, *Evaluator) {
+		sess := shell.New(shell.StyleCore, io.Discard, io.Discard, strings.NewReader(""))
+		return sess, New(sess, strings.NewReader(""), io.Discard, io.Discard)
+	}
+	run := func(ev *Evaluator, src string) {
+		res := parser.Parse(src)
+		if res.Error != nil {
+			t.Fatalf("解析错误 %q：%v", src, res.Error)
+		}
+		for _, st := range res.List.Statements {
+			ev.EvalStatement(st)
+		}
+	}
+	// 读取输入报错
+	sess, ev := newEv()
+	sess.NonInteractive = true
+	run(ev, `Read-Host`)
+	if sess.LastSuccess {
+		t.Fatal("非交互读取应失败")
+	}
+	// 确认提示直接拒绝：带 -Confirm 的删除不执行
+	dir := t.TempDir()
+	t.Chdir(dir)
+	if err := os.WriteFile(filepath.Join(dir, "k.txt"), []byte("x"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	run(ev, `Remove-Item k.txt -Confirm`)
+	if _, err := os.Stat(filepath.Join(dir, "k.txt")); err != nil {
+		t.Fatal("非交互确认应拒绝删除")
+	}
+	// 默认会话不受影响：EOF 下读取无输出但不报错
+	sess, ev = newEv()
+	run(ev, `Read-Host`)
+	if !sess.LastSuccess {
+		t.Fatal("默认读取 EOF 不应失败")
+	}
+}
+
 func TestPipeline(t *testing.T) {
 	wantStr(t, "1..5 | Where-Object { $_ % 2 -eq 0 }", "2", "4")
 	wantStr(t, "3,1,2 | Sort-Object", "1", "2", "3")

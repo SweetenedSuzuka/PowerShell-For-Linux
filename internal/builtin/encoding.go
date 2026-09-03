@@ -79,3 +79,8 @@ func utf32Bytes(text string, be, bom bool) []byte {
 	}
 	return out
 }
+
+// StripUTF8BOM 去掉文本开头的 UTF-8 BOM（读文件与读脚本共用）。
+func StripUTF8BOM(text string) string {
+	return strings.TrimPrefix(text, "\ufeff")
+}

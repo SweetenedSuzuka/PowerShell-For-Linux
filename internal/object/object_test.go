@@ -275,3 +275,49 @@ func TestFileInfoVirtualProps(t *testing.T) {
 		t.Errorf("目录 DirectoryName = %q", v.String())
 	}
 }
+
+// TestTerminalWidthFallback 验证宽度链：COLUMNS 生效，非法值回默认 80。
+func TestTerminalWidthFallback(t *testing.T) {
+	t.Setenv("COLUMNS", "40")
+	if got := TerminalWidth(); got != 40 {
+		t.Fatalf("COLUMNS=40 → %d，想要 40", got)
+	}
+	for _, v := range []string{"", "abc", "-5", "0"} {
+		t.Setenv("COLUMNS", v)
+		if got := TerminalWidth(); got != 80 {
+			t.Fatalf("COLUMNS=%q → %d，想要 80", v, got)
+		}
+	}
+}
+
+// TestFitWidthsTruncate 验证超宽表格收进宽度：右列先截断，渲染行不超限。
+func TestFitWidthsTruncate(t *testing.T) {
+	t.Setenv("COLUMNS", "20")
+	widths := []int{10, 15}
+	labels := []string{"A", "B"}
+	fitWidths(widths, labels, TerminalWidth())
+	if total := widths[0] + widths[1] + 2; total > 20 {
+		t.Fatalf("收窄后总宽 %d 仍超 20", total)
+	}
+	if got := truncateDisplay("abcdef", 4); got != "abcd" {
+		t.Fatalf("截断 → %q，想要 abcd", got)
+	}
+	if got := truncateDisplay("中文ab", 4); got != "中文" {
+		t.Fatalf("中文截断 → %q，想要 中文", got)
+	}
+}
+
+// TestWideFollowsWidth 验证宽幅列数跟终端宽度走。
+func TestWideFollowsWidth(t *testing.T) {
+	t.Setenv("COLUMNS", "30")
+	var buf strings.Builder
+	objs := []*PSObject{Str("a"), Str("b"), Str("c"), Str("d")}
+	if err := FormatWideTo(&buf, objs, 10, ""); err != nil {
+		t.Fatal(err)
+	}
+	// 30/10=3 列，4 项应排 2 行
+	lines := strings.Split(strings.TrimRight(buf.String(), "\n"), "\n")
+	if len(lines) != 2 {
+		t.Fatalf("30 宽 10 列宽应排 2 行，实际 %q", buf.String())
+	}
+}

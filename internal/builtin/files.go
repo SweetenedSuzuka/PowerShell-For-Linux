@@ -198,7 +198,8 @@ func cmdGetContent(c *Context) ([]*object.PSObject, error) {
 		if err != nil {
 			return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, path))
 		}
-		text := string(data)
+		// 去掉 UTF-8 BOM，避免首行带头码。
+		text := StripUTF8BOM(string(data))
 		if raw {
 			out = append(out, object.Str(text))
 			continue
@@ -294,9 +295,18 @@ func cmdAddContent(c *Context) ([]*object.PSObject, error) {
 		return errf(c, "%s", lang.T(lang.MsgCannotOpen, path))
 	}
 	defer f.Close()
+	// 已有内容的旧文件不再写 BOM，与新建文件行为一致。
+	var sb strings.Builder
 	for _, o := range content {
-		fmt.Fprintln(f, o.String())
+		sb.WriteString(o.String())
+		sb.WriteByte('\n')
 	}
+	enc, _ := c.Args.Str("Encoding")
+	bom := true
+	if fi, serr := os.Stat(full); serr == nil && fi.Size() > 0 {
+		bom = false
+	}
+	_, _ = f.Write(encodeText(enc, sb.String(), bom))
 	return nil, nil
 }
 
@@ -653,6 +663,7 @@ func init() {
 	Register("Add-Content", []ParamSpec{
 		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "Value", Position: 1, PositionSet: true, Type: "object"},
+		{Name: "Encoding", Type: "string"},
 	}, cmdAddContent)
 	Register("New-Item", []ParamSpec{
 		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},

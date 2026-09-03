@@ -3,6 +3,8 @@ package object
 import (
 	"fmt"
 	"io"
+	"os"
+	"strconv"
 	"strings"
 )
 
@@ -150,6 +152,57 @@ func tableColumns(objs []*PSObject) (labels []string, aligns []string) {
 	return []string{"Value"}, []string{"left"}
 }
 
+// TerminalWidth 返回输出宽度：终端→COLUMNS→默认 80。
+func TerminalWidth() int {
+	if c := terminalColumns(); c > 0 {
+		return c
+	}
+	if s := os.Getenv("COLUMNS"); s != "" {
+		if n, err := strconv.Atoi(strings.TrimSpace(s)); err == nil && n > 0 {
+			return n
+		}
+	}
+	return 80
+}
+
+// fitWidths 把列宽收进终端宽度：从右向左收窄到表头宽度为止。
+func fitWidths(widths []int, labels []string, max int) {
+	total := 2 * (len(widths) - 1)
+	for _, wd := range widths {
+		total += wd
+	}
+	for i := len(widths) - 1; i >= 0 && total > max; i-- {
+		floor := displayWidth(labels[i])
+		if widths[i] > floor {
+			cut := widths[i] - floor
+			if cut > total-max {
+				cut = total - max
+			}
+			widths[i] -= cut
+			total -= cut
+		}
+	}
+}
+
+// truncateDisplay 按显示宽度截断（中文等宽按 2 计）。
+func truncateDisplay(s string, n int) string {
+	if displayWidth(s) <= n {
+		return s
+	}
+	w := 0
+	for i, r := range s {
+		rw := 1
+		if r > 0x2E7F {
+			rw = 2
+		}
+		if w+rw > n {
+			return s[:i]
+		}
+		w += rw
+	}
+	return s
+}
+
 // FormatTableTo 以表格形式渲染对象。
 func FormatTableTo(w io.Writer, objs []*PSObject, props []string) error {
 	if len(objs) == 0 {
@@ -202,6 +255,8 @@ func FormatTableTo(w io.Writer, objs []*PSObject, props []string) error {
 		}
 		rows = append(rows, row)
 	}
+	// 总宽超限时收进终端宽度。
+	fitWidths(widths, labels, TerminalWidth())
 	// 表头
 	writeRow(w, labels, widths, aligns)
 	// 下划线
@@ -220,6 +275,7 @@ func FormatTableTo(w io.Writer, objs []*PSObject, props []string) error {
 func writeRow(w io.Writer, cells []string, widths []int, aligns []string) {
 	var sb strings.Builder
 	for i, c := range cells {
+		c = truncateDisplay(c, widths[i])
 		pad := widths[i] - displayWidth(c)
 		if pad < 0 {
 			pad = 0
@@ -326,8 +382,8 @@ func FormatWideTo(w io.Writer, objs []*PSObject, colWidth int, prop string) erro
 			cells = append(cells, o.String())
 		}
 	}
-	// 确定列数（依据终端宽度粗略 80）
-	cols := 80 / colWidth
+	// 确定列数（依据终端宽度）。
+	cols := TerminalWidth() / colWidth
 	if cols < 1 {
 		cols = 1
 	}

@@ -6,7 +6,7 @@ import (
 
 // TestTablesComplete 两张语言表必须覆盖全部 Msg 编号，不多不少。
 func TestTablesComplete(t *testing.T) {
-	maxMsg := int(MsgFlagParseFail)
+	maxMsg := int(MsgReadHostNonInteractive)
 	for i := 0; i <= maxMsg; i++ {
 		m := Msg(i)
 		if _, ok := zh[m]; !ok {
@@ -26,7 +26,7 @@ func TestTablesComplete(t *testing.T) {
 
 // TestPlaceholderParity 同一条目两种语言的格式占位符序列必须一致（实参顺序对齐约定的机器检查）。
 func TestPlaceholderParity(t *testing.T) {
-	maxMsg := int(MsgFlagParseFail)
+	maxMsg := int(MsgReadHostNonInteractive)
 	for i := 0; i <= maxMsg; i++ {
 		m := Msg(i)
 		zs := placeholders(zh[m])

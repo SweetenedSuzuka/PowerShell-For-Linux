@@ -176,6 +176,17 @@ var commonParams = map[string]bool{
 	"inputobject": true, "encoding": true,
 }
 
+// CommonParamNames 返回通用参数的规范名（与 commonParams 一一对应，供补全用）。
+func CommonParamNames() []string {
+	return []string{
+		"ErrorAction", "ErrorVariable", "Verbose", "Debug",
+		"WhatIf", "Confirm", "OutVariable", "OutBuffer",
+		"WarningAction", "WarningVariable", "InformationAction",
+		"InformationVariable", "PipelineVariable", "ProgressAction",
+		"InputObject", "Encoding",
+	}
+}
+
 // commonSwitchParams 是开关型常见参数：不取值，后跟的值仍按位置参数处理。
 var commonSwitchParams = map[string]bool{
 	"verbose": true, "debug": true, "whatif": true, "confirm": true,

@@ -705,7 +705,8 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgScriptReadFail, path, err)))
 		return nil
 	}
-	res := parser.Parse(string(data))
+	// 去掉 UTF-8 BOM，带头码的脚本照常解析。
+	res := parser.Parse(builtin.StripUTF8BOM(string(data)))
 	if res.Error != nil {
 		// 脚本没有执行任何语句视作失败：置失败退出码，让 -File 与脚本调用方凭退出码感知
 		e.Session.LastExit = 1

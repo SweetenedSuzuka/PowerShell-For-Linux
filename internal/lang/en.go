@@ -6,7 +6,7 @@ var en = map[Msg]string{
 	MsgBannerDesktop: "Linux PowerShell by SweetenedSuzuka\nCopyright (c) MacroHard Corporation. No rights reserved.\n\nTry the new cross-platform PowerShell https://aka.ms/pscore6\nDon't even try — you can't... wait, PowerShell 7 actually supports Linux.",
 	MsgBannerCore:    "PowerShell For Linux by SweetenedSuzuka\nCopyright (c) MacroHard Corporation. No rights reserved.\n\nType 'help' to get help.",
 	MsgUsage: `Usage:
-  powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <command>] [-File <script>]
+  powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <command>] [-File <script>] [-NoExit] [-NonInteractive] [-ExecutionPolicy <policy>] [-WorkingDirectory <dir>]
 
 Options:
   -Version <5.1|7>  Pick the PowerShell style (5.X or 7.X)
@@ -14,6 +14,10 @@ Options:
   -NoProfile        Do not load the profile script
   -Command <cmd>    Run the command and exit (- reads from stdin)
   -File <script>    Run a .ps1 script and exit
+  -NoExit           Stay interactive after running, do not exit
+  -NonInteractive   Run non-interactively: confirmation prompts are declined, input reads fail
+  -ExecutionPolicy <policy>  Execution policy (value checked only, nothing restricted)
+  -WorkingDirectory <dir>  Start in this directory
   -Help, -?         Show this help
 
 Switch style at runtime:
@@ -127,4 +131,6 @@ Switch style at runtime:
 	// ---- external 与 main ----
 	MsgExternalExecFail: "Cannot execute command %s: %v",
 	MsgFlagParseFail:    "Failed to parse command-line options.",
+	MsgExecutionPolicyInvalid: "Unsupported execution policy '%s'.",
+	MsgReadHostNonInteractive: "Cannot read input while running non-interactively.",
 }

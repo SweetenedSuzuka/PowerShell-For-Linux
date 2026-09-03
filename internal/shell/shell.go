@@ -52,25 +52,26 @@ type Function struct {
 
 // Session 是一次解释器会话的全部状态。
 type Session struct {
-	Style         Style
-	Lang          Lang                        // 界面语言（lang 包的语言码）
-	Vars          map[string]*object.PSObject // 用户显式变量
-	Aliases       map[string]string
-	Functions     map[string]*Function
-	Cwd           string
-	DirStack      []string // Push-Location / Pop-Location 的目录栈
-	History       []string
-	HistoryFile   string // 历史文件路径（空则不持久化）
-	LastExit      int
-	LastSuccess   bool               // $?
-	ErrorRecords  []*object.PSObject // $Error：本会话累积的错误记录，最新在前
-	ErrorSeq      uint64             // 错误记录序列号，每累积一条加一（求值器据此判断某段执行是否产生新错误）
-	Matches       *object.PSObject   // $Matches：最近一次标量 -match 的捕获组，未匹配过为 nil
-	PSCommandPath string
-	Args          []*object.PSObject // 脚本/函数实参（$args）
-	HostOut       io.Writer
-	HostErr       io.Writer
-	HostIn        io.Reader
+	Style          Style
+	Lang           Lang                        // 界面语言（lang 包的语言码）
+	Vars           map[string]*object.PSObject // 用户显式变量
+	Aliases        map[string]string
+	Functions      map[string]*Function
+	Cwd            string
+	DirStack       []string // Push-Location / Pop-Location 的目录栈
+	History        []string
+	HistoryFile    string // 历史文件路径（空则不持久化）
+	LastExit       int
+	LastSuccess    bool               // $?
+	NonInteractive bool               // -NonInteractive：确认提示直接拒绝，读取输入报错
+	ErrorRecords   []*object.PSObject // $Error：本会话累积的错误记录，最新在前
+	ErrorSeq       uint64             // 错误记录序列号，每累积一条加一（求值器据此判断某段执行是否产生新错误）
+	Matches        *object.PSObject   // $Matches：最近一次标量 -match 的捕获组，未匹配过为 nil
+	PSCommandPath  string
+	Args           []*object.PSObject // 脚本/函数实参（$args）
+	HostOut        io.Writer
+	HostErr        io.Writer
+	HostIn         io.Reader
 }
 
 // New 创建新会话。

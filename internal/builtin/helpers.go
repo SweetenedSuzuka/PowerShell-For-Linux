@@ -194,6 +194,10 @@ func confirmSkip(c *Context, operation string, target string, yesAll, noAll *boo
 	if *yesAll || !c.Args.Switch("Confirm") {
 		return false
 	}
+	// 非交互运行不提示，直接拒绝。
+	if c.Shell.NonInteractive {
+		return true
+	}
 	for {
 		fmt.Fprint(c.Stdout, lang.T(lang.MsgConfirmPrompt, operation, target))
 		answer, ok := readLineBytes(c.Stdin)

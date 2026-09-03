@@ -198,7 +198,7 @@ func (e *Evaluator) execAssign(a *ast.Assign) {
 	default:
 		val = e.evalValue(a.Value)
 	}
-	if strings.HasPrefix(a.Target, "env:") {
+	if strings.HasPrefix(strings.ToLower(a.Target), "env:") {
 		if a.Op != "=" {
 			cur := os.Getenv(a.Target[len("env:"):])
 			val = e.binaryOp(a.Op[:len(a.Op)-1], object.Str(cur), val)

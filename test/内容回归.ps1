@@ -744,6 +744,9 @@ $results += T "@() 字面量" (((@(1,2,3) -join ",")) -eq "1,2,3")
 $results += T "大写运算符" ((("a" -EQ "a") -and ("b" -GT "a") -and ("abc" -MATCH "b")))
 # 175. i- 显式不敏感变体
 $results += T "i- 变体" ((("A" -ieq "a") -and ("AbC" -ilike "a*c") -and ("AbC" -imatch "b") -and ("A" -iin @("a","b"))))
+# 176. $ENV: 前缀大小写不限，变量名保持原样
+$env:TmVar904 = "v904"
+$results += T "ENV 大小写" ((($ENV:TmVar904) -eq "v904") -and (($env:TmVar904) -eq "v904"))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

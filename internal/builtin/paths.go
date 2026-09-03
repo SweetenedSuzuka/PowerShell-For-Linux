@@ -193,9 +193,9 @@ func cmdSetItem(c *Context) ([]*object.PSObject, error) {
 	if value == nil {
 		return nil, nil
 	}
-	// env: 驱动器
-	if strings.HasPrefix(path, "env:") {
-		os.Setenv(strings.TrimPrefix(path, "env:"), value.String())
+	// env: 驱动器，前缀大小写不限，变量名保持原样。
+	if strings.HasPrefix(strings.ToLower(path), "env:") {
+		os.Setenv(path[len("env:"):], value.String())
 		return nil, nil
 	}
 	full, derr := resolvePath(c, path)

@@ -361,7 +361,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 		return p.parseVariable(t)
 	case TkBraceVar:
 		p.advance()
-		if strings.HasPrefix(t.Text, "env:") {
+		if strings.HasPrefix(strings.ToLower(t.Text), "env:") {
 			return &ast.EnvRef{Name: t.Text[len("env:"):]}
 		}
 		scope, name := splitScopeName(t.Text)
@@ -599,7 +599,7 @@ func (p *Parser) parseVariable(t lexer.Token) ast.Node {
 	case "null":
 		return &ast.NullLit{}
 	}
-	if strings.HasPrefix(t.Text, "env:") {
+	if strings.HasPrefix(strings.ToLower(t.Text), "env:") {
 		return &ast.EnvRef{Name: t.Text[len("env:"):]}
 	}
 	scope, name := splitScopeName(t.Text)

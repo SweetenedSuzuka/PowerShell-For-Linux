@@ -23,7 +23,7 @@ func (p *Parser) stringFromParts(parts []lexer.StringPart) ast.Node {
 		case lexer.PartEnvVar:
 			nodes = append(nodes, &ast.EnvRef{Name: part.Text})
 		case lexer.PartBraceVar:
-			if strings.HasPrefix(part.Text, "env:") {
+			if strings.HasPrefix(strings.ToLower(part.Text), "env:") {
 				nodes = append(nodes, &ast.EnvRef{Name: part.Text[len("env:"):]})
 			} else {
 				scope, name := splitScopeName(part.Text)

@@ -638,7 +638,7 @@ func (l *Lexer) lexDoubleQuoted() []StringPart {
 			}
 			if sb.Len() > 0 {
 				name := sb.String()
-				if strings.HasPrefix(name, "env:") {
+				if strings.HasPrefix(strings.ToLower(name), "env:") {
 					parts = append(parts, StringPart{Kind: PartEnvVar, Text: name[len("env:"):]})
 				} else {
 					parts = append(parts, StringPart{Kind: PartVar, Text: name})

@@ -41,7 +41,8 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 	case "..":
 		return rangeOp(l, r)
 	case "-eq", "-ne", "-lt", "-le", "-gt", "-ge", "-like", "-notlike", "-match", "-notmatch",
-		"-ceq", "-cne", "-clt", "-cle", "-cgt", "-cge", "-clike", "-cnotlike", "-cmatch", "-cnotmatch":
+		"-ceq", "-cne", "-clt", "-cle", "-cgt", "-cge", "-clike", "-cnotlike", "-cmatch", "-cnotmatch",
+		"-ieq", "-ine", "-ilt", "-ile", "-igt", "-ige", "-ilike", "-inotlike", "-imatch", "-inotmatch":
 		// 数组左值 → 逐元素过滤
 		if l.IsArray() {
 			var matches []*object.PSObject
@@ -58,22 +59,22 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 			}
 			return object.Array(matches)
 		}
-		if op == "-match" || op == "-cmatch" {
+		if op == "-match" || op == "-cmatch" || op == "-imatch" {
 			// 标量 -match/-cmatch 匹配成功后填充 $Matches（数组左值在上面的过滤分支里不填充）
 			return e.evalMatch(op, l, r)
 		}
 		return object.Bool(pairMatch(op, l, r))
-	case "-contains":
+	case "-contains", "-icontains":
 		return object.Bool(arrayContains(l, r))
-	case "-notcontains":
+	case "-notcontains", "-inotcontains":
 		return object.Bool(!arrayContains(l, r))
 	case "-ccontains":
 		return object.Bool(arrayContainsCase(l, r))
 	case "-cnotcontains":
 		return object.Bool(!arrayContainsCase(l, r))
-	case "-in":
+	case "-in", "-iin":
 		return object.Bool(arrayContains(r, l))
-	case "-notin":
+	case "-notin", "-inotin":
 		return object.Bool(!arrayContains(r, l))
 	case "-join":
 		return joinOp(l, r)
@@ -102,24 +103,24 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 }
 
 // pairMatch 判断单个元素与右值是否满足比较运算符。
-// PowerShell 默认比较大小写不敏感；-c* 前缀是大小写敏感变体。
+// PowerShell 默认比较大小写不敏感，-i* 前缀显式不敏感，-c* 前缀大小写敏感。
 func pairMatch(op string, l, r *object.PSObject) bool {
 	switch op {
-	case "-eq":
+	case "-eq", "-ieq":
 		return compareEq(l, r)
-	case "-ne":
+	case "-ne", "-ine":
 		return !compareEq(l, r)
 	case "-ceq":
 		return caseSensitiveEq(l, r)
 	case "-cne":
 		return !caseSensitiveEq(l, r)
-	case "-lt":
+	case "-lt", "-ilt":
 		return compareOrder(l, r) < 0
-	case "-le":
+	case "-le", "-ile":
 		return compareOrder(l, r) <= 0
-	case "-gt":
+	case "-gt", "-igt":
 		return compareOrder(l, r) > 0
-	case "-ge":
+	case "-ge", "-ige":
 		return compareOrder(l, r) >= 0
 	case "-clt":
 		return caseSensitiveOrder(l, r) < 0
@@ -129,21 +130,21 @@ func pairMatch(op string, l, r *object.PSObject) bool {
 		return caseSensitiveOrder(l, r) > 0
 	case "-cge":
 		return caseSensitiveOrder(l, r) >= 0
-	case "-like":
+	case "-like", "-ilike":
 		return object.WildcardMatchFold(r.String(), l.String())
-	case "-notlike":
+	case "-notlike", "-inotlike":
 		return !object.WildcardMatchFold(r.String(), l.String())
 	case "-clike":
 		return object.WildcardMatch(r.String(), l.String())
 	case "-cnotlike":
 		return !object.WildcardMatch(r.String(), l.String())
-	case "-match", "-notmatch", "-cmatch", "-cnotmatch":
+	case "-match", "-notmatch", "-cmatch", "-cnotmatch", "-imatch", "-inotmatch":
 		re, err := compilePattern(op, r.String())
 		if err != nil {
 			return false
 		}
 		matched := re.MatchString(l.String())
-		if op == "-notmatch" || op == "-cnotmatch" {
+		if op == "-notmatch" || op == "-cnotmatch" || op == "-inotmatch" {
 			return !matched
 		}
 		return matched
@@ -155,7 +156,7 @@ func pairMatch(op string, l, r *object.PSObject) bool {
 // -match/-notmatch 在模式前加 (?i) 实现大小写不敏感。
 func compilePattern(op, pattern string) (*regexp.Regexp, error) {
 	p := translateNamedGroups(pattern)
-	if op == "-match" || op == "-notmatch" {
+	if op == "-match" || op == "-notmatch" || op == "-imatch" || op == "-inotmatch" {
 		p = "(?i)" + p
 	}
 	return regexp.Compile(p)

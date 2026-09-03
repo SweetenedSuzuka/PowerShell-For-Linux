@@ -740,6 +740,10 @@ $results += T "@() 执行单命令" ((@($at1).Count -eq 1) -and ($at1[0].Name -e
 $results += T "@() 全量一致" ((@(Get-Command).Count) -eq ($(Get-Command).Count))
 # 173. @() 字面量不受影响
 $results += T "@() 字面量" (((@(1,2,3) -join ",")) -eq "1,2,3")
+# 174. 比较运算符大小写不敏感
+$results += T "大写运算符" ((("a" -EQ "a") -and ("b" -GT "a") -and ("abc" -MATCH "b")))
+# 175. i- 显式不敏感变体
+$results += T "i- 变体" ((("A" -ieq "a") -and ("AbC" -ilike "a*c") -and ("AbC" -imatch "b") -and ("A" -iin @("a","b"))))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

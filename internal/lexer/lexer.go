@@ -80,10 +80,15 @@ var comparisonOps = map[string]bool{
 	"-ceq": true, "-cne": true, "-clt": true, "-cgt": true, "-cle": true,
 	"-cge": true, "-clike": true, "-cnotlike": true, "-cmatch": true,
 	"-cnotmatch": true, "-ccontains": true, "-cnotcontains": true,
+	// 显式不敏感变体（与默认行为一致，大写输入归一化后同样命中）
+	"-ieq": true, "-ine": true, "-ilt": true, "-igt": true, "-ile": true,
+	"-ige": true, "-ilike": true, "-inotlike": true, "-imatch": true,
+	"-inotmatch": true, "-icontains": true, "-inotcontains": true,
+	"-iin": true, "-inotin": true,
 }
 
-// IsComparisonOp 报告文本（含前导 '-'）是否为比较/逻辑运算符。
-func IsComparisonOp(text string) bool { return comparisonOps[text] }
+// IsComparisonOp 报告文本（含前导 '-'）是否为比较/逻辑运算符，大小写不敏感。
+func IsComparisonOp(text string) bool { return comparisonOps[strings.ToLower(text)] }
 
 // Lexer 是词法分析器。
 type Lexer struct {

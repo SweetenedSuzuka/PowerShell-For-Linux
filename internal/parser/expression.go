@@ -180,7 +180,8 @@ func (p *Parser) binaryOpInfo(t lexer.Token) (string, int) {
 			return "?", 5 // 三元运算符（Where-Object 别名的 ? 只在命令位置出现）
 		}
 	case TkDashWord:
-		name := "-" + t.Text
+		// 运算符名归一化为小写，大写输入同样识别。
+		name := "-" + strings.ToLower(t.Text)
 		if !lexer.IsComparisonOp(name) {
 			return "", -1
 		}
@@ -194,7 +195,10 @@ func (p *Parser) binaryOpInfo(t lexer.Token) (string, int) {
 			"-contains", "-notcontains", "-in", "-notin",
 			"-ceq", "-cne", "-clt", "-cgt", "-cle", "-cge",
 			"-clike", "-cnotlike", "-cmatch", "-cnotmatch",
-			"-ccontains", "-cnotcontains":
+			"-ccontains", "-cnotcontains",
+			"-ieq", "-ine", "-ilt", "-igt", "-ile", "-ige",
+			"-ilike", "-inotlike", "-imatch", "-inotmatch",
+			"-icontains", "-inotcontains", "-iin", "-inotin":
 			return name, 20
 		case "-is", "-isnot", "-as":
 			return name, 35

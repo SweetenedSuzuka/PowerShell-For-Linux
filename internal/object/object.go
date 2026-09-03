@@ -552,6 +552,7 @@ func UnixMode(info os.FileInfo) string {
 func Process(pid int, name string, cpu float64, mem int64) *PSObject {
 	o := &PSObject{TypeName: "System.Diagnostics.Process", Value: pid}
 	o.AddProp("Id", int64(pid))
+	o.AddProp("Name", name)
 	o.AddProp("ProcessName", name)
 	o.AddProp("CPU", cpu)
 	o.AddProp("Memory", mem)

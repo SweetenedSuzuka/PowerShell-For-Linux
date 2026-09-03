@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 	"unicode"
+	"unicode/utf8"
 
 	"powershell/internal/ast"
 	"powershell/internal/builtin"
@@ -565,7 +566,7 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 		case "endswith":
 			return object.Bool(strings.HasSuffix(s, arg(0).String()))
 		case "indexof":
-			return object.Int(int64(strings.Index(s, arg(0).String())))
+			return object.Int(runeIndex(s, arg(0).String()))
 		case "lastindexof":
 			// 一参为子串；两参为 子串,起始下标（.NET 搜索范围含起始下标，向左找）
 			if len(args) == 0 {
@@ -580,26 +581,28 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 				if from < 0 {
 					return object.Int(-1)
 				}
-				if int(from) >= len(s) {
-					return object.Int(int64(strings.LastIndex(s, sub)))
+				r := []rune(s)
+				if int(from) >= len(r) {
+					return object.Int(runeLastIndex(s, sub))
 				}
-				return object.Int(int64(strings.LastIndex(s[:from+1], sub)))
+				return object.Int(runeLastIndex(string(r[:from+1]), sub))
 			}
-			return object.Int(int64(strings.LastIndex(s, sub)))
+			return object.Int(runeLastIndex(s, sub))
 		case "substring":
 			start, ok := arg(0).AsInt()
 			if !ok {
 				return object.Null()
 			}
+			r := []rune(s)
 			if len(args) >= 2 {
 				ln, _ := args[1].AsInt()
-				if int(start)+int(ln) <= len(s) {
-					return object.Str(s[start : start+ln])
+				if int(start)+int(ln) <= len(r) {
+					return object.Str(string(r[start : start+ln]))
 				}
-				return object.Str(s[start:])
+				return object.Str(string(r[start:]))
 			}
-			if int(start) <= len(s) {
-				return object.Str(s[start:])
+			if int(start) <= len(r) {
+				return object.Str(string(r[start:]))
 			}
 			return object.Str("")
 		case "replace":
@@ -613,24 +616,25 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			if start < 0 {
 				return object.Null()
 			}
+			r := []rune(s)
 			if len(args) >= 2 {
 				ln, lok := arg(1).AsInt()
 				if !lok || ln < 0 {
 					return object.Null()
 				}
-				if int(start) >= len(s) {
+				if int(start) >= len(r) {
 					return object.Str(s)
 				}
 				end := start + ln
-				if end > int64(len(s)) {
-					end = int64(len(s))
+				if end > int64(len(r)) {
+					end = int64(len(r))
 				}
-				return object.Str(s[:start] + s[end:])
+				return object.Str(string(r[:start]) + string(r[end:]))
 			}
-			if int(start) >= len(s) {
+			if int(start) >= len(r) {
 				return object.Str(s)
 			}
-			return object.Str(s[:start])
+			return object.Str(string(r[:start]))
 		case "padleft":
 			// 一参为总宽（空格补齐）；两参为 总宽,填充字符（只取首个字符，对齐 .NET char 参数）
 			total, ok := arg(0).AsInt()
@@ -902,15 +906,34 @@ func arrayItemAt(items []*object.PSObject, n int64) *object.PSObject {
 	return object.Null()
 }
 
-// stringItemAt 取字符串字符：负数从末尾数，越界返回空串。
+// stringItemAt 取字符串字符：负数从末尾数，越界返回空串；下标按字符计。
 func stringItemAt(s string, n int64) *object.PSObject {
+	r := []rune(s)
 	if n < 0 {
-		n = int64(len(s)) + n
+		n = int64(len(r)) + n
 	}
-	if n >= 0 && int(n) < len(s) {
-		return object.Str(string(s[n]))
+	if n >= 0 && int(n) < len(r) {
+		return object.Str(string(r[n]))
 	}
 	return object.Str("")
+}
+
+// runeIndex 返回子串首现的字符下标，未找到返回 -1；字节下标转字符计数。
+func runeIndex(s, sub string) int64 {
+	b := strings.Index(s, sub)
+	if b < 0 {
+		return -1
+	}
+	return int64(utf8.RuneCountInString(s[:b]))
+}
+
+// runeLastIndex 返回子串末现的字符下标，未找到返回 -1；字节下标转字符计数。
+func runeLastIndex(s, sub string) int64 {
+	b := strings.LastIndex(s, sub)
+	if b < 0 {
+		return -1
+	}
+	return int64(utf8.RuneCountInString(s[:b]))
 }
 
 // ---- 二元运算 ----

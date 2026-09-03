@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"powershell/internal/ast"
 	"powershell/internal/lang"
@@ -196,7 +197,7 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 	switch o.TypeName {
 	case "String":
 		if strings.EqualFold(name, "Length") {
-			return Int(int64(len(o.String()))), true
+			return Int(int64(utf8.RuneCountInString(o.String()))), true
 		}
 	case "Object[]":
 		if strings.EqualFold(name, "Length") || strings.EqualFold(name, "Count") {

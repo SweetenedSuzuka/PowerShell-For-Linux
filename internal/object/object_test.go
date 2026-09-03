@@ -185,6 +185,55 @@ func TestFormatOutputStrings(t *testing.T) {
 	}
 }
 
+// TestFormatOutputCustomObjectMerge 验证自定义对象流合成一张表：首对象属性作列，后出属性不另起表，缺失置空。
+func TestFormatOutputCustomObjectMerge(t *testing.T) {
+	o1 := PSCustomObject([]HashEntry{{Key: "n", Value: Str("x")}, {Key: "m", Value: Int(1)}})
+	o2 := PSCustomObject([]HashEntry{{Key: "n", Value: Str("y")}, {Key: "z", Value: Int(2)}})
+	var sb strings.Builder
+	if err := FormatOutput(&sb, []*PSObject{o1, o2}); err != nil {
+		t.Fatal(err)
+	}
+	lines := strings.Split(strings.TrimRight(sb.String(), "\n"), "\n")
+	if len(lines) != 4 {
+		t.Fatalf("自定义对象应合成一张四行表，得到 %d 行:\n%s", len(lines), sb.String())
+	}
+	if !strings.HasPrefix(lines[0], "n ") || !strings.Contains(lines[0], "m") {
+		t.Errorf("表头应为首对象属性 n、m，得到 %q", lines[0])
+	}
+	if strings.Contains(sb.String(), "z") {
+		t.Errorf("后出属性 z 不应另起列:\n%s", sb.String())
+	}
+}
+
+// TestFormatOutputMixedTableShapes 验证异构表格形状分组渲染：哈希表与自定义对象各成一张表，互不错列。
+func TestFormatOutputMixedTableShapes(t *testing.T) {
+	h := Hashtable([]HashEntry{{Key: "k", Value: Str("v")}})
+	o := PSCustomObject([]HashEntry{{Key: "n", Value: Str("x")}})
+	var sb strings.Builder
+	if err := FormatOutput(&sb, []*PSObject{h, o}); err != nil {
+		t.Fatal(err)
+	}
+	out := sb.String()
+	if strings.Count(out, "----") != 2 {
+		t.Errorf("两类形状应各成一张表（两组下划线），得到:\n%s", out)
+	}
+	if !strings.Contains(out, "Name") || !strings.HasPrefix(strings.Split(out, "\n")[3], "n") {
+		t.Errorf("哈希表取 Name/Value 列、自定义对象取自身属性列，得到:\n%s", out)
+	}
+}
+
+// TestFormatOutputSingleCustomObjectList 验证单个自定义对象走列表（与 PowerShell 一致）。
+func TestFormatOutputSingleCustomObjectList(t *testing.T) {
+	o := PSCustomObject([]HashEntry{{Key: "n", Value: Str("x")}})
+	var sb strings.Builder
+	if err := FormatOutput(&sb, []*PSObject{o}); err != nil {
+		t.Fatal(err)
+	}
+	if sb.String() != "n : x\n" {
+		t.Errorf("单个自定义对象应走列表，得到 %q", sb.String())
+	}
+}
+
 // TestFileInfoVirtualProps 验证 FileInfo/DirectoryInfo 虚拟属性：Extension/BaseName/DirectoryName 从路径计算。
 func TestFileInfoVirtualProps(t *testing.T) {
 	// DirectoryName 经 filepath.Dir 计算，Windows 下返回反斜杠分隔，测试验证 Linux 行为

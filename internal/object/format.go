@@ -10,14 +10,20 @@ import (
 type formatShape int
 
 const (
-	shapeScalar formatShape = iota // 标量：每行一个
-	shapeTable                     // 表格（带 Table 定义或哈希表）
-	shapeList                      // 列表（Name : value）
+	shapeScalar      formatShape = iota // 标量：每行一个
+	shapeTable                          // 表格（带 Table 定义或哈希表）
+	shapeCustomTable                    // 自定义对象表格：与其它表格形状分组渲染，避免异构错列
+	shapeList                           // 列表（Name : value）
 )
 
 func shapeOf(o *PSObject) formatShape {
 	if o.TypeName == "Hashtable" || len(o.Table) > 0 {
 		return shapeTable
+	}
+	// 自定义对象按表格渲染。
+	// 连续同形对象合成一张表，首对象的属性作列。
+	if o.TypeName == "System.Management.Automation.PSCustomObject" {
+		return shapeCustomTable
 	}
 	if isScalarType(o) {
 		return shapeScalar
@@ -44,7 +50,14 @@ func FormatOutput(w io.Writer, objs []*PSObject) error {
 			if err := writeStrings(w, group); err != nil {
 				return err
 			}
-		case shapeTable:
+		case shapeTable, shapeCustomTable:
+			// 单个自定义对象使用列表处理（与 PowerShell 一致），多个才合成表格
+			if shape == shapeCustomTable && len(group) == 1 {
+				if err := FormatListTo(w, group, nil); err != nil {
+					return err
+				}
+				break
+			}
 			if err := FormatTableTo(w, group, nil); err != nil {
 				return err
 			}

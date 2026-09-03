@@ -729,6 +729,10 @@ $results += T "Quiet 命中" (($ss1 -eq $true) -and (@($ss1).Count -eq 1))
 # 169. Select-String -Quiet 未命中无输出
 $ss2 = "abc" | Select-String -Pattern "Z" -Quiet
 $results += T "Quiet 未命中无输出" ($ss2 -eq $null)
+# 170. 自定义对象流合成一张表（首对象属性作列，后出属性不另起表）
+[pscustomobject]@{n="x";m=1},[pscustomobject]@{n="y";z=2} | Out-File ft-merge.txt
+$ftm = Get-Content ft-merge.txt
+$results += T "自定义对象合成表" (($ftm.Count -eq 4) -and ($ftm[0] -like "n*") -and ((($ftm -join "")) -notlike "*z*"))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

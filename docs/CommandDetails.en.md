@@ -793,6 +793,7 @@ Notation:
 | `-AutoSize` | switch | Auto-fit column widths (always auto-fits anyway; accepted) |
 
 - Implementation: builds columns from the first object's properties (or its Props for objects without a table definition), right-aligns numeric columns, underlines headers with `----`.
+- Custom-object streams merge into one table: consecutive same-shape objects share the first object's columns, later properties open no new columns, missing values stay blank. A lone object takes the list view.
 
 ### Format-List
 - Type: Go implementation.

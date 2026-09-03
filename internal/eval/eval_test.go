@@ -1145,6 +1145,29 @@ func TestEncodingParams(t *testing.T) {
 	wantStr(t, `"x" | Out-File /tmp/psl-e3.txt -Encoding unicode; (Get-Item /tmp/psl-e3.txt).Length`, "6")
 }
 
+// TestCopyItemPerm 验证 Copy-Item 保留源文件权限位。
+func TestCopyItemPerm(t *testing.T) {
+	// 权限位仅 Linux 有效；源文件 755，目标须同样 755 而非固定值
+	if runtime.GOOS != "linux" {
+		t.Skip("跳过：测试依赖 Linux 文件权限位")
+	}
+	src := "/tmp/psl-cpp-src.sh"
+	dst := "/tmp/psl-cpp-dst.sh"
+	if err := os.WriteFile(src, []byte("#!/bin/sh\n"), 0o755); err != nil {
+		t.Fatalf("写源文件失败：%v", err)
+	}
+	defer os.Remove(src)
+	defer os.Remove(dst)
+	runEval(t, `Copy-Item /tmp/psl-cpp-src.sh /tmp/psl-cpp-dst.sh`)
+	info, err := os.Stat(dst)
+	if err != nil {
+		t.Fatalf("目标文件不存在：%v", err)
+	}
+	if info.Mode().Perm() != 0o755 {
+		t.Errorf("目标权限位 %o，想要 755", info.Mode().Perm())
+	}
+}
+
 // TestSelectStringCase 验证 Select-String 默认大小写不敏感，-CaseSensitive 才敏感。
 func TestSelectStringCase(t *testing.T) {
 	// 默认不敏感：匹配大小写变体

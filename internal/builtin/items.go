@@ -222,11 +222,19 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 }
 
 func copyFile(src, dest string) error {
+	info, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
 	data, err := os.ReadFile(src)
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(dest, data, 0o644)
+	if err := os.WriteFile(dest, data, 0o644); err != nil {
+		return err
+	}
+	// 目标权限位跟随源文件；目录仍按默认创建。
+	return os.Chmod(dest, info.Mode().Perm())
 }
 
 func copyDir(src, dest string) error {

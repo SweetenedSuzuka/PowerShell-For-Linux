@@ -13,6 +13,7 @@ Set-PSVersion 7 2>$null >$null; if ($?) { $pass++; "PASS  Set-PSVersion" } else 
 Get-Host 2>$null >$null; if ($?) { $pass++; "PASS  Get-Host" } else { $fail++; "FAIL  Get-Host" }
 pwd 2>$null >$null; if ($?) { $pass++; "PASS  Get-Location/pwd" } else { $fail++; "FAIL  Get-Location/pwd" }
 Push-Location /; Pop-Location 2>$null >$null; if ($?) { $pass++; "PASS  Push/Pop-Location" } else { $fail++; "FAIL  Push/Pop-Location" }
+./powershell -NoProfile -ExecutionPolicy Bogus -Command "Write-Output x" 2>$null >$null; if ($LASTEXITCODE -eq 2) { $pass++; "PASS  -ExecutionPolicy 非法值" } else { $fail++; "FAIL  -ExecutionPolicy 非法值" }
 
 Write-Output "== 文件与目录 =="
 Get-ChildItem -Name 2>$null >$null; if ($?) { $pass++; "PASS  Get-ChildItem" } else { $fail++; "FAIL  Get-ChildItem" }
@@ -32,6 +33,8 @@ Write-Output "== 内容读写 =="
 Set-Content test/tmp/c1.txt "hello" 2>$null >$null; if ($?) { $pass++; "PASS  Set-Content" } else { $fail++; "FAIL  Set-Content" }
 Get-Content test/tmp/c1.txt 2>$null >$null; if ($?) { $pass++; "PASS  Get-Content" } else { $fail++; "FAIL  Get-Content" }
 Add-Content test/tmp/c1.txt "world" 2>$null >$null; if ($?) { $pass++; "PASS  Add-Content" } else { $fail++; "FAIL  Add-Content" }
+Add-Content -Encoding utf8BOM test/tmp/enc.txt "a" 2>$null >$null; if ($?) { $pass++; "PASS  Add-Content -Encoding" } else { $fail++; "FAIL  Add-Content -Encoding" }
+if ((Get-Content test/tmp/enc.txt -TotalCount 1) -eq "a") { $pass++; "PASS  读去 BOM" } else { $fail++; "FAIL  读去 BOM" }
 Clear-Content test/tmp/c1.txt 2>$null >$null; if ($?) { $pass++; "PASS  Clear-Content" } else { $fail++; "FAIL  Clear-Content" }
 Set-Item env:VERIFY_VAR "v" 2>$null >$null; if ($?) { $pass++; "PASS  Set-Item 环境变量" } else { $fail++; "FAIL  Set-Item 环境变量" }
 Get-FileHash test/tmp/c1.txt -Algorithm MD5 2>$null >$null; if ($?) { $pass++; "PASS  Get-FileHash" } else { $fail++; "FAIL  Get-FileHash" }

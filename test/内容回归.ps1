@@ -783,6 +783,20 @@ $results += T "while 单次求值" ($wl -eq 3)
 $po = 0
 $pv = $po++
 $results += T "后缀取旧值" ((($pv -eq 0) -and ($po -eq 1)))
+# 188. 变量读写不区分大小写
+$vcFoo = 1
+$VCFOO = 2
+$results += T "变量大小写" ((($VCFOO -eq 2) -and ($VcFoo -eq 2)))
+# 189. 自动变量大小写
+$results += T "自动变量大小写" ((($pwd -ne $null) -and (($PID -gt 0) -and ($psedition -ne ""))))
+# 190. Get-Variable 不区分大小写
+New-Variable -Name GvC -Value 3
+$results += T "取变量大小写" (((Get-Variable gvc).Value -eq 3))
+Remove-Variable GVC
+$results += T "删变量大小写" ((Get-Variable gvc) -eq $null)
+# 191. 作用域修饰符不区分大小写
+$global:SCV = 4
+$results += T "作用域大小写" ($GLOBAL:SCV -eq 4)
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

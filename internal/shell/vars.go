@@ -14,14 +14,43 @@ import (
 
 // vars.go 实现会话变量读写（显式变量与自动变量）。
 
-// IsReadOnlyVar 报告变量是否为只读自动变量。
+// IsReadOnlyVar 报告变量是否为只读自动变量，不区分大小写。
 func IsReadOnlyVar(name string) bool {
-	switch name {
-	case "PSVersionTable", "PID", "PWD", "HOME", "Host", "IsLinux", "IsWindows", "IsMacOS",
-		"PSCommandPath", "PSEdition", "PSHOME", "Matches":
+	switch strings.ToLower(name) {
+	case "psversiontable", "pid", "pwd", "home", "host", "islinux", "iswindows", "ismacos",
+		"pscommandpath", "psedition", "pshome", "matches":
 		return true
 	}
 	return false
+}
+
+// varKey 取显式变量的存储键：已存在（不区分大小写）沿用原大小写，否则用传入名。
+func (s *Session) varKey(name string) string {
+	if _, ok := s.Vars[name]; ok {
+		return name
+	}
+	for k := range s.Vars {
+		if strings.EqualFold(k, name) {
+			return k
+		}
+	}
+	return name
+}
+
+// HasVar 报告显式变量是否存在，不区分大小写。
+func (s *Session) HasVar(name string) bool {
+	_, ok := s.Vars[s.varKey(name)]
+	return ok
+}
+
+// DeleteVar 删除显式变量，不区分大小写；没有返回 false。
+func (s *Session) DeleteVar(name string) bool {
+	k := s.varKey(name)
+	if _, ok := s.Vars[k]; !ok {
+		return false
+	}
+	delete(s.Vars, k)
+	return true
 }
 
 // maxErrorRecords 是 $Error 的容量上限（对应 PowerShell 的 $MaximumErrorCount 默认值）。
@@ -81,48 +110,48 @@ func (s *Session) SetVar(name string, val *object.PSObject) error {
 			return fmt.Errorf("%s", lang.T(lang.MsgErrorActionPreferenceInvalid, val.String()))
 		}
 	}
-	s.Vars[name] = val
+	s.Vars[s.varKey(name)] = val
 	return nil
 }
 
-// GetVar 读取变量：先查显式变量，再查自动变量。
+// GetVar 读取变量：先查显式变量，再查自动变量；两处都不区分大小写。
 func (s *Session) GetVar(name string) (*object.PSObject, bool) {
-	if v, ok := s.Vars[name]; ok {
+	if v, ok := s.Vars[s.varKey(name)]; ok {
 		return v, true
 	}
-	switch name {
-	case "PWD":
+	switch strings.ToLower(name) {
+	case "pwd":
 		return object.Str(s.DisplayPath(s.Cwd)), true
-	case "HOME":
+	case "home":
 		if h, err := os.UserHomeDir(); err == nil {
 			return object.Str(h), true
 		}
 		return object.Null(), true
-	case "PID":
+	case "pid":
 		return object.Int(int64(os.Getpid())), true
-	case "PSVersionTable":
+	case "psversiontable":
 		return s.VersionTable(), true
-	case "LASTEXITCODE":
+	case "lastexitcode":
 		return object.Int(int64(s.LastExit)), true
 	case "?":
 		return object.Bool(s.LastSuccess), true
-	case "Matches":
+	case "matches":
 		if s.Matches == nil {
 			return object.Null(), true
 		}
 		return s.Matches, true
-	case "Error":
+	case "error":
 		arr := object.Array(s.ErrorRecords)
 		// 标记为 $Error 的动态视图：Clear/RemoveAt 等方法经 Session 落到 ErrorRecords 本体
 		arr.AddProp(ErrorViewMarker, object.Str("1"))
 		return arr, true
-	case "ErrorActionPreference":
+	case "erroractionpreference":
 		// 首选项变量：未赋值或已清空时按 Continue 处理
-		if v, ok := s.Vars[name]; ok && !v.IsNull() {
+		if v, ok := s.Vars[s.varKey(name)]; ok && !v.IsNull() {
 			return v, true
 		}
 		return object.Str("Continue"), true
-	case "PSCommandPath":
+	case "pscommandpath":
 		if s.PSCommandPath != "" {
 			return object.Str(s.PSCommandPath), true
 		}
@@ -132,52 +161,57 @@ func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 			return object.Array(s.Args), true
 		}
 		return object.Array(nil), true
-	case "Host":
+	case "host":
 		return s.HostObject(), true
-	case "PSEdition":
+	case "psedition":
 		if s.Style == StyleDesktop {
 			return object.Str("Desktop"), true
 		}
 		return object.Str("Core"), true
-	case "IsLinux":
+	case "islinux":
 		if s.Style == StyleDesktop {
 			return nil, false // 5.X 不存在此变量
 		}
 		return object.Bool(runtime.GOOS == "linux"), true
-	case "IsWindows":
+	case "iswindows":
 		if s.Style == StyleDesktop {
 			return nil, false
 		}
 		return object.Bool(runtime.GOOS == "windows"), true
-	case "IsMacOS":
+	case "ismacos":
 		if s.Style == StyleDesktop {
 			return nil, false
 		}
 		return object.Bool(runtime.GOOS == "darwin"), true
-	case "IsCoreCLR":
+	case "iscoreclr":
 		return object.Bool(s.Style != StyleDesktop), true
-	case "PSHOME":
+	case "pshome":
 		if h, err := os.UserHomeDir(); err == nil {
 			return object.Str(filepath.Join(h, ".local", "share", "powershell")), true
 		}
 		return object.Null(), true
-	case "OFS":
+	case "ofs":
 		return object.Str(" "), true
 	}
 	return nil, false
 }
 
-// AllVarNames 列出全部可见变量名（用于 Get-Variable / 补全）。
+// AllVarNames 列出全部可见变量名（用于 Get-Variable / 补全），不区分大小写去重，显式变量优先。
+// s.Vars中同时存在不同写法时，实际选择的写法取决于map遍历顺序，不过写入的时候已经进行过归一键，应该不会有这种情况。
 func (s *Session) AllVarNames() []string {
-	set := map[string]bool{}
+	byLower := map[string]string{}
 	for n := range s.Vars {
-		set[n] = true
+		if _, ok := byLower[strings.ToLower(n)]; !ok {
+			byLower[strings.ToLower(n)] = n
+		}
 	}
 	for _, n := range []string{"PWD", "HOME", "PID", "PSVersionTable", "LASTEXITCODE", "?", "Matches", "Error", "PSCommandPath", "args", "Host", "PSEdition", "IsLinux", "IsWindows", "IsMacOS", "IsCoreCLR", "PSHOME", "OFS", "ErrorActionPreference"} {
-		set[n] = true
+		if _, ok := byLower[strings.ToLower(n)]; !ok {
+			byLower[strings.ToLower(n)] = n
+		}
 	}
-	var names []string
-	for n := range set {
+	names := make([]string, 0, len(byLower))
+	for _, n := range byLower {
 		names = append(names, n)
 	}
 	sort.Strings(names)

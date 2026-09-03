@@ -253,13 +253,14 @@ func (e *Evaluator) execForEach(v *ast.ForEach) []*object.PSObject {
 	coll := e.evalValue(v.Coll)
 	sc := e.scopes[len(e.scopes)-1]
 	// 循环变量绑定在现有作用域，结束后恢复（保证体内对其它变量的赋值影响外层）
-	oldVar, hadVar := sc[v.Var]
+	key := scopeVarKey(sc, v.Var)
+	oldVar, hadVar := sc[key]
 	oldUS, hadUS := sc["_"]
 	defer func() {
 		if hadVar {
-			sc[v.Var] = oldVar
+			sc[key] = oldVar
 		} else {
-			delete(sc, v.Var)
+			delete(sc, key)
 		}
 		if hadUS {
 			sc["_"] = oldUS
@@ -269,7 +270,7 @@ func (e *Evaluator) execForEach(v *ast.ForEach) []*object.PSObject {
 	}()
 	var out []*object.PSObject
 	for _, item := range coll.ArrayItems() {
-		sc[v.Var] = item
+		sc[key] = item
 		sc["_"] = item
 		o, sig := e.runStatements(v.Body.Body.Statements)
 		out = append(out, o...)
@@ -363,13 +364,14 @@ func (e *Evaluator) execFor(v *ast.For) []*object.PSObject {
 func (e *Evaluator) execSwitch(v *ast.Switch) []*object.PSObject {
 	val := e.evalValue(v.Value)
 	sc := e.scopes[len(e.scopes)-1]
-	oldItem, hadItem := sc["PSItem"]
+	itemKey := scopeVarKey(sc, "PSItem")
+	oldItem, hadItem := sc[itemKey]
 	oldUS, hadUS := sc["_"]
 	defer func() {
 		if hadItem {
-			sc["PSItem"] = oldItem
+			sc[itemKey] = oldItem
 		} else {
-			delete(sc, "PSItem")
+			delete(sc, itemKey)
 		}
 		if hadUS {
 			sc["_"] = oldUS
@@ -377,7 +379,7 @@ func (e *Evaluator) execSwitch(v *ast.Switch) []*object.PSObject {
 			delete(sc, "_")
 		}
 	}()
-	sc["PSItem"] = val
+	sc[itemKey] = val
 
 	var items []*object.PSObject
 	if val.IsArray() {
@@ -390,7 +392,7 @@ func (e *Evaluator) execSwitch(v *ast.Switch) []*object.PSObject {
 nextItem:
 	for _, item := range items {
 		sc["_"] = item
-		sc["PSItem"] = item
+		sc[itemKey] = item
 		matched := false
 		for _, c := range v.Cases {
 			if c.Cond == nil {

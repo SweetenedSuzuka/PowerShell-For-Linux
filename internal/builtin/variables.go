@@ -14,7 +14,7 @@ func cmdGetVariable(c *Context) ([]*object.PSObject, error) {
 			return true
 		}
 		for _, pat := range names {
-			if object.WildcardMatch(pat, n) {
+			if object.WildcardMatchFold(pat, n) {
 				return true
 			}
 		}
@@ -56,7 +56,7 @@ func cmdNewVariable(c *Context) ([]*object.PSObject, error) {
 	if name == "" {
 		return nil, nil
 	}
-	if _, exists := c.Shell.Vars[name]; exists && !c.Args.Switch("Force") {
+	if c.Shell.HasVar(name) && !c.Args.Switch("Force") {
 		return errf(c, "%s", lang.T(lang.MsgVarExists, name))
 	}
 	if val == nil {
@@ -70,7 +70,7 @@ func cmdNewVariable(c *Context) ([]*object.PSObject, error) {
 
 func cmdRemoveVariable(c *Context) ([]*object.PSObject, error) {
 	for _, n := range c.Args.StringSlice("Name") {
-		delete(c.Shell.Vars, n)
+		c.Shell.DeleteVar(n)
 	}
 	return nil, nil
 }

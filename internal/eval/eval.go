@@ -103,22 +103,22 @@ func (e *Evaluator) popScope() {
 	}
 }
 
-// lookupVar 按名字与作用域修饰符查变量。
+// lookupVar 按名字与作用域修饰符查变量，不区分大小写。
 // scope 为空：自顶向下查（PowerShell 默认读语义）；"script"/"global"：只查全局（scopes[0]，即脚本作用域，本解释器脚本不推独立作用域）；"local"：只查当前（栈顶）作用域。
 func (e *Evaluator) lookupVar(name, scope string) *object.PSObject {
 	switch scope {
 	case "script", "global":
-		if v, ok := e.scopes[0][name]; ok {
+		if v, ok := e.scopes[0][scopeVarKey(e.scopes[0], name)]; ok {
 			return v
 		}
 	case "local":
-		if v, ok := e.scopes[len(e.scopes)-1][name]; ok {
+		if v, ok := e.scopes[len(e.scopes)-1][scopeVarKey(e.scopes[len(e.scopes)-1], name)]; ok {
 			return v
 		}
 		return object.Null()
 	default:
 		for i := len(e.scopes) - 1; i >= 0; i-- {
-			if v, ok := e.scopes[i][name]; ok {
+			if v, ok := e.scopes[i][scopeVarKey(e.scopes[i], name)]; ok {
 				return v
 			}
 		}
@@ -127,6 +127,20 @@ func (e *Evaluator) lookupVar(name, scope string) *object.PSObject {
 		return v
 	}
 	return object.Null()
+}
+
+// scopeVarKey 取某层作用域的存储键：已存在（不区分大小写）沿用原大小写，否则用传入名。
+// 写入沿用旧键，避免同名不同大小写并存。
+func scopeVarKey(sc map[string]*object.PSObject, name string) string {
+	if _, ok := sc[name]; ok {
+		return name
+	}
+	for k := range sc {
+		if strings.EqualFold(k, name) {
+			return k
+		}
+	}
+	return name
 }
 
 // setVar 按作用域修饰符写变量：script/global 写全局（scopes[0]），local 与默认写当前（栈顶）。
@@ -151,9 +165,10 @@ func (e *Evaluator) setVar(name, scope string, val *object.PSObject) error {
 		}
 	}
 	if scope == "script" || scope == "global" {
-		e.scopes[0][name] = val
+		e.scopes[0][scopeVarKey(e.scopes[0], name)] = val
 	} else {
-		e.scopes[len(e.scopes)-1][name] = val
+		top := e.scopes[len(e.scopes)-1]
+		top[scopeVarKey(top, name)] = val
 	}
 	return nil
 }

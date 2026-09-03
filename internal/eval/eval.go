@@ -362,26 +362,13 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		if v.Target != nil {
 			return e.incrTarget(v)
 		}
-		cur := e.lookupVar(v.Var, v.Scope)
-		// 浮点变量按浮点增减：$i = 0.5; $i++ → 1.5（AsInt 会把 0.5 截断成 0）
-		if cur.TypeName == "Double" {
-			f, _ := cur.AsFloat()
-			if v.Op == "++" {
-				f++
-			} else {
-				f--
-			}
-			_ = e.setVar(v.Var, v.Scope, object.Float(f))
-			return object.Float(f)
+		delta := int64(1)
+		if v.Op == "--" {
+			delta = -1
 		}
-		n, _ := cur.AsInt()
-		if v.Op == "++" {
-			n++
-		} else {
-			n--
-		}
-		_ = e.setVar(v.Var, v.Scope, object.Int(n))
-		return object.Int(n)
+		old, nv := e.incrOldNew(e.lookupVar(v.Var, v.Scope), delta)
+		_ = e.setVar(v.Var, v.Scope, nv)
+		return old
 	case *ast.PipelineExpr:
 		out := e.evalPipeline(v.Pipeline)
 		return wrapSingle(out)
@@ -412,14 +399,22 @@ func (e *Evaluator) incrTarget(v *ast.Increment) *object.PSObject {
 	return object.Null()
 }
 
-// incrNumber 按现有类型加减：浮点保持浮点，其余按整数（与普通变量一致）。
-func incrNumber(cur *object.PSObject, delta int64) *object.PSObject {
+// incrOldNew 返回加减前后的值：后缀自增取加一前的值，与 PowerShell 一致。
+// 浮点保持浮点，$null 从 0 起，非数字报错。
+func (e *Evaluator) incrOldNew(cur *object.PSObject, delta int64) (old, nv *object.PSObject) {
 	if cur.TypeName == "Double" {
 		f, _ := cur.AsFloat()
-		return object.Float(f + float64(delta))
+		return cur, object.Float(f + float64(delta))
 	}
-	n, _ := cur.AsInt()
-	return object.Int(n + delta)
+	if cur.IsNull() {
+		return object.Int(0), object.Int(delta)
+	}
+	n, ok := cur.AsInt()
+	if !ok {
+		e.throwError(lang.T(lang.MsgArithmeticInvalid))
+		return object.Null(), object.Null()
+	}
+	return object.Int(n), object.Int(n + delta)
 }
 
 // incrIndex 对数组整数下标或哈希表键做增减并写回。
@@ -431,57 +426,57 @@ func (e *Evaluator) incrIndex(t *ast.Index, delta int64) *object.PSObject {
 			key := e.evalValue(t.Index).String()
 			for i := range entries {
 				if strings.EqualFold(entries[i].Key, key) {
-					nv := incrNumber(entries[i].Value, delta)
+					old, nv := e.incrOldNew(entries[i].Value, delta)
 					entries[i].Value = nv
-					return nv
+					return old
 				}
 			}
 		}
-		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		e.throwError(lang.T(lang.MsgIncrTargetInvalid))
 		return object.Null()
 	}
 	if !base.IsArray() {
-		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		e.throwError(lang.T(lang.MsgIncrTargetInvalid))
 		return object.Null()
 	}
 	items := base.ArrayItems()
 	idx := e.evalValue(t.Index)
 	if idx.IsArray() {
-		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		e.throwError(lang.T(lang.MsgIncrTargetInvalid))
 		return object.Null()
 	}
 	n, ok := idx.AsInt()
 	if !ok {
-		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		e.throwError(lang.T(lang.MsgIncrTargetInvalid))
 		return object.Null()
 	}
 	if n < 0 {
 		n = int64(len(items)) + n
 	}
 	if n < 0 || int(n) >= len(items) {
-		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIndexOutOfRange)))
+		e.throwError(lang.T(lang.MsgIndexOutOfRange))
 		return object.Null()
 	}
-	nv := incrNumber(items[n], delta)
+	old, nv := e.incrOldNew(items[n], delta)
 	items[n] = nv
-	return nv
+	return old
 }
 
 // incrMember 对对象属性做增减并写回；属性不存在报错。
 func (e *Evaluator) incrMember(t *ast.MemberAccess, delta int64) *object.PSObject {
 	base := e.evalValue(t.Base)
 	if base == nil || base.IsNull() {
-		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		e.throwError(lang.T(lang.MsgIncrTargetInvalid))
 		return object.Null()
 	}
 	cur, ok := base.PropValue(t.Prop)
 	if !ok {
-		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		e.throwError(lang.T(lang.MsgIncrTargetInvalid))
 		return object.Null()
 	}
-	nv := incrNumber(cur, delta)
+	old, nv := e.incrOldNew(cur, delta)
 	base.SetProp(t.Prop, nv)
-	return nv
+	return old
 }
 
 // wrapSingle 把输出列表包成单个值：0 → $null，1 → 该项，多 → 数组。

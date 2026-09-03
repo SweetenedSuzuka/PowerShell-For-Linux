@@ -290,12 +290,22 @@ func (e *Evaluator) execForEach(v *ast.ForEach) []*object.PSObject {
 
 func (e *Evaluator) execWhile(v *ast.While, doFirst bool) []*object.PSObject {
 	var out []*object.PSObject
-	for {
-		if !doFirst {
-			if !e.evalValue(v.Cond).Truthy() {
-				break
+	if doFirst {
+		// do-while 首轮不判断条件
+		o, sig := e.runStatements(v.Body.Body.Statements)
+		out = append(out, o...)
+		if sig != nil {
+			switch sig.kind {
+			case flowBreak:
+				return out
+			case flowReturn, flowExit, flowError:
+				sig.out = out // 保留 panic 前已收集的输出
+				panic(sig)
 			}
 		}
+	}
+	// 条件每轮只求值一次（含副作用的条件只生效一次）
+	for e.evalValue(v.Cond).Truthy() {
 		o, sig := e.runStatements(v.Body.Body.Statements)
 		out = append(out, o...)
 		if sig != nil {
@@ -303,15 +313,11 @@ func (e *Evaluator) execWhile(v *ast.While, doFirst bool) []*object.PSObject {
 			case flowBreak:
 				return out
 			case flowContinue:
-				// 继续判断条件
+				continue
 			case flowReturn, flowExit, flowError:
 				sig.out = out // 保留 panic 前已收集的输出
 				panic(sig)
 			}
-		}
-		doFirst = false
-		if !e.evalValue(v.Cond).Truthy() {
-			break
 		}
 	}
 	return out

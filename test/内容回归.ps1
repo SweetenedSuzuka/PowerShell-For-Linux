@@ -775,6 +775,14 @@ $results += T "截取越界抛错" ($ec3 -eq "caught")
 # 185. 过滤器内抛错向外传播
 $ec4 = try { 1,2 | ForEach-Object { throw "x" } } catch { "caught" }
 $results += T "过滤器抛错传播" ($ec4 -eq "caught")
+# 186. while 条件每轮求值一次
+$wl = 0
+while ($wl++ -lt 2) { }
+$results += T "while 单次求值" ($wl -eq 3)
+# 187. 后缀自增返回旧值
+$po = 0
+$pv = $po++
+$results += T "后缀取旧值" ((($pv -eq 0) -and ($po -eq 1)))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

@@ -869,7 +869,7 @@ Notation:
 - Type: Go implementation.
 - Alias: select.
 - Version: 5.1 and 7. Distro: any.
-- Function: picks properties or leading/trailing entries. Bash's `cut`, `head`.
+- Function: picks properties, leading/trailing entries, or skips entries. Bash's `cut`, `head`, `tail`.
 
 | Parameter | Type | Meaning |
 | :--- | :--- | :--- |
@@ -877,9 +877,10 @@ Notation:
 | `-ExpandProperty` | string | Outputs that property's own value without wrapping it in an object; array values flatten (as in `Select-Object -ExpandProperty Name`) |
 | `-First` | int | First N entries (`head -n N`) |
 | `-Last` | int | Last N entries (`tail -n N`) |
+| `-Skip` | int | Skips N entries first (`tail -n +N+1`); skips from the end when `-Last` is present; negative values error out |
 | `-Unique` | switch | Deduplicates (`sort -u`, by string, case-sensitive) |
 
-- Behavior: no input with an array at position 0 → treated by array element. `-First 0` / `-Last 0` return empty (explicit 0 is distinct from unset).
+- Behavior: no input with an array at position 0 → treated by array element. `-First 0` / `-Last 0` return empty (explicit 0 is distinct from unset). `-Unique` deduplicates after projection/expansion, by resulting values.
 
 ### Sort-Object
 - Type: Go implementation.

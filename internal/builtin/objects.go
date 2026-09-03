@@ -60,6 +60,7 @@ func cmdWhereObject(c *Context) ([]*object.PSObject, error) {
 func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 	first, firstSet := c.Args.Int("First")
 	last, lastSet := c.Args.Int("Last")
+	skip, skipSet := c.Args.Int("Skip")
 	unique := c.Args.Switch("Unique")
 	expand, _ := c.Args.Str("ExpandProperty")
 
@@ -75,6 +76,19 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 		props = nil
 	}
 	// -First/-Last 显式 0 时返回空（真 PowerShell 语义），未设置则不动
+	// -Skip 先扣除：-Last 在时从尾部扣除，否则从头部扣除（真 PowerShell 语义）；负数报错
+	if skipSet {
+		if skip < 0 {
+			return errf(c, "%s", lang.T(lang.MsgSkipNegative))
+		}
+		if skip >= int64(len(items)) {
+			items = nil
+		} else if skip > 0 && lastSet && last > 0 {
+			items = items[:len(items)-int(skip)]
+		} else if skip > 0 {
+			items = items[skip:]
+		}
+	}
 	if firstSet {
 		if first <= 0 {
 			items = nil
@@ -88,17 +102,6 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 		} else if int(last) < len(items) {
 			items = items[len(items)-int(last):]
 		}
-	}
-	if unique {
-		seen := map[string]bool{}
-		var uniq []*object.PSObject
-		for _, it := range items {
-			if !seen[it.String()] {
-				seen[it.String()] = true
-				uniq = append(uniq, it)
-			}
-		}
-		items = uniq
 	}
 	if len(props) > 0 {
 		// * 表示选全部属性
@@ -133,10 +136,9 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 			}
 			out = append(out, n)
 		}
-		return out, nil
-	}
-	// -ExpandProperty：取属性值本身输出（数组摊平），不做对象包装
-	if expand != "" {
+		items = out
+	} else if expand != "" {
+		// -ExpandProperty：取属性值本身输出（数组摊平），不做对象包装
 		var out []*object.PSObject
 		for _, it := range items {
 			if v, ok := it.PropValue(expand); ok {
@@ -145,7 +147,19 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 				}
 			}
 		}
-		return out, nil
+		items = out
+	}
+	// -Unique 最后去重：按投影/展开后的值（真 PowerShell 语义）
+	if unique {
+		seen := map[string]bool{}
+		var uniq []*object.PSObject
+		for _, it := range items {
+			if !seen[it.String()] {
+				seen[it.String()] = true
+				uniq = append(uniq, it)
+			}
+		}
+		items = uniq
 	}
 	return items, nil
 }
@@ -457,6 +471,7 @@ func init() {
 		{Name: "ExpandProperty", Type: "string"},
 		{Name: "First", Type: "int"},
 		{Name: "Last", Type: "int"},
+		{Name: "Skip", Type: "int"},
 		{Name: "Unique", Switch: true},
 	}, cmdSelectObject)
 	Register("Sort-Object", []ParamSpec{

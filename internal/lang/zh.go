@@ -96,6 +96,7 @@ var zh = map[Msg]string{
 	MsgCannotDelete:        "无法删除 %s：%v",
 	MsgCopyDestNotDir:      "复制多个源时目标 %s 必须是已存在的目录。",
 	MsgCopyNeedsRecurse:    "目录 %s 需要 -Recurse。",
+	MsgSkipNegative:        "参数 \"-Skip\" 不能为负数。",
 	MsgCannotRename:        "无法重命名 %s：%v",
 	MsgRenameDestExists:    "无法重命名为 %s，因为该项已存在。",
 	MsgWhatIfPerform:       "What if: 对目标“%s”执行 %s。",

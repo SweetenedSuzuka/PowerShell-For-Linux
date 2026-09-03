@@ -96,6 +96,7 @@ Switch style at runtime:
 	MsgCannotDelete:        "Cannot delete %s: %v",
 	MsgCopyDestNotDir:      "Destination %s must be an existing directory when copying multiple sources.",
 	MsgCopyNeedsRecurse:    "Directory %s requires -Recurse.",
+	MsgSkipNegative:        "The '-Skip' parameter cannot be negative.",
 	MsgCannotRename:        "Cannot rename %s: %v",
 	MsgRenameDestExists:    "Cannot rename to %s because it already exists.",
 	MsgWhatIfPerform:       "What if: On target '%s', run %s.",

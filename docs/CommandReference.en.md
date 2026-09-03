@@ -345,6 +345,7 @@ Full parameter and field descriptions in [Command Details](CommandDetails.en.md)
 - Difference from Windows PowerShell: the memory field is called Memory (PowerShell calls it WS); its value is physical memory in bytes, matching PowerShell's WS semantics. `-Name` matches by substring (PowerShell uses exact names or wildcards).
 Examples:
 - `ps | Select-Object -First 5` — lists the first 5 processes (roughly bash's `ps -ef | head -5`).
+- `ps | Select-Object -Skip 1 -First 5` — skips 1 and lists the next 5 processes (roughly bash's `ps -ef | tail -n +2 | head -5`).
 - `Get-Process | Where-Object ProcessName -like "*ssh*"` — picks out processes whose names contain ssh (roughly bash's `ps -ef | grep ssh`).
 
 Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Process](CommandDetails.en.md#get-process).

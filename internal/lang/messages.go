@@ -84,6 +84,7 @@ const (
 	MsgCannotDelete
 	MsgCopyDestNotDir
 	MsgCopyNeedsRecurse
+	MsgSkipNegative
 	MsgCannotRename
 	MsgRenameDestExists
 	MsgWhatIfPerform

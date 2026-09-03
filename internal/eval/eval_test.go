@@ -1094,6 +1094,32 @@ func TestSelectObjectFirstLastZero(t *testing.T) {
 	wantStr(t, `"1","2","3" | Select-Object -First 1`, "1")
 }
 
+// TestSelectObjectSkip 验证 -Skip：从头部扣除、与 -First/-Last 组合、超界置空、负数报错。
+func TestSelectObjectSkip(t *testing.T) {
+	// 跳过前 3 条
+	wantStr(t, `1..10 | Select-Object -Skip 3`, "4", "5", "6", "7", "8", "9", "10")
+	// 先跳过再取前 3 条
+	wantStr(t, `1..10 | Select-Object -Skip 2 -First 3`, "3", "4", "5")
+	// -Last 在时从尾部扣除
+	wantStr(t, `1..10 | Select-Object -Skip 2 -Last 3`, "6", "7", "8")
+	// 跳过 0 条与超界
+	wantStr(t, `(1..10 | Select-Object -Skip 0 | Measure-Object).Count`, "10")
+	wantStr(t, `(1..10 | Select-Object -Skip 20 | Measure-Object).Count`, "0")
+	// 负数报错并记录
+	wantStr(t, `1..5 | Select-Object -Skip -1; $Error.Count`, "1")
+	wantStr(t, `1..5 | Select-Object -Skip -1; if ($?) { "ok" } else { "fail" }`, "fail")
+}
+
+// TestSelectObjectUniqueLast 验证 -Unique 在投影/展开之后去重。
+func TestSelectObjectUniqueLast(t *testing.T) {
+	// 按投影后的属性值去重
+	wantStr(t, `([pscustomobject]@{n="a";m=1},[pscustomobject]@{n="a";m=2} | Select-Object -Property n -Unique | Measure-Object).Count`, "1")
+	// 按展开后的值去重
+	wantStr(t, `([pscustomobject]@{n="a"},[pscustomobject]@{n="a"},[pscustomobject]@{n="b"} | Select-Object -ExpandProperty n -Unique)`, "a", "b")
+	// -First 之后去重不变
+	wantStr(t, `(1,1,2,2,3 | Select-Object -First 2 -Unique | Measure-Object).Count`, "1")
+}
+
 // TestMeasureObjectFields 验证 Measure-Object 字段总是补全，未开统计为 $null。
 func TestMeasureObjectFields(t *testing.T) {
 	// 未开开关：Count 有值，Sum/Average 等为空

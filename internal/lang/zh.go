@@ -76,6 +76,8 @@ var zh = map[Msg]string{
 	MsgFormatIndexOut:  "格式串占位符 %q 越界（参数个数 %d）",
 	MsgIndexOutOfRange: "索引超出范围，数组下标无效。",
 	MsgIncrTargetInvalid: "增量/减量运算符不支持该目标。",
+	MsgArithmeticInvalid: "算术运算需要数字操作数。",
+	MsgSubstringOutOfRange: "子字符串起始下标或长度超出范围。",
 	MsgParamOnlyInFunc: "param 语句只能在函数或脚本中使用",
 	MsgRedirectWrite:   "无法写入重定向目标 %s：%v",
 	MsgCommandNotFound: "无法将“%s”项识别为 cmdlet、函数、脚本文件或可运行程序的名称。",

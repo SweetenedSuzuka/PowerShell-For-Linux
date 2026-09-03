@@ -388,26 +388,16 @@ func TestStderrRedirectRestoredAfterExecutePanic(t *testing.T) {
 	var errBuf bytes.Buffer
 	sess := shell.New(shell.StyleCore, io.Discard, &errBuf, strings.NewReader(""))
 	ev := New(sess, strings.NewReader(""), io.Discard, &errBuf)
-	// 脚本块内的越界调用在命令执行期上抛，穿过命令帧后由顶层收住
+	// 脚本块内的越界调用在命令执行期上抛终止错误，穿过命令帧后由顶层落定
 	res := parser.Parse(`"a" | ForEach-Object { $_.Substring(99, 5) } 2> e.txt`)
 	if res.Error != nil {
 		t.Fatalf("解析错误：%v", res.Error)
 	}
-	// 按单次执行的顶层写法回收，再断言恢复情况
-	func() {
-		defer func() {
-			if rec := recover(); rec != nil {
-				if !ev.ReportPanic(rec) {
-					panic(rec)
-				}
-			}
-		}()
-		for _, st := range res.List.Statements {
-			ev.EvalStatement(st)
-		}
-	}()
+	for _, st := range res.List.Statements {
+		ev.EvalStatement(st)
+	}
 	// 恢复已执行，报错回到原缓冲，不滞留文件
-	if !strings.Contains(errBuf.String(), "slice bounds") {
+	if !strings.Contains(errBuf.String(), "子字符串") {
 		t.Fatalf("抛错后 stderr 应归位，实际 %q", errBuf.String())
 	}
 	// 后续命令的错误继续写原缓冲，不再进文件

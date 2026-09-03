@@ -80,7 +80,7 @@ func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObj
 			// return 前的输出一并保留（与函数调用一致：& { "a"; return "b" } 输出 a、b）
 			return append(out, unwrapOutput(sig.value)...), nil
 		case flowError:
-			return nil, fmt.Errorf("%s", sig.value.String())
+			panic(sig) // 脚本块内终止错误向调用方传播（外层 try 可捕获，不在此落定）
 		}
 	}
 	return out, nil
@@ -206,6 +206,16 @@ func (e *Evaluator) reportError(err error) {
 	e.dispatchError("", err)
 }
 
+// throwError 抛出一个求值期终止错误：累积进 $Error 后以 flowError 上抛，外层 try 可捕获。
+// 调用方已判定必须报错的场景用，不经首选项分发。
+func (e *Evaluator) throwError(msg string) {
+	rec := e.Session.RecordError(msg)
+	exc := object.Object("System.RuntimeException", msg)
+	exc.AddProp("Message", object.Str(msg))
+	rec.AddProp("Exception", exc)
+	panic(&flowSignal{kind: flowError, value: rec})
+}
+
 // ReportPanic 把顶层回收到的非控制流 panic 转为非终止错误。
 // 控制流信号返回 false，交由调用方继续传播。
 func (e *Evaluator) ReportPanic(r any) bool {
@@ -259,7 +269,8 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 			if n, ok := val.AsFloat(); ok {
 				return object.Float(-n)
 			}
-			return object.Float(0)
+			e.throwError(lang.T(lang.MsgArithmeticInvalid))
+			return object.Null()
 		}
 		return val
 	case *ast.Binary:
@@ -596,15 +607,17 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			r := []rune(s)
 			if len(args) >= 2 {
 				ln, _ := args[1].AsInt()
-				if int(start)+int(ln) <= len(r) {
-					return object.Str(string(r[start : start+ln]))
+				if start < 0 || ln < 0 || int(start) > len(r) || int(start)+int(ln) > len(r) {
+					e.throwError(lang.T(lang.MsgSubstringOutOfRange))
+					return object.Null()
 				}
-				return object.Str(string(r[start:]))
+				return object.Str(string(r[start : start+ln]))
 			}
-			if int(start) <= len(r) {
-				return object.Str(string(r[start:]))
+			if start < 0 || int(start) > len(r) {
+				e.throwError(lang.T(lang.MsgSubstringOutOfRange))
+				return object.Null()
 			}
-			return object.Str("")
+			return object.Str(string(r[start:]))
 		case "replace":
 			return object.Str(strings.ReplaceAll(s, arg(0).String(), arg(1).String()))
 		case "remove":

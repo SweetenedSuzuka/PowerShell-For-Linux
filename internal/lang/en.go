@@ -76,6 +76,8 @@ Switch style at runtime:
 	MsgFormatIndexOut:  "Format placeholder %q is out of range (%d arguments)",
 	MsgIndexOutOfRange: "Index out of range: the array subscript is invalid.",
 	MsgIncrTargetInvalid: "Increment/decrement operators do not support this target.",
+	MsgArithmeticInvalid: "Arithmetic operations require numeric operands.",
+	MsgSubstringOutOfRange: "Substring start index or length is out of range.",
 	MsgParamOnlyInFunc: "The param statement is only allowed in a function or script",
 	MsgRedirectWrite:   "Cannot write to redirection target %s: %v",
 	MsgCommandNotFound: "The term '%s' is not recognized as the name of a cmdlet, function, script file, or runnable program.",

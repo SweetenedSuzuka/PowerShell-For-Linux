@@ -763,6 +763,18 @@ $results += T "哈希键自增" ($ih["k"] -eq 6)
 $results += T "多字节字符" ((("你好"[1] -eq "好") -and (("你好".Length) -eq 2) -and (("a好b".IndexOf("好")) -eq 1)))
 # 181. 多字节截取与查找
 $results += T "多字节截取" ((("你好世界".Substring(2,2) -eq "世界") -and (("你好世界".Remove(2) -eq "你好")) -and (("好好".LastIndexOf("好")) -eq 1)))
+# 182. 无效算术抛错可捕获
+$ec1 = try { "a" - "b" } catch { "caught" }
+$results += T "无效算术抛错" ($ec1 -eq "caught")
+# 183. 非数字取负抛错可捕获
+$ec2 = try { -"abc" } catch { "caught" }
+$results += T "取负抛错" ($ec2 -eq "caught")
+# 184. 越界截取抛错可捕获
+$ec3 = try { "abc".Substring(1,10) } catch { "caught" }
+$results += T "截取越界抛错" ($ec3 -eq "caught")
+# 185. 过滤器内抛错向外传播
+$ec4 = try { 1,2 | ForEach-Object { throw "x" } } catch { "caught" }
+$results += T "过滤器抛错传播" ($ec4 -eq "caught")
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

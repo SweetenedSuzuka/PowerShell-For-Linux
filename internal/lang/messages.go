@@ -60,6 +60,8 @@ const (
 	MsgFormatIndexOut
 	MsgIndexOutOfRange
 	MsgIncrTargetInvalid
+	MsgArithmeticInvalid
+	MsgSubstringOutOfRange
 	MsgParamOnlyInFunc
 	MsgRedirectWrite
 	MsgCommandNotFound

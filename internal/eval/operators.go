@@ -21,23 +21,23 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 	case "+":
 		return addOp(l, r)
 	case "-":
-		return numOp(l, r, func(a, b float64) float64 { return a - b })
+		return e.numOp(l, r, func(a, b float64) float64 { return a - b })
 	case "*":
-		return mulOp(l, r)
+		return e.mulOp(l, r)
 	case "/":
 		// 除数为零报错并置 $?=false
 		if rf, ok := r.AsFloat(); ok && rf == 0 {
 			e.reportError(fmt.Errorf("%s", lang.T(lang.MsgDivideByZero)))
 			return object.Null()
 		}
-		return numOp(l, r, func(a, b float64) float64 { return a / b })
+		return e.numOp(l, r, func(a, b float64) float64 { return a / b })
 	case "%":
 		// 模数为零同样报错
 		if rf, ok := r.AsFloat(); ok && rf == 0 {
 			e.reportError(fmt.Errorf("%s", lang.T(lang.MsgDivideByZero)))
 			return object.Null()
 		}
-		return numOp(l, r, func(a, b float64) float64 { return math.Mod(a, b) })
+		return e.numOp(l, r, func(a, b float64) float64 { return math.Mod(a, b) })
 	case "..":
 		return rangeOp(l, r)
 	case "-eq", "-ne", "-lt", "-le", "-gt", "-ge", "-like", "-notlike", "-match", "-notmatch",
@@ -89,15 +89,15 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 	case "-as":
 		return asOp(l, r)
 	case "-band":
-		return bitOp(l, r, func(a, b int64) int64 { return a & b })
+		return e.bitOp(l, r, func(a, b int64) int64 { return a & b })
 	case "-bor":
-		return bitOp(l, r, func(a, b int64) int64 { return a | b })
+		return e.bitOp(l, r, func(a, b int64) int64 { return a | b })
 	case "-bxor":
-		return bitOp(l, r, func(a, b int64) int64 { return a ^ b })
+		return e.bitOp(l, r, func(a, b int64) int64 { return a ^ b })
 	case "-shl":
-		return bitOp(l, r, func(a, b int64) int64 { return a << uint(b&63) })
+		return e.bitOp(l, r, func(a, b int64) int64 { return a << uint(b&63) })
 	case "-shr":
-		return bitOp(l, r, func(a, b int64) int64 { return a >> uint(b&63) })
+		return e.bitOp(l, r, func(a, b int64) int64 { return a >> uint(b&63) })
 	}
 	return object.Bool(false)
 }
@@ -345,19 +345,21 @@ func addOp(l, r *object.PSObject) *object.PSObject {
 	return object.Str(l.String() + r.String())
 }
 
-func numOp(l, r *object.PSObject, fn func(a, b float64) float64) *object.PSObject {
+func (e *Evaluator) numOp(l, r *object.PSObject, fn func(a, b float64) float64) *object.PSObject {
 	lf, ok := l.AsFloat()
 	if !ok {
+		e.throwError(lang.T(lang.MsgArithmeticInvalid))
 		return object.Null()
 	}
 	rf, ok2 := r.AsFloat()
 	if !ok2 {
+		e.throwError(lang.T(lang.MsgArithmeticInvalid))
 		return object.Null()
 	}
 	return object.Float(fn(lf, rf))
 }
 
-func mulOp(l, r *object.PSObject) *object.PSObject {
+func (e *Evaluator) mulOp(l, r *object.PSObject) *object.PSObject {
 	if l.TypeName == "String" {
 		if n, ok := r.AsInt(); ok && n >= 0 {
 			return object.Str(strings.Repeat(l.String(), int(n)))
@@ -370,10 +372,12 @@ func mulOp(l, r *object.PSObject) *object.PSObject {
 	}
 	lf, ok := l.AsFloat()
 	if !ok {
+		e.throwError(lang.T(lang.MsgArithmeticInvalid))
 		return object.Null()
 	}
 	rf, ok2 := r.AsFloat()
 	if !ok2 {
+		e.throwError(lang.T(lang.MsgArithmeticInvalid))
 		return object.Null()
 	}
 	return object.Float(lf * rf)
@@ -740,13 +744,15 @@ func parseDatetimeValue(v *object.PSObject) (*object.PSObject, bool) {
 	return nil, false
 }
 
-func bitOp(l, r *object.PSObject, fn func(a, b int64) int64) *object.PSObject {
+func (e *Evaluator) bitOp(l, r *object.PSObject, fn func(a, b int64) int64) *object.PSObject {
 	li, ok := l.AsInt()
 	if !ok {
+		e.throwError(lang.T(lang.MsgArithmeticInvalid))
 		return object.Null()
 	}
 	ri, ok2 := r.AsInt()
 	if !ok2 {
+		e.throwError(lang.T(lang.MsgArithmeticInvalid))
 		return object.Null()
 	}
 	return object.Int(fn(li, ri))

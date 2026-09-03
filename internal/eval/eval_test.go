@@ -1261,7 +1261,7 @@ func TestMeasureObjectFields(t *testing.T) {
 	wantStr(t, `"1","2","3" | Measure-Object | ForEach-Object { $_.Average -eq $null }`, "True")
 	// 开 Sum 有数字时 Sum 有值
 	wantStr(t, `"1","2","3" | Measure-Object -Sum | ForEach-Object { $_.Sum }`, "6")
-	// 开 Sum 遇非数字：累加统计作废，Sum 为空（对齐真 PowerShell）
+	// 开 Sum 遇非数字：累加统计作废，Sum 为空（对齐原版 PowerShell）
 	wantStr(t, `"a","b" | Measure-Object -Sum | ForEach-Object { $_.Sum -eq $null }`, "True")
 	// 混合输入(含数字与非数字)开 Sum：仍作废
 	wantStr(t, `"1","a","2" | Measure-Object -Sum | ForEach-Object { $_.Sum -eq $null }`, "True")

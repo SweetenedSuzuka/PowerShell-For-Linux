@@ -455,7 +455,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 					var item ast.Node
 					switch {
 					case p.cur().Type == TkWord && isAtCommandWord(p.cur().Text) && !p.atCommaAhead():
-						// @() 内裸字走命令位置（与真 PowerShell 一致）：无顶层逗号的单命令元素按命令解析。
+						// @() 内裸字走命令位置（与原版 PowerShell 一致）：无顶层逗号的单命令元素按命令解析。
 						item = p.parsePipelineElement()
 					case p.atCommaAhead():
 						// 含顶层逗号的多元素沿用原解析路径，保持原有行为。
@@ -652,4 +652,3 @@ func (p *Parser) parseHashtable() ast.Node {
 	}
 	return ht
 }
-

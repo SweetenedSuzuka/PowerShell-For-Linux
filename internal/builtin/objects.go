@@ -76,8 +76,8 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 		items = append(items, c.Args.Positional...)
 		props = nil
 	}
-	// -First/-Last 显式 0 时返回空（真 PowerShell 语义），未设置则不动
-	// -Skip 先扣除：-Last 在时从尾部扣除，否则从头部扣除（真 PowerShell 语义）；负数报错
+	// -First/-Last 显式 0 时返回空（原版 PowerShell 语义），未设置则不动
+	// -Skip 先扣除：-Last 在时从尾部扣除，否则从头部扣除（原版 PowerShell 语义）；负数报错
 	if skipSet {
 		if skip < 0 {
 			return errf(c, "%s", lang.T(lang.MsgSkipNegative))
@@ -150,7 +150,7 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 		}
 		items = out
 	}
-	// -Unique 最后去重：按投影/展开后的值（真 PowerShell 语义）
+	// -Unique 最后去重：按投影/展开后的值（原版 PowerShell 语义）
 	if unique {
 		seen := map[string]bool{}
 		var uniq []*object.PSObject
@@ -345,7 +345,7 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 	var nums []float64
 	// Count 按 -Property 过滤：只数能取到该属性的对象（无 -Property 时数全部）
 	matchedCount := int64(0)
-	// Sum/Average 遇非数字输入作废（对齐真 PowerShell：报错且字段置 $null）；Min/Max 仅统计数字
+	// Sum/Average 遇非数字输入作废（对齐原版 PowerShell：报错且字段置 $null）；Min/Max 仅统计数字
 	sumAvgValid := true
 	for _, o := range items {
 		var v *object.PSObject
@@ -382,7 +382,7 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 		avg = sum / float64(len(nums))
 	}
 	m := object.Object("MeasureInfo", nil)
-	// 字段按真 PowerShell 顺序补全：Count 总有，统计字段未开或无数据或遇非数字时为 $null
+	// 字段按原版 PowerShell 顺序补全：Count 总有，统计字段未开或无数据或遇非数字时为 $null
 	var sumVal, avgVal, minVal, maxVal any
 	if sumFlag && sumAvgValid && len(nums) > 0 {
 		sumVal = sum

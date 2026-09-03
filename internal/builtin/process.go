@@ -196,13 +196,15 @@ func cmdStartProcess(c *Context) ([]*object.PSObject, error) {
 	if err := cmd.Start(); err != nil {
 		return errf(c, "Start-Process : %v", err)
 	}
+	// 后台等待子进程结束并回收，已结束进程的 /proc 条目随之消失。
+	go func() { _ = cmd.Wait() }()
 	return []*object.PSObject{object.Process(cmd.Process.Pid, filepath.Base(path), 0, 0)}, nil
 }
 
 func cmdWaitProcess(c *Context) ([]*object.PSObject, error) {
 	name := firstArg(c, "Name")
 	if id, ok := c.Args.Int("Id"); ok {
-		for processAlive(int(id)) {
+		for processActive(int(id)) {
 			time.Sleep(100 * time.Millisecond)
 		}
 		return nil, nil
@@ -211,7 +213,7 @@ func cmdWaitProcess(c *Context) ([]*object.PSObject, error) {
 		return nil, nil
 	}
 	if pid, err := strconv.Atoi(name); err == nil {
-		for processAlive(pid) {
+		for processActive(pid) {
 			time.Sleep(100 * time.Millisecond)
 		}
 		return nil, nil
@@ -234,17 +236,36 @@ func cmdWaitProcess(c *Context) ([]*object.PSObject, error) {
 	return nil, nil
 }
 
-// processAlive 判断进程是否存活（Linux 用 /proc，其它平台尽力而为）。
-func processAlive(pid int) bool {
+// processActive 判断进程是否还在活动，已结束的不再等待。
+// Linux 通过 /proc 判断状态，其它平台取进程句柄后发空信号探测，成功视为还在活动，但不一定准确。
+func processActive(pid int) bool {
 	if runtime.GOOS == "linux" {
-		_, err := os.Stat(filepath.Join("/proc", strconv.Itoa(pid)))
-		return err == nil
+		return linuxProcessActive(pid)
 	}
 	p, err := os.FindProcess(pid)
 	if err != nil {
 		return false
 	}
 	return p.Signal(syscall.Signal(0)) == nil
+}
+
+// linuxProcessActive 读 /proc/PID/stat 判定是否还在活动。
+// 条目不存在、状态不可读或已结束视为不再活动。
+func linuxProcessActive(pid int) bool {
+	data, err := os.ReadFile(filepath.Join("/proc", strconv.Itoa(pid), "stat"))
+	if err != nil {
+		return false
+	}
+	s := string(data)
+	i := strings.LastIndexByte(s, ')')
+	if i < 0 {
+		return false
+	}
+	fields := strings.Fields(s[i+1:])
+	if len(fields) == 0 {
+		return false
+	}
+	return fields[0] != "Z" && fields[0] != "X"
 }
 
 // ---- 注册 ----

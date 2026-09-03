@@ -54,7 +54,7 @@ func cmdCompareObject(c *Context) ([]*object.PSObject, error) {
 		diffUnique = append(diffUnique, item{d, k, "=>"})
 	}
 	// 输出顺序：IncludeEqual 时相等项最先，然后右侧独有（=>），再左侧独有（<=）
-	// 相等项显示参考集（ref）的值，对齐真 PowerShell
+	// 相等项显示参考集（ref）的值，对齐原版 PowerShell
 	var equalOut, rightOut, leftOut []*object.PSObject
 	seen := map[string]bool{}
 	for _, d := range diffUnique {

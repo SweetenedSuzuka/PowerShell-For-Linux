@@ -183,7 +183,7 @@ func translateNamedGroups(pattern string) string {
 }
 
 // evalMatch 处理标量的 -match/-cmatch：匹配成功后把捕获组写入 $Matches。
-// 不匹配时不动 $Matches（与真 PowerShell 一致）；数组左值不经过这里。
+// 不匹配时不动 $Matches（与原版 PowerShell 一致）；数组左值不经过这里。
 func (e *Evaluator) evalMatch(op string, l, r *object.PSObject) *object.PSObject {
 	re, err := compilePattern(op, r.String())
 	if err != nil {
@@ -198,7 +198,7 @@ func (e *Evaluator) evalMatch(op string, l, r *object.PSObject) *object.PSObject
 }
 
 // buildMatches 由正则匹配结果构造 $Matches 哈希表。
-// 键规则与真 PowerShell 一致："0" 是整体匹配；命名组用组名；
+// 键规则与原版 PowerShell 一致："0" 是整体匹配；命名组用组名；
 // 未命名组按其在未命名组中的序号（从 1 起）作键；未参与的组不写入。
 func buildMatches(re *regexp.Regexp, s string, idx []int) *object.PSObject {
 	names := re.SubexpNames()

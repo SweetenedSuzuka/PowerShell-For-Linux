@@ -608,6 +608,27 @@ func TestErrorActionOutput(t *testing.T) {
 	}
 }
 
+// TestPreferenceMigration 验证求值层错误同样受首选项分发：Stop 转终止可捕获，SilentlyContinue 只记不显，默认行为不变。
+func TestPreferenceMigration(t *testing.T) {
+	// 除零：Stop 可捕获且只记一次
+	wantStr(t, `$ErrorActionPreference = 'Stop'; try { 5/0 } catch { "caught" }; $Error.Count`, "caught", "1")
+	// 除零：SilentlyContinue 记录
+	wantStr(t, `$ErrorActionPreference = 'SilentlyContinue'; 5/0; $Error.Count`, "1")
+	// 类型转换失败：Stop 可捕获
+	wantStr(t, `$ErrorActionPreference = 'Stop'; try { [int]"abc" } catch { "caught" }; $Error.Count`, "caught", "1")
+	// 静态成员缺失：Stop 可捕获
+	wantStr(t, `$ErrorActionPreference = 'Stop'; try { [math]::NoSuchMember() } catch { "caught" }; $Error.Count`, "caught", "1")
+	// 函数形参转换失败：Stop 可捕获
+	wantStr(t, `function FM([int]$k) { "never" }; $ErrorActionPreference = 'Stop'; try { FM 'bad' } catch { "caught" }; $Error.Count`, "caught", "1")
+	// 读不到的脚本：Stop 可捕获
+	wantStr(t, `$ErrorActionPreference = 'Stop'; try { ./不存在QS1.ps1 } catch { "caught" }; $Error.Count`, "caught", "1")
+	// 默认行为不变：继续执行
+	wantStr(t, `$x = 1/0; "after"`, "after")
+	// 未捕获的终止错误只记一次
+	wantStr(t, `throw "solo-boom"; $Error.Count`, "1")
+	wantStr(t, `$ErrorActionPreference = 'Stop'; 5/0; $Error.Count`, "1")
+}
+
 // TestAssignSuccessFlag 验证赋值语句的 $?：右侧先求值（读到旧状态），无新错误才置 true。
 func TestAssignSuccessFlag(t *testing.T) {
 	// 右侧读 $? 拿到上一条语句的状态

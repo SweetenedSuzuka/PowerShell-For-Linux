@@ -692,6 +692,20 @@ Get-Item 不存在EA123
 $aqCatch = try { throw "aq-x" } catch { "got" }
 if ($?) { $aqCatchOk = "ok" } else { $aqCatchOk = "fail" }
 $results += T "捕获后赋值置真" (($aqCatch -eq "got") -and ($aqCatchOk -eq "ok"))
+# 160. 首选项 Stop 让除零可捕获
+$em0 = $Error.Count
+$ErrorActionPreference = 'Stop'
+$emDiv = try { 5/0; "no" } catch { "yes" }
+$results += T "首选项 Stop 除零可捕获" (($emDiv -eq "yes") -and ($Error.Count -eq $em0 + 1))
+# 161. 首选项 Stop 让类型转换可捕获
+$em1 = $Error.Count
+$emCast = try { [int]"abc"; "no" } catch { "yes" }
+$results += T "首选项 Stop 转换可捕获" (($emCast -eq "yes") -and ($Error.Count -eq $em1 + 1))
+# 162. 默认除零继续
+$ErrorActionPreference = 'Continue'
+$em2 = $Error.Count
+$emDef = 1/0
+$results += T "默认除零继续" (($emDef -eq $null) -and ($Error.Count -eq $em2 + 1))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

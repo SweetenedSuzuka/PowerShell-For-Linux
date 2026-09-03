@@ -201,6 +201,43 @@ func (e *Evaluator) writeError(err error) {
 	e.Session.LastSuccess = false
 }
 
+// printError 把未捕获的终止错误写到 stderr 并标记 $? 为 false。
+// 错误记录已在抛出时累积，这里不再重复记录。
+func (e *Evaluator) printError(err error) {
+	if err == nil {
+		return
+	}
+	fmt.Fprintf(e.hostErr, "%s : %s\n", e.Session.StyleName(), err.Error())
+	e.Session.LastSuccess = false
+}
+
+// dispatchError 按生效动作分发错误。
+// Stop 与 Inquire 记录后转为终止错误上抛，其余记为非终止错误。
+func (e *Evaluator) dispatchError(action string, err error) {
+	if err == nil {
+		return
+	}
+	switch builtin.ResolveErrorAction(action, e.LookupVar) {
+	case "stop", "inquire":
+		rec := e.Session.RecordError(err.Error())
+		e.Session.LastSuccess = false
+		panic(&flowSignal{kind: flowError, value: rec})
+	case "silentlycontinue":
+		e.Session.RecordError(err.Error())
+		e.Session.LastSuccess = false
+	case "ignore":
+		e.Session.LastSuccess = false
+	default:
+		e.writeError(err)
+	}
+}
+
+// reportError 分发求值层错误。
+// 求值层没有 -ErrorAction 上下文，只读 $ErrorActionPreference。
+func (e *Evaluator) reportError(err error) {
+	e.dispatchError("", err)
+}
+
 // ---- 表达式求值 ----
 
 func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
@@ -304,7 +341,7 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		if val, ok := e.staticMember(v.TypeName, v.Name, argv); ok {
 			return val
 		}
-		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgStaticMemberNotFound, strings.ToLower(strings.TrimPrefix(strings.ToLower(v.TypeName), "system.")), v.Name)))
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgStaticMemberNotFound, strings.ToLower(strings.TrimPrefix(strings.ToLower(v.TypeName), "system.")), v.Name)))
 		return object.Null()
 	case *ast.MemberAccess:
 		base := e.evalValue(v.Base)
@@ -663,7 +700,7 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			if _, ok := base.PropValue(shell.ErrorViewMarker); ok {
 				if idx, ok := arg(0).AsInt(); ok {
 					if !e.Session.RemoveErrorRecord(idx) {
-						e.writeError(fmt.Errorf("%s", lang.T(lang.MsgIndexOutOfRange)))
+						e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIndexOutOfRange)))
 					}
 					return object.Null()
 				}
@@ -695,7 +732,7 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			}
 		}
 	}
-	// 未注册 ToString 的类型走通用兜底：返回显示字符串
+	// 未注册 ToString 的类型返回显示字符串。
 	if strings.EqualFold(m.Name, "tostring") && len(args) == 0 {
 		return object.Str(base.String())
 	}
@@ -846,14 +883,14 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 	case "/":
 		// 除数为零报错并置 $?=false
 		if rf, ok := r.AsFloat(); ok && rf == 0 {
-			e.writeError(fmt.Errorf("%s", lang.T(lang.MsgDivideByZero)))
+			e.reportError(fmt.Errorf("%s", lang.T(lang.MsgDivideByZero)))
 			return object.Null()
 		}
 		return numOp(l, r, func(a, b float64) float64 { return a / b })
 	case "%":
 		// 模数为零同样报错
 		if rf, ok := r.AsFloat(); ok && rf == 0 {
-			e.writeError(fmt.Errorf("%s", lang.T(lang.MsgDivideByZero)))
+			e.reportError(fmt.Errorf("%s", lang.T(lang.MsgDivideByZero)))
 			return object.Null()
 		}
 		return numOp(l, r, func(a, b float64) float64 { return math.Mod(a, b) })
@@ -1255,7 +1292,7 @@ func (e *Evaluator) formatOp(f, args *object.PSObject) *object.PSObject {
 		}
 		idx, err := strconv.Atoi(strings.TrimSpace(alignPart))
 		if err != nil || idx < 0 || idx >= len(items) {
-			e.writeError(fmt.Errorf("%s", lang.T(lang.MsgFormatIndexOut, inner, len(items))))
+			e.reportError(fmt.Errorf("%s", lang.T(lang.MsgFormatIndexOut, inner, len(items))))
 			return object.Null()
 		}
 		s := formatArg(items[idx], spec)
@@ -1504,7 +1541,7 @@ func (e *Evaluator) convertValue(v *object.PSObject, typeName string) *object.PS
 func (e *Evaluator) convertScalar(v *object.PSObject, target string) *object.PSObject {
 	out, err := convertTarget(v, target)
 	if err != nil {
-		e.writeError(err)
+		e.reportError(err)
 		return object.Null()
 	}
 	return out

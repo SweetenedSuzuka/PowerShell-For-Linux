@@ -1401,6 +1401,7 @@ Notation:
 ### Preference variable $ErrorActionPreference
 - Reads as `Continue` when never assigned; assignment accepts only `Continue`, `SilentlyContinue`, `Stop`, `Inquire`, `Ignore`, and invalid values error out without taking effect.
 - Commands without an explicit `-ErrorAction` handle errors per its value; an explicit `-ErrorAction` overrides it. Assignment inside a function applies locally.
+- Errors from expression evaluation, parameter binding, and script loading have no `-ErrorAction`; they consult only the preference.
 
 ### Format operator -f
 - `"template {0} {1}" -f value1, value2`: fills placeholders from later values per .NET-style format strings, spiritually bash's printf.

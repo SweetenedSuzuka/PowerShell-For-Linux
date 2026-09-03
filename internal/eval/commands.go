@@ -45,7 +45,7 @@ func (e *Evaluator) EvalStatements(list *ast.StatementList) []*object.PSObject {
 			e.ExitRequested = true
 			e.ExitCode = sig.code
 		case flowError:
-			e.writeError(fmt.Errorf("%s", sig.value.String()))
+			e.printError(fmt.Errorf("%s", sig.value.String()))
 		case flowBreak, flowContinue:
 			// 无所属循环的 break/continue 终止当前语句序列（与 PowerShell 一致），已产生的输出保留
 		}
@@ -62,7 +62,7 @@ func (e *Evaluator) EvalStatement(st ast.Node) []*object.PSObject {
 			e.ExitRequested = true
 			e.ExitCode = sig.code
 		case flowError:
-			e.writeError(fmt.Errorf("%s", sig.value.String()))
+			e.printError(fmt.Errorf("%s", sig.value.String()))
 		case flowBreak, flowContinue:
 			// 无所属循环的 break/continue 只终止本条语句（与 PowerShell 一致）
 		}
@@ -121,19 +121,13 @@ func flattenOutput(o *object.PSObject) []*object.PSObject {
 }
 
 // builtinError 处理内置 cmdlet 返回的错误。
-// 生效动作为 Stop 或 Inquire 时转为终止错误上抛，其余记为非终止错误。
+// errf 返回的终止错误直接上抛，其余按显式动作与首选项分发。
 func (e *Evaluator) builtinError(args *builtin.BoundArgs, err error) {
 	var term *builtin.TerminatingError
 	if errors.As(err, &term) && term.Record != nil {
 		panic(&flowSignal{kind: flowError, value: term.Record})
 	}
-	switch builtin.ResolveErrorAction(args.ErrorAction, e.LookupVar) {
-	case "stop", "inquire":
-		rec := e.Session.RecordError(err.Error())
-		e.Session.LastSuccess = false
-		panic(&flowSignal{kind: flowError, value: rec})
-	}
-	e.writeError(err)
+	e.dispatchError(args.ErrorAction, err)
 }
 
 // execCommand 调度一条命令：别名 → 函数 → 内置 → 脚本 → 外部。
@@ -158,7 +152,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		spec := builtin.Spec(name)
 		args, err := builtin.Bind(e, cmd, spec, nil)
 		if err != nil {
-			e.writeError(err)
+			e.reportError(err)
 			return nil
 		}
 		// 参数绑定后才定 $?：绑定过程可能读取 $?，不能被新命令提前覆盖
@@ -237,7 +231,7 @@ func (e *Evaluator) redirTargetPath(node ast.Node) (string, bool) {
 	}
 	np, err := shell.ResolvePath(e.Session.Cwd, target.String())
 	if err != nil {
-		e.writeError(err)
+		e.reportError(err)
 		return "", false
 	}
 	return np, true
@@ -289,7 +283,7 @@ func (e *Evaluator) applyRedirects(cmd *ast.Command, out []*object.PSObject) []*
 		}
 		f, err := os.OpenFile(target, flags, 0o644)
 		if err != nil {
-			e.writeError(fmt.Errorf("%s", lang.T(lang.MsgRedirectWrite, target, err)))
+			e.reportError(fmt.Errorf("%s", lang.T(lang.MsgRedirectWrite, target, err)))
 			continue
 		}
 		_, _ = f.WriteString(buf.String())
@@ -479,7 +473,7 @@ func (e *Evaluator) execInvoke(cmd *ast.Command, input []*object.PSObject, isLas
 		rest = append(rest, slot)
 	}
 	if targetIdx < 0 {
-		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgInvokeTargetMissing)))
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgInvokeTargetMissing)))
 		return nil
 	}
 	target := e.evalValue(cmd.Positional[targetIdx])
@@ -706,20 +700,21 @@ func (e *Evaluator) RunScriptFileStreaming(path string, args []*object.PSObject,
 func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(objs []*object.PSObject)) []*object.PSObject {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgScriptReadFail, path, err)))
+		e.Session.LastExit = 1
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgScriptReadFail, path, err)))
 		return nil
 	}
 	res := parser.Parse(string(data))
 	if res.Error != nil {
 		// 脚本没有执行任何语句视作失败：置失败退出码，让 -File 与脚本调用方凭退出码感知
 		e.Session.LastExit = 1
-		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgScriptParseFail, path, res.Error)))
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgScriptParseFail, path, res.Error)))
 		return nil
 	}
 	// 截断的脚本在此拒绝执行，前半段语句不会运行
 	if res.Incomplete {
 		e.Session.LastExit = 1
-		e.writeError(fmt.Errorf("%s : %s", path, lang.T(lang.MsgIncompleteInput)))
+		e.reportError(fmt.Errorf("%s : %s", path, lang.T(lang.MsgIncompleteInput)))
 		return nil
 	}
 	abs, _ := filepath.Abs(path)
@@ -807,10 +802,10 @@ func (e *Evaluator) bindParamValue(p ast.FunctionParam, v *object.PSObject) (*ob
 // writeBindError 写参数绑定错误：类型未注册报"无法找到类型"，否则报实参转换失败。
 func (e *Evaluator) writeBindError(err error, v *object.PSObject, param, target string) {
 	if errors.Is(err, errTypeUnknown) {
-		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgTypeUnknown, target)))
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgTypeUnknown, target)))
 		return
 	}
-	e.writeError(fmt.Errorf("%s", lang.T(lang.MsgBindConvertFail, v.String(), param, target)))
+	e.reportError(fmt.Errorf("%s", lang.T(lang.MsgBindConvertFail, v.String(), param, target)))
 }
 
 // bindScriptParams 按 param() 声明把脚本实参绑到当前作用域（脚本不推独立作用域，变量可见性等价调用点：控制台调用留在会话，函数内调用随函数销毁）。

@@ -66,7 +66,7 @@ func (e *Evaluator) execStatement(n ast.Node) []*object.PSObject {
 		return nil
 	case *ast.ParamBlock:
 		// 脚本/函数体开头的 param() 已被解析器提取；这里说明出现在别处的 param 不合法
-		e.writeError(fmt.Errorf("%s", lang.T(lang.MsgParamOnlyInFunc)))
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgParamOnlyInFunc)))
 		return nil
 	case *ast.Break:
 		panic(&flowSignal{kind: flowBreak})
@@ -210,7 +210,7 @@ func (e *Evaluator) execAssign(a *ast.Assign) {
 			val = e.binaryOp(a.Op[:len(a.Op)-1], cur, val)
 		}
 		if err := e.setVar(a.Target, a.Scope, val); err != nil {
-			e.writeError(err)
+			e.reportError(err)
 		}
 	}
 	if e.Session.ErrorSeq == seq {

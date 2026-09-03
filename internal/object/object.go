@@ -6,7 +6,6 @@ package object
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -662,9 +661,4 @@ func classContains(class string, c byte) bool {
 		}
 	}
 	return false
-}
-
-// WriteFormatted 把对象流渲染到 w（管道终点默认输出）。
-func WriteFormatted(w io.Writer, objs []*PSObject) error {
-	return FormatOutput(w, objs)
 }

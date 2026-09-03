@@ -640,7 +640,43 @@ $results += T "ErrorAction 无效值报错" (($Error.Count -eq $ea4 + 1))
 $ea5 = $Error.Count
 $eaIn = try { Get-Item 不存在EA123 -ErrorAction Inquire; "no" } catch { "yes" }
 $results += T "ErrorAction Inquire 终止" (($eaIn -eq "yes") -and ($Error.Count -eq $ea5 + 1))
+# 148. $ErrorActionPreference 默认值
+$results += T "ErrorActionPreference 默认值" ($ErrorActionPreference -eq "Continue")
+# 149. 首选项 SilentlyContinue 记录
+$ep0 = $Error.Count
+$ErrorActionPreference = 'SilentlyContinue'
+Get-Item 不存在EA123
+$results += T "首选项 SilentlyContinue 记录" (($Error.Count -eq $ep0 + 1))
+# 150. 首选项 Stop 可捕获
+$ep1 = $Error.Count
+$ErrorActionPreference = 'Stop'
+$epCaught = try { Get-Item 不存在EA123; "no" } catch { "yes" }
+$results += T "首选项 Stop 可捕获" (($epCaught -eq "yes") -and ($Error.Count -eq $ep1 + 1))
+# 151. 显式参数覆盖首选项
+$ep2 = $Error.Count
+Get-Item 不存在EA123 -ErrorAction Continue
+$results += T "显式参数覆盖首选项" (($Error.Count -eq $ep2 + 1))
+# 152. 函数内首选项只在局部生效
+$ErrorActionPreference = 'Continue'
+function PrefScope { $ErrorActionPreference = 'Stop'; try { Get-Item 不存在EA123 } catch { "caught" } }
+$epScope = PrefScope
+$results += T "首选项函数局部生效" (($epScope -eq "caught") -and ($ErrorActionPreference -eq "Continue"))
+# 153. 无效首选项赋值报错且不生效
+$ep3 = $Error.Count
+$ErrorActionPreference = 'Bogus'
+$results += T "首选项无效值报错" (($Error.Count -eq $ep3 + 1) -and ($ErrorActionPreference -eq "Continue"))
+# 154. 首选项名大小写混写仍生效
+$ErrorActionPreference = 'Continue'
+$erroractionpreference = 'Stop'
+$epCase = try { Get-Item 不存在EA123; "no" } catch { "yes" }
+$results += T "首选项大小写写入" ($epCase -eq "yes")
+$ErrorActionPreference = 'Continue'
+# 155. 空值恢复默认
+$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = $null
+$results += T "首选项空值恢复默认" ($ErrorActionPreference -eq "Continue")
 $Error.Clear()
+$ErrorActionPreference = 'Continue'
 
 # == 结尾统计 ==
 Write-Output ""

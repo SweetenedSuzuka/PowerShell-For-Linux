@@ -123,13 +123,20 @@ type TerminatingError struct {
 // Error 返回错误文本。
 func (e *TerminatingError) Error() string { return e.Record.String() }
 
-// parseErrorAction 把 -ErrorAction 的取值归一化为小写，未知取值返回 false。
-func parseErrorAction(s string) (string, bool) {
-	switch strings.ToLower(s) {
-	case "continue", "silentlycontinue", "stop", "inquire", "ignore":
-		return strings.ToLower(s), true
+// ResolveErrorAction 取本次调用生效的错误动作。
+// 显式 -ErrorAction 优先，其次作用域可见的 $ErrorActionPreference，未设置时按 Continue 处理。
+func ResolveErrorAction(explicit string, lookup func(string) *object.PSObject) string {
+	if a, ok := shell.ParseErrorAction(explicit); ok {
+		return a
 	}
-	return "", false
+	if lookup != nil {
+		if v := lookup("ErrorActionPreference"); v != nil && !v.IsNull() {
+			if a, ok := shell.ParseErrorAction(v.String()); ok {
+				return a
+			}
+		}
+	}
+	return "continue"
 }
 
 // errf 按本次调用的 -ErrorAction 分发错误。
@@ -137,7 +144,7 @@ func parseErrorAction(s string) (string, bool) {
 // Stop 与 Inquire 记录后转为终止错误（Inquire 在非交互场景按终止错误处理）。
 func errf(c *Context, format string, args ...any) ([]*object.PSObject, error) {
 	msg := fmt.Sprintf(format, args...)
-	switch strings.ToLower(c.Args.ErrorAction) {
+	switch ResolveErrorAction(c.Args.ErrorAction, c.Engine.LookupVar) {
 	case "silentlycontinue":
 		c.Shell.RecordError(msg)
 		c.Shell.LastSuccess = false

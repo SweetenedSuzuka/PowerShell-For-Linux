@@ -126,6 +126,15 @@ const maxErrorRecords = 256
 // ErrorViewMarker 标记一个数组对象是 $Error 的动态视图（eval 层的 Clear/RemoveAt 据此落到记录本体）。
 const ErrorViewMarker = "__ErrorView"
 
+// ParseErrorAction 把错误动作取值归一化为小写，未知取值返回 false。
+func ParseErrorAction(s string) (string, bool) {
+	switch strings.ToLower(s) {
+	case "continue", "silentlycontinue", "stop", "inquire", "ignore":
+		return strings.ToLower(s), true
+	}
+	return "", false
+}
+
 // RecordError 构造一条错误记录并累积进会话，最新在前；超出容量时丢弃最旧的。
 func (s *Session) RecordError(msg string) *object.PSObject {
 	rec := object.Error(msg)
@@ -150,10 +159,22 @@ func (s *Session) RemoveErrorRecord(idx int64) bool {
 	return true
 }
 
-// SetVar 设置变量；只读自动变量拒绝修改。
+// SetVar 设置变量；只读自动变量拒绝修改，$ErrorActionPreference 只接受有效取值。
 func (s *Session) SetVar(name string, val *object.PSObject) error {
 	if IsReadOnlyVar(name) {
 		return fmt.Errorf("%s", lang.T(lang.MsgReadonlyVar, name))
+	}
+	if strings.EqualFold(name, "ErrorActionPreference") {
+		// 首选项名按规范大小写存储。
+		// 空值视为恢复默认。
+		name = "ErrorActionPreference"
+		if val.IsNull() {
+			delete(s.Vars, name)
+			return nil
+		}
+		if _, ok := ParseErrorAction(val.String()); !ok {
+			return fmt.Errorf("%s", lang.T(lang.MsgErrorActionPreferenceInvalid, val.String()))
+		}
 	}
 	s.Vars[name] = val
 	return nil
@@ -190,6 +211,12 @@ func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 		// 标记为 $Error 的动态视图：Clear/RemoveAt 等方法经 Session 落到 ErrorRecords 本体
 		arr.AddProp(ErrorViewMarker, object.Str("1"))
 		return arr, true
+	case "ErrorActionPreference":
+		// 首选项变量：未赋值或已清空时按 Continue 处理
+		if v, ok := s.Vars[name]; ok && !v.IsNull() {
+			return v, true
+		}
+		return object.Str("Continue"), true
 	case "PSCommandPath":
 		if s.PSCommandPath != "" {
 			return object.Str(s.PSCommandPath), true
@@ -330,7 +357,7 @@ func (s *Session) AllVarNames() []string {
 	for n := range s.Vars {
 		set[n] = true
 	}
-	for _, n := range []string{"PWD", "HOME", "PID", "PSVersionTable", "LASTEXITCODE", "?", "Matches", "PSCommandPath", "args", "Host", "PSEdition", "IsLinux", "IsWindows", "IsMacOS", "PSHOME", "OFS"} {
+	for _, n := range []string{"PWD", "HOME", "PID", "PSVersionTable", "LASTEXITCODE", "?", "Matches", "PSCommandPath", "args", "Host", "PSEdition", "IsLinux", "IsWindows", "IsMacOS", "PSHOME", "OFS", "ErrorActionPreference"} {
 		set[n] = true
 	}
 	var names []string

@@ -118,6 +118,11 @@ func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObj
 	return out, nil
 }
 
+// LookupVar 按名字查变量，供内置 cmdlet 读取首选项这类作用域敏感变量。
+func (e *Evaluator) LookupVar(name string) *object.PSObject {
+	return e.lookupVar(name, "")
+}
+
 // ---- 作用域与变量 ----
 
 func (e *Evaluator) pushScope() {
@@ -160,6 +165,22 @@ func (e *Evaluator) lookupVar(name, scope string) *object.PSObject {
 func (e *Evaluator) setVar(name, scope string, val *object.PSObject) error {
 	if shell.IsReadOnlyVar(name) {
 		return fmt.Errorf("%s", lang.T(lang.MsgReadonlyVar, name))
+	}
+	if strings.EqualFold(name, "ErrorActionPreference") {
+		// 首选项名按规范大小写存储。
+		// 空值视为恢复默认。
+		name = "ErrorActionPreference"
+		if val.IsNull() {
+			if scope == "script" || scope == "global" {
+				delete(e.scopes[0], name)
+			} else {
+				delete(e.scopes[len(e.scopes)-1], name)
+			}
+			return nil
+		}
+		if _, ok := shell.ParseErrorAction(val.String()); !ok {
+			return fmt.Errorf("%s", lang.T(lang.MsgErrorActionPreferenceInvalid, val.String()))
+		}
 	}
 	if scope == "script" || scope == "global" {
 		e.scopes[0][name] = val

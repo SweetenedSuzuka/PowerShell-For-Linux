@@ -121,13 +121,14 @@ func flattenOutput(o *object.PSObject) []*object.PSObject {
 }
 
 // builtinError 处理内置 cmdlet 返回的错误。
-// -ErrorAction Stop 转为终止错误上抛，其余记为非终止错误。
+// 生效动作为 Stop 或 Inquire 时转为终止错误上抛，其余记为非终止错误。
 func (e *Evaluator) builtinError(args *builtin.BoundArgs, err error) {
 	var term *builtin.TerminatingError
 	if errors.As(err, &term) && term.Record != nil {
 		panic(&flowSignal{kind: flowError, value: term.Record})
 	}
-	if strings.EqualFold(args.ErrorAction, "stop") {
+	switch builtin.ResolveErrorAction(args.ErrorAction, e.LookupVar) {
+	case "stop", "inquire":
 		rec := e.Session.RecordError(err.Error())
 		e.Session.LastSuccess = false
 		panic(&flowSignal{kind: flowError, value: rec})

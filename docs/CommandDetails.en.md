@@ -1398,6 +1398,10 @@ Notation:
 - `$Error[0].Message` reads the message text of the most recent error.
 - No bash equivalent; conceptually close to collecting every command's stderr into an inspectable list.
 
+### Preference variable $ErrorActionPreference
+- Reads as `Continue` when never assigned; assignment accepts only `Continue`, `SilentlyContinue`, `Stop`, `Inquire`, `Ignore`, and invalid values error out without taking effect.
+- Commands without an explicit `-ErrorAction` handle errors per its value; an explicit `-ErrorAction` overrides it. Assignment inside a function applies locally.
+
 ### Format operator -f
 - `"template {0} {1}" -f value1, value2`: fills placeholders from later values per .NET-style format strings, spiritually bash's printf.
 - Supports `{N}`, `{N,width}` (space-aligned, negative width left-aligns), `{N:spec}`; spec accepts `D`/`Dk` (decimal, k digits zero-padded), `X`/`x` (hexadecimal), `Fk` (k decimal places), `Nk` (thousands separators + k decimal places); unknown specs degrade to the plain string.

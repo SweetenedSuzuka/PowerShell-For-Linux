@@ -70,6 +70,7 @@ const (
 	MsgBindNoParam
 	MsgBindSwitchNoValue
 	MsgBindErrorActionInvalid
+	MsgErrorActionPreferenceInvalid
 	MsgWriteErrorPrefix
 	MsgWriteVerbosePrefix
 	MsgWriteWarningPrefix

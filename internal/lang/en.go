@@ -82,6 +82,7 @@ Switch style at runtime:
 	MsgBindNoParam:            "A parameter cannot be found that matches parameter name '-%s'.",
 	MsgBindSwitchNoValue:      "Missing an argument for parameter '-%s'.",
 	MsgBindErrorActionInvalid: "The value \"%s\" for parameter '-ErrorAction' is invalid. Valid values are Continue, SilentlyContinue, Stop, Inquire, Ignore.",
+	MsgErrorActionPreferenceInvalid: "The value \"%s\" for variable '$ErrorActionPreference' is invalid. Valid values are Continue, SilentlyContinue, Stop, Inquire, Ignore.",
 	MsgWriteErrorPrefix:    "ERROR:",
 	MsgWriteVerbosePrefix:  "VERBOSE:",
 	MsgWriteWarningPrefix:  "WARNING:",

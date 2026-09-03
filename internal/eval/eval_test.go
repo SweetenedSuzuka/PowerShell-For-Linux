@@ -603,6 +603,35 @@ func TestErrorActionOutput(t *testing.T) {
 	if out := runWithStderr(`Get-Item 不存在XYZ123 -ErrorAction Ignore`); out != "" {
 		t.Errorf("Ignore 不应写 stderr，得到 %q", out)
 	}
+	if out := runWithStderr(`$ErrorActionPreference = 'SilentlyContinue'; Get-Item 不存在XYZ123`); out != "" {
+		t.Errorf("首选项 SilentlyContinue 不应写 stderr，得到 %q", out)
+	}
+}
+
+// TestErrorActionPreference 验证 $ErrorActionPreference：默认值、首选项分发、显式参数覆盖、函数内局部生效、无效赋值报错且不生效。
+func TestErrorActionPreference(t *testing.T) {
+	// 未赋值时读到默认值
+	wantStr(t, `$ErrorActionPreference`, "Continue")
+	// 首选项 SilentlyContinue：记录但不显示
+	wantStr(t, `$ErrorActionPreference = 'SilentlyContinue'; Get-Item 不存在XYZ123; $Error.Count`, "1")
+	// 首选项 Stop：转为终止错误，可捕获且只记一次
+	wantStr(t, `$ErrorActionPreference = 'Stop'; try { Get-Item 不存在XYZ123 } catch { "caught" }; $Error.Count`, "caught", "1")
+	// 显式 -ErrorAction 覆盖首选项
+	wantStr(t, `$ErrorActionPreference = 'Stop'; Get-Item 不存在XYZ123 -ErrorAction Continue; $Error.Count`, "1")
+	// 函数内赋值只在局部生效
+	wantStr(t, `function Pref { $ErrorActionPreference = 'Stop'; try { Get-Item 不存在XYZ123 } catch { "caught" } }; Pref; $ErrorActionPreference`, "caught", "Continue")
+	// 无效赋值报错且不生效
+	wantStr(t, `$ErrorActionPreference = 'Bogus'; $Error.Count`, "1")
+	wantStr(t, `$ErrorActionPreference = 'Bogus'; $ErrorActionPreference`, "Continue")
+	// 大小写混写仍落到同一首选项
+	wantStr(t, `$erroractionpreference = 'Stop'; try { Get-Item 不存在XYZ123 } catch { "caught" }`, "caught")
+	// 空值恢复默认
+	wantStr(t, `$ErrorActionPreference = 'Stop'; $ErrorActionPreference = $null; $ErrorActionPreference`, "Continue")
+	// Ignore 同样置失败
+	wantStr(t, `Get-Item 不存在XYZ123 -ErrorAction Ignore; if ($?) { "ok" } else { "fail" }`, "fail")
+	// Set-Variable 与 Clear-Variable 使用同样的校验
+	wantStr(t, `Set-Variable -Name ErrorActionPreference -Value 'Bogus'; $Error.Count`, "1")
+	wantStr(t, `$ErrorActionPreference = 'Stop'; Clear-Variable ErrorActionPreference; $ErrorActionPreference`, "Continue")
 }
 
 // TestTryCatchFinally 验证 try/catch/finally + throw：

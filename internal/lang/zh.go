@@ -82,6 +82,7 @@ var zh = map[Msg]string{
 	MsgBindNoParam:            "找不到与参数名称 \"-%s\" 匹配的参数。",
 	MsgBindSwitchNoValue:      "参数 \"-%s\" 缺少值。",
 	MsgBindErrorActionInvalid: "参数 \"-ErrorAction\" 的值 \"%s\" 无效，有效值是 Continue、SilentlyContinue、Stop、Inquire、Ignore。",
+	MsgErrorActionPreferenceInvalid: "变量 \"$ErrorActionPreference\" 的值 \"%s\" 无效，有效值是 Continue、SilentlyContinue、Stop、Inquire、Ignore。",
 	MsgWriteErrorPrefix:    "错误:",
 	MsgWriteVerbosePrefix:  "详细:",
 	MsgWriteWarningPrefix:  "警告:",

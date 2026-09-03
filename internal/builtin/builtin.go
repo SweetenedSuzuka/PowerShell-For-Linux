@@ -26,6 +26,8 @@ type Engine interface {
 	EvalFilterExpr(node ast.Node, obj *object.PSObject) (bool, error)
 	// RunSource 解析并执行一段源码，返回输出对象（Invoke-Expression / Invoke-History 用）。
 	RunSource(src string) ([]*object.PSObject, error)
+	// LookupVar 按 PowerShell 默认读语义查变量（自顶向下查作用域，再查自动变量）。
+	LookupVar(name string) *object.PSObject
 }
 
 // Context 是内置 cmdlet 的调用上下文。
@@ -221,7 +223,7 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 				// 取值型常见参数的值被参数消费：-ErrorAction 记入绑定供错误分发，其余直接忽略。
 				// WhatIf/Confirm 记录为开关供 cmdlet 读取；-WhatIf:$false 的内联布尔照常生效。
 				if strings.EqualFold(slot.Name, "erroraction") {
-					action, ok := parseErrorAction(val.String())
+					action, ok := shell.ParseErrorAction(val.String())
 					if !ok {
 						return nil, fmt.Errorf("%s", lang.T(lang.MsgBindErrorActionInvalid, val.String()))
 					}

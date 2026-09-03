@@ -115,6 +115,7 @@ func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 
 // execTry 执行 try/catch/finally：
 // body 出错（flowError）→ 找第一个匹配的 catch（无类型全捕，[Exception]/[System.Exception] 基类全捕，其余按异常类型名精确匹配）→ 把错误记录临时绑到 $_（块结束恢复，普通赋值穿透外层）执行 catch 体；
+// 错误被接住置 $? 为 true（catch 体内再出错仍置 false）；
 // finally 无论是否出错、是否被捕获都恒执行；catch/finally 自身的信号优先，未捕获的错误在 finally 之后原样上抛（外层 try 可继续捕获）。
 func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 	var out []*object.PSObject
@@ -127,6 +128,8 @@ func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 			if !catchMatches(cc.TypeName, sig.value) {
 				continue
 			}
+			// 错误已被接住：先置成功，catch 体内再出错仍会置失败。
+			e.Session.LastSuccess = true
 			// catch 块不推独立作用域：普通变量赋值穿透，只有 $_ 是临时绑定，块结束恢复原值。
 			sc := e.scopes[len(e.scopes)-1]
 			oldUS, hadUS := sc["_"]
@@ -185,8 +188,9 @@ func catchMatches(typeName string, errObj *object.PSObject) bool {
 
 // execAssign 处理赋值（含 $env: 与复合赋值）。
 // 右侧若是语句节点（$x = switch ... 等），执行语句并把输出包成单个值。
+// 右侧先求值再定 $?：求值中读 $? 拿到上一条语句的状态，无新错误才置 true。
 func (e *Evaluator) execAssign(a *ast.Assign) {
-	e.Session.LastSuccess = true
+	seq := e.Session.ErrorSeq
 	var val *object.PSObject
 	switch a.Value.(type) {
 	case *ast.If, *ast.Switch, *ast.ForEach, *ast.While, *ast.DoWhile, *ast.For, *ast.Try:
@@ -200,14 +204,17 @@ func (e *Evaluator) execAssign(a *ast.Assign) {
 			val = e.binaryOp(a.Op[:len(a.Op)-1], object.Str(cur), val)
 		}
 		os.Setenv(a.Target[len("env:"):], val.String())
-		return
+	} else {
+		if a.Op != "=" {
+			cur := e.lookupVar(a.Target, a.Scope)
+			val = e.binaryOp(a.Op[:len(a.Op)-1], cur, val)
+		}
+		if err := e.setVar(a.Target, a.Scope, val); err != nil {
+			e.writeError(err)
+		}
 	}
-	if a.Op != "=" {
-		cur := e.lookupVar(a.Target, a.Scope)
-		val = e.binaryOp(a.Op[:len(a.Op)-1], cur, val)
-	}
-	if err := e.setVar(a.Target, a.Scope, val); err != nil {
-		e.writeError(err)
+	if e.Session.ErrorSeq == seq {
+		e.Session.LastSuccess = true
 	}
 }
 

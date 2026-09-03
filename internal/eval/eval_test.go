@@ -608,6 +608,22 @@ func TestErrorActionOutput(t *testing.T) {
 	}
 }
 
+// TestAssignSuccessFlag 验证赋值语句的 $?：右侧先求值（读到旧状态），无新错误才置 true。
+func TestAssignSuccessFlag(t *testing.T) {
+	// 右侧读 $? 拿到上一条语句的状态
+	wantStr(t, `Get-Item 不存在QW1; $x = $?; if ($x) { "ok" } else { "fail" }`, "fail")
+	wantStr(t, `$y = 1; $x = $?; if ($x) { "ok" } else { "fail" }`, "ok")
+	// 干净赋值重置失败状态
+	wantStr(t, `Get-Item 不存在QW1; $x = 5; if ($?) { "ok" } else { "fail" }`, "ok")
+	// 右侧出错保持失败
+	wantStr(t, `$x = 1/0; if ($?) { "ok" } else { "fail" }`, "fail")
+	// 被接住的错误不影响：赋值成功置 true
+	wantStr(t, `Get-Item 不存在QW1; $x = try { throw "a" } catch { "b" }; $x`, "b")
+	wantStr(t, `Get-Item 不存在QW1; $x = try { throw "a" } catch { "b" }; if ($?) { "ok" } else { "fail" }`, "ok")
+	// 裸 try/catch 接住后同样置 true
+	wantStr(t, `Get-Item 不存在QW1; try { throw "a" } catch { "b" }; if ($?) { "ok" } else { "fail" }`, "b", "ok")
+}
+
 // TestErrorActionPreference 验证 $ErrorActionPreference：默认值、首选项分发、显式参数覆盖、函数内局部生效、无效赋值报错且不生效。
 func TestErrorActionPreference(t *testing.T) {
 	// 未赋值时读到默认值

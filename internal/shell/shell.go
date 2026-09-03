@@ -64,6 +64,7 @@ type Session struct {
 	LastExit      int
 	LastSuccess   bool               // $?
 	ErrorRecords  []*object.PSObject // $Error：本会话累积的错误记录，最新在前
+	ErrorSeq      uint64             // 错误记录序列号，每累积一条加一（求值器据此判断某段执行是否产生新错误）
 	Matches       *object.PSObject   // $Matches：最近一次标量 -match 的捕获组，未匹配过为 nil
 	PSCommandPath string
 	Args          []*object.PSObject // 脚本/函数实参（$args）
@@ -138,6 +139,7 @@ func ParseErrorAction(s string) (string, bool) {
 // RecordError 构造一条错误记录并累积进会话，最新在前；超出容量时丢弃最旧的。
 func (s *Session) RecordError(msg string) *object.PSObject {
 	rec := object.Error(msg)
+	s.ErrorSeq++
 	s.ErrorRecords = append([]*object.PSObject{rec}, s.ErrorRecords...)
 	if len(s.ErrorRecords) > maxErrorRecords {
 		s.ErrorRecords = s.ErrorRecords[:maxErrorRecords]

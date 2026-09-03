@@ -675,6 +675,23 @@ $ErrorActionPreference = 'Continue'
 $ErrorActionPreference = 'Stop'
 $ErrorActionPreference = $null
 $results += T "首选项空值恢复默认" ($ErrorActionPreference -eq "Continue")
+# 156. 赋值右侧读 $? 拿到旧状态
+Get-Item 不存在EA123
+$aqRead = $?
+$results += T "赋值读旧 $?" ($aqRead -eq $false)
+# 157. 干净赋值重置失败状态
+$aqTmp = 5
+if ($?) { $aqOk = "ok" } else { $aqOk = "fail" }
+$results += T "干净赋值置真" ($aqOk -eq "ok")
+# 158. 赋值右侧出错保持失败
+$aqBad = 1/0
+if ($?) { $aqBadOk = "ok" } else { $aqBadOk = "fail" }
+$results += T "赋值右侧出错保持失败" (($aqBad -eq $null) -and ($aqBadOk -eq "fail"))
+# 159. 被接住的错误不影响赋值成功
+Get-Item 不存在EA123
+$aqCatch = try { throw "aq-x" } catch { "got" }
+if ($?) { $aqCatchOk = "ok" } else { $aqCatchOk = "fail" }
+$results += T "捕获后赋值置真" (($aqCatch -eq "got") -and ($aqCatchOk -eq "ok"))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

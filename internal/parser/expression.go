@@ -297,6 +297,15 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 				p.advance()
 				return &ast.Increment{Var: vr.Name, Scope: vr.Scope, Op: t.Text}
 			}
+			// 下标与属性目标读写回同一位置（$a[0]++ / $o.n++）。
+			if idx, ok := e.(*ast.Index); ok {
+				p.advance()
+				return &ast.Increment{Target: idx, Op: t.Text}
+			}
+			if m, ok := e.(*ast.MemberAccess); ok {
+				p.advance()
+				return &ast.Increment{Target: m, Op: t.Text}
+			}
 			p.fail(lang.T(lang.MsgParseIncDecVar))
 			break
 		}

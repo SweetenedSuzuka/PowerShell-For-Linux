@@ -303,6 +303,33 @@ func (o *PSObject) HasProp(name string) bool {
 	return false
 }
 
+// SetProp 设置属性值：已存在（不区分大小写）则替换，否则追加。
+// 哈希表按条目键替换或追加；存入解包后的值，与 AddProp 口径一致。
+func (o *PSObject) SetProp(name string, val *PSObject) *PSObject {
+	var v any
+	if val != nil {
+		v = val.Value
+	}
+	if entries, ok := o.Value.([]HashEntry); ok && o.TypeName == "Hashtable" {
+		for i := range entries {
+			if strings.EqualFold(entries[i].Key, name) {
+				entries[i].Value = val
+				return o
+			}
+		}
+		o.Value = append(entries, HashEntry{Key: name, Value: val})
+		return o
+	}
+	for i := range o.Props {
+		if strings.EqualFold(o.Props[i].Name, name) {
+			o.Props[i].Value = v
+			return o
+		}
+	}
+	o.Props = append(o.Props, Prop{Name: name, Value: v})
+	return o
+}
+
 // ToPS 把 Go 值包装成 PSObject（标量、切片、哈希条目、时间、错误等）。
 func ToPS(v any) *PSObject {
 	switch t := v.(type) {

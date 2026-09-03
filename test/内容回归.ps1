@@ -747,6 +747,18 @@ $results += T "i- 变体" ((("A" -ieq "a") -and ("AbC" -ilike "a*c") -and ("AbC"
 # 176. $ENV: 前缀大小写不限，变量名保持原样
 $env:TmVar904 = "v904"
 $results += T "ENV 大小写" ((($ENV:TmVar904) -eq "v904") -and (($env:TmVar904) -eq "v904"))
+# 177. 下标自增写回同一位置
+$iv = 1,2
+$iv[0]++
+$results += T "下标自增" (($iv[0] -eq 2) -and ($iv[1] -eq 2))
+# 178. 属性自增写回
+$im = [pscustomobject]@{n=1}
+$im.n++
+$results += T "属性自增" ($im.n -eq 2)
+# 179. 哈希表键自增写回
+$ih = @{k=5}
+$ih["k"]++
+$results += T "哈希键自增" ($ih["k"] -eq 6)
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

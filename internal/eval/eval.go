@@ -347,6 +347,9 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		}
 		return wrapSingle(out)
 	case *ast.Increment:
+		if v.Target != nil {
+			return e.incrTarget(v)
+		}
 		cur := e.lookupVar(v.Var, v.Scope)
 		// 浮点变量按浮点增减：$i = 0.5; $i++ → 1.5（AsInt 会把 0.5 截断成 0）
 		if cur.TypeName == "Double" {
@@ -378,6 +381,95 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		return object.Null()
 	}
 	return object.Null()
+}
+
+// incrTarget 对下标或属性目标做增减：读当前值、加减一、写回，返回新值。
+// 数组整数下标、哈希表键、对象属性可写；其余报错。
+func (e *Evaluator) incrTarget(v *ast.Increment) *object.PSObject {
+	delta := int64(1)
+	if v.Op == "--" {
+		delta = -1
+	}
+	switch t := v.Target.(type) {
+	case *ast.Index:
+		return e.incrIndex(t, delta)
+	case *ast.MemberAccess:
+		return e.incrMember(t, delta)
+	}
+	e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+	return object.Null()
+}
+
+// incrNumber 按现有类型加减：浮点保持浮点，其余按整数（与普通变量一致）。
+func incrNumber(cur *object.PSObject, delta int64) *object.PSObject {
+	if cur.TypeName == "Double" {
+		f, _ := cur.AsFloat()
+		return object.Float(f + float64(delta))
+	}
+	n, _ := cur.AsInt()
+	return object.Int(n + delta)
+}
+
+// incrIndex 对数组整数下标或哈希表键做增减并写回。
+// 负数下标从末尾数，与读取一致；多下标、字符串下标与越界报错。
+func (e *Evaluator) incrIndex(t *ast.Index, delta int64) *object.PSObject {
+	base := e.evalValue(t.Base)
+	if base.TypeName == "Hashtable" {
+		if entries, ok := base.Value.([]object.HashEntry); ok {
+			key := e.evalValue(t.Index).String()
+			for i := range entries {
+				if strings.EqualFold(entries[i].Key, key) {
+					nv := incrNumber(entries[i].Value, delta)
+					entries[i].Value = nv
+					return nv
+				}
+			}
+		}
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		return object.Null()
+	}
+	if !base.IsArray() {
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		return object.Null()
+	}
+	items := base.ArrayItems()
+	idx := e.evalValue(t.Index)
+	if idx.IsArray() {
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		return object.Null()
+	}
+	n, ok := idx.AsInt()
+	if !ok {
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		return object.Null()
+	}
+	if n < 0 {
+		n = int64(len(items)) + n
+	}
+	if n < 0 || int(n) >= len(items) {
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIndexOutOfRange)))
+		return object.Null()
+	}
+	nv := incrNumber(items[n], delta)
+	items[n] = nv
+	return nv
+}
+
+// incrMember 对对象属性做增减并写回；属性不存在报错。
+func (e *Evaluator) incrMember(t *ast.MemberAccess, delta int64) *object.PSObject {
+	base := e.evalValue(t.Base)
+	if base == nil || base.IsNull() {
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		return object.Null()
+	}
+	cur, ok := base.PropValue(t.Prop)
+	if !ok {
+		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIncrTargetInvalid)))
+		return object.Null()
+	}
+	nv := incrNumber(cur, delta)
+	base.SetProp(t.Prop, nv)
+	return nv
 }
 
 // wrapSingle 把输出列表包成单个值：0 → $null，1 → 该项，多 → 数组。

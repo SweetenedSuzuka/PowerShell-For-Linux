@@ -265,11 +265,12 @@ type Unary struct {
 	Operand Node
 }
 
-// Increment 是增量/减量运算符（$i++ / $i-- / $script:i++）。
+// Increment 是增量/减量运算符（$i++ / $a[0]++ / $o.n++）。
 type Increment struct {
-	Var   string
-	Scope string // 作用域修饰符："" / "script" / "global" / "local"
-	Op    string // ++ 或 --
+	Var    string
+	Scope  string // 作用域修饰符："" / "script" / "global" / "local"
+	Op     string // ++ 或 --
+	Target Node   // 下标或属性目标；nil 表示普通变量（用 Var/Scope）
 }
 
 // Binary 是二元运算：算术、比较、逻辑。

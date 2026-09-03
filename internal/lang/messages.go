@@ -59,6 +59,7 @@ const (
 	MsgDivideByZero
 	MsgFormatIndexOut
 	MsgIndexOutOfRange
+	MsgIncrTargetInvalid
 	MsgParamOnlyInFunc
 	MsgRedirectWrite
 	MsgCommandNotFound

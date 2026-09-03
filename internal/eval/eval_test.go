@@ -1056,6 +1056,18 @@ func TestSelectStringLineNumber(t *testing.T) {
 	wantStr(t, "(\"line1`nlineX`nline3\" | Select-String \"lineX\").Count", "1")
 }
 
+// TestSelectStringQuiet 验证 -Quiet：命中输出单个 $true，未命中无输出。
+func TestSelectStringQuiet(t *testing.T) {
+	// 命中输出单个 True
+	wantStr(t, `"aXb" | Select-String -Pattern "X" -Quiet`, "True")
+	// 多条命中仍只输出一个
+	wantStr(t, `("aXb","cXd" | Select-String -Pattern "X" -Quiet).Count`, "1")
+	// 未命中无输出
+	wantStr(t, `"abc" | Select-String -Pattern "Z" -Quiet`)
+	// 未命中结果判空为真
+	wantStr(t, `if ("abc" | Select-String -Pattern "Z" -Quiet) { "hit" } else { "miss" }`, "miss")
+}
+
 // TestGroupObjectCase 验证 Group-Object 默认大小写不敏感合并，-CaseSensitive 才分组。
 func TestGroupObjectCase(t *testing.T) {
 	// 默认不敏感：apple/Apple/APPLE 合并为一组，Name 取首次原值

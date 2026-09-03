@@ -723,6 +723,12 @@ $results += T "Skip 负数报错" (($Error.Count -eq $sk4 + 1) -and ($sk4ok -eq 
 # 167. -Unique 在投影之后去重
 $sk5 = [pscustomobject]@{n="a";m=1},[pscustomobject]@{n="a";m=2} | Select-Object -Property n -Unique
 $results += T "Unique 投影后去重" (($sk5.Count -eq 1) -and ($sk5[0].n -eq "a"))
+# 168. Select-String -Quiet 命中输出单个 True
+$ss1 = "aXb","cXd" | Select-String -Pattern "X" -Quiet
+$results += T "Quiet 命中" (($ss1 -eq $true) -and (@($ss1).Count -eq 1))
+# 169. Select-String -Quiet 未命中无输出
+$ss2 = "abc" | Select-String -Pattern "Z" -Quiet
+$results += T "Quiet 未命中无输出" ($ss2 -eq $null)
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

@@ -283,6 +283,7 @@ Full parameter and field descriptions in [Command Details](CommandDetails.en.md)
 Examples:
 - `Select-String -Path /etc/os-release "NAME"` — finds lines containing NAME in os-release (bash's `grep NAME /etc/os-release`).
 - `Get-Content server.log | Select-String -Pattern "ERROR|WARN" | Select-Object LineNumber,Line` — finds ERROR or WARN lines with line numbers (bash's `grep -nE 'ERROR|WARN' server.log`).
+- `Get-Content server.log | Select-String -Pattern "ERROR" -Quiet` — asks only whether any ERROR line exists (bash's `grep -q ERROR server.log`).
 
 Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Select-String](CommandDetails.en.md#select-string).
 

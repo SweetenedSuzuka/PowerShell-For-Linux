@@ -119,6 +119,7 @@ func cmdSelectString(c *Context) ([]*object.PSObject, error) {
 	path, _ := c.Args.Str("Path")
 	caseSensitive := c.Args.Switch("CaseSensitive")
 	simple := c.Args.Switch("SimpleMatch")
+	quiet := c.Args.Switch("Quiet")
 	var out []*object.PSObject
 	// 正则预编译一次：默认大小写不敏感（加 (?i)），-CaseSensitive 时原样
 	var re *regexp.Regexp
@@ -177,6 +178,13 @@ func cmdSelectString(c *Context) ([]*object.PSObject, error) {
 			}
 		}
 	}
+	// -Quiet 只报告是否命中：命中输出单个 $true，未命中无输出（但是是 $null，不是 $false）。
+	if quiet {
+		if len(out) == 0 {
+			return nil, nil
+		}
+		return []*object.PSObject{object.Bool(true)}, nil
+	}
 	return out, nil
 }
 
@@ -217,6 +225,7 @@ func init() {
 		{Name: "Path", Position: 1, PositionSet: true, Type: "path"},
 		{Name: "SimpleMatch", Switch: true},
 		{Name: "CaseSensitive", Switch: true},
+		{Name: "Quiet", Switch: true},
 		{Name: "InputObject", Type: "object"},
 	}, cmdSelectString)
 }

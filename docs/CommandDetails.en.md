@@ -374,6 +374,7 @@ Notation:
 | `-Path` (position 1) | path | File to search |
 | `-SimpleMatch` | switch | Literal matching, `grep -F` |
 | `-CaseSensitive` | switch | Case-sensitive matching; insensitive by default (as with `grep -i` reversed) |
+| `-Quiet` | switch | Reports only whether anything matched: a single True on match, no output otherwise (`grep -q`) |
 
 - Without -Path, searches pipeline input.
 - Output: MatchInfo objects with fields LineNumber (from 1), Line, Path, Pattern.

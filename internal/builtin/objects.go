@@ -3,6 +3,7 @@ package builtin
 import (
 	"sort"
 	"strings"
+	"time"
 
 	"powershell/internal/ast"
 	"powershell/internal/lang"
@@ -457,6 +458,16 @@ func cmdNewObject(c *Context) ([]*object.PSObject, error) {
 	}
 }
 
+func cmdMeasureCommand(c *Context) ([]*object.PSObject, error) {
+	node := c.Args.GetNode("Expression")
+	if sb, ok := node.(*ast.ScriptBlock); ok {
+		start := time.Now()
+		_, _ = c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, nil, c.Stdout)
+		return []*object.PSObject{timeSpanObj(time.Since(start))}, nil
+	}
+	return nil, nil
+}
+
 // ---- 注册 ----
 
 func init() {
@@ -498,6 +509,9 @@ func init() {
 		{Name: "Maximum", Switch: true},
 		{Name: "Line", Switch: true},
 	}, cmdMeasureObject)
+	Register("Measure-Command", []ParamSpec{
+		{Name: "Expression", Position: 0, PositionSet: true, Type: "scriptblock"},
+	}, cmdMeasureCommand)
 	Register("Get-Member", []ParamSpec{
 		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "MemberType", Type: "string"},

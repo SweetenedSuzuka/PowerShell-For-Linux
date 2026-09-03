@@ -3,6 +3,7 @@ package builtin
 import (
 	"fmt"
 	"io"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -277,4 +278,19 @@ func inputItems(c *Context) []*object.PSObject {
 		}
 	}
 	return out
+}
+
+// runExternalRaw 直接运行外部命令并透传输入输出，返回退出码；程序不存在返回 127。
+func runExternalRaw(c *Context, program string, args []string) int {
+	cmd := exec.Command(program, args...)
+	cmd.Stdin = c.Stdin
+	cmd.Stdout = c.Stdout
+	cmd.Stderr = c.Stderr
+	if err := cmd.Run(); err != nil {
+		if ee, ok := err.(*exec.ExitError); ok {
+			return ee.ExitCode()
+		}
+		return 127
+	}
+	return 0
 }

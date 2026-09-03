@@ -67,13 +67,16 @@ func run(args []string) int {
 		for _, a := range fs.Args() {
 			scriptArgs = append(scriptArgs, object.Str(a))
 		}
+		// 脚本失败标记：defer 内只标记不退出，展开走完再返回退出码。
+		failed := false
 		func() {
-			// 脚本顶层未捕获的终止错误（throw）：打印后以失败退出码结束
+			// 脚本顶层未捕获的终止错误（throw）：打印后标记失败
 			defer func() {
 				if r := recover(); r != nil {
 					if err := eval.RecoverError(r); err != nil {
 						fmt.Fprintf(os.Stderr, "%s : %v\n", sess.StyleName(), err)
-						os.Exit(1)
+						failed = true
+						return
 					}
 					panic(r)
 				}
@@ -82,6 +85,9 @@ func run(args []string) int {
 				_ = object.FormatOutput(os.Stdout, objs)
 			})
 		}()
+		if failed {
+			return 1
+		}
 		return exitCode(ev, sess)
 	}
 

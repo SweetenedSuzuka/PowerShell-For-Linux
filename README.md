@@ -94,7 +94,7 @@ powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <命令>] [-File <�
 ## 内置命令
 
 内置 115 个 cmdlet 命令，外加 77 个别名。每条命令的用法、版本和发行版要求，以及它对应 bash 的什么写法，见 [docs/指令参考.md](docs/指令参考.md)。  
-逐参数、逐字段的映射规则见 [docs/指令详解.md](docs/指令详解.md)。
+具体详解见 [docs/指令详解-原版跨平台指令.md](docs/指令详解-原版跨平台指令.md)与 [docs/指令详解-原版Windows指令.md](docs/指令详解-原版Windows指令.md)，会同时展示原版指令的用途、版本差异和官方示例，以及 PowerShell For Linux 对已实现内容的详细介绍。
 
 ## 脚本
 
@@ -130,9 +130,8 @@ powershell -File 脚本.ps1
 ## 文档
 
 - [docs/指令参考.md](docs/指令参考.md) —— 面向使用者：每条指令的映射、版本、发行版与例子。
-- [docs/指令详解.md](docs/指令详解.md) —— 开发文档：每条指令逐参数、逐字段的映射规则。
-- [docs/未实现指令.md](docs/未实现指令.md) —— 未实现指令的完整清单及原因。
-- [docs/指令分类.md](docs/指令分类.md) —— 三个核心模块指令的全量归类。
+- [docs/指令详解-原版跨平台指令.md](docs/指令详解-原版跨平台指令.md) —— 原版跨平台指令的用途、版本差异、用法与官方示例。
+- [docs/指令详解-原版Windows指令.md](docs/指令详解-原版Windows指令.md) —— 原版仅 Windows 指令的用途、版本差异、用法与官方示例。
 
 ## 测试
 
@@ -161,10 +160,9 @@ powershellForLinux/
 │   ├── external/        # 外部命令透传
 │   └── repl/            # 交互式 REPL（行编辑、历史、补全）
 ├── docs/
-│   ├── 指令参考.md       # 用户文档：每条指令的分类、行为、两个案例
-│   ├── 指令详解.md       # 开发文档：逐参数、逐字段
-│   ├── 指令分类.md       # 三个核心模块指令的归类
-│   └── 未实现指令.md     # 未实现指令清单及原因
+│   ├── 指令参考.md                 # PowerShell For Linux 中每条指令的分类、行为、案例
+│   ├── 指令详解-原版跨平台指令.md   # 对原版 PowerShell 中跨平台指令的用途、版本差异、用法、官方示例的整理，以及和 PowerShell For Linux 实现的对比
+│   └── 指令详解-原版Windows指令.md  # 对原版 PowerShell 中 Windows 指令的用途、版本差异、用法、官方示例的整理，以及和 PowerShell For Linux 实现的对比
 └── test/
     ├── 核验.ps1          # 逐条核验参考文档里的示例
     ├── 内容回归.ps1      # 回归测试脚本

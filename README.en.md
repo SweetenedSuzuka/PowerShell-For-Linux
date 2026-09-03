@@ -94,7 +94,7 @@ Switch format at runtime: `Set-PSVersion 5.1` (to 5.X), `Set-PSVersion 7` (back 
 ## Built-in commands
 
 115 cmdlets are built in, plus 77 aliases. For each command's usage, version and distro requirements, and its bash equivalent, see [docs/CommandReference.en.md](docs/CommandReference.en.md).  
-Parameter-by-parameter, field-by-field mapping rules live in [docs/CommandDetails.en.md](docs/CommandDetails.en.md).
+Details live in [docs/OriginalCrossPlatformDetails.en.md](docs/OriginalCrossPlatformDetails.en.md) and [docs/OriginalWindowsDetails.en.md](docs/OriginalWindowsDetails.en.md), showing original commands' purposes, version differences and official examples alongside details of this program's implementations.
 
 ## Scripts
 
@@ -130,9 +130,8 @@ Broadly speaking, the commands making up a script behave the same as genuine Pow
 ## Documentation
 
 - [docs/CommandReference.en.md](docs/CommandReference.en.md) — For users: mapping, versions, distro requirements, and examples for every command.
-- [docs/CommandDetails.en.md](docs/CommandDetails.en.md) — Development documentation: parameter-by-parameter, field-by-field mapping rules.
-- [docs/UnimplementedCommands.en.md](docs/UnimplementedCommands.en.md) — The complete list of unimplemented commands, with reasons.
-- [docs/CommandCategories.en.md](docs/CommandCategories.en.md) — Full categorization of the three core-module commands.
+- [docs/OriginalCrossPlatformDetails.en.md](docs/OriginalCrossPlatformDetails.en.md) — Original cross-platform commands: purposes, version differences, usage, official examples.
+- [docs/OriginalWindowsDetails.en.md](docs/OriginalWindowsDetails.en.md) — Original Windows-only commands: purposes, version differences, usage, official examples.
 
 ## Testing
 
@@ -161,10 +160,9 @@ powershellForLinux/
 │   ├── external/        # External command passthrough
 │   └── repl/            # Interactive REPL (line editing, history, completion)
 ├── docs/
-│   ├── 指令参考.md       # User docs: category, behavior, and two examples per command
-│   ├── 指令详解.md       # Dev docs: every parameter, every field
-│   ├── 指令分类.md       # Categories for the three core modules
-│   └── 未实现指令.md     # Unimplemented commands and why
+│   ├── 指令参考.md                  # Categories, behavior, and examples for every command in PowerShell For Linux
+│   ├── 指令详解-原版跨平台指令.md   # Original PowerShell cross-platform commands: purposes, version differences, usage, official examples, compared against this program's implementations
+│   └── 指令详解-原版Windows指令.md  # Original PowerShell Windows-only commands: purposes, version differences, usage, official examples, compared against this program's implementations
 └── test/
     ├── 核验.ps1          # Verifies every example from the reference document
     ├── 内容回归.ps1      # Regression test script

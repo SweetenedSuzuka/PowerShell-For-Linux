@@ -5,7 +5,7 @@ This document is aimed at users and lists the commands this program supports. Co
 - **Go implementation** — behavior is reproduced in Go inside this program, with no external commands called. Most match Windows PowerShell; differences are noted.
 - **Mapped Linux commands** — native system tools are called directly (`systemctl`, `ping`, `xclip`, etc.).
 
-Each command gets two examples — one basic, one a bit more involved — with an explanation of what each does. Full parameter and field details live in the matching section of [Command Details](CommandDetails.en.md) (each entry links there).
+Each command gets two examples — one basic, one a bit more involved — with an explanation of what each does. Official original reference lives in the matching sections of [Original Cross-Platform Details](OriginalCrossPlatformDetails.en.md) and [Original Windows-Only Details](OriginalWindowsDetails.en.md) (each entry links there).
 
 General notes:
 
@@ -30,7 +30,6 @@ Examples:
 - `Set-PSVersion 5.1` — switch to the 5 format.
 - `Set-PSVersion 7; $PSVersionTable.PSEdition` — switch back to 7 and show the format name (prints Core).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Set-PSVersion](CommandDetails.en.md#set-psversion).
 
 ### Get-Host
 - Type: Go implementation.
@@ -40,7 +39,7 @@ Examples:
 - `Get-Host` — shows the host object.
 - `Get-Host | Select-Object Name,InstanceId` — just the name and session identifier.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Host](CommandDetails.en.md#get-host).
+Official original reference: [Get-Host](OriginalCrossPlatformDetails.en.md#get-host).
 
 ---
 
@@ -55,7 +54,7 @@ Examples:
 - `pwd` — shows the current directory (bash's `pwd`).
 - `Set-Location /tmp; Get-Location` — moves to /tmp first, then shows it (bash's `cd /tmp; pwd`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Location](CommandDetails.en.md#get-location).
+Official original reference: [Get-Location](OriginalCrossPlatformDetails.en.md#get-location).
 
 ### Set-Location (cd, sl, chdir)
 - Type: Go implementation.
@@ -66,7 +65,7 @@ Examples:
 - `cd /etc` — moves to /etc (bash's `cd /etc`).
 - `Set-Location $HOME; Get-Location` — moves home and confirms (bash's `cd ~; pwd`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Set-Location](CommandDetails.en.md#set-location).
+Official original reference: [Set-Location](OriginalCrossPlatformDetails.en.md#set-location).
 
 ### Push-Location / Pop-Location
 - Type: Go implementation.
@@ -77,7 +76,7 @@ Examples:
 - `Push-Location /etc; Pop-Location` — notes the current directory, moves to /etc, then goes back (bash's `pushd /etc; popd`).
 - `Push-Location /usr; Push-Location /bin; Pop-Location; Get-Location` — pushes two directories in a row then pops one, landing back at /usr (bash's `pushd /usr; pushd /bin; popd; pwd`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Push-Location](CommandDetails.en.md#push-location), [Pop-Location](CommandDetails.en.md#pop-location).
+Official original reference: [Push-Location](OriginalCrossPlatformDetails.en.md#push-location), [Pop-Location](OriginalCrossPlatformDetails.en.md#pop-location).
 
 ---
 
@@ -92,7 +91,7 @@ Examples:
 - `dir` — lists the current directory (bash's `ls`).
 - `Get-ChildItem /etc -Filter "*.conf" -Recurse | Where-Object Length -gt 1000` — recursively finds .conf files over 1 KB under /etc (roughly bash's `find /etc -name '*.conf' -size +1000c`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-ChildItem](CommandDetails.en.md#get-childitem).
+Official original reference: [Get-ChildItem](OriginalCrossPlatformDetails.en.md#get-childitem).
 
 ### Get-Item (gi)
 - Type: Go implementation.
@@ -103,7 +102,7 @@ Examples:
 - `Get-Item /etc/hostname` — shows hostname's info (bash's `stat /etc/hostname`).
 - `(Get-Item /etc/passwd).Length` — gets passwd's size in bytes (bash's `stat -c %s /etc/passwd`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Item](CommandDetails.en.md#get-item).
+Official original reference: [Get-Item](OriginalCrossPlatformDetails.en.md#get-item).
 
 ### Get-ItemProperty (gp)
 - Type: Go implementation.
@@ -114,7 +113,7 @@ Examples:
 - `gp /etc/hostname` — shows hostname's Name/FullName/Length/LastWriteTime/Mode.
 - `Get-ItemProperty /etc | Format-List *` — lists all properties of /etc line by line.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-ItemProperty](CommandDetails.en.md#get-itemproperty).
+Official original reference: [Get-ItemProperty](OriginalCrossPlatformDetails.en.md#get-itemproperty).
 
 ### Set-ItemProperty (sp)
 - Type: Go implementation.
@@ -125,7 +124,7 @@ Examples:
 - `Set-ItemProperty a.txt -Name LastWriteTime -Value $null` — sets a.txt's modification time to now (bash's `touch a.txt`).
 - `Set-ItemProperty a.txt -Name LastWriteTime -Value $null; (Get-Item a.txt).LastWriteTime` — change it, then look at the time to confirm.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Set-ItemProperty](CommandDetails.en.md#set-itemproperty).
+Official original reference: [Set-ItemProperty](OriginalCrossPlatformDetails.en.md#set-itemproperty).
 
 ### New-Item (ni)
 - Type: Go implementation.
@@ -136,7 +135,7 @@ Examples:
 - `New-Item -ItemType Directory newdir` — creates directory newdir (bash's `mkdir newdir`).
 - `New-Item -ItemType Directory -Force a/b/c; New-Item a/b/c/f.txt` — creates nested directories and a file inside them (bash's `mkdir -p a/b/c && touch a/b/c/f.txt`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [New-Item](CommandDetails.en.md#new-item).
+Official original reference: [New-Item](OriginalCrossPlatformDetails.en.md#new-item).
 
 ### Remove-Item (rm, del, erase, rd, rmdir, ri)
 - Type: Go implementation.
@@ -147,7 +146,7 @@ Examples:
 - `rm old.txt` — deletes a file (bash's `rm old.txt`).
 - `Remove-Item -Recurse -Force build/` — force-deletes a directory together with everything inside (bash's `rm -rf build/`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Remove-Item](CommandDetails.en.md#remove-item).
+Official original reference: [Remove-Item](OriginalCrossPlatformDetails.en.md#remove-item).
 
 ### Copy-Item (cp, copy, cpi)
 - Type: Go implementation.
@@ -158,7 +157,7 @@ Examples:
 - `cp a.txt b.txt` — copies a.txt to b.txt (bash's `cp a.txt b.txt`).
 - `Copy-Item -Path src/ -Destination dst/ -Recurse` — copies a whole directory (bash's `cp -r src/ dst/`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Copy-Item](CommandDetails.en.md#copy-item).
+Official original reference: [Copy-Item](OriginalCrossPlatformDetails.en.md#copy-item).
 
 ### Move-Item (mv, move, mi)
 - Type: Go implementation.
@@ -169,7 +168,7 @@ Examples:
 - `mv a.txt b.txt` — renames a.txt to b.txt (bash's `mv a.txt b.txt`).
 - `Move-Item -Path *.log -Destination logs/ -Recurse` — moves a pile of logs into logs/ (bash's `mv *.log logs/`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Move-Item](CommandDetails.en.md#move-item).
+Official original reference: [Move-Item](OriginalCrossPlatformDetails.en.md#move-item).
 
 ### Rename-Item (ren, rni)
 - Type: Go implementation.
@@ -180,7 +179,7 @@ Examples:
 - `ren old.txt new.txt` — renames old.txt to new.txt (bash's `mv old.txt new.txt`).
 - `Get-ChildItem *.tmp | ForEach-Object { Rename-Item $_ -NewName ($_.Name -replace ".tmp",".txt") }` — renames every .tmp file to .txt.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Rename-Item](CommandDetails.en.md#rename-item).
+Official original reference: [Rename-Item](OriginalCrossPlatformDetails.en.md#rename-item).
 
 ### Invoke-Item (ii)
 - Type: Go implementation (placeholder).
@@ -191,7 +190,7 @@ Examples:
 - `ii README.md` — for now merely prints the path README.md.
 - `Invoke-Item -Path ./report.pdf` — prints report.pdf's path.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Invoke-Item](CommandDetails.en.md#invoke-item).
+Official original reference: [Invoke-Item](OriginalCrossPlatformDetails.en.md#invoke-item).
 
 ### Get-PSDrive (gdr)
 - Type: Go implementation.
@@ -202,7 +201,7 @@ Examples:
 - `gdr` — lists drives.
 - `Get-PSDrive | Select-Object Name,Root,CurrentLocation` — just name, root, and current location.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-PSDrive](CommandDetails.en.md#get-psdrive).
+Official original reference: [Get-PSDrive](OriginalCrossPlatformDetails.en.md#get-psdrive).
 
 ---
 
@@ -217,7 +216,7 @@ Examples:
 - `cat /etc/hostname` — prints hostname's contents (bash's `cat /etc/hostname`).
 - `Get-Content -Path /var/log/syslog -Tail 20` — reads only the last 20 lines (bash's `tail -n 20 /var/log/syslog`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Content](CommandDetails.en.md#get-content).
+Official original reference: [Get-Content](OriginalCrossPlatformDetails.en.md#get-content).
 
 ### Set-Content (sc)
 - Type: Go implementation.
@@ -229,7 +228,7 @@ Examples:
 - `Get-ChildItem -Name | Set-Content filelist.txt` — writes the list of file names into a file (bash's `ls > filelist.txt`).
 - `Set-Content utf8.txt "你好" -Encoding utf8BOM` — UTF-8 with BOM, which Windows Notepad recognizes right away.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Set-Content](CommandDetails.en.md#set-content).
+Official original reference: [Set-Content](OriginalCrossPlatformDetails.en.md#set-content).
 
 ### Add-Content
 - Type: Go implementation.
@@ -240,7 +239,7 @@ Examples:
 - `Add-Content log.txt "a new line"` — appends a line at the end of log.txt (bash's `echo a new line >> log.txt`).
 - `1..10 | Add-Content numbers.txt` — appends 1 through 10, one per line (bash's `seq 1 10 >> numbers.txt`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Add-Content](CommandDetails.en.md#add-content).
+Official original reference: [Add-Content](OriginalCrossPlatformDetails.en.md#add-content).
 
 ### Clear-Content
 - Type: Go implementation.
@@ -251,7 +250,7 @@ Examples:
 - `Clear-Content data.txt` — empties data.txt (bash's `: > data.txt`).
 - `Get-ChildItem *.log | Clear-Content` — empties every .log file in the current directory.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Clear-Content](CommandDetails.en.md#clear-content).
+Official original reference: [Clear-Content](OriginalCrossPlatformDetails.en.md#clear-content).
 
 ### Set-Item (si) / Clear-Item (cli)
 - Type: Go implementation.
@@ -262,7 +261,7 @@ Examples:
 - `Set-Item env:MY_VAR "value"` — sets an environment variable (bash's `export MY_VAR=value`).
 - `Set-Item -Path config.txt -Value "mode=fast"` — writes content into config.txt (bash's `echo mode=fast > config.txt`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Set-Item](CommandDetails.en.md#set-item).
+Official original reference: [Set-Item](OriginalCrossPlatformDetails.en.md#set-item).
 
 ### Get-FileHash
 - Type: Go implementation.
@@ -273,7 +272,7 @@ Examples:
 - `Get-FileHash /etc/hostname -Algorithm MD5` — computes MD5 (bash's `md5sum /etc/hostname`).
 - `Get-ChildItem *.iso | Get-FileHash -Algorithm SHA256 | Select-Object Hash,Path` — batch-computes SHA256 (bash's `sha256sum *.iso`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-FileHash](CommandDetails.en.md#get-filehash).
+Official original reference: [Get-FileHash](OriginalCrossPlatformDetails.en.md#get-filehash).
 
 ### Select-String (sls)
 - Type: Go implementation.
@@ -285,7 +284,7 @@ Examples:
 - `Get-Content server.log | Select-String -Pattern "ERROR|WARN" | Select-Object LineNumber,Line` — finds ERROR or WARN lines with line numbers (bash's `grep -nE 'ERROR|WARN' server.log`).
 - `Get-Content server.log | Select-String -Pattern "ERROR" -Quiet` — asks only whether any ERROR line exists (bash's `grep -q ERROR server.log`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Select-String](CommandDetails.en.md#select-string).
+Official original reference: [Select-String](OriginalCrossPlatformDetails.en.md#select-string).
 
 ---
 
@@ -300,7 +299,7 @@ Examples:
 - `Test-Path /etc/passwd -PathType Container` — checks whether it's a directory (bash's `test -d /etc/passwd`).
 - `if (Test-Path config.json) { Get-Content config.json } else { "missing configuration file" }` — read it if present, say so otherwise (bash's `[ -e config.json ] && cat config.json || echo missing configuration file`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Test-Path](CommandDetails.en.md#test-path).
+Official original reference: [Test-Path](OriginalCrossPlatformDetails.en.md#test-path).
 
 ### Resolve-Path / Convert-Path
 - Type: Go implementation.
@@ -311,7 +310,7 @@ Examples:
 - `Resolve-Path .` — shows the current directory's absolute path (bash's `realpath .`).
 - `Resolve-Path ./a/../b` — straightens out the .. into the final path (bash's `realpath ./a/../b`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Resolve-Path](CommandDetails.en.md#resolve-path).
+Official original reference: [Resolve-Path](OriginalCrossPlatformDetails.en.md#resolve-path).
 
 ### Split-Path
 - Type: Go implementation.
@@ -322,7 +321,7 @@ Examples:
 - `Split-Path /etc/hostname -Leaf` — takes the last segment, hostname (bash's `basename /etc/hostname`).
 - `Get-ChildItem -Name | ForEach-Object { Split-Path $_ -Parent }` — takes the containing directory of each file in turn.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Split-Path](CommandDetails.en.md#split-path).
+Official original reference: [Split-Path](OriginalCrossPlatformDetails.en.md#split-path).
 
 ### Join-Path
 - Type: Go implementation.
@@ -333,7 +332,7 @@ Examples:
 - `Join-Path /tmp "test.txt"` — yields `/tmp/test.txt`.
 - `Join-Path $HOME (Join-Path ".config" "app")` — yields `~/.config/app`.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Join-Path](CommandDetails.en.md#join-path).
+Official original reference: [Join-Path](OriginalCrossPlatformDetails.en.md#join-path).
 
 ---
 
@@ -349,7 +348,7 @@ Examples:
 - `ps | Select-Object -Skip 1 -First 5` — skips 1 and lists the next 5 processes (roughly bash's `ps -ef | tail -n +2 | head -5`).
 - `Get-Process | Where-Object ProcessName -like "*ssh*"` — picks out processes whose names contain ssh (roughly bash's `ps -ef | grep ssh`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Process](CommandDetails.en.md#get-process).
+Official original reference: [Get-Process](OriginalCrossPlatformDetails.en.md#get-process).
 
 ### Stop-Process
 - Type: Go implementation.
@@ -360,7 +359,7 @@ Examples:
 - `Stop-Process 1234` — ends PID 1234 (bash's `kill 1234`).
 - `Get-Process | Where-Object ProcessName -eq "loop" | Stop-Process` — kills every process named loop.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Stop-Process](CommandDetails.en.md#stop-process).
+Official original reference: [Stop-Process](OriginalCrossPlatformDetails.en.md#stop-process).
 
 ### Start-Process
 - Type: Go implementation.
@@ -371,7 +370,7 @@ Examples:
 - `Start-Process sleep 10` — starts `sleep 10` in the background.
 - `Start-Process -FilePath /usr/bin/python3 -ArgumentList "server.py"` — runs server.py with python in the background (bash's `nohup python3 server.py &`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Start-Process](CommandDetails.en.md#start-process).
+Official original reference: [Start-Process](OriginalCrossPlatformDetails.en.md#start-process).
 
 ### Wait-Process
 - Type: Go implementation.
@@ -382,7 +381,7 @@ Examples:
 - `Wait-Process 1234` — waits for PID 1234 to finish.
 - `Start-Process sleep 2; Wait-Process sleep; "sleep finished"` — sleeps 2 seconds in the background and carries on once it's done.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Wait-Process](CommandDetails.en.md#wait-process).
+Official original reference: [Wait-Process](OriginalCrossPlatformDetails.en.md#wait-process).
 
 ### Start-Sleep (sleep)
 - Type: Go implementation.
@@ -393,7 +392,7 @@ Examples:
 - `sleep 1` — pauses for 1 second (bash's `sleep 1`).
 - `Start-Sleep -Milliseconds 500; "continue"` — half a second, then onward.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Start-Sleep](CommandDetails.en.md#start-sleep).
+Official original reference: [Start-Sleep](OriginalCrossPlatformDetails.en.md#start-sleep).
 
 ### Get-Service (gsv)
 - Type: mapped Linux command (`systemctl`).
@@ -403,7 +402,7 @@ Examples:
 - `Get-Service | Select-Object -First 5` — lists the first 5 services (like `systemctl list-units --type=service | head -5`).
 - `Get-Service | Where-Object Status -eq "active" | Select-Object Name` — lists only running services.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Service](CommandDetails.en.md#get-service).
+Official original reference: [Get-Service](OriginalWindowsDetails.en.md#get-service).
 
 ### Start-Service / Stop-Service / Restart-Service / Resume-Service (sasv / spsv)
 - Type: mapped Linux command (`systemctl`; falls back to sudo automatically when permissions fall short).
@@ -413,7 +412,7 @@ Examples:
 - `Restart-Service sshd` — restarts sshd (like `sudo systemctl restart sshd`).
 - `Get-Service nginx | Where-Object Status -ne "active" | ForEach-Object { Start-Service $_.Name }` — starts nginx if it isn't running.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Start-Service](CommandDetails.en.md#start-service).
+Official original reference: [Start-Service](OriginalWindowsDetails.en.md#start-service).
 
 ### Set-Service
 - Type: mapped Linux command (`systemctl`, sudo where needed).
@@ -423,7 +422,7 @@ Examples:
 - `Set-Service nginx -Status running` — starts nginx (like `sudo systemctl start nginx`).
 - `Set-Service nginx -StartupType automatic` — makes it start at boot (like `sudo systemctl enable nginx`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Set-Service](CommandDetails.en.md#set-service).
+Official original reference: [Set-Service](OriginalWindowsDetails.en.md#set-service).
 
 ### Test-Connection
 - Type: mapped Linux command (`ping`).
@@ -433,7 +432,7 @@ Examples:
 - `Test-Connection localhost` — pings localhost 4 times (bash's `ping -c 4 localhost`).
 - `Test-Connection -Count 1 -TargetName 8.8.8.8` — pings just once (bash's `ping -c 1 8.8.8.8`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Test-Connection](CommandDetails.en.md#test-connection).
+Official original reference: [Test-Connection](OriginalCrossPlatformDetails.en.md#test-connection).
 
 ---
 
@@ -447,7 +446,7 @@ Examples:
 - `Get-Date` — shows the current time (bash's `date`).
 - `Get-Date -Format "yyyy-MM-dd HH:mm:ss"` — displays in a chosen format (bash's `date +"%Y-%m-%d %H:%M:%S"`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Date](CommandDetails.en.md#get-date).
+Official original reference: [Get-Date](OriginalCrossPlatformDetails.en.md#get-date).
 
 ### Set-Date
 - Type: mapped Linux command (`sudo date -s`).
@@ -457,7 +456,7 @@ Examples:
 - `Set-Date "2026-01-01 00:00:00"` — sets the system clock to the given value (like `sudo date -s "2026-01-01 00:00:00"`).
 - `Set-Date (Get-Date).AddHours(1)` — moves the clock forward an hour.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Set-Date](CommandDetails.en.md#set-date).
+Official original reference: [Set-Date](OriginalCrossPlatformDetails.en.md#set-date).
 
 ### Get-Uptime
 - Type: Go implementation.
@@ -468,7 +467,7 @@ Examples:
 - `Get-Uptime` — shows uptime duration (roughly `uptime -p`).
 - `Get-Uptime | Select-Object Days,Hours,Minutes` — just days, hours, minutes.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Uptime](CommandDetails.en.md#get-uptime).
+Official original reference: [Get-Uptime](OriginalCrossPlatformDetails.en.md#get-uptime).
 
 ### Get-ComputerInfo
 - Type: Go implementation.
@@ -479,7 +478,7 @@ Examples:
 - `Get-ComputerInfo | Select-Object OsName,CsName` — OS name and host name.
 - `Get-ComputerInfo | Format-List OsName,OsVersion,CsTotalPhysicalMemory` — lists the key items in full.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-ComputerInfo](CommandDetails.en.md#get-computerinfo).
+Official original reference: [Get-ComputerInfo](OriginalWindowsDetails.en.md#get-computerinfo).
 
 ### Get-TimeZone
 - Type: Go implementation.
@@ -489,7 +488,7 @@ Full parameter and field descriptions in [Command Details](CommandDetails.en.md)
 Examples:
 - `Get-TimeZone` — shows the current time zone (bash's `cat /etc/timezone`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-TimeZone](CommandDetails.en.md#get-timezone).
+Official original reference: [Get-TimeZone](OriginalCrossPlatformDetails.en.md#get-timezone).
 
 ### Set-TimeZone
 - Type: mapped Linux command (`sudo timedatectl`).
@@ -498,7 +497,7 @@ Full parameter and field descriptions in [Command Details](CommandDetails.en.md)
 Examples:
 - `Set-TimeZone Asia/Shanghai; Get-TimeZone` — switches to Shanghai time and confirms (like `sudo timedatectl set-timezone Asia/Shanghai; cat /etc/timezone`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Set-TimeZone](CommandDetails.en.md#set-timezone).
+Official original reference: [Set-TimeZone](OriginalWindowsDetails.en.md#set-timezone).
 
 ### Get-Culture
 - Type: Go implementation.
@@ -509,7 +508,7 @@ Examples:
 - `Get-Culture` — shows the locale.
 - `(Get-Culture).Name` — just the locale name.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Culture](CommandDetails.en.md#get-culture).
+Official original reference: [Get-Culture](OriginalCrossPlatformDetails.en.md#get-culture).
 
 ### Get-Clipboard / Set-Clipboard
 - Type: mapped Linux command (`xclip` / `xsel`).
@@ -519,7 +518,7 @@ Examples:
 - `Set-Clipboard "text"; Get-Clipboard` — puts text on the clipboard, then reads it back.
 - `Get-Content note.txt | Set-Clipboard` — puts a file's contents on the clipboard (like `xclip -selection clipboard < note.txt`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Clipboard](CommandDetails.en.md#get-clipboard).
+Official original reference: [Get-Clipboard](OriginalCrossPlatformDetails.en.md#get-clipboard).
 
 ### Restart-Computer / Stop-Computer / Rename-Computer
 - Type: mapped Linux command (`sudo reboot` / `sudo shutdown -h now` / `sudo hostnamectl set-hostname`).
@@ -529,7 +528,7 @@ Examples:
 - `Rename-Computer myhost` — changes the host name (like `sudo hostnamectl set-hostname myhost`).
 - `Restart-Computer` — reboots the machine (save your work first).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Restart-Computer](CommandDetails.en.md#restart-computer).
+Official original reference: [Restart-Computer](OriginalCrossPlatformDetails.en.md#restart-computer).
 
 ---
 
@@ -544,7 +543,7 @@ Examples:
 - `echo "hello"` — prints hello (bash's `echo hello`).
 - `Write-Output (1..5) | Where-Object { $_ % 2 -eq 0 }` — prints 1..5 then picks the even numbers (bash's `printf '1\n2\n3\n4\n5\n' | awk '$1%2==0'`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Write-Output](CommandDetails.en.md#write-output).
+Official original reference: [Write-Output](OriginalCrossPlatformDetails.en.md#write-output).
 
 ### Write-Host
 - Type: Go implementation.
@@ -555,7 +554,7 @@ Examples:
 - `Write-Host "50% done"` — shows "50% done" right on screen (like `echo 50% done`).
 - `Write-Host -NoNewline "working"; Start-Sleep 1; Write-Host " done"` — shows progress without a newline, appending "done" after a second (bash's `echo -n working; sleep 1; echo ' done'`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Write-Host](CommandDetails.en.md#write-host).
+Official original reference: [Write-Host](OriginalCrossPlatformDetails.en.md#write-host).
 
 ### Clear-Host (cls, clear)
 - Type: Go implementation.
@@ -566,7 +565,6 @@ Examples:
 - `clear` — clears the screen (bash's `clear`).
 - `cls` — same thing via the Windows-style alias.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Clear-Host](CommandDetails.en.md#clear-host).
 
 ### Write-Error / Write-Warning / Write-Verbose / Write-Debug / Write-Information
 - Type: Go implementation.
@@ -577,7 +575,7 @@ Examples:
 - `Write-Error "something went wrong"` — writes one line onto the error stream (like `echo something went wrong 1>&2`) and sets `$?` to False.
 - `if (Test-Path x) { Write-Information "present" } else { Write-Warning "missing" }` — an informational message or a warning depending on the case.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Write-Error](CommandDetails.en.md#write-error).
+Official original reference: [Write-Error](OriginalCrossPlatformDetails.en.md#write-error).
 
 ### Out-File
 - Type: Go implementation.
@@ -588,7 +586,7 @@ Examples:
 - `Get-ChildItem -Name > list.txt` — writes file names into list.txt (bash's `ls > list.txt`).
 - `Get-Process | Sort-Object CPU -Descending | Out-File -Append proc.log` — appends to a log (roughly bash's `ps -eo pid,comm,%cpu --sort=-%cpu >> proc.log`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Out-File](CommandDetails.en.md#out-file).
+Official original reference: [Out-File](OriginalCrossPlatformDetails.en.md#out-file).
 
 ### Out-Null
 - Type: Go implementation.
@@ -599,7 +597,7 @@ Examples:
 - `Get-ChildItem -Recurse | Out-Null` — walks the tree listing everything while showing nothing (like `ls -R > /dev/null`).
 - `1..100000 | Out-Null; "done"` — generates a heap of numbers and tosses them, showing only "done" (like `seq 1 100000 > /dev/null; echo done`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Out-Null](CommandDetails.en.md#out-null).
+Official original reference: [Out-Null](OriginalCrossPlatformDetails.en.md#out-null).
 
 ### Out-Host
 - Type: Go implementation.
@@ -610,7 +608,7 @@ Examples:
 - `Get-Date | Out-Host` — shows the date (like `date`).
 - `Get-ChildItem | Out-Host` — shows the directory contents (like `ls`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Out-Host](CommandDetails.en.md#out-host).
+Official original reference: [Out-Host](OriginalCrossPlatformDetails.en.md#out-host).
 
 ### Out-String
 - Type: Go implementation.
@@ -621,7 +619,7 @@ Examples:
 - `Get-Date | Out-String` — turns a date object into a string.
 - `Get-Process | Out-String | Set-Content proc.txt` — saves the process list as text (bash's `ps -ef > proc.txt`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Out-String](CommandDetails.en.md#out-string).
+Official original reference: [Out-String](OriginalCrossPlatformDetails.en.md#out-string).
 
 ### Format-Table (ft)
 - Type: Go implementation.
@@ -632,7 +630,7 @@ Examples:
 - `Get-ChildItem | ft -AutoSize` — tabulates the current directory.
 - `Get-Process | ft ProcessName,Id -AutoSize` — just the process-name and ID columns.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Format-Table](CommandDetails.en.md#format-table).
+Official original reference: [Format-Table](OriginalCrossPlatformDetails.en.md#format-table).
 
 ### Format-List (fl)
 - Type: Go implementation.
@@ -643,7 +641,7 @@ Examples:
 - `Get-Item /etc/hostname | fl` — lists hostname's properties line by line.
 - `Get-Process | fl * | Select-Object -First 10` — lists every property of each process, first ten blocks only.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Format-List](CommandDetails.en.md#format-list).
+Official original reference: [Format-List](OriginalCrossPlatformDetails.en.md#format-list).
 
 ### Format-Wide (fw)
 - Type: Go implementation.
@@ -654,7 +652,7 @@ Examples:
 - `Get-ChildItem -Name | fw` — lays names out in multiple columns (like `ls | column`).
 - `Get-Service -ErrorAction SilentlyContinue | fw Name` — lays service names out in multiple columns.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Format-Wide](CommandDetails.en.md#format-wide).
+Official original reference: [Format-Wide](OriginalCrossPlatformDetails.en.md#format-wide).
 
 ### Format-Hex
 - Type: Go implementation.
@@ -664,7 +662,7 @@ Examples:
 - `"abc" | Format-Hex` — shows abc's bytes in hex (like `echo -n abc | xxd`).
 - `Format-Hex /var/log/boot.log` — views a file in hex.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Format-Hex](CommandDetails.en.md#format-hex).
+Official original reference: [Format-Hex](OriginalCrossPlatformDetails.en.md#format-hex).
 
 ---
 
@@ -679,7 +677,7 @@ Examples:
 - `1..10 | Where-Object { $_ -gt 5 }` — keeps numbers over 5 (bash's `seq 1 10 | awk '$1>5'`).
 - `Get-Process | Where-Object CPU -gt 1 | Select-Object ProcessName,CPU` — keeps processes using more than 1 second of CPU.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Where-Object](CommandDetails.en.md#where-object).
+Official original reference: [Where-Object](OriginalCrossPlatformDetails.en.md#where-object).
 
 ### ForEach-Object (%)
 - Type: Go implementation.
@@ -690,7 +688,7 @@ Examples:
 - `1..3 | % { $_ * 2 }` — doubles each number (bash's `printf '1\n2\n3\n' | awk '{print $1*2}'`).
 - `Get-ChildItem *.txt | % { Add-Content $_ "END" }` — appends END to every txt file (bash's `for f in *.txt; do echo END >> "$f"; done`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [ForEach-Object](CommandDetails.en.md#foreach-object).
+Official original reference: [ForEach-Object](OriginalCrossPlatformDetails.en.md#foreach-object).
 
 ### Select-Object (select)
 - Type: Go implementation.
@@ -701,7 +699,7 @@ Examples:
 - `1..10 | Select-Object -First 3` — the first 3 numbers (bash's `seq 1 10 | head -3`).
 - `Get-ChildItem | Select-Object Name,Length | Sort-Object Length -Descending | Select-Object -First 5` — lists files and keeps the 5 largest.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Select-Object](CommandDetails.en.md#select-object).
+Official original reference: [Select-Object](OriginalCrossPlatformDetails.en.md#select-object).
 
 ### Sort-Object (sort)
 - Type: Go implementation.
@@ -712,7 +710,7 @@ Examples:
 - `3,1,2 | sort` — sorts into 1 2 3 (bash's `printf '3\n1\n2\n' | sort`).
 - `Get-ChildItem | Sort-Object Length -Descending | Select-Object -First 3` — sorts by size, taking the 3 largest.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Sort-Object](CommandDetails.en.md#sort-object).
+Official original reference: [Sort-Object](OriginalCrossPlatformDetails.en.md#sort-object).
 
 ### Group-Object (group)
 - Type: Go implementation.
@@ -723,7 +721,7 @@ Examples:
 - `1,1,2,3,3,3 | Group-Object` — counts occurrences of each number (bash's `printf '1\n1\n2\n3\n3\n3\n' | sort | uniq -c`).
 - `Get-Process | Group-Object ProcessName | Sort-Object Count -Descending | Select-Object -First 5` — counts each process type, keeping the 5 most numerous.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Group-Object](CommandDetails.en.md#group-object).
+Official original reference: [Group-Object](OriginalCrossPlatformDetails.en.md#group-object).
 
 ### Measure-Object (measure)
 - Type: Go implementation.
@@ -734,7 +732,7 @@ Examples:
 - `Get-Content file.txt | Measure-Object -Line` — counts lines (bash's `wc -l file.txt`).
 - `Get-ChildItem | Measure-Object -Property Length -Sum -Average -Maximum` — sums, averages, and maximizes file sizes.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Measure-Object](CommandDetails.en.md#measure-object).
+Official original reference: [Measure-Object](OriginalCrossPlatformDetails.en.md#measure-object).
 
 ### Measure-Command
 - Type: Go implementation.
@@ -745,7 +743,7 @@ Examples:
 - `Measure-Command { Start-Sleep -Milliseconds 100 }` — measures how long sleeping 0.1 seconds takes (like `time sleep 0.1`).
 - `(Measure-Command { Get-ChildItem -Recurse | Out-Null }).TotalSeconds` — how many seconds a recursive directory walk took.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Measure-Command](CommandDetails.en.md#measure-command).
+Official original reference: [Measure-Command](OriginalCrossPlatformDetails.en.md#measure-command).
 
 ### Get-Member (gm)
 - Type: Go implementation.
@@ -757,7 +755,7 @@ Examples:
 - `Get-ChildItem | Select-Object -First 1 | Get-Member` — what members a file object has.
 - `Get-Item x.txt | Get-Member -MemberType Property` — properties only (in spirit like inspecting `stat` fields in bash).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Member](CommandDetails.en.md#get-member).
+Official original reference: [Get-Member](OriginalCrossPlatformDetails.en.md#get-member).
 
 ### Get-Unique (gu)
 - Type: Go implementation.
@@ -768,7 +766,7 @@ Examples:
 - `1,1,2,2,3 | Get-Unique` — deduplicates into 1 2 3 (bash's `printf '1\n1\n2\n2\n3\n' | sort -u`).
 - `Get-Content words.txt | Sort-Object | Get-Unique | Select-Object -First 10` — deduplicated words, first ten.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Unique](CommandDetails.en.md#get-unique).
+Official original reference: [Get-Unique](OriginalCrossPlatformDetails.en.md#get-unique).
 
 ### Compare-Object
 - Type: Go implementation.
@@ -779,7 +777,7 @@ Examples:
 - `Compare-Object (1,2,3) (2,3,4)` — shows 1 only on the left and 4 only on the right (like `diff <(printf '1\n2\n3\n') <(printf '2\n3\n4\n')`).
 - `Compare-Object (Get-ChildItem a -Name) (Get-ChildItem b -Name)` — which file names differ between directories a and b.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Compare-Object](CommandDetails.en.md#compare-object).
+Official original reference: [Compare-Object](OriginalCrossPlatformDetails.en.md#compare-object).
 
 ### Tee-Object (tee)
 - Type: Go implementation.
@@ -790,7 +788,7 @@ Examples:
 - `Get-ChildItem -Name | Tee-Object list.txt` — file names go into list.txt while still being shown (bash's `ls | tee list.txt`).
 - `Get-Process | Tee-Object -Append proc.log | Select-Object -First 5` — appends to a log and takes the first 5 entries (like `ps -ef | tee -a proc.log | head -5`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Tee-Object](CommandDetails.en.md#tee-object).
+Official original reference: [Tee-Object](OriginalCrossPlatformDetails.en.md#tee-object).
 
 ### Add-Member
 - Type: Go implementation.
@@ -801,7 +799,7 @@ Examples:
 - `Get-Date | Add-Member -Name tag -Value test | Select-Object tag` — adds a "tag" property to a date object and reads it back.
 - `Get-ChildItem | Add-Member -Name source -Value "local" | Select-Object -First 2` — gives each file object a "source" property.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Add-Member](CommandDetails.en.md#add-member).
+Official original reference: [Add-Member](OriginalCrossPlatformDetails.en.md#add-member).
 
 ### New-Object
 - Type: Go implementation.
@@ -812,7 +810,7 @@ Examples:
 - `New-Object PSObject -Property @{name="x"; n=1}` — constructs an object with two properties (equivalent to `[pscustomobject]@{...}`).
 - `[pscustomobject]@{ a = 1; b = "x" }` — type literal constructing a custom object directly.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [New-Object](CommandDetails.en.md#new-object).
+Official original reference: [New-Object](OriginalCrossPlatformDetails.en.md#new-object).
 
 ---
 
@@ -833,7 +831,7 @@ Examples:
   ```
 - `ConvertFrom-Json '{"a":1,"b":[2,3]}' | Select-Object a` — parses JSON and takes a (bash's `echo '{"a":1,"b":[2,3]}' | jq -r .a`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [ConvertTo-Json](CommandDetails.en.md#convertto-json).
+Official original reference: [ConvertTo-Json](OriginalCrossPlatformDetails.en.md#convertto-json).
 
 ### ConvertTo-Csv / ConvertFrom-Csv
 - Type: Go implementation.
@@ -844,7 +842,7 @@ Examples:
 - `Get-ChildItem | ConvertTo-Csv` — turns a file listing into CSV.
 - `Get-Process | Select-Object ProcessName,Id | ConvertTo-Csv | Set-Content proc.csv` — saves process names and IDs as a CSV file.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [ConvertTo-Csv](CommandDetails.en.md#convertto-csv).
+Official original reference: [ConvertTo-Csv](OriginalCrossPlatformDetails.en.md#convertto-csv).
 
 ### ConvertFrom-StringData
 - Type: Go implementation.
@@ -855,7 +853,7 @@ Examples:
 - `ConvertFrom-StringData "a=1"` — yields `{a=1}`.
 - `Get-Content app.conf | ConvertFrom-StringData` — reads a configuration file into a key-value table.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [ConvertFrom-StringData](CommandDetails.en.md#convertfrom-stringdata).
+Official original reference: [ConvertFrom-StringData](OriginalCrossPlatformDetails.en.md#convertfrom-stringdata).
 
 ### Test-Json
 - Type: Go implementation.
@@ -866,7 +864,7 @@ Examples:
 - `Test-Json '{"a":1}'` — returns True.
 - `Get-Content data.json | Test-Json` — checks data.json's validity.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Test-Json](CommandDetails.en.md#test-json).
+Official original reference: [Test-Json](OriginalCrossPlatformDetails.en.md#test-json).
 
 ### Get-Random
 - Type: Go implementation.
@@ -877,7 +875,7 @@ Examples:
 - `Get-Random -Minimum 1 -Maximum 100` — a random number from 1 to 99 (bash's `shuf -i 1-100 -n 1`).
 - `Get-ChildItem -Name | Get-Random -Count 2` — two random file names (bash's `ls | shuf -n 2`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Random](CommandDetails.en.md#get-random).
+Official original reference: [Get-Random](OriginalCrossPlatformDetails.en.md#get-random).
 
 ### New-Guid
 - Type: Go implementation.
@@ -888,7 +886,7 @@ Examples:
 - `New-Guid` — generates a UUID (like `uuidgen`).
 - `1..3 | % { New-Guid }` — generates three UUIDs.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [New-Guid](CommandDetails.en.md#new-guid).
+Official original reference: [New-Guid](OriginalCrossPlatformDetails.en.md#new-guid).
 
 ### New-TimeSpan
 - Type: Go implementation.
@@ -899,7 +897,7 @@ Examples:
 - `New-TimeSpan -Minutes 5` — a 5-minute span.
 - `(New-TimeSpan -Hours 2 -Minutes 30).TotalMinutes` — works out that 2 hours 30 minutes is 150 minutes.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [New-TimeSpan](CommandDetails.en.md#new-timespan).
+Official original reference: [New-TimeSpan](OriginalCrossPlatformDetails.en.md#new-timespan).
 
 ### New-TemporaryFile
 - Type: Go implementation.
@@ -910,7 +908,7 @@ Examples:
 - `New-TemporaryFile` — creates a temp file (like `mktemp`).
 - `$f = New-TemporaryFile; Set-Content $f.FullName "tmp"; Remove-Item $f.FullName` — creates a temp file, puts something in it, deletes it.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [New-TemporaryFile](CommandDetails.en.md#new-temporaryfile).
+Official original reference: [New-TemporaryFile](OriginalCrossPlatformDetails.en.md#new-temporaryfile).
 
 ### Join-String
 - Type: Go implementation.
@@ -921,7 +919,7 @@ Examples:
 - `1..3 | Join-String -Separator ", "` — yields `1, 2, 3`.
 - `Get-ChildItem -Name | Join-String -Separator "`n"` — joins file names with line breaks.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Join-String](CommandDetails.en.md#join-string).
+Official original reference: [Join-String](OriginalCrossPlatformDetails.en.md#join-string).
 
 ---
 
@@ -936,7 +934,7 @@ Examples:
 - `gv HOME` — looks at the HOME variable.
 - `Get-Variable P* | Select-Object Name,Value` — lists all variables starting with P.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Variable](CommandDetails.en.md#get-variable).
+Official original reference: [Get-Variable](OriginalCrossPlatformDetails.en.md#get-variable).
 
 ### Set-Variable / New-Variable / Remove-Variable / Clear-Variable (sv / nv / rv / clv)
 - Type: Go implementation.
@@ -947,7 +945,7 @@ Examples:
 - `New-Variable data 42` — creates data=42 (like `data=42`).
 - `Set-Variable -Name total -Value (1..100 | Measure-Object -Sum).Sum; Remove-Variable total` — sums 1 through 100 into total, then removes it.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Set-Variable](CommandDetails.en.md#set-variable).
+Official original reference: [Set-Variable](OriginalCrossPlatformDetails.en.md#set-variable).
 
 ### $env: environment variables
 - Type: Go implementation.
@@ -958,7 +956,6 @@ Examples:
 - `$env:MY_VAR = "v"; $env:MY_VAR` — sets then reads (bash's `export MY_VAR=v; echo $MY_VAR`).
 - `$env:PATH = "/usr/bin:$env:PATH"` — prepends to PATH (bash's `export PATH=/usr/bin:$PATH`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [$env: environment variables](CommandDetails.en.md#env).
 
 ---
 
@@ -973,7 +970,7 @@ Examples:
 - `gal ls` — who ls points to.
 - `Get-Alias | Where-Object Definition -like "*Get-Content*"` — finds every alias pointing at Get-Content.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Alias](CommandDetails.en.md#get-alias).
+Official original reference: [Get-Alias](OriginalCrossPlatformDetails.en.md#get-alias).
 
 ### Set-Alias / New-Alias / Remove-Alias / Import-Alias / Export-Alias (sa / na)
 - Type: Go implementation.
@@ -984,7 +981,7 @@ Examples:
 - `Set-Alias ll "Get-ChildItem"` — points ll at Get-ChildItem (bash's `alias ll='ls'`).
 - `New-Alias -Name untar -Value tar; untar xf a.tar.gz` — dubs tar "untar", then unpacks with it.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Set-Alias](CommandDetails.en.md#set-alias).
+Official original reference: [Set-Alias](OriginalCrossPlatformDetails.en.md#set-alias).
 
 ---
 
@@ -999,7 +996,7 @@ Examples:
 - `history` — shows history (bash's `history`).
 - `Get-History | Where-Object CommandLine -like "*git*" | Invoke-History` — digs out git-related commands and replays them.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-History](CommandDetails.en.md#get-history).
+Official original reference: [Get-History](OriginalCrossPlatformDetails.en.md#get-history).
 
 ---
 
@@ -1014,7 +1011,7 @@ Examples:
 - `iwr https://example.com` — fetches a page (like `curl https://example.com`).
 - `Invoke-WebRequest -Uri https://api.example.com/data -Method POST -Body '{"k":1}'` — POSTs some JSON (like `curl -X POST -d '{"k":1}' https://api.example.com/data`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Invoke-WebRequest](CommandDetails.en.md#invoke-webrequest).
+Official original reference: [Invoke-WebRequest](OriginalCrossPlatformDetails.en.md#invoke-webrequest).
 
 ### Invoke-RestMethod (irm)
 - Type: Go implementation.
@@ -1025,7 +1022,7 @@ Examples:
 - `irm https://api.github.com/zen` — fetches and parses one aphorism (like `curl -s https://api.github.com/zen`).
 - `$r = Invoke-RestMethod https://jsonplaceholder.typicode.com/todos/1; $r.title` — gets JSON, then takes the title field (like `curl -s ... | jq -r .title`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Invoke-RestMethod](CommandDetails.en.md#invoke-restmethod).
+Official original reference: [Invoke-RestMethod](OriginalCrossPlatformDetails.en.md#invoke-restmethod).
 
 ---
 
@@ -1040,7 +1037,7 @@ Examples:
 - `gcm Get-Content` — what Get-Content is (bash's `type cat`).
 - `Get-Command | Where-Object CommandType -eq "Cmdlet" | Select-Object -First 10` — lists the first 10 built-in commands.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Command](CommandDetails.en.md#get-command).
+Official original reference: [Get-Command](OriginalCrossPlatformDetails.en.md#get-command).
 
 ### Get-Help (help, man, gh)
 - Type: Go implementation.
@@ -1052,7 +1049,7 @@ Examples:
 - `help Get-Content` — Get-Content's syntax.
 - `Get-Help Get-ChildItem | Out-String` — captures help text as a string.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Get-Help](CommandDetails.en.md#get-help).
+Official original reference: [Get-Help](OriginalCrossPlatformDetails.en.md#get-help).
 
 ### Invoke-Expression (iex)
 - Type: Go implementation.
@@ -1063,7 +1060,7 @@ Examples:
 - `iex "1 + 2"` — executes and prints 3.
 - `Get-Content commands.txt | Invoke-Expression` — runs commands.txt's contents line by line.
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Invoke-Expression](CommandDetails.en.md#invoke-expression).
+Official original reference: [Invoke-Expression](OriginalCrossPlatformDetails.en.md#invoke-expression).
 
 ### Read-Host
 - Type: Go implementation.
@@ -1074,7 +1071,7 @@ Examples:
 - `$name = Read-Host "your name"` — prompts, reads a line into $name (like `read -p "your name" name`).
 - `if ((Read-Host "continue? (y/n)") -eq "y") { "continuing" } else { "quitting" }` — continue on y, quit otherwise (bash's `read -p "continue? (y/n)" a; [ "$a" = y ] && echo continuing || echo quitting`).
 
-Full parameter and field descriptions in [Command Details](CommandDetails.en.md): [Read-Host](CommandDetails.en.md#read-host).
+Official original reference: [Read-Host](OriginalCrossPlatformDetails.en.md#read-host).
 
 ---
 

@@ -797,6 +797,17 @@ $results += T "删变量大小写" ((Get-Variable gvc) -eq $null)
 # 191. 作用域修饰符不区分大小写
 $global:SCV = 4
 $results += T "作用域大小写" ($GLOBAL:SCV -eq 4)
+# 192. Stop-Process 多 Id 逐个停止
+$sp1 = Start-Process /bin/sleep -ArgumentList "30"
+$sp2 = Start-Process /bin/sleep -ArgumentList "30"
+Stop-Process -Id $sp1.Id, $sp2.Id
+Start-Sleep -Milliseconds 800
+$results += T "多 Id 停止" (((Test-Path "/proc/$($sp1.Id)") -eq $false) -and ((Test-Path "/proc/$($sp2.Id)") -eq $false))
+Stop-Process -Id $sp1.Id, $sp2.Id
+# 193. Get-Process -Name 通配
+$sp3 = Start-Process /bin/sleep -ArgumentList "30"
+$results += T "进程名通配" (((@(Get-Process -Name "slee*").Count) -ge 1) -and ((@(Get-Process -Name "zzz-no-such-*").Count) -eq 0))
+Stop-Process -Id $sp3.Id
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

@@ -46,7 +46,7 @@ func cmdGetProcess(c *Context) ([]*object.PSObject, error) {
 			}
 			continue
 		}
-		if name != "" && !strings.Contains(strings.ToLower(pr.name), strings.ToLower(name)) {
+		if name != "" && !object.WildcardMatchFold(name, pr.name) {
 			continue
 		}
 		out = append(out, object.Process(pr.pid, pr.name, pr.cpu, pr.mem))
@@ -126,8 +126,12 @@ func listLinuxProcs() ([]procEntry, error) {
 }
 
 func cmdStopProcess(c *Context) ([]*object.PSObject, error) {
-	if id, ok := c.Args.Int("Id"); ok {
-		_ = killProcess(int(id))
+	if v := c.Args.Get("Id"); v != nil {
+		for _, it := range v.ArrayItems() {
+			if id, ok := it.AsInt(); ok {
+				_ = killProcess(int(id))
+			}
+		}
 		return nil, nil
 	}
 	name := firstArg(c, "Name")
@@ -203,9 +207,13 @@ func cmdStartProcess(c *Context) ([]*object.PSObject, error) {
 
 func cmdWaitProcess(c *Context) ([]*object.PSObject, error) {
 	name := firstArg(c, "Name")
-	if id, ok := c.Args.Int("Id"); ok {
-		for processActive(int(id)) {
-			time.Sleep(100 * time.Millisecond)
+	if v := c.Args.Get("Id"); v != nil {
+		for _, it := range v.ArrayItems() {
+			if id, ok := it.AsInt(); ok {
+				for processActive(int(id)) {
+					time.Sleep(100 * time.Millisecond)
+				}
+			}
 		}
 		return nil, nil
 	}

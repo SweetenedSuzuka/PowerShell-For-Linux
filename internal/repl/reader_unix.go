@@ -48,7 +48,7 @@ func newLineReader(in *os.File, out io.Writer, hist *[]string, complete func(str
 	fd := int(in.Fd())
 	var t syscall.Termios
 	if _, _, errno := syscall.Syscall(syscall.SYS_IOCTL, uintptr(fd), syscall.TCGETS, uintptr(unsafe.Pointer(&t))); errno != 0 {
-		return &simpleReader{in: in, out: out, history: hist}
+		return &simpleReader{in: in, out: out}
 	}
 	return &unixEditor{
 		in: in, out: out, br: bufio.NewReader(in),

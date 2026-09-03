@@ -167,7 +167,7 @@ func Spec(name string) []ParamSpec {
 	return specMap[strings.ToLower(name)]
 }
 
-// commonParams 是所有 cmdlet 通用的参数（MVP：接受但忽略）。
+// commonParams 是所有 cmdlet 通用的参数：-ErrorAction、-WhatIf、-Confirm 按各自语义生效，其余接受但忽略。
 var commonParams = map[string]bool{
 	"erroraction": true, "errorvariable": true, "verbose": true, "debug": true,
 	"whatif": true, "confirm": true, "outvariable": true, "outbuffer": true,

@@ -25,12 +25,12 @@ func (s *Session) ContinuationPrompt() string {
 	return ">>"
 }
 
-// PromptString 返回带颜色的提示符文本。
+// PromptString 返回提示符文本。
 func (s *Session) PromptString() string {
 	return s.Prompt()
 }
 
-// Usage 打印用法说明（-Help）。
+// Usage 返回用法说明文本（-Help）。
 func (s *Session) Usage() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "%s\n\n", s.Banner())

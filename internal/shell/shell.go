@@ -339,7 +339,7 @@ func newUUID() string {
 		b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], b[11], b[12], b[13], b[14], b[15])
 }
 
-// HostObject 构造 $Host 对象：InstanceId 为本会话的随机 UUID，区域随界面语言（未登记的语言回退默认语言）。
+// HostObject 构造 $Host 对象：InstanceId 每次构造随机生成，区域随界面语言（未登记的语言回退默认语言）。
 func (s *Session) HostObject() *object.PSObject {
 	h := object.Object("System.Management.Automation.Internal.Host.InternalHost", nil)
 	h.AddProp("Name", "ConsoleHost")
@@ -359,7 +359,7 @@ func (s *Session) AllVarNames() []string {
 	for n := range s.Vars {
 		set[n] = true
 	}
-	for _, n := range []string{"PWD", "HOME", "PID", "PSVersionTable", "LASTEXITCODE", "?", "Matches", "PSCommandPath", "args", "Host", "PSEdition", "IsLinux", "IsWindows", "IsMacOS", "PSHOME", "OFS", "ErrorActionPreference"} {
+	for _, n := range []string{"PWD", "HOME", "PID", "PSVersionTable", "LASTEXITCODE", "?", "Matches", "Error", "PSCommandPath", "args", "Host", "PSEdition", "IsLinux", "IsWindows", "IsMacOS", "IsCoreCLR", "PSHOME", "OFS", "ErrorActionPreference"} {
 		set[n] = true
 	}
 	var names []string
@@ -372,7 +372,7 @@ func (s *Session) AllVarNames() []string {
 
 // ---- 别名与命令解析 ----
 
-// ResolveAlias 解析别名（区分大小写不敏感）。
+// ResolveAlias 解析别名（不区分大小写）。
 func (s *Session) ResolveAlias(name string) (string, bool) {
 	if target, ok := s.Aliases[name]; ok {
 		return target, true

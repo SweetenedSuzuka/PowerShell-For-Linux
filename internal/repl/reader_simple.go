@@ -9,10 +9,9 @@ import (
 
 // simpleReader 是朴素行读取器（Windows/非终端回退）。
 type simpleReader struct {
-	in      io.Reader
-	out     io.Writer
-	history *[]string
-	br      *bufio.Reader
+	in  io.Reader
+	out io.Writer
+	br  *bufio.Reader
 }
 
 // ReadLine 读取一行（含提示符输出）。

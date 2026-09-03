@@ -78,7 +78,7 @@ func (r *REPL) loop() {
 		}
 		// 记录历史（整条合并）
 		joined := strings.Join(strings.Split(strings.TrimRight(r.pending, "\n"), "\n"), "; ")
-		if len(sessHistory(r.Session)) == 0 || sessHistory(r.Session)[len(sessHistory(r.Session))-1] != joined {
+		if len(r.Session.History) == 0 || r.Session.History[len(r.Session.History)-1] != joined {
 			r.Session.History = append(r.Session.History, joined)
 		}
 		// 逐语句执行并格式化，保证与直写命令顺序一致
@@ -93,8 +93,6 @@ func (r *REPL) loop() {
 		r.pending = ""
 	}
 }
-
-func sessHistory(s *shell.Session) []string { return s.History }
 
 // ---- Tab 补全 ----
 

@@ -1143,7 +1143,7 @@ func (p *Parser) isValueStart(t lexer.Token) bool {
 // ---- 表达式 ----
 
 // parseExpression 解析表达式（含逗号数组）。
-// 非实参模式下，若以"后跟参数/终止符的裸字"开头，视为命令调用（赋值 RHS、条件等场景）。
+// 非实参模式下，若以"后跟参数/终止符的裸字"开头，视为命令调用（赋值右侧、条件等场景）。
 func (p *Parser) parseExpression(argMode bool) ast.Node {
 	if p.err != nil {
 		return nil
@@ -1241,7 +1241,7 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 			elseExpr := p.parseBinaryExpr(prec, argMode)
 			lhs = &ast.Ternary{Cond: lhs, If: ifExpr, Else: elseExpr}
 		case "-f":
-			// 格式运算符：RHS 是逗号分隔的参数列表（如 "{0} {1}" -f 1,2）。
+			// 格式运算符：右侧是逗号分隔的参数列表（如 "{0} {1}" -f 1,2）。
 			// 参数项含范围但排除算术（-f 比算术绑定更紧："{0}" -f 5 * 2 先格式化再乘）
 			p.advance()
 			if !argMode {

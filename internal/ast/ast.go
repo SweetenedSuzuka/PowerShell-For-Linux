@@ -77,7 +77,7 @@ type Command struct {
 
 // Assign 是赋值：$x = 5、$env:X = "y"、$x += 1、$script:x = 1。
 type Assign struct {
-	Target string // 变量名，可为 "env:Name" 或 "$x"（去掉 $ 与 ${}）
+	Target string // 变量名，如 x 或 "env:Name"（不含前导 $ 与 ${}）
 	Scope  string // 作用域修饰符："" / "script" / "global" / "local"（$env: 单独走 Target）
 	Op     string // =、+=、-=、*=、/=、%=
 	Value  Node
@@ -242,7 +242,7 @@ type HashPair struct {
 // HashtableLit 是哈希表字面量 @{ k = v; ... }。
 type HashtableLit struct{ Pairs []HashPair }
 
-// TypeCast 是类型字面量：[pscustomobject]@{...} 构造自定义对象。
+// TypeCast 是类型转换：[int]"42" 转整数，[pscustomobject]@{...} 构造自定义对象。
 type TypeCast struct {
 	TypeName string
 	Expr     Node

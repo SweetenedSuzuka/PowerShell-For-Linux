@@ -162,7 +162,7 @@ The two styles' alias sets are largely identical; style 5 adds `curl`, `wget`, a
 | `gcm` | Get-Command | 5.1 and 7 |
 | `gal` | Get-Alias | 5.1 and 7 |
 | `gv` | Get-Variable | 5.1 and 7 |
-| `help` / `man` / `gh`（gh being this program's extension） | Get-Help | 5.1 and 7 |
+| `help` / `man` / `gh` (gh being this program's extension) | Get-Help | 5.1 and 7 |
 | `date` | Get-Date | 5.1 and 7 |
 | `gdr` | Get-PSDrive | 5.1 and 7 |
 | `history` / `ghy` | Get-History | 5.1 and 7 |

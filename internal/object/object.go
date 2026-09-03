@@ -1,6 +1,6 @@
 // Package object 定义 PowerShell 对象模型（PSObject）与格式化输出。
 //
-// 管道的灵魂是"对象"：内置 cmdlet 产出的是带类型与属性的对象，而非纯文本。
+// 内置 cmdlet 产出的是带类型与属性的对象，而非纯文本。
 // 管道终点再按对象的形状（表格/列表/纯文本）渲染。
 package object
 
@@ -304,7 +304,7 @@ func (o *PSObject) HasProp(name string) bool {
 	return false
 }
 
-// ToPS 把 Go 值包装成 PSObject（标量）。
+// ToPS 把 Go 值包装成 PSObject（标量、切片、哈希条目、时间、错误等）。
 func ToPS(v any) *PSObject {
 	switch t := v.(type) {
 	case *PSObject:

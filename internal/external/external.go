@@ -27,7 +27,7 @@ func LookPath(name string) (string, bool) {
 }
 
 // Exec 执行外部命令，返回退出码。
-// dir 是命令的工作目录（空则用进程当前目录）；stdin/stdout/stderr 决定 IO 接续。
+// dir 是命令的工作目录（空则用进程当前目录）；stdin/stdout/stderr 直接作为子进程的标准输入输出。
 func Exec(dir, program string, argv []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	cmd := exec.Command(program, argv...)
 	if dir != "" {

@@ -121,7 +121,7 @@ func flattenOutput(o *object.PSObject) []*object.PSObject {
 }
 
 // builtinError 处理内置 cmdlet 返回的错误。
-// errf 返回的终止错误直接上抛，其余按显式动作与首选项分发。
+// 返回的错误已是终止错误时直接上抛，其余按显式动作与首选项分发。
 func (e *Evaluator) builtinError(args *builtin.BoundArgs, err error) {
 	var term *builtin.TerminatingError
 	if errors.As(err, &term) && term.Record != nil {

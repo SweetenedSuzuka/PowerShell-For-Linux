@@ -17,7 +17,7 @@ Write-Output "== 参数绑定（位置绑定中心化回归） =="
 # 1. Set-Content 全位置
 Set-Content a.txt "val-a"
 $results += T "Set-Content 全位置" (((Get-Content a.txt) -eq "val-a"))
-# 2. Set-Content 命名 Path + 位置值（核心场景，此前被 Encoding 抢走）
+# 2. Set-Content 命名 Path + 位置值（命名 Path 占位后，位置值落到 Value）
 Set-Content -Path b.txt bval
 $results += T "命名Path+位置值" (((Get-Content b.txt) -eq "bval"))
 # 3. Set-Content 全命名
@@ -189,13 +189,13 @@ $results += T "命名目标在前" (((Get-ChildItem d6 -Name) -join ",") -eq "a3
 New-Item -ItemType Directory -Path d7 | Out-Null
 Copy-Item a1.txt,a2.txt d7 2>$null
 $results += T "数组+位置目标" (((Get-ChildItem d7 -Name) -join ",") -eq "a1.txt,a2.txt")
-# 52. Set-Content 管道 + 命名 Path 缺值（旧行为：不写）
+# 52. Set-Content 管道 + 命名 Path 缺值（命名 Path 缺值时不写文件）
 "x" | Set-Content -Path np.txt
 $results += T "管道+命名缺值不写" ((-not (Test-Path np.txt)))
 # 53. Add-Content 位置缺值追加空
 Add-Content ac.txt
 $results += T "Add-Content 位置缺值写空" (((Test-Path ac.txt)))
-# 54. Get-ChildItem 通配多路径（目录含其它 txt，断言改为包含性检查）
+# 54. Get-ChildItem 通配多路径（目录含多个 txt，只断言包含目标文件）
 "t1" | Set-Content f1.log; "t2" | Set-Content f2.md
 $wc = Get-ChildItem *.txt, *.log -Name
 $results += T "Get-ChildItem 通配数组" (($wc -contains "a1.txt") -and ($wc -contains "f1.log") -and ($wc.Count -ge 4))
@@ -217,7 +217,7 @@ $results += T "Compare-Object 跳槽" (($co.Count -eq 2))
 # 59. Set-Alias 两位置
 Set-Alias al1 cv1 2>$null
 $results += T "Set-Alias 两位置" (((Get-Alias al1).Definition -eq "cv1"))
-# 60. 管道输入 Get-Content（无路径）
+# 60. 管道输入 Set-Content 写文件，再用路径读回
 "p1" | Set-Content p.txt
 $gp = Get-Content p.txt
 $results += T "Get-Content 单文件" (($gp -join ",") -eq "p1")

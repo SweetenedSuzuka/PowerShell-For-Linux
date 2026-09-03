@@ -142,7 +142,7 @@ func executeOnce(sess *shell.Session, ev *eval.Evaluator, src string) int {
 		fmt.Fprintf(os.Stderr, "%s : %v\n", sess.StyleName(), res.Error)
 		return 1
 	}
-	// 仅交互续行状态允许不完整的语句，一次性交互拒绝执行不完整的输入
+	// 非交互单次执行拒绝不完整的输入（交互续行允许）。
 	if res.Incomplete {
 		fmt.Fprintf(os.Stderr, "%s : %s\n", sess.StyleName(), lang.T(lang.MsgIncompleteInput))
 		return 1

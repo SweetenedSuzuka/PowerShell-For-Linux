@@ -25,10 +25,10 @@ const (
 	TkString                    // 字符串（单/双引号），内容在 Parts 中
 	TkVariable                  // $name 或 $env:Name，Text 为名字
 	TkBraceVar                  // ${name}，Text 为大括号内名字
-	TkDashWord                  // -xxx，Text 不含前导 '-' 与可能的值部分（'-Name:' 时 Text 为 Name）
+	TkDashWord                  // -xxx，Text 不含前导 '-' 但保留冒号及后续值原文（'-Name:Value' 时 Text 为 Name:Value）
 	TkColon                     // ':'
 	TkDot                       // '.'（属性访问）
-	TkOp                        // 算术/赋值/重定向运算符，Text 为其符号
+	TkOp                        // 运算符，Text 为其符号（算术、赋值、重定向、逻辑、比较、自增等）
 	TkPunct                     // 其它标点：| ; , ( ) { } [ ] @
 )
 

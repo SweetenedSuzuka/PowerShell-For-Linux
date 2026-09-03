@@ -136,7 +136,17 @@ func loadProfile(ev *eval.Evaluator, sess *shell.Session, out io.Writer) {
 }
 
 // executeOnce 执行一段命令文本并输出结果，返回退出码。
-func executeOnce(sess *shell.Session, ev *eval.Evaluator, src string) int {
+func executeOnce(sess *shell.Session, ev *eval.Evaluator, src string) (code int) {
+	// 单次执行顶层回收：普通 panic 转为报错并返回失败码。
+	defer func() {
+		if r := recover(); r != nil {
+			if ev.ReportPanic(r) {
+				code = 1
+				return
+			}
+			panic(r)
+		}
+	}()
 	res := parser.Parse(src)
 	if res.Error != nil {
 		fmt.Fprintf(os.Stderr, "%s : %v\n", sess.StyleName(), res.Error)

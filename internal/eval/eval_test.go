@@ -1150,3 +1150,27 @@ func TestMeasureObjectFields(t *testing.T) {
 	wantStr(t, `@{a=1},@{a=2},@{b=3} | Measure-Object -Property a -Sum | ForEach-Object { $_.Count }`, "2")
 	wantStr(t, `@{a=1},@{a=2},@{b=3} | Measure-Object -Property a -Sum | ForEach-Object { $_.Sum }`, "3")
 }
+
+// TestReportPanic 验证顶层回收：普通 panic 转为报错，控制流信号继续传播。
+func TestReportPanic(t *testing.T) {
+	sess := shell.New(shell.StyleCore, io.Discard, io.Discard, strings.NewReader(""))
+	ev := New(sess, strings.NewReader(""), io.Discard, io.Discard)
+	// 普通值处理：记录错误并置失败
+	if !ev.ReportPanic("boom") {
+		t.Fatal("普通 panic 应处理")
+	}
+	if sess.LastSuccess {
+		t.Fatal("处理后 $? 应为失败")
+	}
+	if len(sess.ErrorRecords) == 0 {
+		t.Fatal("处理后 $Error 应有记录")
+	}
+	// 控制流信号继续传播
+	rec := sess.RecordError("x")
+	if ev.ReportPanic(&flowSignal{kind: flowError, value: rec}) {
+		t.Fatal("控制流信号不应处理")
+	}
+	if ev.ReportPanic(nil) {
+		t.Fatal("空值不应处理")
+	}
+}

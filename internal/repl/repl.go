@@ -32,6 +32,15 @@ type REPL struct {
 
 // Run 启动 REPL 主循环。
 func Run(sess *shell.Session, ev *eval.Evaluator, showBanner bool, in *os.File, out, errw io.Writer) {
+	// 交互顶层回收：普通 panic 转为报错后返回，历史保存不受影响。
+	defer func() {
+		if rec := recover(); rec != nil {
+			if ev.ReportPanic(rec) {
+				return
+			}
+			panic(rec)
+		}
+	}()
 	if showBanner {
 		fmt.Fprintln(out, sess.Banner())
 		fmt.Fprintln(out)
@@ -82,13 +91,35 @@ func (r *REPL) loop() {
 			r.Session.History = append(r.Session.History, joined)
 		}
 		// 逐语句执行并格式化，保证与直写命令顺序一致
-		for _, st := range res.List.Statements {
-			objs := r.Eval.EvalStatement(st)
-			_ = object.FormatOutput(r.out, objs)
-			if r.Eval.ExitRequested {
-				r.pending = ""
-				return
+		exited := false
+		recovered := false
+		func() {
+			// 单轮回收：普通 panic 转为报错后继续下一轮。
+			defer func() {
+				if rec := recover(); rec != nil {
+					if r.Eval.ReportPanic(rec) {
+						recovered = true
+						return
+					}
+					panic(rec)
+				}
+			}()
+			for _, st := range res.List.Statements {
+				objs := r.Eval.EvalStatement(st)
+				_ = object.FormatOutput(r.out, objs)
+				if r.Eval.ExitRequested {
+					exited = true
+					return
+				}
 			}
+		}()
+		if exited {
+			r.pending = ""
+			return
+		}
+		if recovered {
+			r.pending = ""
+			continue
 		}
 		r.pending = ""
 	}

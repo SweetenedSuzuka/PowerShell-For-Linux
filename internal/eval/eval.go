@@ -238,6 +238,19 @@ func (e *Evaluator) reportError(err error) {
 	e.dispatchError("", err)
 }
 
+// ReportPanic 把顶层回收到的非控制流 panic 转为非终止错误。
+// 控制流信号返回 false，交由调用方继续传播。
+func (e *Evaluator) ReportPanic(r any) bool {
+	if r == nil {
+		return false
+	}
+	if _, ok := r.(*flowSignal); ok {
+		return false
+	}
+	e.writeError(fmt.Errorf("%v", r))
+	return true
+}
+
 // ---- 表达式求值 ----
 
 func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {

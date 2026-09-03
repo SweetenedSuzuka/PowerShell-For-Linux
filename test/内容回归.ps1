@@ -733,6 +733,13 @@ $results += T "Quiet 未命中无输出" ($ss2 -eq $null)
 [pscustomobject]@{n="x";m=1},[pscustomobject]@{n="y";z=2} | Out-File ft-merge.txt
 $ftm = Get-Content ft-merge.txt
 $results += T "自定义对象合成表" (($ftm.Count -eq 4) -and ($ftm[0] -like "n*") -and ((($ftm -join "")) -notlike "*z*"))
+# 171. @() 内裸命令执行（单命令）
+$at1 = @(Get-Command -Name Get-Process)
+$results += T "@() 执行单命令" ((@($at1).Count -eq 1) -and ($at1[0].Name -eq "Get-Process"))
+# 172. @() 全量与 $() 一致
+$results += T "@() 全量一致" ((@(Get-Command).Count) -eq ($(Get-Command).Count))
+# 173. @() 字面量不受影响
+$results += T "@() 字面量" (((@(1,2,3) -join ",")) -eq "1,2,3")
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

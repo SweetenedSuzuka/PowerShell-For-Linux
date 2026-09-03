@@ -143,3 +143,16 @@ func isStatementKeyword(text string) bool {
 	return false
 }
 
+// isAtCommandWord 报告 @() 元素开头的裸字是否按命令解析。
+// 语句关键字（判据与 parseStatement 的关键字分支一致）沿用表达式路径，其余裸字走命令位置。
+func isAtCommandWord(text string) bool {
+	if isStatementKeyword(text) {
+		return false
+	}
+	switch strings.ToLower(text) {
+	case "function", "filter", "param", "break", "continue", "return", "exit", "throw", "catch", "finally":
+		return false
+	}
+	return true
+}
+

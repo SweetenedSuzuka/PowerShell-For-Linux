@@ -301,6 +301,43 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 	return e
 }
 
+// atCommaAhead 报告 @() 当前元素内是否有顶层逗号：从当前位置按括号深度扫描 token。
+// 深度归零处的逗号分隔下一个元素；`)`/`]`/`}`、管道、分号、赋值、换行与文件尾表示没有。
+// 词法 token 原子计入，字符串与脚本块内部不影响深度；只读游标，不移动位置。
+func (p *Parser) atCommaAhead() bool {
+	depth := 0
+	for i := p.pos; i < len(p.toks); i++ {
+		t := p.toks[i]
+		if t.Type == TkEOF || t.Type == TkNewline {
+			return false
+		}
+		if t.Type == TkOp && (t.Text == "=" || t.Text == "&&" || t.Text == "||") {
+			return false
+		}
+		if t.Type != TkPunct {
+			continue
+		}
+		switch t.Text {
+		case "(", "[", "{":
+			depth++
+		case ")", "]", "}":
+			if depth == 0 {
+				return false
+			}
+			depth--
+		case ",":
+			if depth == 0 {
+				return true
+			}
+		case "|", ";":
+			if depth == 0 {
+				return false
+			}
+		}
+	}
+	return false
+}
+
 func (p *Parser) parsePrimary(argMode bool) ast.Node {
 	t := p.cur()
 	switch t.Type {
@@ -415,7 +452,18 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 						break
 					}
 					// 元素解析优先级低于逗号（28），使 "x","y" | cmd 先成数组再进管道
-					item := p.parseBinaryExpr(27, false)
+					var item ast.Node
+					switch {
+					case p.cur().Type == TkWord && isAtCommandWord(p.cur().Text) && !p.atCommaAhead():
+						// @() 内裸字走命令位置（与真 PowerShell 一致）：无顶层逗号的单命令元素按命令解析。
+						item = p.parsePipelineElement()
+					case p.atCommaAhead():
+						// 含顶层逗号的多元素沿用原解析路径，保持原有行为。
+						item = p.parseBinaryExpr(27, false)
+					default:
+						// 其余沿用表达式路径（含语句关键字与管道，判据同 parseExpression）。
+						item = p.parseExpression(false)
+					}
 					// 元素内可以是管道：@("x" | ForEach-Object { ... })
 					if p.cur().Type == TkPunct && p.cur().Text == "|" {
 						pipe := &ast.Pipeline{Expr: item}

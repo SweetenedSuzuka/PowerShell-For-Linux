@@ -825,6 +825,14 @@ $results += T "空值分组" (((@($null | Group-Object).Count) -eq 0))
 # 198. $null 写文件零字节
 $null | Set-Content test/tmp/nullbyte.txt
 $results += T "空值写文件" ((((Get-Item test/tmp/nullbyte.txt).Length) -eq 0))
+# 199. Wait-Process 缺失 PID 报错
+$Error.Clear()
+Wait-Process -Id 999991
+$results += T "等待缺失进程" ((($? -eq $false)) -and (($Error.Count -ge 1)))
+# 200. Wait-Process 缺失进程名报错
+$Error.Clear()
+Wait-Process -Name "zzz-no-such-proc-abc"
+$results += T "等待缺失进程名" ((($? -eq $false)) -and (($Error.Count -ge 1)))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

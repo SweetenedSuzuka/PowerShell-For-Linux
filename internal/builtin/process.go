@@ -210,6 +210,10 @@ func cmdWaitProcess(c *Context) ([]*object.PSObject, error) {
 	if v := c.Args.Get("Id"); v != nil {
 		for _, it := range v.ArrayItems() {
 			if id, ok := it.AsInt(); ok {
+				// 入口已不存在即报错（刚结束的同样报错，与 PowerShell 一致）
+				if !processActive(int(id)) {
+					return errf(c, "%s", lang.T(lang.MsgProcIdNotFound, it.String()))
+				}
 				for processActive(int(id)) {
 					time.Sleep(100 * time.Millisecond)
 				}
@@ -221,27 +225,33 @@ func cmdWaitProcess(c *Context) ([]*object.PSObject, error) {
 		return nil, nil
 	}
 	if pid, err := strconv.Atoi(name); err == nil {
+		if !processActive(pid) {
+			return errf(c, "%s", lang.T(lang.MsgProcIdNotFound, name))
+		}
 		for processActive(pid) {
 			time.Sleep(100 * time.Millisecond)
 		}
 		return nil, nil
 	}
-	for {
-		found := false
-		if procs, e := listProcesses(); e == nil {
-			for _, pr := range procs {
-				if strings.EqualFold(pr.name, name) {
-					found = true
-					break
-				}
-			}
-		}
-		if !found {
-			break
-		}
+	if !processNameActive(name) {
+		return errf(c, "%s", lang.T(lang.MsgProcNameNotFound, name))
+	}
+	for processNameActive(name) {
 		time.Sleep(100 * time.Millisecond)
 	}
 	return nil, nil
+}
+
+// processNameActive 报告是否有同名活动进程。
+func processNameActive(name string) bool {
+	if procs, e := listProcesses(); e == nil {
+		for _, pr := range procs {
+			if strings.EqualFold(pr.name, name) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // processActive 判断进程是否还在活动，已结束的不再等待。

@@ -9,7 +9,7 @@ import (
 	"powershell/internal/object"
 )
 
-// utility.go 收纳各自不成名词域的独立小指令（连接测试、暂停）。
+// utility.go 收纳不成体系的独立小指令（连接测试、暂停）。
 
 func cmdTestConnection(c *Context) ([]*object.PSObject, error) {
 	host := firstArg(c, "TargetName")

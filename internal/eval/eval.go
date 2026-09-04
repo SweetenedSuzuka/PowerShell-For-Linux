@@ -517,7 +517,7 @@ func wrapSingle(out []*object.PSObject) *object.PSObject {
 	return object.Array(out)
 }
 
-// unwrapOutput 把返回值展开为对象流（数组摊平）。
+// unwrapOutput 把返回值展开为对象流（数组展开）。
 func unwrapOutput(v *object.PSObject) []*object.PSObject {
 	if v == nil || v.IsNull() {
 		return nil

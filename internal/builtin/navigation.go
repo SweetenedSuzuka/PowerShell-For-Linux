@@ -12,7 +12,7 @@ import (
 // navigation.go 实现导航定位类 cmdlet（目录列举、条目查看、位置切换、驱动器）。
 
 func cmdGetChildItem(c *Context) ([]*object.PSObject, error) {
-	// 路径：-Path（命名或位置，数组摊平）加超量位置实参，全部当起始路径
+	// 路径：-Path（命名或位置，数组展开）加超量位置实参，全部当起始路径
 	var paths []string
 	if v := c.Args.Get("Path"); v != nil {
 		for _, it := range v.ArrayItems() {
@@ -46,13 +46,13 @@ func cmdGetChildItem(c *Context) ([]*object.PSObject, error) {
 			if err != nil {
 				continue
 			}
-			out = append(out, listOne(c, p, info, filter, nameOnly, recurse, dirOnly, fileOnly)...)
+			out = append(out, listSinglePath(c, p, info, filter, nameOnly, recurse, dirOnly, fileOnly)...)
 		}
 	}
 	return out, nil
 }
 
-func listOne(c *Context, p string, info os.FileInfo, filter string, nameOnly bool, recurse bool, dirOnly bool, fileOnly bool) []*object.PSObject {
+func listSinglePath(c *Context, p string, info os.FileInfo, filter string, nameOnly bool, recurse bool, dirOnly bool, fileOnly bool) []*object.PSObject {
 	var out []*object.PSObject
 	if info.IsDir() {
 		entries, err := os.ReadDir(p)
@@ -82,7 +82,7 @@ func listOne(c *Context, p string, info os.FileInfo, filter string, nameOnly boo
 				out = append(out, object.FileInfo(full, fi))
 			}
 			if recurse && fi.IsDir() {
-				out = append(out, listOne(c, full, fi, filter, nameOnly, recurse, dirOnly, fileOnly)...)
+				out = append(out, listSinglePath(c, full, fi, filter, nameOnly, recurse, dirOnly, fileOnly)...)
 			}
 		}
 	} else {
@@ -105,7 +105,7 @@ func listOne(c *Context, p string, info os.FileInfo, filter string, nameOnly boo
 }
 
 func cmdGetItem(c *Context) ([]*object.PSObject, error) {
-	// 路径：-Path（命名或位置，数组摊平）加超量位置实参
+	// 路径：-Path（命名或位置，数组展开）加超量位置实参
 	var paths []string
 	if v := c.Args.Get("Path"); v != nil {
 		for _, it := range v.ArrayItems() {

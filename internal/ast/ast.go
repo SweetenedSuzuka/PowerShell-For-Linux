@@ -227,7 +227,7 @@ type BoolLit struct{ Value bool }
 type NullLit struct{}
 
 // ArrayLit 是数组 @(...) / ,(...) / 逗号表达式。
-// Flatten 标记来自 @(...)：元素按输出流摊平（@($arr) 得到元素本身）；逗号列表不摊平（1,2,(3,4) 第 3 项是内嵌数组）。
+// Flatten 标记来自 @(...)：元素按输出流展开（@($arr) 得到元素本身）；逗号列表不展开（1,2,(3,4) 第 3 项是内嵌数组）。
 type ArrayLit struct {
 	Items   []Node
 	Flatten bool

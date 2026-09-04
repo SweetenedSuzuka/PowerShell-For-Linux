@@ -456,6 +456,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 				p.advance() // @
 				p.advance() // (
 				var items []ast.Node
+				afterComma := false
 				for {
 					if p.err != nil {
 						break
@@ -474,10 +475,10 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 					first := len(items) == 0
 					switch {
 					case p.cur().Type == TkWord && isAtCommandWord(p.cur().Text) && first:
-						// 首元素裸字走命令位置（与原版 PowerShell 一致）：命令吞掉后续逗号实参，后元素不再另起。
+						// 首元素裸字走命令位置（与原版 PowerShell 一致）：后续逗号实参加入该命令，后元素不再另起。
 						item = p.parsePipelineElement()
-					case !first && p.cur().Type == TkWord && isAtCommandWord(p.cur().Text):
-						// 非首元素裸字：原版 PowerShell 报逗号后缺少表达式（值元素后不许另起命令，裸 true 亦错）。
+					case afterComma && p.cur().Type == TkWord && isAtCommandWord(p.cur().Text):
+						// 逗号后裸字：原版 PowerShell 报逗号后缺少表达式；分号/换行分隔的新语句不适用。
 						p.fail(lang.T(lang.MsgParseMissingExpr))
 						item = &ast.BareWord{Value: ""}
 					case p.atCommaAhead():
@@ -506,6 +507,9 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 					items = append(items, item)
 					if p.cur().Type == TkPunct && p.cur().Text == "," {
 						p.advance()
+						afterComma = true
+					} else {
+						afterComma = false
 					}
 				}
 				return &ast.ArrayLit{Items: items, Flatten: true}

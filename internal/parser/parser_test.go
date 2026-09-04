@@ -277,9 +277,9 @@ func parseOK(t *testing.T, src string) *ast.StatementList {
 func TestSimplePipeline(t *testing.T) {
 	src := "Get-ChildItem -Force | Where-Object Length -gt 100 | Sort-Object Length -Descending"
 	d := dump(parseOK(t, src))
-	want := "stmt[cmd(Get-ChildItem -Force) | cmd(Where-Object (word(Length) -gt num(100))) | cmd(Sort-Object word(Length) -Descending)]"
-	if d != want {
-		t.Fatalf("解析 %q\n  得到 %s\n  想要 %s", src, d, want)
+	expected := "stmt[cmd(Get-ChildItem -Force) | cmd(Where-Object (word(Length) -gt num(100))) | cmd(Sort-Object word(Length) -Descending)]"
+	if d != expected {
+		t.Fatalf("解析 %q\n  得到 %s\n  想要 %s", src, d, expected)
 	}
 }
 
@@ -370,7 +370,7 @@ func TestFunctionAndParams(t *testing.T) {
 }
 
 func TestArraysAndHashtables(t *testing.T) {
-	// @(...) 元素解析优先级低于逗号：1,2,3 在元素内先成数组（Flatten 摊平后语义与平铺一致）
+	// @(...) 元素解析优先级低于逗号：1,2,3 在元素内先成数组（Flatten 展开后语义与平铺一致）
 	d := dump(parseOK(t, "$a = @(1, 2, 3)"))
 	if !strings.Contains(d, "set(a = [[num(1),num(2),num(3)]") {
 		t.Fatalf("数组解析失败: %s", d)
@@ -836,13 +836,15 @@ func TestExpressionLineContinuation(t *testing.T) {
 	}
 }
 
-// TestAtArrayCommaRules 验证 @() 逗号规则（与 PowerShell 一致）：首元素命令吞逗号实参；值元素后裸命令词报缺表达式错；裸逗号后裸字同样报错。
+// TestAtArrayCommaRules 验证 @() 逗号规则（与 PowerShell 一致）：首元素命令接纳逗号实参；值元素后裸命令词报缺表达式错；裸逗号后裸字同样报错。
 func TestAtArrayCommaRules(t *testing.T) {
 	for _, src := range []string{
 		`@(Write-Output "a", "b")`,
 		`@(Get-ChildItem -Path /tmp, "x")`,
 		`@(Get-Date)`,
 		`@(1, 2)`,
+		`@(Get-Date; Get-Date)`,
+		`@($x; Get-Date)`,
 	} {
 		if res := Parse(src); res.Error != nil {
 			t.Errorf("%q 应可解析，实际 err=%v", src, res.Error)

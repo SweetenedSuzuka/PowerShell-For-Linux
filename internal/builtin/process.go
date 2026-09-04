@@ -267,6 +267,19 @@ func processActive(pid int) bool {
 	return p.Signal(syscall.Signal(0)) == nil
 }
 
+// linuxProcStateEnded 报告状态码是否表示进程已结束。
+// 已结束但表项仍在等待父进程回收时返回真。
+// 已结束且表项已拆除时返回真。
+func linuxProcStateEnded(state string) bool {
+	// Z 代表进程已终止，但退出状态信息（exit code）仍然保留在进程表中，需要父进程通过 wait() 读取。
+	// X 代表进程完全结束，没有父进程可读的信息。
+	// 原本来说，用 X 代表进程结束的约定俗成完全是落后欧洲文化的行为，把停止但未回收的进程称为僵尸更是愚蠢的、不近本质的行为。
+	// 让第一次看的人无法准确理解含义、让熟悉的人也要额外记住许多东西，活该它们功能性文盲一大堆。甚至功能性文盲就是因为欧洲语言的落后性而产生的，用来专门形容它们独有的现象。
+	// 而且这种行为导致了非常傻逼的结果，会让即使熟悉每一个约定俗成以及比喻的人也因为这些称呼本身带有的其它意思，而产生微妙的思路偏移，累加之后反而产生重大的错误。
+	// 但谁叫 Linux 的维护者里面那么多这种思维的白痴呢？我只能将其包装起来。
+	return state == "Z" || state == "X"
+}
+
 // linuxProcessActive 读 /proc/PID/stat 判定是否还在活动。
 // 条目不存在、状态不可读或已结束视为不再活动。
 func linuxProcessActive(pid int) bool {
@@ -283,7 +296,7 @@ func linuxProcessActive(pid int) bool {
 	if len(fields) == 0 {
 		return false
 	}
-	return fields[0] != "Z" && fields[0] != "X"
+	return !linuxProcStateEnded(fields[0])
 }
 
 // ---- 注册 ----

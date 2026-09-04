@@ -6,7 +6,7 @@ import "testing"
 func TestDrivePath(t *testing.T) {
 	cases := []struct {
 		in   string
-		want string
+		expected string
 		err  bool
 	}{
 		{"C:\\tmp\\x", "/tmp/x", false},
@@ -21,20 +21,20 @@ func TestDrivePath(t *testing.T) {
 		{"d:/x", "", true},
 		{"A:foo", "", true},
 	}
-	for _, c := range cases {
-		got, err := DrivePath(c.in)
-		if c.err {
+	for _, tc := range cases {
+		actual, err := DrivePath(tc.in)
+		if tc.err {
 			if err == nil {
-				t.Errorf("%q 应报错，实际得 %q", c.in, got)
+				t.Errorf("%q 应报错，实际得 %q", tc.in, actual)
 			}
 			continue
 		}
 		if err != nil {
-			t.Errorf("%q 不应报错：%v", c.in, err)
+			t.Errorf("%q 不应报错：%v", tc.in, err)
 			continue
 		}
-		if got != c.want {
-			t.Errorf("DrivePath(%q) = %q，想要 %q", c.in, got, c.want)
+		if actual != tc.expected {
+			t.Errorf("DrivePath(%q) = %q，想要 %q", tc.in, actual, tc.expected)
 		}
 	}
 }

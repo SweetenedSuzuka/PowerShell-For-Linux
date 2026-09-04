@@ -99,7 +99,7 @@ func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 	return cur
 }
 
-// flattenPipelineList 在管道节点间把数组摊平（PowerShell 的枚举语义）。
+// flattenPipelineList 在管道节点间把数组展开（PowerShell 的枚举语义）。
 func flattenPipelineList(in []*object.PSObject) []*object.PSObject {
 	var out []*object.PSObject
 	for _, o := range in {
@@ -114,7 +114,7 @@ func flattenPipelineList(in []*object.PSObject) []*object.PSObject {
 	return out
 }
 
-// flattenPipeInput 把表达式值转为管道输入：数组摊平，$null 作为对象保留（下游按各自语义处理，顶层单个与末端渲染时丢弃）。
+// flattenPipeInput 把表达式值转为管道输入：数组展开，$null 作为对象保留（下游按各自语义处理，顶层单个与末端渲染时丢弃）。
 func flattenPipeInput(o *object.PSObject) []*object.PSObject {
 	if o == nil {
 		return nil
@@ -710,7 +710,7 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgScriptReadFail, path, err)))
 		return nil
 	}
-	// 去掉 UTF-8 BOM，带头码的脚本照常解析。
+	// 去掉 UTF-8 BOM，带 BOM 的脚本照常解析。
 	res := parser.Parse(builtin.StripUTF8BOM(string(data)))
 	if res.Error != nil {
 		// 脚本没有执行任何语句视作失败：置失败退出码，让 -File 与脚本调用方凭退出码感知

@@ -171,8 +171,8 @@ type whatIfCollector struct {
 	out    []*object.PSObject
 }
 
-// hit 报告本目标是否命中 -WhatIf；命中时登记预演行并指示跳过实际变更。
-func (w *whatIfCollector) hit(target string) bool {
+// reportWhatIf 登记 -WhatIf 预演行；返回真表示跳过实际变更。
+func (w *whatIfCollector) reportWhatIf(target string) bool {
 	if !w.c.Args.Switch("WhatIf") {
 		return false
 	}
@@ -218,7 +218,7 @@ func confirmSkip(c *Context, operation string, target string, yesAll, noAll *boo
 			*noAll = true
 			return true
 		}
-		// 其余输入不进行识别，重新提示
+		// 其余输入不识别，重新提示
 	}
 }
 
@@ -241,7 +241,7 @@ func readLineBytes(r io.Reader) (string, bool) {
 	}
 }
 
-// pathList 汇总管道输入或 -Path / 位置参数中的路径列表（数组摊平，支持"可多个"）。
+// pathList 汇总管道输入或 -Path / 位置参数中的路径列表（数组展开，支持"可多个"）。
 func pathList(c *Context) []string {
 	var paths []string
 	if len(c.Input) > 0 {
@@ -261,7 +261,7 @@ func pathList(c *Context) []string {
 	return paths
 }
 
-// inputItems 取输入对象：优先管道输入，其次 -InputObject（含位置映射），再补齐剩余位置实参（未声明位置槽位的实参，数组摊平）。
+// inputItems 取输入对象：优先管道输入，其次 -InputObject（含位置映射），再补齐剩余位置实参（未声明位置槽位的实参，数组展开）。
 func inputItems(c *Context) []*object.PSObject {
 	if len(c.Input) > 0 {
 		return c.Input

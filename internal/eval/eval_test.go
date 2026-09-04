@@ -44,15 +44,15 @@ func strs(objs []*object.PSObject) []string {
 	return out
 }
 
-func wantStr(t *testing.T, src string, want ...string) {
+func wantStr(t *testing.T, src string, expected ...string) {
 	t.Helper()
-	got := strs(runEval(t, src))
-	if len(got) != len(want) {
-		t.Fatalf("%q → %v，想要 %v", src, got, want)
+	actual := strs(runEval(t, src))
+	if len(actual) != len(expected) {
+		t.Fatalf("%q → %v，想要 %v", src, actual, expected)
 	}
-	for i := range want {
-		if got[i] != want[i] {
-			t.Fatalf("%q → %v，想要 %v", src, got, want)
+	for i := range expected {
+		if actual[i] != expected[i] {
+			t.Fatalf("%q → %v，想要 %v", src, actual, expected)
 		}
 	}
 }
@@ -417,14 +417,14 @@ func TestStderrRedirectRestoredAfterExecutePanic(t *testing.T) {
 func TestReadStripsUTF8BOM(t *testing.T) {
 	dir := t.TempDir()
 	t.Chdir(dir)
-	// Get-Content：首行无头码
+	// Get-Content：首行无 BOM
 	txtPath := filepath.Join(dir, "b.txt")
 	data := append([]byte{0xEF, 0xBB, 0xBF}, []byte("hi\nsecond\n")...)
 	if err := os.WriteFile(txtPath, data, 0644); err != nil {
 		t.Fatal(err)
 	}
 	wantStr(t, `Get-Content b.txt -TotalCount 1`, "hi")
-	// 脚本：带头码照常解析执行
+	// 脚本：带 BOM 照常解析执行
 	psPath := filepath.Join(dir, "b.ps1")
 	psData := append([]byte{0xEF, 0xBB, 0xBF}, []byte("Write-Output 'ok'\n")...)
 	if err := os.WriteFile(psPath, psData, 0644); err != nil {
@@ -906,22 +906,22 @@ func TestPSVersionTableCore(t *testing.T) {
 }
 
 func TestPSVersionTableDesktop(t *testing.T) {
-	check := func(src string, want ...string) {
+	assertEvalOut := func(src string, expected ...string) {
 		t.Helper()
 		got := strs(runEvalWithStyle(t, shell.StyleDesktop, src))
-		if len(got) != len(want) {
-			t.Fatalf("%q → %v，想要 %v", src, got, want)
+		if len(got) != len(expected) {
+			t.Fatalf("%q → %v，想要 %v", src, got, expected)
 		}
-		for i := range want {
-			if got[i] != want[i] {
-				t.Fatalf("%q → %v，想要 %v", src, got, want)
+		for i := range expected {
+			if got[i] != expected[i] {
+				t.Fatalf("%q → %v，想要 %v", src, got, expected)
 			}
 		}
 	}
-	check("$PSVersionTable.PSVersion.Major", "5")
-	check("$PSVersionTable.PSVersion.Minor", "1")
-	check("$PSVersionTable.PSVersion", "5.1")
-	check("$PSVersionTable.PSEdition", "Desktop")
+	assertEvalOut("$PSVersionTable.PSVersion.Major", "5")
+	assertEvalOut("$PSVersionTable.PSVersion.Minor", "1")
+	assertEvalOut("$PSVersionTable.PSVersion", "5.1")
+	assertEvalOut("$PSVersionTable.PSEdition", "Desktop")
 }
 
 func TestMatchesCapture(t *testing.T) {

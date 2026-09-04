@@ -11,7 +11,7 @@ import (
 // content.go 实现文件内容读写类 cmdlet。
 
 func cmdGetContent(c *Context) ([]*object.PSObject, error) {
-	// 路径：-Path（命名或位置，数组摊平）加超量位置实参，逐个文件读取
+	// 路径：-Path（命名或位置，数组展开）加超量位置实参，逐个文件读取
 	var paths []string
 	if v := c.Args.Get("Path"); v != nil {
 		for _, it := range v.ArrayItems() {
@@ -40,7 +40,7 @@ func cmdGetContent(c *Context) ([]*object.PSObject, error) {
 		if err != nil {
 			return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, path))
 		}
-		// 去掉 UTF-8 BOM，避免首行带头码。
+		// 去掉 UTF-8 BOM，避免首行残留 BOM。
 		text := StripUTF8BOM(string(data))
 		if raw {
 			out = append(out, object.Str(text))
@@ -91,12 +91,12 @@ func cmdSetContent(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
-	var wi whatIfCollector
-	wi.cmdlet = "Set-Content"
-	wi.c = c
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "Set-Content"
+	dryRun.c = c
 	var yesAll, noAll bool
-	if wi.hit(full) {
-		out, _ := wi.result()
+	if dryRun.reportWhatIf(full) {
+		out, _ := dryRun.result()
 		return out, nil
 	}
 	if confirmSkip(c, "Set-Content", full, &yesAll, &noAll) {
@@ -124,12 +124,12 @@ func cmdAddContent(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
-	var wi whatIfCollector
-	wi.cmdlet = "Add-Content"
-	wi.c = c
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "Add-Content"
+	dryRun.c = c
 	var yesAll, noAll bool
-	if wi.hit(full) {
-		out, _ := wi.result()
+	if dryRun.reportWhatIf(full) {
+		out, _ := dryRun.result()
 		return out, nil
 	}
 	if confirmSkip(c, "Add-Content", full, &yesAll, &noAll) {
@@ -140,7 +140,7 @@ func cmdAddContent(c *Context) ([]*object.PSObject, error) {
 		return errf(c, "%s", lang.T(lang.MsgCannotOpen, path))
 	}
 	defer f.Close()
-	// 已有内容的旧文件不再写 BOM，与新建文件行为一致。
+	// 已有内容的文件不写 BOM，与新建文件行为一致。
 	var sb strings.Builder
 	for _, o := range content {
 		if o == nil || o.IsNull() {

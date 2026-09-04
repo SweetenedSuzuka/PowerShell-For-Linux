@@ -135,24 +135,24 @@ func (r *REPL) promptText() (text string) {
 	if res.Error != nil || res.Incomplete || len(res.List.Statements) == 0 {
 		return text
 	}
-	var b strings.Builder
+	var promptBuilder strings.Builder
 	func() {
 		defer func() {
 			if recover() == nil {
 				return
 			}
-			b.Reset()
+			promptBuilder.Reset()
 		}()
 		for _, st := range res.List.Statements {
-			for _, o := range r.Eval.EvalStatement(st) {
-				b.WriteString(o.String())
+			for _, obj := range r.Eval.EvalStatement(st) {
+				promptBuilder.WriteString(obj.String())
 			}
 		}
 	}()
-	if b.Len() == 0 {
+	if promptBuilder.Len() == 0 {
 		return text
 	}
-	return b.String()
+	return promptBuilder.String()
 }
 
 // hasPromptFunc 报告会话是否定义了 prompt 函数（名大小写不限）。
@@ -227,21 +227,21 @@ func (r *REPL) completeParam(cmd, prefix string) []string {
 	if _, ok := builtin.Lookup(name); !ok {
 		return nil
 	}
-	want := strings.ToLower(strings.TrimPrefix(prefix, "-"))
+	normPrefix := strings.ToLower(strings.TrimPrefix(prefix, "-"))
 	seen := map[string]bool{}
 	var out []string
-	add := func(n string) {
-		key := strings.ToLower(n)
-		if strings.HasPrefix(key, want) && !seen[key] {
+	addParam := func(name string) {
+		key := strings.ToLower(name)
+		if strings.HasPrefix(key, normPrefix) && !seen[key] {
 			seen[key] = true
-			out = append(out, "-"+n+" ")
+			out = append(out, "-"+name+" ")
 		}
 	}
 	for _, sp := range builtin.Spec(name) {
-		add(sp.Name)
+		addParam(sp.Name)
 	}
-	for _, n := range builtin.CommonParamNames() {
-		add(n)
+	for _, paramName := range builtin.CommonParamNames() {
+		addParam(paramName)
 	}
 	return out
 }

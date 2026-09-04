@@ -47,43 +47,43 @@ func TestConfirmSkipAnswers(t *testing.T) {
 		{"l\n", true},
 	}
 	for _, tc := range cases {
-		ctx, ya, na := confirmCtx(tc.answer, true)
-		if got := confirmSkip(ctx, "Remove-Item", "a", ya, na); got != tc.skip {
-			t.Errorf("应答 %q：skip=%v，想要 %v", tc.answer, got, tc.skip)
+		ctx, yesAll, noAll := confirmCtx(tc.answer, true)
+		if skip := confirmSkip(ctx, "Remove-Item", "a", yesAll, noAll); skip != tc.skip {
+			t.Errorf("应答 %q：skip=%v，想要 %v", tc.answer, skip, tc.skip)
 		}
 	}
 }
 
 // TestConfirmSkipAllFlags A/L 的选择写入标记并作用于后续目标。
 func TestConfirmSkipAllFlags(t *testing.T) {
-	ctx, ya, na := confirmCtx("a\n", true)
-	if confirmSkip(ctx, "Remove-Item", "a1", ya, na) {
+	ctx, yesAll, noAll := confirmCtx("a\n", true)
+	if confirmSkip(ctx, "Remove-Item", "a1", yesAll, noAll) {
 		t.Fatal("A 应执行")
 	}
-	if !*ya || *na {
-		t.Fatalf("A 应置 yesAll，实际 %v %v", *ya, *na)
+	if !*yesAll || *noAll {
+		t.Fatalf("A 应置 yesAll，实际 %v %v", *yesAll, *noAll)
 	}
-	ctx2, ya2, na2 := confirmCtx("l\n", true)
-	if !confirmSkip(ctx2, "Remove-Item", "b1", ya2, na2) {
+	ctx2, yesAll2, noAll2 := confirmCtx("l\n", true)
+	if !confirmSkip(ctx2, "Remove-Item", "b1", yesAll2, noAll2) {
 		t.Fatal("L 应跳过")
 	}
-	if !*na2 {
+	if !*noAll2 {
 		t.Fatal("L 应置 noAll")
 	}
 }
 
 // TestConfirmSkipEofRejects 输入结束没有回答时按拒绝处理。
 func TestConfirmSkipEofRejects(t *testing.T) {
-	ctx, ya, na := confirmCtx("", true)
-	if !confirmSkip(ctx, "Remove-Item", "a", ya, na) {
+	ctx, yesAll, noAll := confirmCtx("", true)
+	if !confirmSkip(ctx, "Remove-Item", "a", yesAll, noAll) {
 		t.Fatal("EOF 应按拒绝处理")
 	}
 }
 
 // TestConfirmSkipUnknownRetries 不认识的应答重新提示，直到出现可识别选项。
 func TestConfirmSkipUnknownRetries(t *testing.T) {
-	ctx, ya, na := confirmCtx("zz\nn\n", true)
-	if !confirmSkip(ctx, "Remove-Item", "a", ya, na) {
+	ctx, yesAll, noAll := confirmCtx("zz\nn\n", true)
+	if !confirmSkip(ctx, "Remove-Item", "a", yesAll, noAll) {
 		t.Fatal("未知应答重试后 n 应跳过")
 	}
 }

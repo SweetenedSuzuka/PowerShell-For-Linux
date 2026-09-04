@@ -34,7 +34,7 @@ Set-Content test/tmp/c1.txt "hello" 2>$null >$null; if ($?) { $pass++; "PASS  Se
 Get-Content test/tmp/c1.txt 2>$null >$null; if ($?) { $pass++; "PASS  Get-Content" } else { $fail++; "FAIL  Get-Content" }
 Add-Content test/tmp/c1.txt "world" 2>$null >$null; if ($?) { $pass++; "PASS  Add-Content" } else { $fail++; "FAIL  Add-Content" }
 Add-Content -Encoding utf8BOM test/tmp/enc.txt "a" 2>$null >$null; if ($?) { $pass++; "PASS  Add-Content -Encoding" } else { $fail++; "FAIL  Add-Content -Encoding" }
-if ((Get-Content test/tmp/enc.txt -TotalCount 1) -eq "a") { $pass++; "PASS  读去 BOM" } else { $fail++; "FAIL  读去 BOM" }
+if ((Get-Content test/tmp/enc.txt -TotalCount 1) -eq "a") { $pass++; "PASS  读取去 BOM" } else { $fail++; "FAIL  读取去 BOM" }
 Clear-Content test/tmp/c1.txt 2>$null >$null; if ($?) { $pass++; "PASS  Clear-Content" } else { $fail++; "FAIL  Clear-Content" }
 Set-Item env:VERIFY_VAR "v" 2>$null >$null; if ($?) { $pass++; "PASS  Set-Item 环境变量" } else { $fail++; "FAIL  Set-Item 环境变量" }
 Get-FileHash test/tmp/c1.txt -Algorithm MD5 2>$null >$null; if ($?) { $pass++; "PASS  Get-FileHash" } else { $fail++; "FAIL  Get-FileHash" }

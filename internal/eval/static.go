@@ -17,13 +17,13 @@ func (e *Evaluator) staticMember(typeName, name string, args []*object.PSObject)
 	typ := strings.ToLower(strings.TrimPrefix(strings.ToLower(typeName), "system."))
 	norm := strings.ToLower(name)
 	argN := len(args)
-	f1 := func(i int) (float64, bool) {
+	floatAt := func(i int) (float64, bool) {
 		if argN > i {
 			return args[i].AsFloat()
 		}
 		return 0, false
 	}
-	f2 := func(i int) (float64, float64, bool) {
+	floatPairAt := func(i int) (float64, float64, bool) {
 		if argN > i+1 {
 			a, ok1 := args[i].AsFloat()
 			b, ok2 := args[i+1].AsFloat()
@@ -36,42 +36,42 @@ func (e *Evaluator) staticMember(typeName, name string, args []*object.PSObject)
 	case "math":
 		switch norm {
 		case "abs":
-			if f, ok := f1(0); ok {
+			if f, ok := floatAt(0); ok {
 				return object.Float(math.Abs(f)), true
 			}
 		case "sqrt":
-			if f, ok := f1(0); ok {
+			if f, ok := floatAt(0); ok {
 				return object.Float(math.Sqrt(f)), true
 			}
 		case "floor":
-			if f, ok := f1(0); ok {
+			if f, ok := floatAt(0); ok {
 				return object.Float(math.Floor(f)), true
 			}
 		case "ceiling":
-			if f, ok := f1(0); ok {
+			if f, ok := floatAt(0); ok {
 				return object.Float(math.Ceil(f)), true
 			}
 		case "truncate":
-			if f, ok := f1(0); ok {
+			if f, ok := floatAt(0); ok {
 				return object.Float(math.Trunc(f)), true
 			}
 		case "exp":
-			if f, ok := f1(0); ok {
+			if f, ok := floatAt(0); ok {
 				return object.Float(math.Exp(f)), true
 			}
 		case "log":
-			if f, ok := f1(0); ok {
-				if base, ok2 := f1(1); ok2 {
+			if f, ok := floatAt(0); ok {
+				if base, ok2 := floatAt(1); ok2 {
 					return object.Float(math.Log(f) / math.Log(base)), true
 				}
 				return object.Float(math.Log(f)), true
 			}
 		case "log10":
-			if f, ok := f1(0); ok {
+			if f, ok := floatAt(0); ok {
 				return object.Float(math.Log10(f)), true
 			}
 		case "sign":
-			if f, ok := f1(0); ok {
+			if f, ok := floatAt(0); ok {
 				switch {
 				case f > 0:
 					return object.Int(1), true
@@ -81,18 +81,18 @@ func (e *Evaluator) staticMember(typeName, name string, args []*object.PSObject)
 				return object.Int(0), true
 			}
 		case "pow":
-			if a, b, ok := f2(0); ok {
+			if a, b, ok := floatPairAt(0); ok {
 				return object.Float(math.Pow(a, b)), true
 			}
 		case "max", "min":
-			if a, b, ok := f2(0); ok {
+			if a, b, ok := floatPairAt(0); ok {
 				if (norm == "max") == (a >= b) {
 					return object.Float(a), true
 				}
 				return object.Float(b), true
 			}
 		case "round":
-			if f, ok := f1(0); ok {
+			if f, ok := floatAt(0); ok {
 				digits := 0.0
 				if argN > 1 {
 					if d, ok2 := args[1].AsInt(); ok2 && d > 0 && d < 15 {

@@ -46,14 +46,14 @@ func (p *Parser) expectPunct(text string) lexer.Token {
 }
 
 // expectWord 期望一个裸字 token。
-func (p *Parser) expectWord(what string) string {
+func (p *Parser) expectWord(expectedDesc string) string {
 	t := p.cur()
 	if t.Type == TkEOF {
 		p.incomplete = true
 		return ""
 	}
 	if t.Type != TkWord {
-		p.fail(lang.T(lang.MsgParseExpectWhat, what, p.describe(t)))
+		p.fail(lang.T(lang.MsgParseExpectWhat, expectedDesc, p.describe(t)))
 		return ""
 	}
 	p.advance()

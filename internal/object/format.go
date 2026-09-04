@@ -85,7 +85,7 @@ func dropNulls(objs []*PSObject) []*PSObject {
 	return out
 }
 
-// flatten 把数组对象摊平为元素列表（数组内嵌数组时递归）。
+// flatten 把数组对象展开为元素列表（数组内嵌数组时递归）。
 func flatten(objs []*PSObject) []*PSObject {
 	var out []*PSObject
 	for _, o := range objs {

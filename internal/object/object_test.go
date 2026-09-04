@@ -11,7 +11,7 @@ import (
 func TestTruthy(t *testing.T) {
 	cases := []struct {
 		o    *PSObject
-		want bool
+		expected bool
 	}{
 		{Null(), false},
 		{Bool(false), false},
@@ -28,8 +28,8 @@ func TestTruthy(t *testing.T) {
 		{Hashtable(nil), true},
 	}
 	for _, c := range cases {
-		if got := c.o.Truthy(); got != c.want {
-			t.Errorf("Truthy(%s) = %v, want %v", c.o.String(), got, c.want)
+		if got := c.o.Truthy(); got != c.expected {
+			t.Errorf("Truthy(%s) = %v, want %v", c.o.String(), got, c.expected)
 		}
 	}
 }
@@ -256,11 +256,11 @@ func TestFileInfoVirtualProps(t *testing.T) {
 		t.Errorf("文件 DirectoryName = %v", v)
 	}
 	// 无扩展名文件：Extension 空串、BaseName 原名
-	f2 := FileInfo("/tmp/README", fi)
-	if v, _ := f2.PropValue("Extension"); v.String() != "" {
+	noExtFile := FileInfo("/tmp/README", fi)
+	if v, _ := noExtFile.PropValue("Extension"); v.String() != "" {
 		t.Errorf("无扩展名 Extension = %q", v.String())
 	}
-	if v, _ := f2.PropValue("BaseName"); v.String() != "README" {
+	if v, _ := noExtFile.PropValue("BaseName"); v.String() != "README" {
 		t.Errorf("无扩展名 BaseName = %q", v.String())
 	}
 	// 目录：Extension 恒空、BaseName 是目录名（不去扩展名）
@@ -322,7 +322,7 @@ func TestWideFollowsWidth(t *testing.T) {
 	}
 }
 
-// TestFormatTableMissingBlank 验证缺列留空：缺失属性不再回填对象自身（用 String 非空的 FileInfo 断言）。
+// TestFormatTableMissingBlank 验证缺列留空：缺失属性格留空（用 String 非空的 FileInfo 断言）。
 func TestFormatTableMissingBlank(t *testing.T) {
 	o := Object("System.IO.FileInfo", "/a/b")
 	var sb strings.Builder

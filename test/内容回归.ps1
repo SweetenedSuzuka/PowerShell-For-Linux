@@ -22,7 +22,7 @@ Set-Content -Path b.txt bval
 $results += T "命名Path+位置值" (((Get-Content b.txt) -eq "bval"))
 # 3. Set-Content 全命名
 Set-Content -Path c.txt -Value cval
-$results += T "全命名" (((Get-Content c.txt) -eq "cval"))
+$results += T "Set-Content 全命名绑定" (((Get-Content c.txt) -eq "cval"))
 # 4. Set-Content 位置 Path + 命名 Value
 Set-Content d.txt -Value dval
 $results += T "位置Path+命名Value" (((Get-Content d.txt) -eq "dval"))
@@ -100,15 +100,15 @@ Set-ItemProperty prop.txt LastWriteTime 2020-01-01
 $results += T "Set-ItemProperty" (($?))
 # 28. 管道 + Set-Content
 "pipe-content" | Set-Content piped.txt
-$results += T "管道写内容" (((Get-Content piped.txt) -eq "pipe-content"))
+$results += T "管道写文件" (((Get-Content piped.txt) -eq "pipe-content"))
 # 29. 管道组合
 $combo = Get-ChildItem *.txt | Where-Object { $_.Length -gt 0 } | ForEach-Object { $_.Name.Length }
-$results += T "管道组合" (($combo.Count -gt 0))
+$results += T "文件过滤管道" (($combo.Count -gt 0))
 # 30. Get-ItemProperty 双位置
 $gip = Get-ItemProperty pat.txt Length
 $results += T "Get-ItemProperty" (($gip.Length -gt 0))
-# 31. 命名优先跳槽
-$results += T "命名优先跳槽" (((Join-Path -ChildPath child /tmp) -eq "/tmp/child"))
+# 31. 命名优先落位
+$results += T "命名优先落位" (((Join-Path -ChildPath child /tmp) -eq "/tmp/child"))
 # 32. Get-Content -Path + -Tail 混合
 $gc2 = Get-Content g.txt -Tail 1
 $results += T "命名+位置混合" (($gc2 -join ",") -eq "line2")
@@ -158,10 +158,10 @@ $results += T "Test-Path 数组" (((Test-Path g1.txt, m2.txt) -eq $true))
 $h = @{ Name = "hn"; Length = 5 }
 $ep = $h | Select-Object -ExpandProperty Name
 $results += T "ExpandProperty 标量" (($ep -eq "hn"))
-# 45. -ExpandProperty 数组摊平
+# 45. -ExpandProperty 数组展开
 $arr = @{ Items = @(1,2,3) }
 $epa = $arr | Select-Object -ExpandProperty Items
-$results += T "ExpandProperty 数组摊平" (($epa -join ",") -eq "1,2,3")
+$results += T "ExpandProperty 数组展开" (($epa -join ",") -eq "1,2,3")
 # 46. -Property 与 -ExpandProperty 并存时 Property 优先
 $both = $h | Select-Object -Property Name -ExpandProperty Name
 $results += T "Property 优先于 ExpandProperty" (($both.Name -eq "hn"))
@@ -169,7 +169,7 @@ $results += T "Property 优先于 ExpandProperty" (($both.Name -eq "hn"))
 $sw = 1,2,3 | Where-Object -FilterScript { $_ -gt 1 } { $_ -eq 2 }
 $results += T "脚本块命名优先" (($sw -join ",") -eq "2,3")
 
-Write-Output "== 边界核对（Copy-Item 多源 / 槽位跳槽） =="
+Write-Output "== 边界核对（Copy-Item 多源 / 槽位落位） =="
 
 # 48. Copy-Item 四位置实参
 "c1" | Set-Content a1.txt; "c2" | Set-Content a2.txt; "c3" | Set-Content a3.txt
@@ -211,9 +211,9 @@ $results += T "Select-Object -First 组合" (($sf -join ",") -eq "a,b")
 # 57. Get-Unique 数组 + 位置
 $gu2 = Get-Unique 3,1 3 2
 $results += T "Get-Unique 数组+位置" (($gu2 -join ",") -eq "3,1,2")
-# 58. Compare-Object 命名 + 位置跳槽
+# 58. Compare-Object 命名 + 位置落位
 $co = Compare-Object -DifferenceObject b a
-$results += T "Compare-Object 跳槽" (($co.Count -eq 2))
+$results += T "Compare-Object 落位" (($co.Count -eq 2))
 # 59. Set-Alias 两位置
 Set-Alias al1 cv1 2>$null
 $results += T "Set-Alias 两位置" (((Get-Alias al1).Definition -eq "cv1"))
@@ -399,9 +399,9 @@ $gi = "x","y","x" | Group-Object
 $results += T "GroupInfo 索引不穿透" ((@($gi).Count -eq 2) -and ($gi[0].Name -eq "x") -and ($gi[0].Group -join ",") -eq "x,x")
 # 105. Join-String 默认分隔符是空串（与 PowerShell 一致）
 $results += T "Join-String 默认分隔符" (((1..3 | Join-String) -eq "123") -and ((1..3 | Join-String -Separator ",") -eq "1,2,3"))
-# 106. @() 元素按输出流摊平：@($arr) 得元素本身；@() 内可含管道
+# 106. @() 元素按输出流展开：@($arr) 得元素本身；@() 内可含管道
 $aa = 1,2,3
-$results += T "@() 摊平与管道" ((@($aa).Count -eq 3) -and (@(1,2 | ForEach-Object { $_ * 10 }) -join ",") -eq "10,20")
+$results += T "@() 展开与管道" ((@($aa).Count -eq 3) -and (@(1,2 | ForEach-Object { $_ * 10 }) -join ",") -eq "10,20")
 
 Write-Output "== 解析终止性 =="
 
@@ -576,7 +576,7 @@ $nb = 1,2 | Nb1
 $results += T "begin/process/end 三段顺序" (($nb -join ",") -eq "nb-b,nb-p:1,nb-p:2,nb-e")
 # 132. 直调：process 以 $null 跑一次
 $nb2 = Nb1
-$results += T "命名块直调" (($nb2 -join ",") -eq "nb-b,nb-p:,nb-e")
+$results += T "函数直调三段" (($nb2 -join ",") -eq "nb-b,nb-p:,nb-e")
 # 133. 零输入：begin/end 跑，process 不跑
 $zero = @()
 $nb3 = @($zero | Nb1)
@@ -743,7 +743,7 @@ $results += T "@() 字面量" (((@(1,2,3) -join ",")) -eq "1,2,3")
 # 174. 比较运算符大小写不敏感
 $results += T "大写运算符" ((("a" -EQ "a") -and ("b" -GT "a") -and ("abc" -MATCH "b")))
 # 175. i- 显式不敏感变体
-$results += T "i- 变体" ((("A" -ieq "a") -and ("AbC" -ilike "a*c") -and ("AbC" -imatch "b") -and ("A" -iin @("a","b"))))
+$results += T "显式不敏感变体" ((("A" -ieq "a") -and ("AbC" -ilike "a*c") -and ("AbC" -imatch "b") -and ("A" -iin @("a","b"))))
 # 176. $ENV: 前缀大小写不限，变量名保持原样
 $env:TmVar904 = "v904"
 $results += T "ENV 大小写" ((($ENV:TmVar904) -eq "v904") -and (($env:TmVar904) -eq "v904"))
@@ -774,11 +774,11 @@ $ec3 = try { "abc".Substring(1,10) } catch { "caught" }
 $results += T "截取越界抛错" ($ec3 -eq "caught")
 # 185. 过滤器内抛错向外传播
 $ec4 = try { 1,2 | ForEach-Object { throw "x" } } catch { "caught" }
-$results += T "过滤器抛错传播" ($ec4 -eq "caught")
+$results += T "ForEach 抛错传播" ($ec4 -eq "caught")
 # 186. while 条件每轮求值一次
 $wl = 0
 while ($wl++ -lt 2) { }
-$results += T "while 单次求值" ($wl -eq 3)
+$results += T "while 每轮求值" ($wl -eq 3)
 # 187. 后缀自增返回旧值
 $po = 0
 $pv = $po++
@@ -833,12 +833,15 @@ $results += T "等待缺失进程" ((($? -eq $false)) -and (($Error.Count -ge 1)
 $Error.Clear()
 Wait-Process -Name "zzz-no-such-proc-abc"
 $results += T "等待缺失进程名" ((($? -eq $false)) -and (($Error.Count -ge 1)))
-# 201. @() 首命令吞逗号实参
+# 201. @() 首命令接纳逗号实参
 $at1 = @(Write-Output "a", "b")
 $results += T "数组首命令" ((($at1.Count -eq 2)) -and ((($at1 -join "|") -eq "a|b")))
 # 202. @() 命名首命令可解析
 $at2 = @(Write-Output -InputObject "a", "b")
 $results += T "数组命名首命令" ((($at2.Count -eq 2)) -and ((($at2 -join "|") -eq "a|b")))
+# 203. @() 分号多语句不受逗号分隔影响
+$at3 = @(Get-Date; Get-Date)
+$results += T "数组分号多语句" (($at3.Count -eq 2))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

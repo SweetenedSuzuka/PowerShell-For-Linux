@@ -31,11 +31,11 @@ func TestBasicTokens(t *testing.T) {
 func TestNumbers(t *testing.T) {
 	src := "42 3.14 -5 2-1 1.5e3"
 	toks := New(src).Tokens()
-	want := []float64{42, 3.14, -5}
+	expected := []float64{42, 3.14, -5}
 	// 前三个应为独立数字
-	for i, w := range want {
-		if toks[i].Type != TkNumber || toks[i].Num != w {
-			t.Fatalf("tok[%d] = %+v, want number %v", i, toks[i], w)
+	for i, num := range expected {
+		if toks[i].Type != TkNumber || toks[i].Num != num {
+			t.Fatalf("tok[%d] = %+v, expected number %v", i, toks[i], num)
 		}
 	}
 	// 2-1 应为 2 和 减法运算符

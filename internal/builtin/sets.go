@@ -155,8 +155,8 @@ func randomInRange(lo, hi int64) int64 {
 	var b [8]byte
 	_, _ = rand.Read(b[:])
 	v := int64(0)
-	for _, c := range b {
-		v = v*256 + int64(c)
+	for _, byteVal := range b {
+		v = v*256 + int64(byteVal)
 	}
 	if v < 0 {
 		v = -v

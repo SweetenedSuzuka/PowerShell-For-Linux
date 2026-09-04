@@ -8620,7 +8620,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | `-Name` (position 0) | string | Process name |
 | `-Id` | int | Process ID |
 
-- Implementation: on Linux reads `/proc/<pid>/stat` to judge liveness (Z/X count as ended), polling every 100ms; by name, polls the process list until it disappears. A target already gone at entry errors immediately.
+- Implementation: on Linux reads `/proc/<pid>/stat` to check whether the process is active (Z/X count as ended), polling every 100ms; by name, polls the process list until it disappears. A target already gone at entry errors immediately.
 
 
 ### Where-Object

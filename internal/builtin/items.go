@@ -27,12 +27,12 @@ func cmdNewItem(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
-	var wi whatIfCollector
-	wi.cmdlet = "New-Item"
-	wi.c = c
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "New-Item"
+	dryRun.c = c
 	var yesAll, noAll bool
-	if wi.hit(full) {
-		out, _ := wi.result()
+	if dryRun.reportWhatIf(full) {
+		out, _ := dryRun.result()
 		return out, nil
 	}
 	if confirmSkip(c, "New-Item", full, &yesAll, &noAll) {
@@ -74,9 +74,9 @@ func cmdNewItem(c *Context) ([]*object.PSObject, error) {
 func cmdRemoveItem(c *Context) ([]*object.PSObject, error) {
 	recurse := c.Args.Switch("Recurse")
 	force := c.Args.Switch("Force")
-	var wi whatIfCollector
-	wi.cmdlet = "Remove-Item"
-	wi.c = c
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "Remove-Item"
+	dryRun.c = c
 	var yesAll, noAll bool
 	for _, p := range pathList(c) {
 		fulls, derr := expandWildcard(c, p)
@@ -88,7 +88,7 @@ func cmdRemoveItem(c *Context) ([]*object.PSObject, error) {
 			if err != nil {
 				continue
 			}
-			if wi.hit(full) {
+			if dryRun.reportWhatIf(full) {
 				continue
 			}
 			if confirmSkip(c, "Remove-Item", full, &yesAll, &noAll) {
@@ -112,23 +112,23 @@ func cmdRemoveItem(c *Context) ([]*object.PSObject, error) {
 			}
 		}
 	}
-	if out, ok := wi.result(); ok {
+	if out, ok := dryRun.result(); ok {
 		return out, nil
 	}
 	return nil, nil
 }
 
-func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
-	label := "Copy-Item"
+func copyOrMove(c *Context, move bool) ([]*object.PSObject, error) {
+	cmdletName := "Copy-Item"
 	if move {
-		label = "Move-Item"
+		cmdletName = "Move-Item"
 	}
-	var wi whatIfCollector
-	wi.cmdlet = label
-	wi.c = c
+	var dryRun whatIfCollector
+	dryRun.cmdlet = cmdletName
+	dryRun.c = c
 	var yesAll, noAll bool
 	recurse := c.Args.Switch("Recurse")
-	// 源路径：命名/位置 -Path（数组摊平）优先，其次管道输入
+	// 源路径：命名/位置 -Path（数组展开）优先，其次管道输入
 	var paths []string
 	if v := c.Args.Get("Path"); v != nil {
 		for _, it := range v.ArrayItems() {
@@ -185,12 +185,12 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 	for _, srcFull := range srcFulls {
 		info, err := os.Stat(srcFull)
 		if err != nil {
-			return errf(c, "%s : %s", label, lang.T(lang.MsgPathNotFoundFmt, srcFull))
+			return errf(c, "%s : %s", cmdletName, lang.T(lang.MsgPathNotFoundFmt, srcFull))
 		}
-		if wi.hit(srcFull) {
+		if dryRun.reportWhatIf(srcFull) {
 			continue
 		}
-		if confirmSkip(c, label, srcFull, &yesAll, &noAll) {
+		if confirmSkip(c, cmdletName, srcFull, &yesAll, &noAll) {
 			continue
 		}
 		destFull, derr := resolvePath(c, dest)
@@ -202,20 +202,20 @@ func copyItem(c *Context, move bool) ([]*object.PSObject, error) {
 		}
 		if info.IsDir() && recurse {
 			if err := copyDir(srcFull, destFull); err != nil {
-				return errf(c, "%s : %v", label, err)
+				return errf(c, "%s : %v", cmdletName, err)
 			}
 		} else if info.IsDir() {
-			return errf(c, "%s : %s", label, lang.T(lang.MsgCopyNeedsRecurse, srcFull))
+			return errf(c, "%s : %s", cmdletName, lang.T(lang.MsgCopyNeedsRecurse, srcFull))
 		} else {
 			if err := copyFile(srcFull, destFull); err != nil {
-				return errf(c, "%s : %v", label, err)
+				return errf(c, "%s : %v", cmdletName, err)
 			}
 		}
 		if move {
 			_ = os.RemoveAll(srcFull)
 		}
 	}
-	if out, ok := wi.result(); ok {
+	if out, ok := dryRun.result(); ok {
 		return out, nil
 	}
 	return nil, nil
@@ -251,8 +251,8 @@ func copyDir(src, dest string) error {
 	})
 }
 
-func cmdCopyItem(c *Context) ([]*object.PSObject, error) { return copyItem(c, false) }
-func cmdMoveItem(c *Context) ([]*object.PSObject, error) { return copyItem(c, true) }
+func cmdCopyItem(c *Context) ([]*object.PSObject, error) { return copyOrMove(c, false) }
+func cmdMoveItem(c *Context) ([]*object.PSObject, error) { return copyOrMove(c, true) }
 
 func cmdRenameItem(c *Context) ([]*object.PSObject, error) {
 	path := firstPathArg(c)
@@ -277,12 +277,12 @@ func cmdRenameItem(c *Context) ([]*object.PSObject, error) {
 	if _, err := os.Lstat(newPath); err == nil {
 		return errf(c, "%s", lang.T(lang.MsgRenameDestExists, newPath))
 	}
-	var wi whatIfCollector
-	wi.cmdlet = "Rename-Item"
-	wi.c = c
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "Rename-Item"
+	dryRun.c = c
 	var yesAll, noAll bool
-	if wi.hit(old) {
-		out, _ := wi.result()
+	if dryRun.reportWhatIf(old) {
+		out, _ := dryRun.result()
 		return out, nil
 	}
 	if confirmSkip(c, "Rename-Item", old, &yesAll, &noAll) {
@@ -295,7 +295,7 @@ func cmdRenameItem(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdInvokeItem(c *Context) ([]*object.PSObject, error) {
-	// 用系统默认方式打开（MVP：打印路径）
+	// 用系统默认方式打开，只打印路径。
 	path := firstPathArg(c)
 	if path != "" {
 		fmt.Fprintln(c.Stdout, path)

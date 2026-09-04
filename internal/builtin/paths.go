@@ -13,7 +13,7 @@ import (
 // ---- 路径与导航 ----
 
 func cmdTestPath(c *Context) ([]*object.PSObject, error) {
-	// 路径：-Path（命名或位置，数组摊平）加超量位置实参，命中任意一个即 True
+	// 路径：-Path（命名或位置，数组展开）加超量位置实参，命中任意一个即 True
 	var paths []string
 	if v := c.Args.Get("Path"); v != nil {
 		for _, it := range v.ArrayItems() {
@@ -30,7 +30,7 @@ func cmdTestPath(c *Context) ([]*object.PSObject, error) {
 	}
 	// -PathType 过滤：Leaf 只认文件、Container 只认目录、Any/缺省不限制
 	pt, _ := c.Args.Str("PathType")
-	typeMatch := func(p string) bool {
+	pathTypeMatch := func(p string) bool {
 		if pt == "" || strings.EqualFold(pt, "Any") {
 			return true
 		}
@@ -52,7 +52,7 @@ func cmdTestPath(c *Context) ([]*object.PSObject, error) {
 			return errf(c, "%v", derr)
 		}
 		for _, p := range expanded {
-			if _, err := os.Stat(p); err == nil && typeMatch(p) {
+			if _, err := os.Stat(p); err == nil && pathTypeMatch(p) {
 				return []*object.PSObject{object.Bool(true)}, nil
 			}
 		}
@@ -160,16 +160,16 @@ func cmdClearContent(c *Context) ([]*object.PSObject, error) {
 	if derr != nil {
 		return errf(c, "%v", derr)
 	}
-	var wi whatIfCollector
-	wi.cmdlet = "Clear-Content"
-	wi.c = c
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "Clear-Content"
+	dryRun.c = c
 	var yesAll, noAll bool
 	for _, p := range paths {
 		// Clear-Content 只清空已存在的文件，不存在时报错而非创建空文件
 		if _, err := os.Stat(p); err != nil {
 			return errf(c, "%s", lang.T(lang.MsgPathNotFoundForSet, p))
 		}
-		if wi.hit(p) {
+		if dryRun.reportWhatIf(p) {
 			continue
 		}
 		if confirmSkip(c, "Clear-Content", p, &yesAll, &noAll) {
@@ -179,7 +179,7 @@ func cmdClearContent(c *Context) ([]*object.PSObject, error) {
 			return errf(c, "%s", lang.T(lang.MsgCannotClear, p))
 		}
 	}
-	if out, ok := wi.result(); ok {
+	if out, ok := dryRun.result(); ok {
 		return out, nil
 	}
 	return nil, nil
@@ -210,12 +210,12 @@ func cmdSetItem(c *Context) ([]*object.PSObject, error) {
 	if info.IsDir() {
 		return nil, nil
 	}
-	var wi whatIfCollector
-	wi.cmdlet = "Set-Item"
-	wi.c = c
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "Set-Item"
+	dryRun.c = c
 	var yesAll, noAll bool
-	if wi.hit(full) {
-		out, _ := wi.result()
+	if dryRun.reportWhatIf(full) {
+		out, _ := dryRun.result()
 		return out, nil
 	}
 	if confirmSkip(c, "Set-Item", full, &yesAll, &noAll) {
@@ -244,12 +244,12 @@ func cmdClearItem(c *Context) ([]*object.PSObject, error) {
 	if info.IsDir() {
 		return nil, nil
 	}
-	var wi whatIfCollector
-	wi.cmdlet = "Clear-Item"
-	wi.c = c
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "Clear-Item"
+	dryRun.c = c
 	var yesAll, noAll bool
-	if wi.hit(full) {
-		out, _ := wi.result()
+	if dryRun.reportWhatIf(full) {
+		out, _ := dryRun.result()
 		return out, nil
 	}
 	if confirmSkip(c, "Clear-Item", full, &yesAll, &noAll) {
@@ -305,7 +305,7 @@ func cmdSetItemProperty(c *Context) ([]*object.PSObject, error) {
 	if path == "" {
 		return nil, nil
 	}
-	// MVP：支持 -Name LastWriteTime -Value <时间>；其余属性忽略
+	// 只支持 -Name LastWriteTime -Value <时间>；其余属性忽略
 	if name != "" && val != nil && strings.EqualFold(name, "LastWriteTime") {
 		full, derr := resolvePath(c, path)
 		if derr != nil {

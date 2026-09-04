@@ -133,12 +133,12 @@ func (e *unixEditor) redraw(prompt string, buf []rune, pos int) {
 }
 
 func (e *unixEditor) handleEscape(prompt string, buf *[]rune, pos *int) {
-	b, _ := e.br.ReadByte()
-	if b != '[' {
+	firstByte, _ := e.br.ReadByte()
+	if firstByte != '[' {
 		return
 	}
-	b2, _ := e.br.ReadByte()
-	switch b2 {
+	secondByte, _ := e.br.ReadByte()
+	switch secondByte {
 	case 'A': // 上：历史前一条
 		if e.histIdx > 0 {
 			e.histIdx--
@@ -185,28 +185,28 @@ func (e *unixEditor) handleEscape(prompt string, buf *[]rune, pos *int) {
 func (e *unixEditor) doComplete(prompt string, buf *[]rune, pos *int) {
 	line := string(*buf)
 	before := line[:*pos]
-	ws := strings.LastIndexFunc(before, func(r rune) bool {
+	sepIdx := strings.LastIndexFunc(before, func(r rune) bool {
 		return r == ' ' || r == '\t' || r == '|' || r == ';' || r == '('
 	})
-	ws++
-	word := before[ws:]
+	sepIdx++
+	word := before[sepIdx:]
 	cands := e.complete(before)
 	if len(cands) == 0 {
 		return
 	}
 	if len(cands) == 1 {
 		replacement := cands[0]
-		newLine := line[:ws] + replacement + line[*pos:]
+		newLine := line[:sepIdx] + replacement + line[*pos:]
 		*buf = []rune(newLine)
-		*pos = runeLen(before[:ws] + replacement)
+		*pos = runeLen(before[:sepIdx] + replacement)
 		e.redraw(prompt, *buf, *pos)
 		return
 	}
 	common := commonPrefix(cands)
 	if runeLen(common) > runeLen(word) {
-		newLine := line[:ws] + common + line[*pos:]
+		newLine := line[:sepIdx] + common + line[*pos:]
 		*buf = []rune(newLine)
-		*pos = runeLen(before[:ws] + common)
+		*pos = runeLen(before[:sepIdx] + common)
 		e.redraw(prompt, *buf, *pos)
 		return
 	}

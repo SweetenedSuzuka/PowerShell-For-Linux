@@ -77,14 +77,14 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 		props = nil
 	}
 	// $null 不参与选择（与 PowerShell 一致）
-	var shaped []*object.PSObject
+	var nonNullItems []*object.PSObject
 	for _, o := range items {
 		if o == nil || o.IsNull() {
 			continue
 		}
-		shaped = append(shaped, o)
+		nonNullItems = append(nonNullItems, o)
 	}
-	items = shaped
+	items = nonNullItems
 	// -First/-Last 显式 0 时返回空（原版 PowerShell 语义），未设置则不动
 	// -Skip 先扣除：-Last 在时从尾部扣除，否则从头部扣除（原版 PowerShell 语义）；负数报错
 	if skipSet {
@@ -148,7 +148,7 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 		}
 		items = out
 	} else if expand != "" {
-		// -ExpandProperty：取属性值本身输出（数组摊平），不做对象包装
+		// -ExpandProperty：取属性值本身输出（数组展开），不做对象包装
 		var out []*object.PSObject
 		for _, it := range items {
 			if v, ok := it.PropValue(expand); ok {
@@ -193,22 +193,22 @@ func cmdSortObject(c *Context) ([]*object.PSObject, error) {
 			return compareOrderBuiltin(a, b)
 		}
 		for _, p := range props {
-			if c := compareOrderBuiltin(keyOf(a, p), keyOf(b, p)); c != 0 {
-				return c
+			if ord := compareOrderBuiltin(keyOf(a, p), keyOf(b, p)); ord != 0 {
+				return ord
 			}
 		}
 		return compareOrderBuiltin(a, b)
 	}
 	items := c.Input
 	// $null 不参与排序（与 PowerShell 一致）
-	var shapedSort []*object.PSObject
+	var nonNullSortItems []*object.PSObject
 	for _, o := range items {
 		if o == nil || o.IsNull() {
 			continue
 		}
-		shapedSort = append(shapedSort, o)
+		nonNullSortItems = append(nonNullSortItems, o)
 	}
-	items = shapedSort
+	items = nonNullSortItems
 	sort.SliceStable(items, func(i, j int) bool {
 		ord := compare(items[i], items[j])
 		if desc {
@@ -433,13 +433,13 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 func cmdGetMember(c *Context) ([]*object.PSObject, error) {
 	// -MemberType 过滤成员类型（Property/TypeName 等，大小写不敏感，缺省返回全部）
 	mt, _ := c.Args.Str("MemberType")
-	typeMatch := func(t string) bool {
+	memberTypeMatch := func(t string) bool {
 		return mt == "" || strings.EqualFold(t, mt)
 	}
 	seen := map[string]bool{}
 	var out []*object.PSObject
 	for _, o := range inputItems(c) {
-		if !seen["type:"+o.TypeName] && typeMatch("TypeName") {
+		if !seen["type:"+o.TypeName] && memberTypeMatch("TypeName") {
 			seen["type:"+o.TypeName] = true
 			t := object.Object("PSMemberInfo", nil)
 			t.AddProp("Name", o.TypeName)
@@ -448,7 +448,7 @@ func cmdGetMember(c *Context) ([]*object.PSObject, error) {
 			out = append(out, t)
 		}
 		for _, p := range o.Props {
-			if seen[p.Name] || !typeMatch("Property") {
+			if seen[p.Name] || !memberTypeMatch("Property") {
 				continue
 			}
 			seen[p.Name] = true

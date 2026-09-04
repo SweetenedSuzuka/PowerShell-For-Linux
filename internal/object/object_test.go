@@ -10,7 +10,7 @@ import (
 
 func TestTruthy(t *testing.T) {
 	cases := []struct {
-		o    *PSObject
+		o        *PSObject
 		expected bool
 	}{
 		{Null(), false},
@@ -151,6 +151,29 @@ func TestFormatList(t *testing.T) {
 	}
 	if !strings.Contains(sb.String(), "Name : a") || !strings.Contains(sb.String(), "Desc : d") {
 		t.Errorf("列表输出异常:\n%s", sb.String())
+	}
+}
+
+// TestFormatTableDateTimeDefault 验证 DateTime 默认表格列（顺序与 PowerShell 一致）与刻度锚点。
+func TestFormatTableDateTimeDefault(t *testing.T) {
+	o := DateTime(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC))
+	o.AddProp("DisplayHint", "DateTime")
+	if v, ok := o.PropValue("Ticks"); !ok || v.String() != "637134336000000000" {
+		t.Fatalf("Ticks 异常: %v", v)
+	}
+	if v, ok := o.PropValue("Kind"); !ok || v.String() != "Utc" {
+		t.Fatalf("Kind 异常: %v", v)
+	}
+	labels, _ := tableColumns([]*PSObject{o})
+	if strings.Join(labels, ",") != strings.Join(dateTimeColumns, ",") {
+		t.Fatalf("默认列异常: %v", labels)
+	}
+	var sb strings.Builder
+	if err := FormatTableTo(&sb, []*PSObject{o}, nil); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(sb.String(), "2020") || !strings.Contains(sb.String(), "DateTime") {
+		t.Errorf("数据行异常:\n%s", sb.String())
 	}
 }
 

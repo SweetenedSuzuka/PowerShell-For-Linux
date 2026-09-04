@@ -22,7 +22,10 @@ func cmdGetDate(c *Context) ([]*object.PSObject, error) {
 	if f, ok := c.Args.Str("Format"); ok && f != "" {
 		return []*object.PSObject{object.Str(now.Format(dotnetToGoLayout(f)))}, nil
 	}
-	return []*object.PSObject{object.DateTime(now)}, nil
+	// Get-Date 输出带 DisplayHint 属性（与 PowerShell 一致，类型转换来的时间对象没有）。
+	o := object.DateTime(now)
+	o.AddProp("DisplayHint", "DateTime")
+	return []*object.PSObject{o}, nil
 }
 
 // parseDateArg 按常见日期时间格式解析 -Date 参数（无时区信息按本地时区）。

@@ -144,6 +144,9 @@ func cellOf(o *PSObject, label string) string {
 	return ""
 }
 
+// dateTimeColumns 是 DateTime 默认表格列（顺序与 PowerShell 一致）。
+var dateTimeColumns = []string{"DisplayHint", "Date", "Day", "DayOfWeek", "DayOfYear", "Hour", "Kind", "Millisecond", "Microsecond", "Nanosecond", "Minute", "Month", "Second", "Ticks", "TimeOfDay", "Year"}
+
 // tableColumns 决定表格的列定义（标签 + 对齐）。
 func tableColumns(objs []*PSObject) (labels []string, aligns []string) {
 	for _, o := range objs {
@@ -159,6 +162,16 @@ func tableColumns(objs []*PSObject) (labels []string, aligns []string) {
 			}
 			return labels, aligns
 		}
+	}
+	// DateTime 用默认列（虚拟属性经 PropValue 取值，顺序见 dateTimeColumns）。
+	if len(objs) > 0 && objs[0].TypeName == "DateTime" {
+		labels := make([]string, len(dateTimeColumns))
+		copy(labels, dateTimeColumns)
+		aligns := make([]string, len(dateTimeColumns))
+		for i := range aligns {
+			aligns[i] = "left"
+		}
+		return labels, aligns
 	}
 	// 对象没有表格列定义时用第一个对象的属性名作为列（如 Select-Object 的自定义对象）
 	if len(objs) > 0 && len(objs[0].Props) > 0 {

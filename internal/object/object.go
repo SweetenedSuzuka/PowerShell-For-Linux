@@ -268,6 +268,23 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 				return Str(t.Weekday().String()), true
 			case "dayofyear":
 				return Int(int64(t.YearDay())), true
+			case "ticks":
+				return Int(t.UnixNano()/100 + 621355968000000000), true
+			case "millisecond":
+				return Int(int64(t.Nanosecond() / 1e6)), true
+			case "microsecond":
+				return Int(int64(t.Nanosecond() / 1e3 % 1e3)), true
+			case "nanosecond":
+				return Int(int64(t.Nanosecond() % 1e3)), true
+			case "kind":
+				return Str(dateTimeKind(t)), true
+			case "date":
+				midnight := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+				return Str(formatDateTime(midnight)), true
+			case "timeofday":
+				return Str(formatTimeOfDay(t)), true
+			case "datetime":
+				return Str(formatDateTime(t)), true
 			}
 		}
 	case "System.Version":
@@ -487,6 +504,26 @@ func formatDateTime(t time.Time) string {
 		return t.Format("Monday, 2 January 2006 15:04:05")
 	}
 	return t.Format("2006年1月2日") + weekdayZh[t.Weekday()] + t.Format(" 15:04:05")
+}
+
+// dateTimeKind 按时区名报告时间的种类：本地为 Local，UTC 为 Utc，其余为 Unspecified。
+func dateTimeKind(t time.Time) string {
+	switch t.Location().String() {
+	case "Local":
+		return "Local"
+	case "UTC":
+		return "Utc"
+	}
+	return "Unspecified"
+}
+
+// formatTimeOfDay 渲染当日已过时间（时:分:秒，亚秒部分去尾零）。
+func formatTimeOfDay(t time.Time) string {
+	s := fmt.Sprintf("%02d:%02d:%02d", t.Hour(), t.Minute(), t.Second())
+	if ns := t.Nanosecond(); ns != 0 {
+		s += "." + strings.TrimRight(fmt.Sprintf("%09d", ns), "0")
+	}
+	return s
 }
 
 // weekdayZh 是星期的中文名（Go 布局没有中文占位符，自行映射）。

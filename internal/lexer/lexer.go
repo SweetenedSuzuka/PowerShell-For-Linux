@@ -628,12 +628,17 @@ func (l *Lexer) lexDoubleQuoted() []StringPart {
 				continue
 			}
 			var sb strings.Builder
-			for {
-				ch := l.peek()
-				if l.nextIsLetter() || isDigit(ch) || ch == '_' || ch == ':' {
-					sb.WriteByte(l.next())
-				} else {
-					break
+			if l.peek() == '?' {
+				// 问号变量只占一个字符（如 $?），后面字母不并入名字。
+				sb.WriteByte(l.next())
+			} else {
+				for {
+					ch := l.peek()
+					if l.nextIsLetter() || isDigit(ch) || ch == '_' || ch == ':' {
+						sb.WriteByte(l.next())
+					} else {
+						break
+					}
 				}
 			}
 			if sb.Len() > 0 {
@@ -676,8 +681,8 @@ func (l *Lexer) lexDash(adj bool) Token {
 		return Token{Type: TkOp, Text: "--", Line: startLine, Col: startCol, Adjacent: adj}
 	}
 	// '-' 后紧跟数字或 '.'：
-	//   紧贴前一值 token（如 '2-1'、'$x-1'）→ 减法运算符
-	//   否则（如 ' -1'、行首 '-1'）→ 负数
+	// 紧贴前一值 token（如 '2-1'、'$x-1'）→ 减法运算符
+	// 否则（如 ' -1'、行首 '-1'）→ 负数
 	if isDigit(l.peekAt(1)) || l.peekAt(1) == '.' {
 		if adj {
 			l.next()

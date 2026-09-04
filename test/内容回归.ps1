@@ -842,6 +842,12 @@ $results += T "数组命名首命令" ((($at2.Count -eq 2)) -and ((($at2 -join "
 # 203. @() 分号多语句不受逗号分隔影响
 $at3 = @(Get-Date; Get-Date)
 $results += T "数组分号多语句" (($at3.Count -eq 2))
+# 204. 字符串内 $? 展开
+Write-Output "x" > $null
+$qi = "AFTER=$?"
+Get-Content zzz-no-such-xyz-123 2>$null >$null
+$qj = "AFTER=$?+$?x"
+$results += T "字符串问号展开" ((($qi -eq "AFTER=True")) -and (($qj -eq "AFTER=False+Falsex")))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

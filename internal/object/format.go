@@ -95,6 +95,15 @@ func writeStrings(w io.Writer, objs []*PSObject) error {
 	return nil
 }
 
+// tableScalar 报告对象在表格中是否按标量直出：无可制表属性，-Property 忽略（DateTime 有属性，走表格）。
+func tableScalar(o *PSObject) bool {
+	switch o.TypeName {
+	case "String", "Int", "Double", "Boolean", "Null", "ScriptBlock":
+		return true
+	}
+	return false
+}
+
 // cellOf 取对象某列的显示值；哈希表特殊处理为 Name/Value 两列。
 func cellOf(o *PSObject, label string) string {
 	if o.TypeName == "Hashtable" {
@@ -120,7 +129,7 @@ func cellOf(o *PSObject, label string) string {
 	if v, ok := o.PropValue(label); ok {
 		return v.String()
 	}
-	return o.String()
+	return ""
 }
 
 // tableColumns 决定表格的列定义（标签 + 对齐）。
@@ -203,11 +212,39 @@ func truncateDisplay(s string, n int) string {
 	return s
 }
 
-// FormatTableTo 以表格形式渲染对象。
+// FormatTableTo 以表格形式渲染对象；标量穿插直出（顺序：先落攒的表，再出标量行）。
 func FormatTableTo(w io.Writer, objs []*PSObject, props []string) error {
 	if len(objs) == 0 {
 		return nil
 	}
+	var buf []*PSObject
+	flush := func() error {
+		if len(buf) == 0 {
+			return nil
+		}
+		if err := writeTable(w, buf, props); err != nil {
+			return err
+		}
+		buf = nil
+		return nil
+	}
+	for _, o := range objs {
+		if tableScalar(o) {
+			if err := flush(); err != nil {
+				return err
+			}
+			if _, err := fmt.Fprintln(w, o.String()); err != nil {
+				return err
+			}
+			continue
+		}
+		buf = append(buf, o)
+	}
+	return flush()
+}
+
+// writeTable 渲染一段非标量对象为一张表。
+func writeTable(w io.Writer, objs []*PSObject, props []string) error {
 	labels, aligns := tableColumns(objs)
 	if len(props) > 0 {
 		labels = props

@@ -2078,7 +2078,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | `-Property` (position 0) | string[] | Property columns to display |
 | `-AutoSize` | switch | Auto-fit column widths (always auto-fits anyway; accepted) |
 
-- Implementation: builds columns from the first object's properties (or its Props for objects without a table definition), right-aligns numeric columns, underlines headers with `----`.
+- Implementation: builds columns from the first object's properties (or its Props for objects without a table definition), right-aligns numeric columns, underlines headers with `----`. Scalars (strings/numbers/booleans/scriptblocks) have no tabulatable properties and print one per line.
 - Custom-object streams merge into one table: consecutive same-shape objects share the first object's columns, later properties open no new columns, missing values stay blank. A lone object takes the list view.
 
 

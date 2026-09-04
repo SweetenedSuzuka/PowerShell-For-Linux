@@ -321,3 +321,58 @@ func TestWideFollowsWidth(t *testing.T) {
 		t.Fatalf("30 宽 10 列宽应排 2 行，实际 %q", buf.String())
 	}
 }
+
+// TestFormatTableMissingBlank 验证缺列留空：缺失属性不再回填对象自身（用 String 非空的 FileInfo 断言）。
+func TestFormatTableMissingBlank(t *testing.T) {
+	o := Object("System.IO.FileInfo", "/a/b")
+	var sb strings.Builder
+	if err := FormatTableTo(&sb, []*PSObject{o}, []string{"Nope"}); err != nil {
+		t.Fatal(err)
+	}
+	out := sb.String()
+	if strings.Contains(out, "/a/b") {
+		t.Errorf("缺列不应回填对象自身:\n%s", out)
+	}
+	lines := strings.Split(out, "\n")
+	if len(lines) != 4 || lines[0] != "Nope" || lines[1] != "----" || lines[2] != "" {
+		t.Fatalf("应为表头+下划线+空行，得到 %q", out)
+	}
+}
+
+// TestFormatTableScalarPassthrough 验证标量直出：标量无可制表属性，-Property 忽略，不起表头。
+func TestFormatTableScalarPassthrough(t *testing.T) {
+	var sb strings.Builder
+	if err := FormatTableTo(&sb, []*PSObject{Str("hello")}, []string{"Nope"}); err != nil {
+		t.Fatal(err)
+	}
+	if sb.String() != "hello\n" {
+		t.Errorf("标量应裸行输出，得到 %q", sb.String())
+	}
+}
+
+// TestFormatTableMixedOrder 验证混排顺序：先落攒的表，再出标量行（任一顺序标量都不进表）。
+func TestFormatTableMixedOrder(t *testing.T) {
+	f := Object("System.IO.FileInfo", "/a/b")
+	var sb strings.Builder
+	if err := FormatTableTo(&sb, []*PSObject{f, Str("hi")}, []string{"Nope"}); err != nil {
+		t.Fatal(err)
+	}
+	out := sb.String()
+	if strings.Contains(out, "/a/b") || strings.Contains(out, "hi\n/a") {
+		t.Errorf("文件行应留空且 hi 不进表，得到 %q", out)
+	}
+	if !strings.HasSuffix(strings.TrimRight(out, "\n"), "hi") {
+		t.Errorf("末行应为标量 hi，得到 %q", out)
+	}
+	sb.Reset()
+	if err := FormatTableTo(&sb, []*PSObject{Str("hi"), f}, []string{"Nope"}); err != nil {
+		t.Fatal(err)
+	}
+	out = sb.String()
+	if !strings.HasPrefix(out, "hi\n") {
+		t.Errorf("标量在前应先出标量行，得到 %q", out)
+	}
+	if strings.Contains(out, "/a/b") {
+		t.Errorf("文件行应留空，得到 %q", out)
+	}
+}

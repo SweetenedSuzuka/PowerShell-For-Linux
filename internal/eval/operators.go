@@ -686,11 +686,15 @@ func (e *Evaluator) convertValue(v *object.PSObject, typeName string) *object.PS
 	return e.convertScalar(v, norm)
 }
 
-// convertScalar 单值转换：target 为归一化小写类型名，未知类型报"无法找到类型"。
+// convertScalar 单值转换：target 为归一化小写类型名；未知类型报"无法找到类型"（与参数绑定路径同文案）。
 func (e *Evaluator) convertScalar(v *object.PSObject, target string) *object.PSObject {
 	out, err := convertTarget(v, target)
 	if err != nil {
-		e.reportError(err)
+		if errors.Is(err, errTypeUnknown) {
+			e.reportError(fmt.Errorf("%s", lang.T(lang.MsgTypeUnknown, target)))
+		} else {
+			e.reportError(err)
+		}
 		return object.Null()
 	}
 	return out
@@ -719,6 +723,10 @@ func convertTarget(v *object.PSObject, target string) (*object.PSObject, error) 
 		if dv, ok := parseDatetimeValue(v); ok {
 			return dv, nil
 		}
+	case "version":
+		if vv, ok := parseVersionValue(v); ok {
+			return vv, nil
+		}
 	case "void":
 		return object.Null(), nil
 	default:
@@ -729,6 +737,26 @@ func convertTarget(v *object.PSObject, target string) (*object.PSObject, error) 
 
 // errTypeUnknown 表示目标类型未注册，区别于值无法转换成已注册类型。
 var errTypeUnknown = errors.New("type unknown")
+
+// parseVersionValue 从 "major.minor[.build[.revision]]" 构造版本对象；缺段记 -1（与 PowerShell 一致）。
+func parseVersionValue(v *object.PSObject) (*object.PSObject, bool) {
+	if v.TypeName == "System.Version" {
+		return v, true
+	}
+	parts := strings.Split(v.String(), ".")
+	if len(parts) < 2 || len(parts) > 4 {
+		return nil, false
+	}
+	nums := []int{-1, -1, -1, -1}
+	for i, p := range parts {
+		n, err := strconv.Atoi(p)
+		if err != nil || n < 0 {
+			return nil, false
+		}
+		nums[i] = n
+	}
+	return object.Version(nums[0], nums[1], nums[2], nums[3]), true
+}
 
 // parseDatetimeValue 从 DateTime 原值或常见格式的字符串构造时间对象。
 func parseDatetimeValue(v *object.PSObject) (*object.PSObject, bool) {

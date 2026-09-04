@@ -852,6 +852,11 @@ $results += T "字符串问号展开" ((($qi -eq "AFTER=True")) -and (($qj -eq "
 $Error.Clear()
 Start-Sleep 1 2
 $results += T "睡眠超量位置" ((($? -eq $false)) -and (($Error.Count -ge 1)))
+# 206. [version] 类型转换与未知类型本地化
+$ver = [version]"1.2"
+$Error.Clear()
+$zz = [zzznope]"a"
+$results += T "版本转换" ((($ver.Major -eq 1)) -and (($ver.Minor -eq 2)) -and (($ver.Build -eq -1)) -and (("$ver" -eq "1.2")) -and (($? -eq $false)) -and (($Error.Count -ge 1)) -and (("$($Error[0])" -like "*无法找到类型*")))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

@@ -90,12 +90,22 @@ type versionParts struct {
 	major, minor, build, revision int
 }
 
-// String 渲染版本号：从右往左省略为 0 的段，至少保留 major。
-// 这样 Version(7,0,0,0) 显示 "7"，Version(5,1,0,0) 显示 "5.1"。
+// String 渲染版本号：
+// - 从右向左裁剪所有值为 0 或 -1 的尾部段（-1 表示该段在解析时缺失）。
+// - 至少保留主版本号（major），即使它为 0。
+// - 非尾部段的 0 会正常显示。
+//
+// 示例：
+//
+//	[7,0,0,0]   -> "7"
+//	[1,2,-1,-1] -> "1.2"
+//	[1,0,3,0]   -> "1.0.3"  (中间的 0 保留)
+//	[0,0,0,0]   -> "0"      (至少保留 major)
+//	[1,-1,0,0]  -> "1"      (尾部 -1 和 0 均被裁剪)
 func (v versionParts) String() string {
 	segs := []int{v.major, v.minor, v.build, v.revision}
 	end := len(segs) - 1
-	for end > 0 && segs[end] == 0 {
+	for end > 0 && (segs[end] == 0 || segs[end] == -1) {
 		end--
 	}
 	var sb strings.Builder

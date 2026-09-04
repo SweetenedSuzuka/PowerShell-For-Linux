@@ -32,6 +32,10 @@ func cmdStartSleep(c *Context) ([]*object.PSObject, error) {
 	if c.Args.Get("Seconds") != nil && c.Args.Get("Milliseconds") != nil {
 		return errf(c, "%s", lang.T(lang.MsgParamSetUnresolvable))
 	}
+	// 超量位置实参无槽位可接（Seconds 只占位置 0），报错而非静默忽略。
+	if len(c.Args.Positional) > 0 {
+		return errf(c, "%s", lang.T(lang.MsgPositionalParamNotFound, c.Args.Positional[0].String()))
+	}
 	var d time.Duration
 	if sec, ok := c.Args.Int("Seconds"); ok {
 		d = time.Duration(sec) * time.Second

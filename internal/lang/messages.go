@@ -113,6 +113,7 @@ const (
 	MsgPSVersionSet
 	MsgHashAlgoUnsupported
 	MsgParamSetUnresolvable
+	MsgPositionalParamNotFound
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported

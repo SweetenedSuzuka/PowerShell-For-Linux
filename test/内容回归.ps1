@@ -848,6 +848,10 @@ $qi = "AFTER=$?"
 Get-Content zzz-no-such-xyz-123 2>$null >$null
 $qj = "AFTER=$?+$?x"
 $results += T "字符串问号展开" ((($qi -eq "AFTER=True")) -and (($qj -eq "AFTER=False+Falsex")))
+# 205. Start-Sleep 超量位置实参报错
+$Error.Clear()
+Start-Sleep 1 2
+$results += T "睡眠超量位置" ((($? -eq $false)) -and (($Error.Count -ge 1)))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

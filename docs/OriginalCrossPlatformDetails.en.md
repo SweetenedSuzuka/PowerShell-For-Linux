@@ -7588,6 +7588,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | `-Milliseconds` | int | How many milliseconds to sleep |
 
 - `-Seconds` and `-Milliseconds` are mutually exclusive; specifying both is an error.
+- `-Seconds` takes only position 0; extra positional arguments are an error.
 
 
 ### Start-ThreadJob

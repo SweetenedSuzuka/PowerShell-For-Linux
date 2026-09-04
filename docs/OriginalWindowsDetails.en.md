@@ -13,135 +13,134 @@ Status legend:
 
 | Command | Module | Version | Differences | Purpose | Status | Notes |
 |---|---|---|---|---|---|---|
-| [`Add-AppProvisionedSharedPackageContainer`](#add-appprovisionedsharedpackagecontainer) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Add-AppSharedPackageContainer`](#add-appsharedpackagecontainer) | Appx | Both | None | Deploys the shared package container definition. | Out of scope |  |
+| [`Add-AppProvisionedSharedPackageContainer`](#add-appprovisionedsharedpackagecontainer) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Add-AppSharedPackageContainer`](#add-appsharedpackagecontainer) | Appx | 5.1 only | 5.1 only | Deploys the shared package container definition. | Out of scope |  |
 | [`Add-AppvClientConnectionGroup`](#add-appvclientconnectiongroup) | AppvClient | 5.1 only | 5.1 only | Creates a composition of multiple packages. | Out of scope |  |
 | [`Add-AppvClientPackage`](#add-appvclientpackage) | AppvClient | 5.1 only | 5.1 only | Adds a package to a computer running the App-V client. | Out of scope |  |
 | [`Add-AppvPublishingServer`](#add-appvpublishingserver) | AppvClient | 5.1 only | 5.1 only | Adds a publishing server for the computer that runs the App-V client. | Out of scope |  |
-| [`Add-AppxPackage`](#add-appxpackage) | Appx | Both | None | Adds a signed app package to a user account. | Out of scope |  |
-| [`Add-AppxProvisionedPackage`](#add-appxprovisionedpackage) | Dism | Both | Syntax differs | Adds an app package (.appx) that will install for each new user to a Windows image. | Out of scope |  |
-| [`Add-AppxVolume`](#add-appxvolume) | Appx | Both | None | Adds an appx volume to the Package Manager. | Out of scope |  |
-| [`Add-BitsFile`](#add-bitsfile) | BitsTransfer | Both | None | Adds one or more files to an existing BITS transfer job. | Out of scope |  |
-| [`Add-CertificateEnrollmentPolicyServer`](#add-certificateenrollmentpolicyserver) | PKI | Both | None | Adds an enrollment policy server to the current user or local system configuration. | Out of scope |  |
-| [`Add-Computer`](#add-computer) | Microsoft.PowerShell.Management | Both | None | Add the local computer to a domain or workgroup. | Out of scope |  |
-| [`Add-JobTrigger`](#add-jobtrigger) | PSScheduledJob | Both | None | Adds job triggers to scheduled jobs. | Out of scope |  |
-| [`Add-KdsRootKey`](#add-kdsrootkey) | Kds | Both | None | Generates a new root key for the Microsoft Group KdsSvc within Active Directory. | Out of scope |  |
-| [`Add-LocalGroupMember`](#add-localgroupmember) | Microsoft.PowerShell.LocalAccounts | Both | None | Adds members to a local group. | Out of scope |  |
+| [`Add-AppxPackage`](#add-appxpackage) | Appx | 5.1 only | 5.1 only | Adds a signed app package to a user account. | Out of scope |  |
+| [`Add-AppxProvisionedPackage`](#add-appxprovisionedpackage) | Dism | 5.1 only | Syntax differs | Adds an app package (.appx) that will install for each new user to a Windows image. | Out of scope |  |
+| [`Add-AppxVolume`](#add-appxvolume) | Appx | 5.1 only | 5.1 only | Adds an appx volume to the Package Manager. | Out of scope |  |
+| [`Add-BitsFile`](#add-bitsfile) | BitsTransfer | 5.1 only | 5.1 only | Adds one or more files to an existing BITS transfer job. | Out of scope |  |
+| [`Add-CertificateEnrollmentPolicyServer`](#add-certificateenrollmentpolicyserver) | PKI | 5.1 only | 5.1 only | Adds an enrollment policy server to the current user or local system configuration. | Out of scope |  |
+| [`Add-Computer`](#add-computer) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Add the local computer to a domain or workgroup. | Out of scope |  |
+| [`Add-JobTrigger`](#add-jobtrigger) | PSScheduledJob | 5.1 only | 5.1 only | Adds job triggers to scheduled jobs. | Out of scope |  |
+| [`Add-KdsRootKey`](#add-kdsrootkey) | Kds | 5.1 only | 5.1 only | Generates a new root key for the Microsoft Group KdsSvc within Active Directory. | Out of scope |  |
+| [`Add-LocalGroupMember`](#add-localgroupmember) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Adds members to a local group. | Out of scope |  |
 | [`Add-PSSnapin`](#add-pssnapin) | Microsoft.PowerShell.Core | 5.1 only | 5.1 only | Adds one or more Windows PowerShell snap-ins to the current session. | Out of scope |  |
-| [`Add-SignerRule`](#add-signerrule) | ConfigCI | Both | None | Creates a signer rule and adds it to a policy. | Out of scope |  |
-| [`Add-WindowsCapability`](#add-windowscapability) | Dism | Both | None | Installs a Windows capability package on the specified operating system image. | Out of scope |  |
-| [`Add-WindowsDriver`](#add-windowsdriver) | Dism | Both | None | Adds a driver to an offline Windows image. | Out of scope |  |
-| [`Add-WindowsImage`](#add-windowsimage) | Dism | Both | None | Adds an additional image to an existing image (.wim) file. | Out of scope |  |
-| [`Add-WindowsPackage`](#add-windowspackage) | Dism | Both | None | Adds a single .cab or .msu file to a Windows image. | Out of scope |  |
-| [`Checkpoint-Computer`](#checkpoint-computer) | Microsoft.PowerShell.Management | Both | None | Creates a system restore point on the local computer. | Out of scope |  |
-| [`Clear-EventLog`](#clear-eventlog) | Microsoft.PowerShell.Management | Both | None | Clears all entries from specified event logs on the local or remote computers. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
-| [`Clear-KdsCache`](#clear-kdscache) | Kds | Both | None | Clears the group key cache of the local computer. | Out of scope |  |
-| [`Clear-RecycleBin`](#clear-recyclebin) | Microsoft.PowerShell.Management | 7 only | 7 only, spelled Clear-Recyclebin in 5.1 (letter case differs) | Clears the contents of the current user's recycle bin. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
-| [`Clear-Recyclebin`](#clear-recyclebin) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only, spelled Clear-RecycleBin in 7 (letter case differs) | Clears the contents of the current user's recycle bin. | Out of scope |  |
-| [`Clear-ReFSDedupSchedule`](#clear-refsdedupschedule) | Microsoft.ReFsDedup.Commands | Both | None | Clears the scheduled task for deduplication on a specified ReFS volume. | Out of scope |  |
-| [`Clear-ReFSDedupScrubSchedule`](#clear-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | Both | None | Clears the deduplication scrub schedule on a specified ReFS volume. | Out of scope |  |
-| [`Clear-Tpm`](#clear-tpm) | TrustedPlatformModule | Both | None | Resets a TPM to its default state. | Out of scope |  |
+| [`Add-SignerRule`](#add-signerrule) | ConfigCI | 5.1 only | 5.1 only | Creates a signer rule and adds it to a policy. | Out of scope |  |
+| [`Add-WindowsCapability`](#add-windowscapability) | Dism | 5.1 only | 5.1 only | Installs a Windows capability package on the specified operating system image. | Out of scope |  |
+| [`Add-WindowsDriver`](#add-windowsdriver) | Dism | 5.1 only | 5.1 only | Adds a driver to an offline Windows image. | Out of scope |  |
+| [`Add-WindowsImage`](#add-windowsimage) | Dism | 5.1 only | 5.1 only | Adds an additional image to an existing image (.wim) file. | Out of scope |  |
+| [`Add-WindowsPackage`](#add-windowspackage) | Dism | 5.1 only | 5.1 only | Adds a single .cab or .msu file to a Windows image. | Out of scope |  |
+| [`Checkpoint-Computer`](#checkpoint-computer) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Creates a system restore point on the local computer. | Out of scope |  |
+| [`Clear-EventLog`](#clear-eventlog) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Clears all entries from specified event logs on the local or remote computers. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Clear-KdsCache`](#clear-kdscache) | Kds | 5.1 only | 5.1 only | Clears the group key cache of the local computer. | Out of scope |  |
+| [`Clear-RecycleBin`](#clear-recyclebin) | Microsoft.PowerShell.Management | Both | None | Clears the contents of the current user’s recycle bin. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Clear-ReFSDedupSchedule`](#clear-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Clears the scheduled task for deduplication on a specified ReFS volume. | Out of scope |  |
+| [`Clear-ReFSDedupScrubSchedule`](#clear-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Clears the deduplication scrub schedule on a specified ReFS volume. | Out of scope |  |
+| [`Clear-Tpm`](#clear-tpm) | TrustedPlatformModule | 5.1 only | 5.1 only | Resets a TPM to its default state. | Out of scope |  |
 | [`Clear-UevAppxPackage`](#clear-uevappxpackage) | UEV | 5.1 only | 5.1 only | Clears a setting in the computer or user sections of the registry. | Out of scope |  |
 | [`Clear-UevConfiguration`](#clear-uevconfiguration) | UEV | 5.1 only | 5.1 only | Clears UE-V configuration settings. | Out of scope |  |
-| [`Clear-WindowsCorruptMountPoint`](#clear-windowscorruptmountpoint) | Dism | Both | None | Deletes all of the resources associated with a mounted image that has been corrupted. | Out of scope |  |
-| [`Complete-BitsTransfer`](#complete-bitstransfer) | BitsTransfer | Both | None | Completes a BITS transfer job. | Out of scope |  |
-| [`Complete-DtcDiagnosticTransaction`](#complete-dtcdiagnostictransaction) | MsDtc | Both | None | Invokes the Commit process if the specified transaction is the root transaction; otherwise, invokes the Complete method on a transaction object. | Out of scope |  |
-| [`Complete-Transaction`](#complete-transaction) | Microsoft.PowerShell.Management | Both | None | Commits the active transaction. | Out of scope |  |
-| [`Confirm-SecureBootUEFI`](#confirm-securebootuefi) | SecureBoot | Both | None | Confirms that Secure Boot is enabled by checking the Secure Boot status on the local computer. | Out of scope |  |
+| [`Clear-WindowsCorruptMountPoint`](#clear-windowscorruptmountpoint) | Dism | 5.1 only | 5.1 only | Deletes all of the resources associated with a mounted image that has been corrupted. | Out of scope |  |
+| [`Complete-BitsTransfer`](#complete-bitstransfer) | BitsTransfer | 5.1 only | 5.1 only | Completes a BITS transfer job. | Out of scope |  |
+| [`Complete-DtcDiagnosticTransaction`](#complete-dtcdiagnostictransaction) | MsDtc | 5.1 only | 5.1 only | Invokes the Commit process if the specified transaction is the root transaction; otherwise, invokes the Complete method on a transaction object. | Out of scope |  |
+| [`Complete-Transaction`](#complete-transaction) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Commits the active transaction. | Out of scope |  |
+| [`Confirm-SecureBootUEFI`](#confirm-securebootuefi) | SecureBoot | 5.1 only | 5.1 only | Confirms that Secure Boot is enabled by checking the Secure Boot status on the local computer. | Out of scope |  |
 | [`Connect-PSSession`](#connect-pssession) | Microsoft.PowerShell.Core | Both | None | Reconnects to disconnected sessions. | Out of scope | Remote sessions (requires a remote host; out of scope) |
 | [`Connect-WSMan`](#connect-wsman) | Microsoft.WSMan.Management | Both | None | Connects to the WinRM service on a remote computer. | Out of scope |  |
 | [`Convert-String`](#convert-string) | Microsoft.PowerShell.Utility | 5.1 only | 5.1 only | Formats a string to match examples. | Out of scope |  |
-| [`ConvertFrom-CIPolicy`](#convertfrom-cipolicy) | ConfigCI | Both | None | Converts an .xml file that contains a Code Integrity policy into binary format. | Out of scope |  |
+| [`ConvertFrom-CIPolicy`](#convertfrom-cipolicy) | ConfigCI | 5.1 only | 5.1 only | Converts an .xml file that contains a Code Integrity policy into binary format. | Out of scope |  |
 | [`ConvertFrom-SddlString`](#convertfrom-sddlstring) | Microsoft.PowerShell.Utility | 7 only | 7 only | Converts a SDDL string to a custom object. | Out of scope | Serialization / markup / formatting (rarely used) |
 | [`ConvertFrom-String`](#convertfrom-string) | Microsoft.PowerShell.Utility | 5.1 only | 5.1 only | Extracts and parses structured properties from string content. | Out of scope |  |
-| [`ConvertTo-ProcessMitigationPolicy`](#convertto-processmitigationpolicy) | ProcessMitigations | Both | None | Converts an mitigation policy file formats. | Out of scope |  |
-| [`ConvertTo-TpmOwnerAuth`](#convertto-tpmownerauth) | TrustedPlatformModule | Both | None | Creates a TPM owner authorization value from a supplied string. | Out of scope |  |
-| [`Copy-BcdEntry`](#copy-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Copy-UserInternationalSettingsToSystem`](#copy-userinternationalsettingstosystem) | International | Both | None | Copies the current user's international settings (Windows Display language, Input language, Regional Format/locale, and Location/GeoID) to one or both of the following: * Welcome screen and system accounts | Out of scope |  |
-| [`Disable-AppBackgroundTaskDiagnosticLog`](#disable-appbackgroundtaskdiagnosticlog) | AppBackgroundTask | Both | None | Disables background task logging in Event Viewer. | Out of scope |  |
+| [`ConvertTo-ProcessMitigationPolicy`](#convertto-processmitigationpolicy) | ProcessMitigations | 5.1 only | 5.1 only | Converts an mitigation policy file formats. | Out of scope |  |
+| [`ConvertTo-TpmOwnerAuth`](#convertto-tpmownerauth) | TrustedPlatformModule | 5.1 only | 5.1 only | Creates a TPM owner authorization value from a supplied string. | Out of scope |  |
+| [`Copy-BcdEntry`](#copy-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Copy-UserInternationalSettingsToSystem`](#copy-userinternationalsettingstosystem) | International | 5.1 only | 5.1 only | Copies the current user's international settings (Windows Display language, Input language, Regional Format/locale, and Location/GeoID) to one or both of the following: * Welcome screen and system accounts | Out of scope |  |
+| [`Disable-AppBackgroundTaskDiagnosticLog`](#disable-appbackgroundtaskdiagnosticlog) | AppBackgroundTask | 5.1 only | 5.1 only | Disables background task logging in Event Viewer. | Out of scope |  |
 | [`Disable-Appv`](#disable-appv) | AppvClient | 5.1 only | 5.1 only | Disables the App-V service. | Out of scope |  |
 | [`Disable-AppvClientConnectionGroup`](#disable-appvclientconnectiongroup) | AppvClient | 5.1 only | 5.1 only | Disables a connection group on the computer running the App-V client. | Out of scope |  |
-| [`Disable-BcdElementBootDebug`](#disable-bcdelementbootdebug) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Disable-BcdElementBootEms`](#disable-bcdelementbootems) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Disable-BcdElementDebug`](#disable-bcdelementdebug) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Disable-BcdElementEms`](#disable-bcdelementems) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Disable-BcdElementEventLogging`](#disable-bcdelementeventlogging) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Disable-BcdElementHypervisorDebug`](#disable-bcdelementhypervisordebug) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Disable-ComputerRestore`](#disable-computerrestore) | Microsoft.PowerShell.Management | Both | None | Disables the System Restore feature on the specified file system drive. | Out of scope |  |
-| [`Disable-JobTrigger`](#disable-jobtrigger) | PSScheduledJob | Both | None | Disables the job triggers of scheduled jobs. | Out of scope |  |
-| [`Disable-LocalUser`](#disable-localuser) | Microsoft.PowerShell.LocalAccounts | Both | None | Disables a local user account. | Out of scope |  |
+| [`Disable-BcdElementBootDebug`](#disable-bcdelementbootdebug) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Disable-BcdElementBootEms`](#disable-bcdelementbootems) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Disable-BcdElementDebug`](#disable-bcdelementdebug) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Disable-BcdElementEms`](#disable-bcdelementems) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Disable-BcdElementEventLogging`](#disable-bcdelementeventlogging) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Disable-BcdElementHypervisorDebug`](#disable-bcdelementhypervisordebug) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Disable-ComputerRestore`](#disable-computerrestore) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Disables the System Restore feature on the specified file system drive. | Out of scope |  |
+| [`Disable-JobTrigger`](#disable-jobtrigger) | PSScheduledJob | 5.1 only | 5.1 only | Disables the job triggers of scheduled jobs. | Out of scope |  |
+| [`Disable-LocalUser`](#disable-localuser) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Disables a local user account. | Out of scope |  |
 | [`Disable-PSRemoting`](#disable-psremoting) | Microsoft.PowerShell.Core | Both | None | Prevents PowerShell endpoints from receiving remote connections. | Out of scope |  |
 | [`Disable-PSSessionConfiguration`](#disable-pssessionconfiguration) | Microsoft.PowerShell.Core | Both | None | Disables session configurations on the local computer. | Out of scope | Remote sessions (requires a remote host; out of scope) |
-| [`Disable-ReFSDedup`](#disable-refsdedup) | Microsoft.ReFsDedup.Commands | Both | None | Disables data deduplication on a specified ReFS volume. | Out of scope |  |
-| [`Disable-ScheduledJob`](#disable-scheduledjob) | PSScheduledJob | Both | None | Disables a scheduled job. | Out of scope |  |
-| [`Disable-TlsCipherSuite`](#disable-tlsciphersuite) | TLS | Both | None | Disables a TLS cipher suite. | Out of scope |  |
-| [`Disable-TlsEccCurve`](#disable-tlsecccurve) | TLS | Both | None | Disables the Elliptic Curve Cryptography (ECC) cipher suites available for TLS(Transport Layer Security) for a computer. | Out of scope |  |
-| [`Disable-TlsSessionTicketKey`](#disable-tlssessionticketkey) | TLS | Both | None | Disables a TLS session ticket key. | Out of scope |  |
-| [`Disable-TpmAutoProvisioning`](#disable-tpmautoprovisioning) | TrustedPlatformModule | Both | None | Disables TPM auto-provisioning. | Out of scope |  |
+| [`Disable-ReFSDedup`](#disable-refsdedup) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Disables data deduplication on a specified ReFS volume. | Out of scope |  |
+| [`Disable-ScheduledJob`](#disable-scheduledjob) | PSScheduledJob | 5.1 only | 5.1 only | Disables a scheduled job. | Out of scope |  |
+| [`Disable-TlsCipherSuite`](#disable-tlsciphersuite) | TLS | 5.1 only | 5.1 only | Disables a TLS cipher suite. | Out of scope |  |
+| [`Disable-TlsEccCurve`](#disable-tlsecccurve) | TLS | 5.1 only | 5.1 only | Disables the Elliptic Curve Cryptography (ECC) cipher suites available for TLS(Transport Layer Security) for a computer. | Out of scope |  |
+| [`Disable-TlsSessionTicketKey`](#disable-tlssessionticketkey) | TLS | 5.1 only | 5.1 only | Disables a TLS session ticket key. | Out of scope |  |
+| [`Disable-TpmAutoProvisioning`](#disable-tpmautoprovisioning) | TrustedPlatformModule | 5.1 only | 5.1 only | Disables TPM auto-provisioning. | Out of scope |  |
 | [`Disable-Uev`](#disable-uev) | UEV | 5.1 only | 5.1 only | Disables the UE-V service. | Out of scope |  |
 | [`Disable-UevAppxPackage`](#disable-uevappxpackage) | UEV | 5.1 only | 5.1 only | Disables UE-V synchronization of Windows 8 apps. | Out of scope |  |
 | [`Disable-UevTemplate`](#disable-uevtemplate) | UEV | 5.1 only | 5.1 only | Disables a settings location template. | Out of scope |  |
-| [`Disable-WindowsErrorReporting`](#disable-windowserrorreporting) | WindowsErrorReporting | Both | None | Disables Windows Error Reporting. | Out of scope |  |
-| [`Disable-WindowsOptionalFeature`](#disable-windowsoptionalfeature) | Dism | Both | None | Disables a feature in a Windows image. | Out of scope |  |
+| [`Disable-WindowsErrorReporting`](#disable-windowserrorreporting) | WindowsErrorReporting | 5.1 only | 5.1 only | Disables Windows Error Reporting. | Out of scope |  |
+| [`Disable-WindowsOptionalFeature`](#disable-windowsoptionalfeature) | Dism | 5.1 only | 5.1 only | Disables a feature in a Windows image. | Out of scope |  |
 | [`Disable-WSManCredSSP`](#disable-wsmancredssp) | Microsoft.WSMan.Management | Both | None | Disables CredSSP authentication on a computer. | Out of scope |  |
 | [`Disconnect-PSSession`](#disconnect-pssession) | Microsoft.PowerShell.Core | Both | Syntax differs | Disconnects from a session. | Out of scope | Remote sessions (requires a remote host; out of scope) |
 | [`Disconnect-WSMan`](#disconnect-wsman) | Microsoft.WSMan.Management | Both | None | Disconnects the client from the WinRM service on a remote computer. | Out of scope |  |
-| [`Dismount-AppxVolume`](#dismount-appxvolume) | Appx | Both | None | Dismounts an appx volume. | Out of scope |  |
-| [`Dismount-WindowsImage`](#dismount-windowsimage) | Dism | Both | None | Dismounts a Windows image from the directory it is mapped to. | Out of scope |  |
-| [`Edit-CIPolicyRule`](#edit-cipolicyrule) | ConfigCI | Both | None | This cmdlet is not supported. | Out of scope |  |
-| [`Enable-AppBackgroundTaskDiagnosticLog`](#enable-appbackgroundtaskdiagnosticlog) | AppBackgroundTask | Both | None | Enables background task logging in Event Viewer. | Out of scope |  |
+| [`Dismount-AppxVolume`](#dismount-appxvolume) | Appx | 5.1 only | 5.1 only | Dismounts an appx volume. | Out of scope |  |
+| [`Dismount-WindowsImage`](#dismount-windowsimage) | Dism | 5.1 only | 5.1 only | Dismounts a Windows image from the directory it is mapped to. | Out of scope |  |
+| [`Edit-CIPolicyRule`](#edit-cipolicyrule) | ConfigCI | 5.1 only | 5.1 only | This cmdlet is not supported. | Out of scope |  |
+| [`Enable-AppBackgroundTaskDiagnosticLog`](#enable-appbackgroundtaskdiagnosticlog) | AppBackgroundTask | 5.1 only | 5.1 only | Enables background task logging in Event Viewer. | Out of scope |  |
 | [`Enable-Appv`](#enable-appv) | AppvClient | 5.1 only | 5.1 only | Enables the App-V service. | Out of scope |  |
 | [`Enable-AppvClientConnectionGroup`](#enable-appvclientconnectiongroup) | AppvClient | 5.1 only | 5.1 only | Enables a running connection group on the computer running the App-V client. | Out of scope |  |
-| [`Enable-BcdElementBootDebug`](#enable-bcdelementbootdebug) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Enable-BcdElementBootEms`](#enable-bcdelementbootems) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Enable-BcdElementDebug`](#enable-bcdelementdebug) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Enable-BcdElementEms`](#enable-bcdelementems) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Enable-BcdElementEventLogging`](#enable-bcdelementeventlogging) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Enable-BcdElementHypervisorDebug`](#enable-bcdelementhypervisordebug) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Enable-ComputerRestore`](#enable-computerrestore) | Microsoft.PowerShell.Management | Both | None | Enables the System Restore feature on the specified file system drive. | Out of scope |  |
-| [`Enable-JobTrigger`](#enable-jobtrigger) | PSScheduledJob | Both | None | Enables the job triggers of scheduled jobs. | Out of scope |  |
-| [`Enable-LocalUser`](#enable-localuser) | Microsoft.PowerShell.LocalAccounts | Both | None | Enables a local user account. | Out of scope |  |
+| [`Enable-BcdElementBootDebug`](#enable-bcdelementbootdebug) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Enable-BcdElementBootEms`](#enable-bcdelementbootems) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Enable-BcdElementDebug`](#enable-bcdelementdebug) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Enable-BcdElementEms`](#enable-bcdelementems) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Enable-BcdElementEventLogging`](#enable-bcdelementeventlogging) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Enable-BcdElementHypervisorDebug`](#enable-bcdelementhypervisordebug) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Enable-ComputerRestore`](#enable-computerrestore) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Enables the System Restore feature on the specified file system drive. | Out of scope |  |
+| [`Enable-JobTrigger`](#enable-jobtrigger) | PSScheduledJob | 5.1 only | 5.1 only | Enables the job triggers of scheduled jobs. | Out of scope |  |
+| [`Enable-LocalUser`](#enable-localuser) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Enables a local user account. | Out of scope |  |
 | [`Enable-PSRemoting`](#enable-psremoting) | Microsoft.PowerShell.Core | Both | None | Configures the computer to receive remote commands. | Out of scope |  |
 | [`Enable-PSSessionConfiguration`](#enable-pssessionconfiguration) | Microsoft.PowerShell.Core | Both | None | Enables the session configurations on the local computer. | Out of scope | Remote sessions (requires a remote host; out of scope) |
-| [`Enable-ReFSDedup`](#enable-refsdedup) | Microsoft.ReFsDedup.Commands | Both | None | Enables data deduplication on a specified ReFS volume. | Out of scope |  |
-| [`Enable-ScheduledJob`](#enable-scheduledjob) | PSScheduledJob | Both | None | Enables a scheduled job. | Out of scope |  |
-| [`Enable-TlsCipherSuite`](#enable-tlsciphersuite) | TLS | Both | Syntax differs | Enables a TLS cipher suite. | Out of scope |  |
-| [`Enable-TlsEccCurve`](#enable-tlsecccurve) | TLS | Both | Syntax differs | Enables Elliptic Curve Cryptography (ECC) cipher suites available for TLS. | Out of scope |  |
-| [`Enable-TlsSessionTicketKey`](#enable-tlssessionticketkey) | TLS | Both | None | Configures a TLS server with a TLS session ticket key. | Out of scope |  |
-| [`Enable-TpmAutoProvisioning`](#enable-tpmautoprovisioning) | TrustedPlatformModule | Both | None | Enables TPM auto-provisioning. | Out of scope |  |
+| [`Enable-ReFSDedup`](#enable-refsdedup) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Enables data deduplication on a specified ReFS volume. | Out of scope |  |
+| [`Enable-ScheduledJob`](#enable-scheduledjob) | PSScheduledJob | 5.1 only | 5.1 only | Enables a scheduled job. | Out of scope |  |
+| [`Enable-TlsCipherSuite`](#enable-tlsciphersuite) | TLS | 5.1 only | 5.1 only | Enables a TLS cipher suite. | Out of scope |  |
+| [`Enable-TlsEccCurve`](#enable-tlsecccurve) | TLS | 5.1 only | 5.1 only | Enables Elliptic Curve Cryptography (ECC) cipher suites available for TLS. | Out of scope |  |
+| [`Enable-TlsSessionTicketKey`](#enable-tlssessionticketkey) | TLS | 5.1 only | 5.1 only | Configures a TLS server with a TLS session ticket key. | Out of scope |  |
+| [`Enable-TpmAutoProvisioning`](#enable-tpmautoprovisioning) | TrustedPlatformModule | 5.1 only | 5.1 only | Enables TPM auto-provisioning. | Out of scope |  |
 | [`Enable-Uev`](#enable-uev) | UEV | 5.1 only | 5.1 only | Enables the UE-V service. | Out of scope |  |
 | [`Enable-UevAppxPackage`](#enable-uevappxpackage) | UEV | 5.1 only | 5.1 only | Enables UE-V synchronization of Windows 8 apps. | Out of scope |  |
 | [`Enable-UevTemplate`](#enable-uevtemplate) | UEV | 5.1 only | 5.1 only | Enables a settings location template. | Out of scope |  |
-| [`Enable-WindowsErrorReporting`](#enable-windowserrorreporting) | WindowsErrorReporting | Both | None | Enables Windows Error Reporting. | Out of scope |  |
-| [`Enable-WindowsOptionalFeature`](#enable-windowsoptionalfeature) | Dism | Both | None | Enables a feature in a Windows image. | Out of scope |  |
+| [`Enable-WindowsErrorReporting`](#enable-windowserrorreporting) | WindowsErrorReporting | 5.1 only | 5.1 only | Enables Windows Error Reporting. | Out of scope |  |
+| [`Enable-WindowsOptionalFeature`](#enable-windowsoptionalfeature) | Dism | 5.1 only | 5.1 only | Enables a feature in a Windows image. | Out of scope |  |
 | [`Enable-WSManCredSSP`](#enable-wsmancredssp) | Microsoft.WSMan.Management | Both | None | Enables Credential Security Support Provider (CredSSP) authentication on a computer. | Out of scope |  |
-| [`Expand-OsImage`](#expand-osimage) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Expand-WindowsCustomDataImage`](#expand-windowscustomdataimage) | Dism | Both | None | Expands a custom data image. | Out of scope |  |
-| [`Expand-WindowsImage`](#expand-windowsimage) | Dism | Both | Syntax differs | Applies an image to a specified location. | Out of scope |  |
-| [`Export-BcdStore`](#export-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Export-BinaryMiLog`](#export-binarymilog) | CimCmdlets | Both | None | Creates a binary encoded representation of an object or objects and stores it in a file. | Out of scope | Windows-only (CIM/WMI stack) |
-| [`Export-Certificate`](#export-certificate) | PKI | Both | None | Exports a certificate from a certificate store into a file. | Out of scope |  |
+| [`Expand-OsImage`](#expand-osimage) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Expand-WindowsCustomDataImage`](#expand-windowscustomdataimage) | Dism | 5.1 only | 5.1 only | Expands a custom data image. | Out of scope |  |
+| [`Expand-WindowsImage`](#expand-windowsimage) | Dism | 5.1 only | 5.1 only | Applies an image to a specified location. | Out of scope |  |
+| [`Export-BcdStore`](#export-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Export-BinaryMiLog`](#export-binarymilog) | CimCmdlets | 5.1 only | 5.1 only | Creates a binary encoded representation of an object or objects and stores it in a file. | Out of scope | Windows-only (CIM/WMI stack) |
+| [`Export-Certificate`](#export-certificate) | PKI | 5.1 only | 5.1 only | Exports a certificate from a certificate store into a file. | Out of scope |  |
 | [`Export-Console`](#export-console) | Microsoft.PowerShell.Core | 5.1 only | 5.1 only | Exports the names of snap-ins in the current session to a console file. | Out of scope |  |
-| [`Export-Counter`](#export-counter) | Microsoft.PowerShell.Diagnostics | Both | None | Exports performance counter data to log files. | Out of scope |  |
-| [`Export-OsImage`](#export-osimage) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Export-PfxCertificate`](#export-pfxcertificate) | PKI | Both | None | Exports a certificate or a PFXData object to a Personal Information Exchange (PFX) file. | Out of scope |  |
-| [`Export-ProvisioningPackage`](#export-provisioningpackage) | Provisioning | Both | None | Extract the contents of a provisioning package. | Out of scope |  |
-| [`Export-StartLayout`](#export-startlayout) | StartLayout | Both | None | Exports the layout of the Start screen. | Out of scope |  |
-| [`Export-StartLayoutEdgeAssets`](#export-startlayoutedgeassets) | StartLayout | Both | None | Exports secondary tiles for Microsoft Edge that display a custom image. | Out of scope |  |
-| [`Export-TlsSessionTicketKey`](#export-tlssessionticketkey) | TLS | Both | None | Exports a TLS session ticket key. | Out of scope |  |
-| [`Export-Trace`](#export-trace) | Provisioning | Both | None | Exports an event trace log file for provisioning. | Out of scope |  |
+| [`Export-Counter`](#export-counter) | Microsoft.PowerShell.Diagnostics | 5.1 only | 5.1 only | Exports performance counter data to log files. | Out of scope |  |
+| [`Export-OsImage`](#export-osimage) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Export-PfxCertificate`](#export-pfxcertificate) | PKI | 5.1 only | 5.1 only | Exports a certificate or a PFXData object to a Personal Information Exchange (PFX) file. | Out of scope |  |
+| [`Export-ProvisioningPackage`](#export-provisioningpackage) | Provisioning | 5.1 only | 5.1 only | Extract the contents of a provisioning package. | Out of scope |  |
+| [`Export-StartLayout`](#export-startlayout) | StartLayout | 5.1 only | 5.1 only | Exports the layout of the Start screen. | Out of scope |  |
+| [`Export-StartLayoutEdgeAssets`](#export-startlayoutedgeassets) | StartLayout | 5.1 only | 5.1 only | Exports secondary tiles for Microsoft Edge that display a custom image. | Out of scope |  |
+| [`Export-TlsSessionTicketKey`](#export-tlssessionticketkey) | TLS | 5.1 only | 5.1 only | Exports a TLS session ticket key. | Out of scope |  |
+| [`Export-Trace`](#export-trace) | Provisioning | 5.1 only | 5.1 only | Exports an event trace log file for provisioning. | Out of scope |  |
 | [`Export-UevConfiguration`](#export-uevconfiguration) | UEV | 5.1 only | 5.1 only | Exports the UE-V configuration. | Out of scope |  |
 | [`Export-UevPackage`](#export-uevpackage) | UEV | 5.1 only | 5.1 only | Exports the settings stored in a settings package. | Out of scope |  |
-| [`Export-WindowsCapabilitySource`](#export-windowscapabilitysource) | Dism | Both | None | Creates a custom FOD repository that includes packages that support the installation of the specified capabilities. See | Out of scope |  |
-| [`Export-WindowsDriver`](#export-windowsdriver) | Dism | Both | None | Exports all third-party drivers from a Windows image to a destination folder. | Out of scope |  |
-| [`Export-WindowsImage`](#export-windowsimage) | Dism | Both | Syntax differs | Exports a copy of the specified image to another image file. | Out of scope |  |
-| [`Find-LapsADExtendedRights`](#find-lapsadextendedrights) | LAPS | Both | None | Queries Active Directory (AD) to find principals that have been granted permission to read Windows Local Administrator Password Solution (LAPS) password attributes. | Out of scope |  |
-| [`Format-SecureBootUEFI`](#format-securebootuefi) | SecureBoot | Both | None | Formats certificates or hashes into a content object that is returned and creates a file that is ready to be signed. | Out of scope |  |
+| [`Export-WindowsCapabilitySource`](#export-windowscapabilitysource) | Dism | 5.1 only | 5.1 only | Creates a custom FOD repository that includes packages that support the installation of the specified capabilities. See | Out of scope |  |
+| [`Export-WindowsDriver`](#export-windowsdriver) | Dism | 5.1 only | 5.1 only | Exports all third-party drivers from a Windows image to a destination folder. | Out of scope |  |
+| [`Export-WindowsImage`](#export-windowsimage) | Dism | 5.1 only | 5.1 only | Exports a copy of the specified image to another image file. | Out of scope |  |
+| [`Find-LapsADExtendedRights`](#find-lapsadextendedrights) | LAPS | 5.1 only | 5.1 only | Queries Active Directory (AD) to find principals that have been granted permission to read Windows Local Administrator Password Solution (LAPS) password attributes. | Out of scope |  |
+| [`Format-SecureBootUEFI`](#format-securebootuefi) | SecureBoot | 5.1 only | 5.1 only | Formats certificates or hashes into a content object that is returned and creates a file that is ready to be signed. | Out of scope |  |
 | [`Get-Acl`](#get-acl) | Microsoft.PowerShell.Security | Both | Syntax differs | Gets the security descriptor for a resource, such as a file or registry key. | Out of scope |  |
-| [`Get-AppLockerFileInformation`](#get-applockerfileinformation) | AppLocker | Both | None | Gets the file information necessary to create AppLocker rules from a list of files or an event log. | Out of scope |  |
-| [`Get-AppLockerPolicy`](#get-applockerpolicy) | AppLocker | Both | None | Gets the local, the effective, or a domain AppLocker policy. | Out of scope |  |
-| [`Get-AppProvisionedSharedPackageContainer`](#get-appprovisionedsharedpackagecontainer) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-AppSharedPackageContainer`](#get-appsharedpackagecontainer) | Appx | Both | None | Gets information about the shared package container. | Out of scope |  |
+| [`Get-AppLockerFileInformation`](#get-applockerfileinformation) | AppLocker | 5.1 only | 5.1 only | Gets the file information necessary to create AppLocker rules from a list of files or an event log. | Out of scope |  |
+| [`Get-AppLockerPolicy`](#get-applockerpolicy) | AppLocker | 5.1 only | 5.1 only | Gets the local, the effective, or a domain AppLocker policy. | Out of scope |  |
+| [`Get-AppProvisionedSharedPackageContainer`](#get-appprovisionedsharedpackagecontainer) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-AppSharedPackageContainer`](#get-appsharedpackagecontainer) | Appx | 5.1 only | 5.1 only | Gets information about the shared package container. | Out of scope |  |
 | [`Get-AppvClientApplication`](#get-appvclientapplication) | AppvClient | 5.1 only | 5.1 only | Returns applications that are part of App-V Client Packages. | Out of scope |  |
 | [`Get-AppvClientConfiguration`](#get-appvclientconfiguration) | AppvClient | 5.1 only | 5.1 only | Returns the configuration for the App-V client. | Out of scope |  |
 | [`Get-AppvClientConnectionGroup`](#get-appvclientconnectiongroup) | AppvClient | 5.1 only | 5.1 only | Returns an App-V connection group object. | Out of scope |  |
@@ -149,383 +148,383 @@ Status legend:
 | [`Get-AppvClientPackage`](#get-appvclientpackage) | AppvClient | 5.1 only | 5.1 only | Returns App-V Client Packages. | Out of scope |  |
 | [`Get-AppvPublishingServer`](#get-appvpublishingserver) | AppvClient | 5.1 only | 5.1 only | Returns App-V Server objects. | Out of scope |  |
 | [`Get-AppvStatus`](#get-appvstatus) | AppvClient | 5.1 only | 5.1 only | Gets the status of the App-V service. | Out of scope |  |
-| [`Get-AppxDefaultVolume`](#get-appxdefaultvolume) | Appx | Both | None | Gets the default appx volume. | Out of scope |  |
-| [`Get-AppxPackage`](#get-appxpackage) | Appx | Both | None | Gets a list of the app packages that are installed in a user profile. | Out of scope |  |
-| [`Get-AppxPackageAutoUpdateSettings`](#get-appxpackageautoupdatesettings) | Appx | Both | None | Provides visibility to the settings configured for a particular Windows App. | Out of scope |  |
-| [`Get-AppxPackageManifest`](#get-appxpackagemanifest) | Appx | Both | None | Gets the manifest of an app package. | Out of scope |  |
-| [`Get-AppxProvisionedPackage`](#get-appxprovisionedpackage) | Dism | Both | None | Gets information about app packages (.appx) in an image that will be installed for each new user. | Out of scope |  |
-| [`Get-AppxVolume`](#get-appxvolume) | Appx | Both | None | Gets appx volumes for the computer. | Out of scope |  |
+| [`Get-AppxDefaultVolume`](#get-appxdefaultvolume) | Appx | 5.1 only | 5.1 only | Gets the default appx volume. | Out of scope |  |
+| [`Get-AppxPackage`](#get-appxpackage) | Appx | 5.1 only | 5.1 only | Gets a list of the app packages that are installed in a user profile. | Out of scope |  |
+| [`Get-AppxPackageAutoUpdateSettings`](#get-appxpackageautoupdatesettings) | Appx | 5.1 only | 5.1 only | Provides visibility to the settings configured for a particular Windows App. | Out of scope |  |
+| [`Get-AppxPackageManifest`](#get-appxpackagemanifest) | Appx | 5.1 only | 5.1 only | Gets the manifest of an app package. | Out of scope |  |
+| [`Get-AppxProvisionedPackage`](#get-appxprovisionedpackage) | Dism | 5.1 only | 5.1 only | Gets information about app packages (.appx) in an image that will be installed for each new user. | Out of scope |  |
+| [`Get-AppxVolume`](#get-appxvolume) | Appx | 5.1 only | 5.1 only | Gets appx volumes for the computer. | Out of scope |  |
 | [`Get-AuthenticodeSignature`](#get-authenticodesignature) | Microsoft.PowerShell.Security | Both | None | Gets information about the Authenticode signature for a file. | Out of scope |  |
-| [`Get-BcdEntry`](#get-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-BcdEntryDebugSettings`](#get-bcdentrydebugsettings) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-BcdEntryHypervisorSettings`](#get-bcdentryhypervisorsettings) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-BcdStore`](#get-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-BitsTransfer`](#get-bitstransfer) | BitsTransfer | Both | None | Gets the associated BitsJob object for an existing BITS transfer job. | Out of scope |  |
-| [`Get-Certificate`](#get-certificate) | PKI | Both | None | Submits a certificate request to an enrollment server and installs the response or retrieves a certificate for a previously submitted request. | Out of scope |  |
-| [`Get-CertificateAutoEnrollmentPolicy`](#get-certificateautoenrollmentpolicy) | PKI | Both | None | Retrieves certificate auto-enrollment policy settings. | Out of scope |  |
-| [`Get-CertificateEnrollmentPolicyServer`](#get-certificateenrollmentpolicyserver) | PKI | Both | None | Returns all of the certificate enrollment policy server URL configurations. | Out of scope |  |
-| [`Get-CertificateNotificationTask`](#get-certificatenotificationtask) | PKI | Both | None | Returns all registered certificate notification tasks. | Out of scope |  |
+| [`Get-BcdEntry`](#get-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-BcdEntryDebugSettings`](#get-bcdentrydebugsettings) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-BcdEntryHypervisorSettings`](#get-bcdentryhypervisorsettings) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-BcdStore`](#get-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-BitsTransfer`](#get-bitstransfer) | BitsTransfer | 5.1 only | 5.1 only | Gets the associated BitsJob object for an existing BITS transfer job. | Out of scope |  |
+| [`Get-Certificate`](#get-certificate) | PKI | 5.1 only | 5.1 only | Submits a certificate request to an enrollment server and installs the response or retrieves a certificate for a previously submitted request. | Out of scope |  |
+| [`Get-CertificateAutoEnrollmentPolicy`](#get-certificateautoenrollmentpolicy) | PKI | 5.1 only | 5.1 only | Retrieves certificate auto-enrollment policy settings. | Out of scope |  |
+| [`Get-CertificateEnrollmentPolicyServer`](#get-certificateenrollmentpolicyserver) | PKI | 5.1 only | 5.1 only | Returns all of the certificate enrollment policy server URL configurations. | Out of scope |  |
+| [`Get-CertificateNotificationTask`](#get-certificatenotificationtask) | PKI | 5.1 only | 5.1 only | Returns all registered certificate notification tasks. | Out of scope |  |
 | [`Get-CimAssociatedInstance`](#get-cimassociatedinstance) | CimCmdlets | Both | Syntax differs | Retrieves the CIM instances that are connected to a specific CIM instance by an association. | Out of scope | Windows-only (CIM/WMI stack) |
 | [`Get-CimClass`](#get-cimclass) | CimCmdlets | Both | Syntax differs | Gets a list of CIM classes in a specific namespace. | Out of scope | Windows-only (CIM/WMI stack) |
 | [`Get-CimInstance`](#get-ciminstance) | CimCmdlets | Both | Syntax differs | Gets the CIM instances of a class from a CIM server. | Out of scope | Windows-only (CIM/WMI stack) |
 | [`Get-CimSession`](#get-cimsession) | CimCmdlets | Both | Syntax differs | Gets the CIM session objects from the current session. | Out of scope | Windows-only (CIM/WMI stack) |
-| [`Get-CIPolicy`](#get-cipolicy) | ConfigCI | Both | None | Gets the rules in a Code Integrity policy. | Out of scope |  |
-| [`Get-CIPolicyIdInfo`](#get-cipolicyidinfo) | ConfigCI | Both | None | Displays Code Integrity policy information. | Out of scope |  |
-| [`Get-CIPolicyInfo`](#get-cipolicyinfo) | ConfigCI | Both | None | This cmdlet is not supported. | Out of scope |  |
+| [`Get-CIPolicy`](#get-cipolicy) | ConfigCI | 5.1 only | 5.1 only | Gets the rules in a Code Integrity policy. | Out of scope |  |
+| [`Get-CIPolicyIdInfo`](#get-cipolicyidinfo) | ConfigCI | 5.1 only | 5.1 only | Displays Code Integrity policy information. | Out of scope |  |
+| [`Get-CIPolicyInfo`](#get-cipolicyinfo) | ConfigCI | 5.1 only | 5.1 only | This cmdlet is not supported. | Out of scope |  |
 | [`Get-ComputerInfo`](#get-computerinfo) | Microsoft.PowerShell.Management | Both | None | Gets a consolidated object of system and operating system properties. | Go implementation | Reduced field set. |
-| [`Get-ComputerRestorePoint`](#get-computerrestorepoint) | Microsoft.PowerShell.Management | Both | None | Gets the restore points on the local computer. | Out of scope |  |
-| [`Get-ControlPanelItem`](#get-controlpanelitem) | Microsoft.PowerShell.Management | Both | None | Gets control panel items. | Out of scope |  |
+| [`Get-ComputerRestorePoint`](#get-computerrestorepoint) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Gets the restore points on the local computer. | Out of scope |  |
+| [`Get-ControlPanelItem`](#get-controlpanelitem) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Gets control panel items. | Out of scope |  |
 | [`Get-Counter`](#get-counter) | Microsoft.PowerShell.Diagnostics | Both | None | Gets performance counter data from local and remote computers. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
-| [`Get-DAPolicyChange`](#get-dapolicychange) | NetSecurity | Both | None | Gets a list of IP addresses that need to be added and deleted to an IPsec rule based on the differences detected between the IP addresses for the existing rule and the IP addresses derived from the input parameters, and creates a Windows PowerShell® script (.ps1) that updates the IPsec rule in the appropriate policy stores. | Out of scope |  |
-| [`Get-DeliveryOptimizationLog`](#get-deliveryoptimizationlog) | DeliveryOptimization | Both | Syntax differs | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-DeliveryOptimizationLogAnalysis`](#get-deliveryoptimizationloganalysis) | DeliveryOptimization | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-EventLog`](#get-eventlog) | Microsoft.PowerShell.Management | Both | None | Gets the events in an event log, or a list of the event logs, on the local computer or remote computers. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Get-DAPolicyChange`](#get-dapolicychange) | NetSecurity | 5.1 only | 5.1 only | Gets a list of IP addresses that need to be added and deleted to an IPsec rule based on the differences detected between the IP addresses for the existing rule and the IP addresses derived from the input parameters, and creates a Windows PowerShell® script (.ps1) that updates the IPsec rule in the appropriate policy stores. | Out of scope |  |
+| [`Get-DeliveryOptimizationLog`](#get-deliveryoptimizationlog) | DeliveryOptimization | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-DeliveryOptimizationLogAnalysis`](#get-deliveryoptimizationloganalysis) | DeliveryOptimization | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-EventLog`](#get-eventlog) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Gets the events in an event log, or a list of the event logs, on the local computer or remote computers. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
 | [`Get-HotFix`](#get-hotfix) | Microsoft.PowerShell.Management | Both | None | Gets the hotfixes that are installed on local or remote computers. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
-| [`Get-InstalledLanguage`](#get-installedlanguage) | LanguagePackManagement | Both | None | Returns information about the installed languages on a device. | Out of scope |  |
-| [`Get-JobTrigger`](#get-jobtrigger) | PSScheduledJob | Both | None | Gets the job triggers of scheduled jobs. | Out of scope |  |
-| [`Get-KdsConfiguration`](#get-kdsconfiguration) | Kds | Both | None | Retrieves the current configuration of the Microsoft Group KdsSvc from Active Directory. | Out of scope |  |
-| [`Get-KdsRootKey`](#get-kdsrootkey) | Kds | Both | None | Retrieves a list of root key values stored by the Microsoft Group KdsSvc. | Out of scope |  |
-| [`Get-LapsADPassword`](#get-lapsadpassword) | LAPS | Both | None | Queries Windows Local Administrator Password Solution (LAPS) credentials from Active Directory (AD) on a specified AD computer or domain controller object. | Out of scope |  |
-| [`Get-LocalGroup`](#get-localgroup) | Microsoft.PowerShell.LocalAccounts | Both | None | Gets the local security groups. | Out of scope |  |
-| [`Get-LocalGroupMember`](#get-localgroupmember) | Microsoft.PowerShell.LocalAccounts | Both | None | Gets members from a local group. | Out of scope |  |
-| [`Get-LocalUser`](#get-localuser) | Microsoft.PowerShell.LocalAccounts | Both | None | Gets local user accounts. | Out of scope |  |
-| [`Get-NonRemovableAppsPolicy`](#get-nonremovableappspolicy) | Dism | Both | None | Returns a list of the app packages that are installed and configured as non-removable apps. | Out of scope |  |
-| [`Get-OSConfiguration`](#get-osconfiguration) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-OsConfigurationDocument`](#get-osconfigurationdocument) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-OsConfigurationDocumentContent`](#get-osconfigurationdocumentcontent) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-OsConfigurationDocumentResult`](#get-osconfigurationdocumentresult) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-OsConfigurationProperty`](#get-osconfigurationproperty) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-OSConfigurationScenarioDefinition`](#get-osconfigurationscenariodefinition) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-OSConfigurationScenarioDefinitionInfo`](#get-osconfigurationscenariodefinitioninfo) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-PfxData`](#get-pfxdata) | PKI | Both | None | Extracts the content of a Personal Information Exchange (PFX) file into a structure without importing it to certificate store. | Out of scope |  |
-| [`Get-PmemDedicatedMemory`](#get-pmemdedicatedmemory) | PersistentMemory | Both | None | Gets dedicated persistent memory. | Out of scope |  |
-| [`Get-PmemDisk`](#get-pmemdisk) | PersistentMemory | Both | None | Gets persistent memory disks. | Out of scope |  |
-| [`Get-PmemPhysicalDevice`](#get-pmemphysicaldevice) | PersistentMemory | Both | None | Gets the physical devices associated with persistent memory. | Out of scope |  |
-| [`Get-PmemUnusedRegion`](#get-pmemunusedregion) | PersistentMemory | Both | None | Gets unused regions in persistent memory. | Out of scope |  |
-| [`Get-ProcessMitigation`](#get-processmitigation) | ProcessMitigations | Both | None | Gets the current process mitigation settings, either from the registry, from a running process, or saves all to a XML. | Out of scope |  |
-| [`Get-ProvisioningPackage`](#get-provisioningpackage) | Provisioning | Both | None | Gets information about the installed provisioning package. | Out of scope |  |
+| [`Get-InstalledLanguage`](#get-installedlanguage) | LanguagePackManagement | 5.1 only | 5.1 only | Returns information about the installed languages on a device. | Out of scope |  |
+| [`Get-JobTrigger`](#get-jobtrigger) | PSScheduledJob | 5.1 only | 5.1 only | Gets the job triggers of scheduled jobs. | Out of scope |  |
+| [`Get-KdsConfiguration`](#get-kdsconfiguration) | Kds | 5.1 only | 5.1 only | Retrieves the current configuration of the Microsoft Group KdsSvc from Active Directory. | Out of scope |  |
+| [`Get-KdsRootKey`](#get-kdsrootkey) | Kds | 5.1 only | 5.1 only | Retrieves a list of root key values stored by the Microsoft Group KdsSvc. | Out of scope |  |
+| [`Get-LapsADPassword`](#get-lapsadpassword) | LAPS | 5.1 only | 5.1 only | Queries Windows Local Administrator Password Solution (LAPS) credentials from Active Directory (AD) on a specified AD computer or domain controller object. | Out of scope |  |
+| [`Get-LocalGroup`](#get-localgroup) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Gets the local security groups. | Out of scope |  |
+| [`Get-LocalGroupMember`](#get-localgroupmember) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Gets members from a local group. | Out of scope |  |
+| [`Get-LocalUser`](#get-localuser) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Gets local user accounts. | Out of scope |  |
+| [`Get-NonRemovableAppsPolicy`](#get-nonremovableappspolicy) | Dism | 5.1 only | 5.1 only | Returns a list of the app packages that are installed and configured as non-removable apps. | Out of scope |  |
+| [`Get-OSConfiguration`](#get-osconfiguration) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-OsConfigurationDocument`](#get-osconfigurationdocument) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-OsConfigurationDocumentContent`](#get-osconfigurationdocumentcontent) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-OsConfigurationDocumentResult`](#get-osconfigurationdocumentresult) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-OsConfigurationProperty`](#get-osconfigurationproperty) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-OSConfigurationScenarioDefinition`](#get-osconfigurationscenariodefinition) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-OSConfigurationScenarioDefinitionInfo`](#get-osconfigurationscenariodefinitioninfo) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-PfxData`](#get-pfxdata) | PKI | 5.1 only | 5.1 only | Extracts the content of a Personal Information Exchange (PFX) file into a structure without importing it to certificate store. | Out of scope |  |
+| [`Get-PmemDedicatedMemory`](#get-pmemdedicatedmemory) | PersistentMemory | 5.1 only | 5.1 only | Gets dedicated persistent memory. | Out of scope |  |
+| [`Get-PmemDisk`](#get-pmemdisk) | PersistentMemory | 5.1 only | 5.1 only | Gets persistent memory disks. | Out of scope |  |
+| [`Get-PmemPhysicalDevice`](#get-pmemphysicaldevice) | PersistentMemory | 5.1 only | 5.1 only | Gets the physical devices associated with persistent memory. | Out of scope |  |
+| [`Get-PmemUnusedRegion`](#get-pmemunusedregion) | PersistentMemory | 5.1 only | 5.1 only | Gets unused regions in persistent memory. | Out of scope |  |
+| [`Get-ProcessMitigation`](#get-processmitigation) | ProcessMitigations | 5.1 only | 5.1 only | Gets the current process mitigation settings, either from the registry, from a running process, or saves all to a XML. | Out of scope |  |
+| [`Get-ProvisioningPackage`](#get-provisioningpackage) | Provisioning | 5.1 only | 5.1 only | Gets information about the installed provisioning package. | Out of scope |  |
 | [`Get-PSSessionCapability`](#get-pssessioncapability) | Microsoft.PowerShell.Core | Both | None | Gets the capabilities of a specific user on a constrained session configuration. | Out of scope | Remote sessions (requires a remote host; out of scope) |
 | [`Get-PSSessionConfiguration`](#get-pssessionconfiguration) | Microsoft.PowerShell.Core | Both | None | Gets the registered session configurations on the computer. | Out of scope | Remote sessions (requires a remote host; out of scope) |
 | [`Get-PSSnapin`](#get-pssnapin) | Microsoft.PowerShell.Core | 5.1 only | 5.1 only | Gets the Windows PowerShell snap-ins on the computer. | Out of scope |  |
-| [`Get-RecoveryManagementPluginAltitude`](#get-recoverymanagementpluginaltitude) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-RecoveryManagementPluginInfo`](#get-recoverymanagementplugininfo) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-RecoveryManagementPlugins`](#get-recoverymanagementplugins) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-RecoveryRemoteManagementStatus`](#get-recoveryremotemanagementstatus) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-ReFSDedupSchedule`](#get-refsdedupschedule) | Microsoft.ReFsDedup.Commands | Both | None | Retrieves the deduplication schedule on a specified ReFS volume. | Out of scope |  |
-| [`Get-ReFSDedupScrubSchedule`](#get-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | Both | None | Retrieves the deduplication scrub schedule on the specified ReFS volume. | Out of scope |  |
-| [`Get-ReFSDedupStatus`](#get-refsdedupstatus) | Microsoft.ReFsDedup.Commands | Both | None | Retrieves the status of data deduplication on a specified ReFS volume. | Out of scope |  |
-| [`Get-ScheduledJob`](#get-scheduledjob) | PSScheduledJob | Both | None | Gets scheduled jobs on the local computer. | Out of scope |  |
-| [`Get-ScheduledJobOption`](#get-scheduledjoboption) | PSScheduledJob | Both | None | Gets the job options of scheduled jobs. | Out of scope |  |
-| [`Get-SecureBootPolicy`](#get-securebootpolicy) | SecureBoot | Both | None | Gets the publisher GUID and the policy version of the Secure Boot configuration policy. | Out of scope |  |
-| [`Get-SecureBootSVN`](#get-securebootsvn) | SecureBoot | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Get-SecureBootUEFI`](#get-securebootuefi) | SecureBoot | Both | None | Gets the UEFI variable values related to Secure Boot. | Out of scope |  |
+| [`Get-RecoveryManagementPluginAltitude`](#get-recoverymanagementpluginaltitude) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-RecoveryManagementPluginInfo`](#get-recoverymanagementplugininfo) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-RecoveryManagementPlugins`](#get-recoverymanagementplugins) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-RecoveryRemoteManagementStatus`](#get-recoveryremotemanagementstatus) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-ReFSDedupSchedule`](#get-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Retrieves the deduplication schedule on a specified ReFS volume. | Out of scope |  |
+| [`Get-ReFSDedupScrubSchedule`](#get-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Retrieves the deduplication scrub schedule on the specified ReFS volume. | Out of scope |  |
+| [`Get-ReFSDedupStatus`](#get-refsdedupstatus) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Retrieves the status of data deduplication on a specified ReFS volume. | Out of scope |  |
+| [`Get-ScheduledJob`](#get-scheduledjob) | PSScheduledJob | 5.1 only | 5.1 only | Gets scheduled jobs on the local computer. | Out of scope |  |
+| [`Get-ScheduledJobOption`](#get-scheduledjoboption) | PSScheduledJob | 5.1 only | 5.1 only | Gets the job options of scheduled jobs. | Out of scope |  |
+| [`Get-SecureBootPolicy`](#get-securebootpolicy) | SecureBoot | 5.1 only | 5.1 only | Gets the publisher GUID and the policy version of the Secure Boot configuration policy. | Out of scope |  |
+| [`Get-SecureBootSVN`](#get-securebootsvn) | SecureBoot | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Get-SecureBootUEFI`](#get-securebootuefi) | SecureBoot | 5.1 only | 5.1 only | Gets the UEFI variable values related to Secure Boot. | Out of scope |  |
 | [`Get-Service`](#get-service) | Microsoft.PowerShell.Management | Both | Description differs; Syntax differs | 5.1: Gets the services on a local or remote computer. / 7: Gets the services on the computer. | Mapped Linux (systemctl) |  |
-| [`Get-SystemDriver`](#get-systemdriver) | ConfigCI | Both | None | Scans for drivers on the system. | Out of scope |  |
-| [`Get-SystemPreferredUILanguage`](#get-systempreferreduilanguage) | LanguagePackManagement | Both | None | Returns the current System Preferred Language. | Out of scope |  |
-| [`Get-TlsCipherSuite`](#get-tlsciphersuite) | TLS | Both | None | Gets the TLS cipher suites for a computer. | Out of scope |  |
-| [`Get-TlsEccCurve`](#get-tlsecccurve) | TLS | Both | None | Gets the list of Elliptic Curve Cryptography (ECC) cipher suites available for TLS for a computer. | Out of scope |  |
-| [`Get-Tpm`](#get-tpm) | TrustedPlatformModule | Both | None | Gets an object that contains information about a TPM. | Out of scope |  |
-| [`Get-TpmEndorsementKeyInfo`](#get-tpmendorsementkeyinfo) | TrustedPlatformModule | Both | None | Gets information about the endorsement key and certificates of the TPM. | Out of scope |  |
-| [`Get-TpmSupportedFeature`](#get-tpmsupportedfeature) | TrustedPlatformModule | Both | None | Verifies whether a TPM supports specified features. | Out of scope |  |
-| [`Get-Transaction`](#get-transaction) | Microsoft.PowerShell.Management | Both | None | Gets the current (active) transaction. | Out of scope |  |
-| [`Get-TroubleshootingPack`](#get-troubleshootingpack) | TroubleshootingPack | Both | None | Gets a troubleshooting pack or generates an answer file. | Out of scope |  |
-| [`Get-TrustedProvisioningCertificate`](#get-trustedprovisioningcertificate) | Provisioning | Both | None | Lists all installed trusted provisioning certificates. | Out of scope |  |
+| [`Get-SystemDriver`](#get-systemdriver) | ConfigCI | 5.1 only | 5.1 only | Scans for drivers on the system. | Out of scope |  |
+| [`Get-SystemPreferredUILanguage`](#get-systempreferreduilanguage) | LanguagePackManagement | 5.1 only | 5.1 only | Returns the current System Preferred Language. | Out of scope |  |
+| [`Get-TlsCipherSuite`](#get-tlsciphersuite) | TLS | 5.1 only | 5.1 only | Gets the TLS cipher suites for a computer. | Out of scope |  |
+| [`Get-TlsEccCurve`](#get-tlsecccurve) | TLS | 5.1 only | 5.1 only | Gets the list of Elliptic Curve Cryptography (ECC) cipher suites available for TLS for a computer. | Out of scope |  |
+| [`Get-Tpm`](#get-tpm) | TrustedPlatformModule | 5.1 only | 5.1 only | Gets an object that contains information about a TPM. | Out of scope |  |
+| [`Get-TpmEndorsementKeyInfo`](#get-tpmendorsementkeyinfo) | TrustedPlatformModule | 5.1 only | 5.1 only | Gets information about the endorsement key and certificates of the TPM. | Out of scope |  |
+| [`Get-TpmSupportedFeature`](#get-tpmsupportedfeature) | TrustedPlatformModule | 5.1 only | 5.1 only | Verifies whether a TPM supports specified features. | Out of scope |  |
+| [`Get-Transaction`](#get-transaction) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Gets the current (active) transaction. | Out of scope |  |
+| [`Get-TroubleshootingPack`](#get-troubleshootingpack) | TroubleshootingPack | 5.1 only | 5.1 only | Gets a troubleshooting pack or generates an answer file. | Out of scope |  |
+| [`Get-TrustedProvisioningCertificate`](#get-trustedprovisioningcertificate) | Provisioning | 5.1 only | 5.1 only | Lists all installed trusted provisioning certificates. | Out of scope |  |
 | [`Get-UevAppxPackage`](#get-uevappxpackage) | UEV | 5.1 only | 5.1 only | Gets a list of Windows 8 apps and synchronization status. | Out of scope |  |
 | [`Get-UevConfiguration`](#get-uevconfiguration) | UEV | 5.1 only | 5.1 only | Gets the UE-V configuration settings. | Out of scope |  |
 | [`Get-UevStatus`](#get-uevstatus) | UEV | 5.1 only | 5.1 only | Gets the status of the UE-V service. | Out of scope |  |
 | [`Get-UevTemplate`](#get-uevtemplate) | UEV | 5.1 only | 5.1 only | Gets settings location templates for UE-V. | Out of scope |  |
 | [`Get-UevTemplateProgram`](#get-uevtemplateprogram) | UEV | 5.1 only | 5.1 only | Gets the information about programs defined by a settings location template. | Out of scope |  |
-| [`Get-WheaMemoryPolicy`](#get-wheamemorypolicy) | Whea | Both | None | Gets the WHEA memory policies for a computer. | Out of scope |  |
-| [`Get-WIMBootEntry`](#get-wimbootentry) | Dism | Both | None | Displays the Windows image file boot (WIMBoot) configuration entries for a specified disk volume. | Out of scope |  |
-| [`Get-WinAcceptLanguageFromLanguageListOptOut`](#get-winacceptlanguagefromlanguagelistoptout) | International | Both | None | Gets the HTTP Accept Language from the Language List opt-out setting for the current user account. | Out of scope |  |
-| [`Get-WinCultureFromLanguageListOptOut`](#get-winculturefromlanguagelistoptout) | International | Both | None | Gets the Culture from the language list opt-out setting for the current user account. | Out of scope |  |
-| [`Get-WinDefaultInputMethodOverride`](#get-windefaultinputmethodoverride) | International | Both | None | Gets the default input method override setting for the current user account. | Out of scope |  |
-| [`Get-WindowsCapability`](#get-windowscapability) | Dism | Both | None | Gets Windows capabilities for an image or a running operating system. | Out of scope |  |
-| [`Get-WindowsDeveloperLicense`](#get-windowsdeveloperlicense) | WindowsDeveloperLicense | Both | None | Provides information about Developer Mode for the current computer. | Out of scope |  |
-| [`Get-WindowsDriver`](#get-windowsdriver) | Dism | Both | None | Displays information about drivers in a Windows image. | Out of scope |  |
-| [`Get-WindowsEdition`](#get-windowsedition) | Dism | Both | None | Gets edition information about a Windows image. | Out of scope |  |
-| [`Get-WindowsErrorReporting`](#get-windowserrorreporting) | WindowsErrorReporting | Both | None | Retrieves the Windows Error Reporting status. | Out of scope |  |
-| [`Get-WindowsImage`](#get-windowsimage) | Dism | Both | Syntax differs | Gets information about a Windows image in a WIM or VHD file. | Out of scope |  |
-| [`Get-WindowsImageContent`](#get-windowsimagecontent) | Dism | Both | Syntax differs | Displays a list of the files and folders in a specified image. | Out of scope |  |
-| [`Get-WindowsOptionalFeature`](#get-windowsoptionalfeature) | Dism | Both | None | Gets information about optional features in a Windows image. | Out of scope |  |
-| [`Get-WindowsPackage`](#get-windowspackage) | Dism | Both | None | Gets information about packages in a Windows image. | Out of scope |  |
-| [`Get-WindowsReservedStorageState`](#get-windowsreservedstoragestate) | Dism | Both | None | Gets the reserved storage state of the image. | Out of scope |  |
-| [`Get-WindowsSearchSetting`](#get-windowssearchsetting) | WindowsSearch | Both | None | Gets the values of settings for Windows Search. | Out of scope |  |
+| [`Get-WheaMemoryPolicy`](#get-wheamemorypolicy) | Whea | 5.1 only | 5.1 only | Gets the WHEA memory policies for a computer. | Out of scope |  |
+| [`Get-WIMBootEntry`](#get-wimbootentry) | Dism | 5.1 only | 5.1 only | Displays the Windows image file boot (WIMBoot) configuration entries for a specified disk volume. | Out of scope |  |
+| [`Get-WinAcceptLanguageFromLanguageListOptOut`](#get-winacceptlanguagefromlanguagelistoptout) | International | 5.1 only | 5.1 only | Gets the HTTP Accept Language from the Language List opt-out setting for the current user account. | Out of scope |  |
+| [`Get-WinCultureFromLanguageListOptOut`](#get-winculturefromlanguagelistoptout) | International | 5.1 only | 5.1 only | Gets the Culture from the language list opt-out setting for the current user account. | Out of scope |  |
+| [`Get-WinDefaultInputMethodOverride`](#get-windefaultinputmethodoverride) | International | 5.1 only | 5.1 only | Gets the default input method override setting for the current user account. | Out of scope |  |
+| [`Get-WindowsCapability`](#get-windowscapability) | Dism | 5.1 only | 5.1 only | Gets Windows capabilities for an image or a running operating system. | Out of scope |  |
+| [`Get-WindowsDeveloperLicense`](#get-windowsdeveloperlicense) | WindowsDeveloperLicense | 5.1 only | 5.1 only | Provides information about Developer Mode for the current computer. | Out of scope |  |
+| [`Get-WindowsDriver`](#get-windowsdriver) | Dism | 5.1 only | 5.1 only | Displays information about drivers in a Windows image. | Out of scope |  |
+| [`Get-WindowsEdition`](#get-windowsedition) | Dism | 5.1 only | 5.1 only | Gets edition information about a Windows image. | Out of scope |  |
+| [`Get-WindowsErrorReporting`](#get-windowserrorreporting) | WindowsErrorReporting | 5.1 only | 5.1 only | Retrieves the Windows Error Reporting status. | Out of scope |  |
+| [`Get-WindowsImage`](#get-windowsimage) | Dism | 5.1 only | 5.1 only | Gets information about a Windows image in a WIM or VHD file. | Out of scope |  |
+| [`Get-WindowsImageContent`](#get-windowsimagecontent) | Dism | 5.1 only | 5.1 only | Displays a list of the files and folders in a specified image. | Out of scope |  |
+| [`Get-WindowsOptionalFeature`](#get-windowsoptionalfeature) | Dism | 5.1 only | 5.1 only | Gets information about optional features in a Windows image. | Out of scope |  |
+| [`Get-WindowsPackage`](#get-windowspackage) | Dism | 5.1 only | 5.1 only | Gets information about packages in a Windows image. | Out of scope |  |
+| [`Get-WindowsReservedStorageState`](#get-windowsreservedstoragestate) | Dism | 5.1 only | 5.1 only | Gets the reserved storage state of the image. | Out of scope |  |
+| [`Get-WindowsSearchSetting`](#get-windowssearchsetting) | WindowsSearch | 5.1 only | 5.1 only | Gets the values of settings for Windows Search. | Out of scope |  |
 | [`Get-WinEvent`](#get-winevent) | Microsoft.PowerShell.Diagnostics | Both | None | Gets events from event logs and event tracing log files on local and remote computers. | Out of scope |  |
-| [`Get-WinHomeLocation`](#get-winhomelocation) | International | Both | None | Gets the Windows GeoID home location setting for the current user account. | Out of scope |  |
-| [`Get-WinLanguageBarOption`](#get-winlanguagebaroption) | International | Both | None | Gets the language bar mode and language bar type for the current user account. | Out of scope |  |
-| [`Get-WinSystemLocale`](#get-winsystemlocale) | International | Both | None | Gets the System-locale setting for the current computer. | Out of scope |  |
-| [`Get-WinUILanguageOverride`](#get-winuilanguageoverride) | International | Both | None | Gets the Windows UI language override setting for the current user account. | Out of scope |  |
-| [`Get-WinUserLanguageList`](#get-winuserlanguagelist) | International | Both | None | Gets the language list for the current user account. | Out of scope |  |
-| [`Get-WmiObject`](#get-wmiobject) | Microsoft.PowerShell.Management | Both | None | Gets instances of Windows Management Instrumentation (WMI) classes or information about the available classes. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Get-WinHomeLocation`](#get-winhomelocation) | International | 5.1 only | 5.1 only | Gets the Windows GeoID home location setting for the current user account. | Out of scope |  |
+| [`Get-WinLanguageBarOption`](#get-winlanguagebaroption) | International | 5.1 only | 5.1 only | Gets the language bar mode and language bar type for the current user account. | Out of scope |  |
+| [`Get-WinSystemLocale`](#get-winsystemlocale) | International | 5.1 only | 5.1 only | Gets the System-locale setting for the current computer. | Out of scope |  |
+| [`Get-WinUILanguageOverride`](#get-winuilanguageoverride) | International | 5.1 only | 5.1 only | Gets the Windows UI language override setting for the current user account. | Out of scope |  |
+| [`Get-WinUserLanguageList`](#get-winuserlanguagelist) | International | 5.1 only | 5.1 only | Gets the language list for the current user account. | Out of scope |  |
+| [`Get-WmiObject`](#get-wmiobject) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Gets instances of Windows Management Instrumentation (WMI) classes or information about the available classes. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
 | [`Get-WSManCredSSP`](#get-wsmancredssp) | Microsoft.WSMan.Management | Both | None | Gets the Credential Security Support Provider-related configuration for the client. | Out of scope |  |
 | [`Get-WSManInstance`](#get-wsmaninstance) | Microsoft.WSMan.Management | Both | None | Displays management information for a resource instance specified by a Resource URI. | Out of scope |  |
-| [`Import-BcdStore`](#import-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Import-BinaryMiLog`](#import-binarymilog) | CimCmdlets | Both | None | Used to re-create the saved objects based on the contents of an export file. | Out of scope | Windows-only (CIM/WMI stack) |
-| [`Import-Certificate`](#import-certificate) | PKI | Both | None | Imports one or more certificates into a certificate store. | Out of scope |  |
-| [`Import-Counter`](#import-counter) | Microsoft.PowerShell.Diagnostics | Both | None | Imports performance counter log files and creates the objects that represent each counter sample in the log. | Out of scope |  |
-| [`Import-PfxCertificate`](#import-pfxcertificate) | PKI | Both | None | Imports certificates and private keys from a Personal Information Exchange (PFX) file to the destination store. | Out of scope |  |
-| [`Import-StartLayout`](#import-startlayout) | StartLayout | Both | None | Imports the layout of the Start into a mounted Windows image. | Out of scope |  |
-| [`Import-TpmOwnerAuth`](#import-tpmownerauth) | TrustedPlatformModule | Both | None | Imports a TPM owner authorization value to the registry. | Out of scope |  |
+| [`Import-BcdStore`](#import-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Import-BinaryMiLog`](#import-binarymilog) | CimCmdlets | 5.1 only | 5.1 only | Used to re-create the saved objects based on the contents of an export file. | Out of scope | Windows-only (CIM/WMI stack) |
+| [`Import-Certificate`](#import-certificate) | PKI | 5.1 only | 5.1 only | Imports one or more certificates into a certificate store. | Out of scope |  |
+| [`Import-Counter`](#import-counter) | Microsoft.PowerShell.Diagnostics | 5.1 only | 5.1 only | Imports performance counter log files and creates the objects that represent each counter sample in the log. | Out of scope |  |
+| [`Import-PfxCertificate`](#import-pfxcertificate) | PKI | 5.1 only | 5.1 only | Imports certificates and private keys from a Personal Information Exchange (PFX) file to the destination store. | Out of scope |  |
+| [`Import-StartLayout`](#import-startlayout) | StartLayout | 5.1 only | 5.1 only | Imports the layout of the Start into a mounted Windows image. | Out of scope |  |
+| [`Import-TpmOwnerAuth`](#import-tpmownerauth) | TrustedPlatformModule | 5.1 only | 5.1 only | Imports a TPM owner authorization value to the registry. | Out of scope |  |
 | [`Import-UevConfiguration`](#import-uevconfiguration) | UEV | 5.1 only | 5.1 only | Imports the UE-V configuration. | Out of scope |  |
-| [`Initialize-PmemPhysicalDevice`](#initialize-pmemphysicaldevice) | PersistentMemory | Both | None | Initializes the label storage area on a physical persistent memory device. | Out of scope |  |
-| [`Initialize-Tpm`](#initialize-tpm) | TrustedPlatformModule | Both | None | Performs part of the provisioning process for a TPM. | Out of scope |  |
-| [`Install-Language`](#install-language) | LanguagePackManagement | Both | None | Installs a language onto a device. | Out of scope |  |
-| [`Install-ProvisioningPackage`](#install-provisioningpackage) | Provisioning | Both | None | Install .PPKG package onto the local machine. | Out of scope |  |
-| [`Install-TrustedProvisioningCertificate`](#install-trustedprovisioningcertificate) | Provisioning | Both | None | Adds a certificate to the Trusted Certificate Store. | Out of scope |  |
+| [`Initialize-PmemPhysicalDevice`](#initialize-pmemphysicaldevice) | PersistentMemory | 5.1 only | 5.1 only | Initializes the label storage area on a physical persistent memory device. | Out of scope |  |
+| [`Initialize-Tpm`](#initialize-tpm) | TrustedPlatformModule | 5.1 only | 5.1 only | Performs part of the provisioning process for a TPM. | Out of scope |  |
+| [`Install-Language`](#install-language) | LanguagePackManagement | 5.1 only | 5.1 only | Installs a language onto a device. | Out of scope |  |
+| [`Install-ProvisioningPackage`](#install-provisioningpackage) | Provisioning | 5.1 only | 5.1 only | Install .PPKG package onto the local machine. | Out of scope |  |
+| [`Install-TrustedProvisioningCertificate`](#install-trustedprovisioningcertificate) | Provisioning | 5.1 only | 5.1 only | Adds a certificate to the Trusted Certificate Store. | Out of scope |  |
 | [`Invoke-CimMethod`](#invoke-cimmethod) | CimCmdlets | Both | Syntax differs | Invokes a method of a CIM class. | Out of scope | Windows-only (CIM/WMI stack) |
-| [`Invoke-CommandInDesktopPackage`](#invoke-commandindesktoppackage) | Appx | Both | None | A debugging tool that creates a new process in the context of a packaged app. | Out of scope |  |
-| [`Invoke-DscResource`](#invoke-dscresource) | PSDesiredStateConfiguration | Both | None | Runs a method of a specified PowerShell Desired State Configuration (DSC) resource. | Out of scope |  |
-| [`Invoke-LapsPolicyProcessing`](#invoke-lapspolicyprocessing) | LAPS | Both | None | Causes Windows Local Administrator Password Solution (LAPS) to process the currently configured policy. | Out of scope |  |
-| [`Invoke-TroubleshootingPack`](#invoke-troubleshootingpack) | TroubleshootingPack | Both | None | Runs a troubleshooting pack. | Out of scope |  |
-| [`Invoke-WmiMethod`](#invoke-wmimethod) | Microsoft.PowerShell.Management | Both | None | Calls WMI methods. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Invoke-CommandInDesktopPackage`](#invoke-commandindesktoppackage) | Appx | 5.1 only | 5.1 only | A debugging tool that creates a new process in the context of a packaged app. | Out of scope |  |
+| [`Invoke-DscResource`](#invoke-dscresource) | PSDesiredStateConfiguration | 7 only | 7 only | Runs a method of a specified PowerShell Desired State Configuration (DSC) resource. | Out of scope |  |
+| [`Invoke-LapsPolicyProcessing`](#invoke-lapspolicyprocessing) | LAPS | 5.1 only | 5.1 only | Causes Windows Local Administrator Password Solution (LAPS) to process the currently configured policy. | Out of scope |  |
+| [`Invoke-TroubleshootingPack`](#invoke-troubleshootingpack) | TroubleshootingPack | 5.1 only | 5.1 only | Runs a troubleshooting pack. | Out of scope |  |
+| [`Invoke-WmiMethod`](#invoke-wmimethod) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Calls WMI methods. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
 | [`Invoke-WSManAction`](#invoke-wsmanaction) | Microsoft.WSMan.Management | Both | None | Invokes an action on the object that is specified by the Resource URI and by the selectors. | Out of scope |  |
-| [`Join-DtcDiagnosticResourceManager`](#join-dtcdiagnosticresourcemanager) | MsDtc | Both | None | Enlists a diagnostic Resource Manager for a transaction object. | Out of scope |  |
-| [`Limit-EventLog`](#limit-eventlog) | Microsoft.PowerShell.Management | Both | None | Sets the event log properties that limit the size of the event log and the age of its entries. | Out of scope |  |
-| [`Merge-CIPolicy`](#merge-cipolicy) | ConfigCI | Both | None | Combines the rules in several Code Integrity policy files. | Out of scope |  |
+| [`Join-DtcDiagnosticResourceManager`](#join-dtcdiagnosticresourcemanager) | MsDtc | 5.1 only | 5.1 only | Enlists a diagnostic Resource Manager for a transaction object. | Out of scope |  |
+| [`Limit-EventLog`](#limit-eventlog) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Sets the event log properties that limit the size of the event log and the age of its entries. | Out of scope |  |
+| [`Merge-CIPolicy`](#merge-cipolicy) | ConfigCI | 5.1 only | 5.1 only | Combines the rules in several Code Integrity policy files. | Out of scope |  |
 | [`Mount-AppvClientConnectionGroup`](#mount-appvclientconnectiongroup) | AppvClient | 5.1 only | 5.1 only | Streams the contents of packages to the local disk. | Out of scope |  |
 | [`Mount-AppvClientPackage`](#mount-appvclientpackage) | AppvClient | 5.1 only | 5.1 only | Loads a package into the App-V cache. | Out of scope |  |
-| [`Mount-AppxVolume`](#mount-appxvolume) | Appx | Both | None | Mounts an appx volume. | Out of scope |  |
-| [`Mount-WindowsImage`](#mount-windowsimage) | Dism | Both | Syntax differs | Mounts a Windows image in a WIM or VHD file to a directory on the local computer. | Out of scope |  |
-| [`Move-AppxPackage`](#move-appxpackage) | Appx | Both | None | Moves a package from its current location to another appx volume. | Out of scope |  |
-| [`New-AppLockerPolicy`](#new-applockerpolicy) | AppLocker | Both | None | Creates a new AppLocker policy from a list of file information and other rule creation options. | Out of scope |  |
-| [`New-BcdEntry`](#new-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`New-BcdStore`](#new-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`New-CertificateNotificationTask`](#new-certificatenotificationtask) | PKI | Both | None | Creates a new task in the Task Scheduler that will be triggered when a certificate is replaced, expired, or about to expired. | Out of scope |  |
+| [`Mount-AppxVolume`](#mount-appxvolume) | Appx | 5.1 only | 5.1 only | Mounts an appx volume. | Out of scope |  |
+| [`Mount-WindowsImage`](#mount-windowsimage) | Dism | 5.1 only | 5.1 only | Mounts a Windows image in a WIM or VHD file to a directory on the local computer. | Out of scope |  |
+| [`Move-AppxPackage`](#move-appxpackage) | Appx | 5.1 only | 5.1 only | Moves a package from its current location to another appx volume. | Out of scope |  |
+| [`New-AppLockerPolicy`](#new-applockerpolicy) | AppLocker | 5.1 only | 5.1 only | Creates a new AppLocker policy from a list of file information and other rule creation options. | Out of scope |  |
+| [`New-BcdEntry`](#new-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`New-BcdStore`](#new-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`New-CertificateNotificationTask`](#new-certificatenotificationtask) | PKI | 5.1 only | 5.1 only | Creates a new task in the Task Scheduler that will be triggered when a certificate is replaced, expired, or about to expired. | Out of scope |  |
 | [`New-CimInstance`](#new-ciminstance) | CimCmdlets | Both | Syntax differs | Creates a CIM instance. | Out of scope | Windows-only (CIM/WMI stack) |
 | [`New-CimSession`](#new-cimsession) | CimCmdlets | Both | Syntax differs | Creates a CIM session. | Out of scope | Windows-only (CIM/WMI stack) |
 | [`New-CimSessionOption`](#new-cimsessionoption) | CimCmdlets | Both | Syntax differs | Specifies advanced options for the New-CimSession cmdlet. | Out of scope | Windows-only (CIM/WMI stack) |
-| [`New-CIPolicy`](#new-cipolicy) | ConfigCI | Both | None | Creates a Code Integrity policy as an .xml file. | Out of scope |  |
-| [`New-CIPolicyRule`](#new-cipolicyrule) | ConfigCI | Both | None | Generates Code Integrity policy rules for user mode code and drivers. | Out of scope |  |
-| [`New-DtcDiagnosticTransaction`](#new-dtcdiagnostictransaction) | MsDtc | Both | None | Creates a new transaction in a Transaction Manager on the local computer. | Out of scope |  |
-| [`New-EventLog`](#new-eventlog) | Microsoft.PowerShell.Management | Both | None | Creates a new event log and a new event source on a local or remote computer. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`New-CIPolicy`](#new-cipolicy) | ConfigCI | 5.1 only | 5.1 only | Creates a Code Integrity policy as an .xml file. | Out of scope |  |
+| [`New-CIPolicyRule`](#new-cipolicyrule) | ConfigCI | 5.1 only | 5.1 only | Generates Code Integrity policy rules for user mode code and drivers. | Out of scope |  |
+| [`New-DtcDiagnosticTransaction`](#new-dtcdiagnostictransaction) | MsDtc | 5.1 only | 5.1 only | Creates a new transaction in a Transaction Manager on the local computer. | Out of scope |  |
+| [`New-EventLog`](#new-eventlog) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Creates a new event log and a new event source on a local or remote computer. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
 | [`New-FileCatalog`](#new-filecatalog) | Microsoft.PowerShell.Security | Both | None | Creates a Windows catalog file containing cryptographic hashes for files and folders in the specified paths. | Out of scope |  |
-| [`New-JobTrigger`](#new-jobtrigger) | PSScheduledJob | Both | None | Creates a job trigger for a scheduled job. | Out of scope |  |
-| [`New-LocalGroup`](#new-localgroup) | Microsoft.PowerShell.LocalAccounts | Both | None | Creates a local security group. | Out of scope |  |
-| [`New-LocalUser`](#new-localuser) | Microsoft.PowerShell.LocalAccounts | Both | None | Creates a local user account. | Out of scope |  |
-| [`New-NetIPsecAuthProposal`](#new-netipsecauthproposal) | NetSecurity | Both | None | Creates a main mode authentication proposal that specifies a suite of authentication protocols to offer in IPsec main mode negotiations with other computers. | Out of scope |  |
-| [`New-NetIPsecMainModeCryptoProposal`](#new-netipsecmainmodecryptoproposal) | NetSecurity | Both | None | Creates a main mode cryptographic proposal that specifies a suite of cryptographic protocols to offer in IPsec main mode negotiations with other computers. | Out of scope |  |
-| [`New-NetIPsecQuickModeCryptoProposal`](#new-netipsecquickmodecryptoproposal) | NetSecurity | Both | Syntax differs | Creates a quick mode cryptographic proposal that specifies a suite of cryptographic protocols to offer in IPsec quick mode negotiations with other computers. | Out of scope |  |
-| [`New-PmemDedicatedMemory`](#new-pmemdedicatedmemory) | PersistentMemory | Both | None | Creates dedicated persistent memory in the specified region. | Out of scope |  |
-| [`New-PmemDisk`](#new-pmemdisk) | PersistentMemory | Both | None | Creates a persistent memory disk in an unused persistent memory region. | Out of scope |  |
-| [`New-ProvisioningRepro`](#new-provisioningrepro) | Provisioning | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`New-PSWorkflowExecutionOption`](#new-psworkflowexecutionoption) | PSWorkflow | Both | None | Creates an object that contains session configuration options for workflow sessions. | Out of scope |  |
-| [`New-ScheduledJobOption`](#new-scheduledjoboption) | PSScheduledJob | Both | None | Creates an object that contains advanced options for a scheduled job. | Out of scope |  |
-| [`New-SelfSignedCertificate`](#new-selfsignedcertificate) | PKI | Both | None | Creates a new self-signed certificate for testing purposes. | Out of scope |  |
+| [`New-JobTrigger`](#new-jobtrigger) | PSScheduledJob | 5.1 only | 5.1 only | Creates a job trigger for a scheduled job. | Out of scope |  |
+| [`New-LocalGroup`](#new-localgroup) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Creates a local security group. | Out of scope |  |
+| [`New-LocalUser`](#new-localuser) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Creates a local user account. | Out of scope |  |
+| [`New-NetIPsecAuthProposal`](#new-netipsecauthproposal) | NetSecurity | 5.1 only | 5.1 only | Creates a main mode authentication proposal that specifies a suite of authentication protocols to offer in IPsec main mode negotiations with other computers. | Out of scope |  |
+| [`New-NetIPsecMainModeCryptoProposal`](#new-netipsecmainmodecryptoproposal) | NetSecurity | 5.1 only | 5.1 only | Creates a main mode cryptographic proposal that specifies a suite of cryptographic protocols to offer in IPsec main mode negotiations with other computers. | Out of scope |  |
+| [`New-NetIPsecQuickModeCryptoProposal`](#new-netipsecquickmodecryptoproposal) | NetSecurity | 5.1 only | 5.1 only | Creates a quick mode cryptographic proposal that specifies a suite of cryptographic protocols to offer in IPsec quick mode negotiations with other computers. | Out of scope |  |
+| [`New-PmemDedicatedMemory`](#new-pmemdedicatedmemory) | PersistentMemory | 5.1 only | 5.1 only | Creates dedicated persistent memory in the specified region. | Out of scope |  |
+| [`New-PmemDisk`](#new-pmemdisk) | PersistentMemory | 5.1 only | 5.1 only | Creates a persistent memory disk in an unused persistent memory region. | Out of scope |  |
+| [`New-ProvisioningRepro`](#new-provisioningrepro) | Provisioning | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`New-PSWorkflowExecutionOption`](#new-psworkflowexecutionoption) | PSWorkflow | 5.1 only | 5.1 only | Creates an object that contains session configuration options for workflow sessions. | Out of scope |  |
+| [`New-ScheduledJobOption`](#new-scheduledjoboption) | PSScheduledJob | 5.1 only | 5.1 only | Creates an object that contains advanced options for a scheduled job. | Out of scope |  |
+| [`New-SelfSignedCertificate`](#new-selfsignedcertificate) | PKI | 5.1 only | 5.1 only | Creates a new self-signed certificate for testing purposes. | Out of scope |  |
 | [`New-Service`](#new-service) | Microsoft.PowerShell.Management | Both | Syntax differs | Creates a new Windows service. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
-| [`New-TlsSessionTicketKey`](#new-tlssessionticketkey) | TLS | Both | None | Creates a TLS session ticket key configuration file. | Out of scope |  |
-| [`New-WebServiceProxy`](#new-webserviceproxy) | Microsoft.PowerShell.Management | Both | None | Creates a Web service proxy object that lets you use and manage the Web service in PowerShell. | Out of scope |  |
-| [`New-WindowsCustomImage`](#new-windowscustomimage) | Dism | Both | None | Captures an image of customized or serviced Windows components on a Windows Image File Boot (WIMBoot) configured device. | Out of scope |  |
-| [`New-WindowsImage`](#new-windowsimage) | Dism | Both | None | Captures an image of a drive to a new WIM file. | Out of scope |  |
+| [`New-TlsSessionTicketKey`](#new-tlssessionticketkey) | TLS | 5.1 only | 5.1 only | Creates a TLS session ticket key configuration file. | Out of scope |  |
+| [`New-WebServiceProxy`](#new-webserviceproxy) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Creates a Web service proxy object that lets you use and manage the Web service in PowerShell. | Out of scope |  |
+| [`New-WindowsCustomImage`](#new-windowscustomimage) | Dism | 5.1 only | 5.1 only | Captures an image of customized or serviced Windows components on a Windows Image File Boot (WIMBoot) configured device. | Out of scope |  |
+| [`New-WindowsImage`](#new-windowsimage) | Dism | 5.1 only | 5.1 only | Captures an image of a drive to a new WIM file. | Out of scope |  |
 | [`New-WinEvent`](#new-winevent) | Microsoft.PowerShell.Diagnostics | Both | None | Creates a new Windows event for the specified event provider. | Out of scope |  |
-| [`New-WinUserLanguageList`](#new-winuserlanguagelist) | International | Both | None | Instantiates a new language list object. | Out of scope |  |
+| [`New-WinUserLanguageList`](#new-winuserlanguagelist) | International | 5.1 only | 5.1 only | Instantiates a new language list object. | Out of scope |  |
 | [`New-WSManInstance`](#new-wsmaninstance) | Microsoft.WSMan.Management | Both | None | Creates a new instance of a management resource. | Out of scope |  |
 | [`New-WSManSessionOption`](#new-wsmansessionoption) | Microsoft.WSMan.Management | Both | None | Creates session option hash table to use as input parameters for WS-Management cmdlets. | Out of scope |  |
-| [`Optimize-AppxProvisionedPackages`](#optimize-appxprovisionedpackages) | Dism | Both | None | Optimizes the total file size of provisioned packages on the image by replacing identical files with hard links. | Out of scope |  |
-| [`Optimize-WindowsImage`](#optimize-windowsimage) | Dism | Both | None | Configures a Windows image with specified optimizations. | Out of scope |  |
+| [`Optimize-AppxProvisionedPackages`](#optimize-appxprovisionedpackages) | Dism | 5.1 only | 5.1 only | Optimizes the total file size of provisioned packages on the image by replacing identical files with hard links. | Out of scope |  |
+| [`Optimize-WindowsImage`](#optimize-windowsimage) | Dism | 5.1 only | 5.1 only | Configures a Windows image with specified optimizations. | Out of scope |  |
 | [`Out-GridView`](#out-gridview) | Microsoft.PowerShell.Utility | Both | None | Sends output to an interactive table in a separate window. | Out of scope | GUI and printing |
 | [`Out-Printer`](#out-printer) | Microsoft.PowerShell.Utility | Both | None | Sends output to a printer. | Out of scope | GUI and printing |
 | [`Publish-AppvClientPackage`](#publish-appvclientpackage) | AppvClient | 5.1 only | 5.1 only | Publishes the App-V package. | Out of scope |  |
-| [`Publish-DscConfiguration`](#publish-dscconfiguration) | PSDesiredStateConfiguration | Both | None | Publishes a DSC configuration to a set of computers. | Out of scope |  |
-| [`Receive-DtcDiagnosticTransaction`](#receive-dtcdiagnostictransaction) | MsDtc | Both | None | Propagates a transaction from a given diagnostic Resource Manager. | Out of scope |  |
+| [`Publish-DscConfiguration`](#publish-dscconfiguration) | PSDesiredStateConfiguration | 5.1 only | 5.1 only | Publishes a DSC configuration to a set of computers. | Out of scope |  |
+| [`Receive-DtcDiagnosticTransaction`](#receive-dtcdiagnostictransaction) | MsDtc | 5.1 only | 5.1 only | Propagates a transaction from a given diagnostic Resource Manager. | Out of scope |  |
 | [`Receive-PSSession`](#receive-pssession) | Microsoft.PowerShell.Core | Both | Syntax differs | Gets results of commands in disconnected sessions | Out of scope | Remote sessions (requires a remote host; out of scope) |
 | [`Register-CimIndicationEvent`](#register-cimindicationevent) | CimCmdlets | Both | Syntax differs | Subscribes to indications using a filter expression or a query expression. | Out of scope | Windows-only (CIM/WMI stack) |
 | [`Register-PSSessionConfiguration`](#register-pssessionconfiguration) | Microsoft.PowerShell.Core | Both | Syntax differs | Creates and registers a new session configuration. | Out of scope | Remote sessions (requires a remote host; out of scope) |
-| [`Register-RecoveryManagementPlugin`](#register-recoverymanagementplugin) | Dism | Both | Syntax differs | - | Out of scope | No documentation accurately describes this command. |
-| [`Register-ScheduledJob`](#register-scheduledjob) | PSScheduledJob | Both | None | Creates a scheduled job. | Out of scope |  |
+| [`Register-RecoveryManagementPlugin`](#register-recoverymanagementplugin) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Register-ScheduledJob`](#register-scheduledjob) | PSScheduledJob | 5.1 only | 5.1 only | Creates a scheduled job. | Out of scope |  |
 | [`Register-UevTemplate`](#register-uevtemplate) | UEV | 5.1 only | 5.1 only | Registers a settings location template with UE-V. | Out of scope |  |
-| [`Register-WmiEvent`](#register-wmievent) | Microsoft.PowerShell.Management | Both | None | Subscribes to a Windows Management Instrumentation (WMI) event. | Out of scope |  |
-| [`Remove-AppProvisionedSharedPackageContainer`](#remove-appprovisionedsharedpackagecontainer) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Remove-AppSharedPackageContainer`](#remove-appsharedpackagecontainer) | Appx | Both | None | Removes the shared package container. | Out of scope |  |
+| [`Register-WmiEvent`](#register-wmievent) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Subscribes to a Windows Management Instrumentation (WMI) event. | Out of scope |  |
+| [`Remove-AppProvisionedSharedPackageContainer`](#remove-appprovisionedsharedpackagecontainer) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Remove-AppSharedPackageContainer`](#remove-appsharedpackagecontainer) | Appx | 5.1 only | 5.1 only | Removes the shared package container. | Out of scope |  |
 | [`Remove-AppvClientConnectionGroup`](#remove-appvclientconnectiongroup) | AppvClient | 5.1 only | 5.1 only | Deletes an App-V connection group on the client. | Out of scope |  |
 | [`Remove-AppvClientPackage`](#remove-appvclientpackage) | AppvClient | 5.1 only | 5.1 only | Removes the package from a computer. | Out of scope |  |
 | [`Remove-AppvPublishingServer`](#remove-appvpublishingserver) | AppvClient | 5.1 only | 5.1 only | Removes an App-V publishing server. | Out of scope |  |
-| [`Remove-AppxPackage`](#remove-appxpackage) | Appx | Both | None | Removes an app package from one or more user accounts. | Out of scope |  |
-| [`Remove-AppxPackageAutoUpdateSettings`](#remove-appxpackageautoupdatesettings) | Appx | Both | None | Removes settings configured for a particular Windows app. | Out of scope |  |
-| [`Remove-AppxProvisionedPackage`](#remove-appxprovisionedpackage) | Dism | Both | None | Removes an app package (.appx) from a Windows image. | Out of scope |  |
-| [`Remove-AppxVolume`](#remove-appxvolume) | Appx | Both | None | Removes an appx volume. | Out of scope |  |
-| [`Remove-BcdElement`](#remove-bcdelement) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Remove-BcdEntry`](#remove-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Remove-BitsTransfer`](#remove-bitstransfer) | BitsTransfer | Both | None | Cancels a BITS transfer job. | Out of scope |  |
-| [`Remove-CertificateEnrollmentPolicyServer`](#remove-certificateenrollmentpolicyserver) | PKI | Both | None | Removes an enrollment policy server and the URL of the enrollment policy server from the current user or local computer configuration. | Out of scope |  |
-| [`Remove-CertificateNotificationTask`](#remove-certificatenotificationtask) | PKI | Both | None | Removes a certificate notification task from Task Scheduler. | Out of scope |  |
+| [`Remove-AppxPackage`](#remove-appxpackage) | Appx | 5.1 only | 5.1 only | Removes an app package from one or more user accounts. | Out of scope |  |
+| [`Remove-AppxPackageAutoUpdateSettings`](#remove-appxpackageautoupdatesettings) | Appx | 5.1 only | 5.1 only | Removes settings configured for a particular Windows app. | Out of scope |  |
+| [`Remove-AppxProvisionedPackage`](#remove-appxprovisionedpackage) | Dism | 5.1 only | 5.1 only | Removes an app package (.appx) from a Windows image. | Out of scope |  |
+| [`Remove-AppxVolume`](#remove-appxvolume) | Appx | 5.1 only | 5.1 only | Removes an appx volume. | Out of scope |  |
+| [`Remove-BcdElement`](#remove-bcdelement) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Remove-BcdEntry`](#remove-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Remove-BitsTransfer`](#remove-bitstransfer) | BitsTransfer | 5.1 only | 5.1 only | Cancels a BITS transfer job. | Out of scope |  |
+| [`Remove-CertificateEnrollmentPolicyServer`](#remove-certificateenrollmentpolicyserver) | PKI | 5.1 only | 5.1 only | Removes an enrollment policy server and the URL of the enrollment policy server from the current user or local computer configuration. | Out of scope |  |
+| [`Remove-CertificateNotificationTask`](#remove-certificatenotificationtask) | PKI | 5.1 only | 5.1 only | Removes a certificate notification task from Task Scheduler. | Out of scope |  |
 | [`Remove-CimInstance`](#remove-ciminstance) | CimCmdlets | Both | Syntax differs | Removes a CIM instance from a computer. | Out of scope | Windows-only (CIM/WMI stack) |
 | [`Remove-CimSession`](#remove-cimsession) | CimCmdlets | Both | Syntax differs | Removes one or more CIM sessions. | Out of scope | Windows-only (CIM/WMI stack) |
-| [`Remove-CIPolicyRule`](#remove-cipolicyrule) | ConfigCI | Both | None | This cmdlet is not supported. | Out of scope |  |
-| [`Remove-Computer`](#remove-computer) | Microsoft.PowerShell.Management | Both | None | Removes the local computer from its domain. | Out of scope |  |
-| [`Remove-EventLog`](#remove-eventlog) | Microsoft.PowerShell.Management | Both | None | Deletes an event log or unregisters an event source. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
-| [`Remove-JobTrigger`](#remove-jobtrigger) | PSScheduledJob | Both | None | Delete job triggers from scheduled jobs. | Out of scope |  |
-| [`Remove-LocalGroup`](#remove-localgroup) | Microsoft.PowerShell.LocalAccounts | Both | None | Deletes local security groups. | Out of scope |  |
-| [`Remove-LocalGroupMember`](#remove-localgroupmember) | Microsoft.PowerShell.LocalAccounts | Both | None | Removes members from a local group. | Out of scope |  |
-| [`Remove-LocalUser`](#remove-localuser) | Microsoft.PowerShell.LocalAccounts | Both | None | Deletes local user accounts. | Out of scope |  |
-| [`Remove-OsConfigurationDocument`](#remove-osconfigurationdocument) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Remove-OSConfigurationScenarioDefinition`](#remove-osconfigurationscenariodefinition) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Remove-PmemDedicatedMemory`](#remove-pmemdedicatedmemory) | PersistentMemory | Both | None | Gets dedicated persistent memory. | Out of scope |  |
-| [`Remove-PmemDisk`](#remove-pmemdisk) | PersistentMemory | Both | None | Removes persistent memory disks. | Out of scope |  |
+| [`Remove-CIPolicyRule`](#remove-cipolicyrule) | ConfigCI | 5.1 only | 5.1 only | This cmdlet is not supported. | Out of scope |  |
+| [`Remove-Computer`](#remove-computer) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Removes the local computer from its domain. | Out of scope |  |
+| [`Remove-EventLog`](#remove-eventlog) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Deletes an event log or unregisters an event source. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Remove-JobTrigger`](#remove-jobtrigger) | PSScheduledJob | 5.1 only | 5.1 only | Delete job triggers from scheduled jobs. | Out of scope |  |
+| [`Remove-LocalGroup`](#remove-localgroup) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Deletes local security groups. | Out of scope |  |
+| [`Remove-LocalGroupMember`](#remove-localgroupmember) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Removes members from a local group. | Out of scope |  |
+| [`Remove-LocalUser`](#remove-localuser) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Deletes local user accounts. | Out of scope |  |
+| [`Remove-OsConfigurationDocument`](#remove-osconfigurationdocument) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Remove-OSConfigurationScenarioDefinition`](#remove-osconfigurationscenariodefinition) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Remove-PmemDedicatedMemory`](#remove-pmemdedicatedmemory) | PersistentMemory | 5.1 only | 5.1 only | Gets dedicated persistent memory. | Out of scope |  |
+| [`Remove-PmemDisk`](#remove-pmemdisk) | PersistentMemory | 5.1 only | 5.1 only | Removes persistent memory disks. | Out of scope |  |
 | [`Remove-PSSnapin`](#remove-pssnapin) | Microsoft.PowerShell.Core | 5.1 only | 5.1 only | Removes Windows PowerShell snap-ins from the current session. | Out of scope |  |
-| [`Remove-RecoveryManagementPluginAltitude`](#remove-recoverymanagementpluginaltitude) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
+| [`Remove-RecoveryManagementPluginAltitude`](#remove-recoverymanagementpluginaltitude) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
 | [`Remove-Service`](#remove-service) | Microsoft.PowerShell.Management | 7 only | 7 only | Removes a Windows service. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
-| [`Remove-WindowsCapability`](#remove-windowscapability) | Dism | Both | None | Uninstalls a Windows capability package from an image. | Out of scope |  |
-| [`Remove-WindowsDriver`](#remove-windowsdriver) | Dism | Both | None | Removes a driver from an offline Windows image. | Out of scope |  |
-| [`Remove-WindowsImage`](#remove-windowsimage) | Dism | Both | Syntax differs | Deletes the specified volume image from a WIM file that has multiple volume images. | Out of scope |  |
-| [`Remove-WindowsPackage`](#remove-windowspackage) | Dism | Both | None | Removes a package from a Windows image. | Out of scope |  |
-| [`Remove-WmiObject`](#remove-wmiobject) | Microsoft.PowerShell.Management | Both | None | Deletes an instance of an existing Windows Management Instrumentation (WMI) class. | Out of scope |  |
+| [`Remove-WindowsCapability`](#remove-windowscapability) | Dism | 5.1 only | 5.1 only | Uninstalls a Windows capability package from an image. | Out of scope |  |
+| [`Remove-WindowsDriver`](#remove-windowsdriver) | Dism | 5.1 only | 5.1 only | Removes a driver from an offline Windows image. | Out of scope |  |
+| [`Remove-WindowsImage`](#remove-windowsimage) | Dism | 5.1 only | 5.1 only | Deletes the specified volume image from a WIM file that has multiple volume images. | Out of scope |  |
+| [`Remove-WindowsPackage`](#remove-windowspackage) | Dism | 5.1 only | 5.1 only | Removes a package from a Windows image. | Out of scope |  |
+| [`Remove-WmiObject`](#remove-wmiobject) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Deletes an instance of an existing Windows Management Instrumentation (WMI) class. | Out of scope |  |
 | [`Remove-WSManInstance`](#remove-wsmaninstance) | Microsoft.WSMan.Management | Both | None | Deletes a management resource instance. | Out of scope |  |
 | [`Rename-Computer`](#rename-computer) | Microsoft.PowerShell.Management | Both | Syntax differs | Renames a computer. | Mapped Linux (sudo reboot / shutdown / hostnamectl) |  |
-| [`Rename-LocalGroup`](#rename-localgroup) | Microsoft.PowerShell.LocalAccounts | Both | None | Renames a local security group. | Out of scope |  |
-| [`Rename-LocalUser`](#rename-localuser) | Microsoft.PowerShell.LocalAccounts | Both | None | Renames a local user account. | Out of scope |  |
+| [`Rename-LocalGroup`](#rename-localgroup) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Renames a local security group. | Out of scope |  |
+| [`Rename-LocalUser`](#rename-localuser) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Renames a local user account. | Out of scope |  |
 | [`Repair-AppvClientConnectionGroup`](#repair-appvclientconnectiongroup) | AppvClient | 5.1 only | 5.1 only | Resets the user package settings for the connection group. | Out of scope |  |
 | [`Repair-AppvClientPackage`](#repair-appvclientpackage) | AppvClient | 5.1 only | 5.1 only | Resets the user settings of a package. | Out of scope |  |
 | [`Repair-UevTemplateIndex`](#repair-uevtemplateindex) | UEV | 5.1 only | 5.1 only | Repairs a corrupted UE-V template index. | Out of scope |  |
-| [`Repair-WindowsImage`](#repair-windowsimage) | Dism | Both | None | Repairs a Windows image in a WIM or VHD file. | Out of scope |  |
-| [`Reset-AppSharedPackageContainer`](#reset-appsharedpackagecontainer) | Appx | Both | None | Destroys all the application data of the container. | Out of scope |  |
-| [`Reset-AppxPackage`](#reset-appxpackage) | Appx | Both | None | Restores the Windows app to its initial configuration. | Out of scope |  |
-| [`Reset-ComputerMachinePassword`](#reset-computermachinepassword) | Microsoft.PowerShell.Management | Both | None | Resets the machine account password for the computer. | Out of scope |  |
-| [`Reset-LapsPassword`](#reset-lapspassword) | LAPS | Both | None | Causes Windows Local Administrator Password Solution (LAPS) to immediately rotate the password for the currently managed local account. | Out of scope |  |
-| [`Resolve-DnsName`](#resolve-dnsname) | DnsClient | Both | None | Performs a DNS name query resolution for the specified name. | Out of scope |  |
+| [`Repair-WindowsImage`](#repair-windowsimage) | Dism | 5.1 only | 5.1 only | Repairs a Windows image in a WIM or VHD file. | Out of scope |  |
+| [`Reset-AppSharedPackageContainer`](#reset-appsharedpackagecontainer) | Appx | 5.1 only | 5.1 only | Destroys all the application data of the container. | Out of scope |  |
+| [`Reset-AppxPackage`](#reset-appxpackage) | Appx | 5.1 only | 5.1 only | Restores the Windows app to its initial configuration. | Out of scope |  |
+| [`Reset-ComputerMachinePassword`](#reset-computermachinepassword) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Resets the machine account password for the computer. | Out of scope |  |
+| [`Reset-LapsPassword`](#reset-lapspassword) | LAPS | 5.1 only | 5.1 only | Causes Windows Local Administrator Password Solution (LAPS) to immediately rotate the password for the currently managed local account. | Out of scope |  |
+| [`Resolve-DnsName`](#resolve-dnsname) | DnsClient | 5.1 only | 5.1 only | Performs a DNS name query resolution for the specified name. | Out of scope |  |
 | [`Restart-Service`](#restart-service) | Microsoft.PowerShell.Management | Both | None | Stops and then starts one or more services. | Mapped Linux (systemctl start/stop/restart) |  |
-| [`Restore-Computer`](#restore-computer) | Microsoft.PowerShell.Management | Both | None | Starts a system restore on the local computer. | Out of scope |  |
+| [`Restore-Computer`](#restore-computer) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Starts a system restore on the local computer. | Out of scope |  |
 | [`Restore-UevBackup`](#restore-uevbackup) | UEV | 5.1 only | 5.1 only | Applies backed up settings from another computer to this computer. | Out of scope |  |
 | [`Restore-UevUserSetting`](#restore-uevusersetting) | UEV | 5.1 only | 5.1 only | Sets a restore flag for the user settings. | Out of scope |  |
-| [`Resume-BitsTransfer`](#resume-bitstransfer) | BitsTransfer | Both | None | Resumes a BITS transfer job. | Out of scope |  |
+| [`Resume-BitsTransfer`](#resume-bitstransfer) | BitsTransfer | 5.1 only | 5.1 only | Resumes a BITS transfer job. | Out of scope |  |
 | [`Resume-Job`](#resume-job) | Microsoft.PowerShell.Core | 5.1 only | 5.1 only | Restarts a suspended job. | Out of scope |  |
-| [`Resume-ProvisioningSession`](#resume-provisioningsession) | Provisioning | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Resume-ReFSDedupSchedule`](#resume-refsdedupschedule) | Microsoft.ReFsDedup.Commands | Both | None | Resumes the deduplication schedule on a specified ReFS volume. | Out of scope |  |
+| [`Resume-ProvisioningSession`](#resume-provisioningsession) | Provisioning | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Resume-ReFSDedupSchedule`](#resume-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Resumes the deduplication schedule on a specified ReFS volume. | Out of scope |  |
 | [`Resume-Service`](#resume-service) | Microsoft.PowerShell.Management | Both | None | Resumes one or more suspended (paused) services. | Mapped Linux (systemctl start/stop/restart) |  |
-| [`Save-OsImage`](#save-osimage) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Save-SoftwareInventory`](#save-softwareinventory) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Save-WindowsImage`](#save-windowsimage) | Dism | Both | None | Applies changes made to a mounted image to its WIM or VHD file. | Out of scope |  |
+| [`Save-OsImage`](#save-osimage) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Save-SoftwareInventory`](#save-softwareinventory) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Save-WindowsImage`](#save-windowsimage) | Dism | 5.1 only | 5.1 only | Applies changes made to a mounted image to its WIM or VHD file. | Out of scope |  |
 | [`Send-AppvClientReport`](#send-appvclientreport) | AppvClient | 5.1 only | 5.1 only | Sends reporting data from the client. | Out of scope |  |
-| [`Send-DtcDiagnosticTransaction`](#send-dtcdiagnostictransaction) | MsDtc | Both | None | Propagates a transaction to a specified diagnostic Resource Manager. | Out of scope |  |
+| [`Send-DtcDiagnosticTransaction`](#send-dtcdiagnostictransaction) | MsDtc | 5.1 only | 5.1 only | Propagates a transaction to a specified diagnostic Resource Manager. | Out of scope |  |
 | [`Set-Acl`](#set-acl) | Microsoft.PowerShell.Security | Both | Syntax differs | Changes the security descriptor of a specified item, such as a file or a registry key. | Out of scope |  |
-| [`Set-AppBackgroundTaskResourcePolicy`](#set-appbackgroundtaskresourcepolicy) | AppBackgroundTask | Both | None | Configures the use of the global pool by background tasks. | Out of scope |  |
-| [`Set-AppLockerPolicy`](#set-applockerpolicy) | AppLocker | Both | None | Sets the AppLocker policy for the specified GPO. | Out of scope |  |
+| [`Set-AppBackgroundTaskResourcePolicy`](#set-appbackgroundtaskresourcepolicy) | AppBackgroundTask | 5.1 only | 5.1 only | Configures the use of the global pool by background tasks. | Out of scope |  |
+| [`Set-AppLockerPolicy`](#set-applockerpolicy) | AppLocker | 5.1 only | 5.1 only | Sets the AppLocker policy for the specified GPO. | Out of scope |  |
 | [`Set-AppvClientConfiguration`](#set-appvclientconfiguration) | AppvClient | 5.1 only | 5.1 only | Applies configuration settings to the App-V Client. | Out of scope |  |
 | [`Set-AppvClientMode`](#set-appvclientmode) | AppvClient | 5.1 only | 5.1 only | Sets the mode in which the client runs. | Out of scope |  |
 | [`Set-AppvClientPackage`](#set-appvclientpackage) | AppvClient | 5.1 only | 5.1 only | Configures an App-V Client Package. | Out of scope |  |
 | [`Set-AppvPublishingServer`](#set-appvpublishingserver) | AppvClient | 5.1 only | 5.1 only | Modifies properties of an App-V Publishing Server. | Out of scope |  |
-| [`Set-AppxDefaultVolume`](#set-appxdefaultvolume) | Appx | Both | None | Specifies a default appx volume. | Out of scope |  |
-| [`Set-AppxPackageAutoUpdateSettings`](#set-appxpackageautoupdatesettings) | Appx | Both | Syntax differs | Configures a specific Windows App's Auto Update and Repair settings. | Out of scope |  |
-| [`Set-AppXProvisionedDataFile`](#set-appxprovisioneddatafile) | Dism | Both | None | Adds custom data into the specified app (.appx) package that has been provisioned in a Windows image. | Out of scope |  |
+| [`Set-AppxDefaultVolume`](#set-appxdefaultvolume) | Appx | 5.1 only | 5.1 only | Specifies a default appx volume. | Out of scope |  |
+| [`Set-AppxPackageAutoUpdateSettings`](#set-appxpackageautoupdatesettings) | Appx | 5.1 only | 5.1 only | Configures a specific Windows App's Auto Update and Repair settings. | Out of scope |  |
+| [`Set-AppXProvisionedDataFile`](#set-appxprovisioneddatafile) | Dism | 5.1 only | 5.1 only | Adds custom data into the specified app (.appx) package that has been provisioned in a Windows image. | Out of scope |  |
 | [`Set-AuthenticodeSignature`](#set-authenticodesignature) | Microsoft.PowerShell.Security | Both | None | Adds an Authenticode signature to a PowerShell script or other file. | Out of scope |  |
-| [`Set-BcdBootDefault`](#set-bcdbootdefault) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-BcdBootDisplayOrder`](#set-bcdbootdisplayorder) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-BcdBootSequence`](#set-bcdbootsequence) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-BcdBootTimeout`](#set-bcdboottimeout) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-BcdBootToolsDisplayOrder`](#set-bcdboottoolsdisplayorder) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-BcdDebugSettings`](#set-bcddebugsettings) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-BcdElement`](#set-bcdelement) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-BcdHypervisorSettings`](#set-bcdhypervisorsettings) | Microsoft.Windows.Bcd.Cmdlets | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-BitsTransfer`](#set-bitstransfer) | BitsTransfer | Both | None | Modifies the properties of an existing BITS transfer job. | Out of scope |  |
-| [`Set-CertificateAutoEnrollmentPolicy`](#set-certificateautoenrollmentpolicy) | PKI | Both | None | Sets local certificate auto-enrollment policy. | Out of scope |  |
+| [`Set-BcdBootDefault`](#set-bcdbootdefault) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-BcdBootDisplayOrder`](#set-bcdbootdisplayorder) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-BcdBootSequence`](#set-bcdbootsequence) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-BcdBootTimeout`](#set-bcdboottimeout) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-BcdBootToolsDisplayOrder`](#set-bcdboottoolsdisplayorder) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-BcdDebugSettings`](#set-bcddebugsettings) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-BcdElement`](#set-bcdelement) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-BcdHypervisorSettings`](#set-bcdhypervisorsettings) | Microsoft.Windows.Bcd.Cmdlets | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-BitsTransfer`](#set-bitstransfer) | BitsTransfer | 5.1 only | 5.1 only | Modifies the properties of an existing BITS transfer job. | Out of scope |  |
+| [`Set-CertificateAutoEnrollmentPolicy`](#set-certificateautoenrollmentpolicy) | PKI | 5.1 only | 5.1 only | Sets local certificate auto-enrollment policy. | Out of scope |  |
 | [`Set-CimInstance`](#set-ciminstance) | CimCmdlets | Both | Syntax differs | Modifies a CIM instance on a CIM server by calling the ModifyInstance method of the CIM class. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
-| [`Set-CIPolicyIdInfo`](#set-cipolicyidinfo) | ConfigCI | Both | None | Modifies the name and ID of a Code Integrity policy. | Out of scope |  |
-| [`Set-CIPolicySetting`](#set-cipolicysetting) | ConfigCI | Both | None | Modifies the SecureSettings within the Code Integrity policy. | Out of scope |  |
-| [`Set-CIPolicyVersion`](#set-cipolicyversion) | ConfigCI | Both | None | Updates the version number of the policy. | Out of scope |  |
-| [`Set-Culture`](#set-culture) | International | Both | None | Sets the user culture for the current user account. | Out of scope |  |
-| [`Set-DscLocalConfigurationManager`](#set-dsclocalconfigurationmanager) | PSDesiredStateConfiguration | Both | None | Applies Local Configuration Manager (LCM) settings to nodes. | Out of scope |  |
-| [`Set-HVCIOptions`](#set-hvcioptions) | ConfigCI | Both | None | Modifies hypervisor Code Integrity options for a policy. | Out of scope |  |
-| [`Set-JobTrigger`](#set-jobtrigger) | PSScheduledJob | Both | None | Changes the job trigger of a scheduled job. | Out of scope |  |
-| [`Set-KdsConfiguration`](#set-kdsconfiguration) | Kds | Both | None | Sets the configuration of Microsoft Group KdsSvc. | Out of scope |  |
-| [`Set-LapsADAuditing`](#set-lapsadauditing) | LAPS | Both | None | Configures an Active Directory (AD) Organizational Unit (OU) to enable auditing on the Windows Local Administrator Password Solution (LAPS) password schema attributes. | Out of scope |  |
-| [`Set-LapsADComputerSelfPermission`](#set-lapsadcomputerselfpermission) | LAPS | Both | None | Configures permissions on an Active Directory (AD) Organizational Unit (OU) to enable computers in that OU to update their Windows Local Administrator Password Solution (LAPS) passwords. | Out of scope |  |
-| [`Set-LapsADPasswordExpirationTime`](#set-lapsadpasswordexpirationtime) | LAPS | Both | None | Sets the Windows Local Administrator Password Solution (LAPS) password expiration timestamp on an Active Directory (AD) computer or domain controller object. | Out of scope |  |
-| [`Set-LapsADReadPasswordPermission`](#set-lapsadreadpasswordpermission) | LAPS | Both | None | Configures security on an Active Directory (AD) Organizational Unit (OU) to grant specific users or groups permission to query Windows Local Administrator Password Solution (LAPS) passwords. | Out of scope |  |
-| [`Set-LapsADResetPasswordPermission`](#set-lapsadresetpasswordpermission) | LAPS | Both | None | Configures security on an Active Directory (AD) Organizational Unit (OU) to grant specific users or groups permission to set the Windows Local Administrator Password Solution (LAPS) password | Out of scope |  |
-| [`Set-LocalGroup`](#set-localgroup) | Microsoft.PowerShell.LocalAccounts | Both | None | Changes a local security group. | Out of scope |  |
-| [`Set-LocalUser`](#set-localuser) | Microsoft.PowerShell.LocalAccounts | Both | None | Modifies a local user account. | Out of scope |  |
-| [`Set-NonRemovableAppsPolicy`](#set-nonremovableappspolicy) | Dism | Both | None | Sets an app package as non-removable (can not be uninstalled). | Out of scope |  |
-| [`Set-OsConfigurationDocument`](#set-osconfigurationdocument) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-OsConfigurationProperty`](#set-osconfigurationproperty) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-OSConfigurationScenarioDefinition`](#set-osconfigurationscenariodefinition) | OsConfiguration | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-ProcessMitigation`](#set-processmitigation) | ProcessMitigations | Both | None | Commands to enable and disable process mitigations or set them in bulk from an XML file. | Out of scope |  |
+| [`Set-CIPolicyIdInfo`](#set-cipolicyidinfo) | ConfigCI | 5.1 only | 5.1 only | Modifies the name and ID of a Code Integrity policy. | Out of scope |  |
+| [`Set-CIPolicySetting`](#set-cipolicysetting) | ConfigCI | 5.1 only | 5.1 only | Modifies the SecureSettings within the Code Integrity policy. | Out of scope |  |
+| [`Set-CIPolicyVersion`](#set-cipolicyversion) | ConfigCI | 5.1 only | 5.1 only | Updates the version number of the policy. | Out of scope |  |
+| [`Set-Culture`](#set-culture) | International | 5.1 only | 5.1 only | Sets the user culture for the current user account. | Out of scope |  |
+| [`Set-DscLocalConfigurationManager`](#set-dsclocalconfigurationmanager) | PSDesiredStateConfiguration | 5.1 only | 5.1 only | Applies Local Configuration Manager (LCM) settings to nodes. | Out of scope |  |
+| [`Set-HVCIOptions`](#set-hvcioptions) | ConfigCI | 5.1 only | 5.1 only | Modifies hypervisor Code Integrity options for a policy. | Out of scope |  |
+| [`Set-JobTrigger`](#set-jobtrigger) | PSScheduledJob | 5.1 only | 5.1 only | Changes the job trigger of a scheduled job. | Out of scope |  |
+| [`Set-KdsConfiguration`](#set-kdsconfiguration) | Kds | 5.1 only | 5.1 only | Sets the configuration of Microsoft Group KdsSvc. | Out of scope |  |
+| [`Set-LapsADAuditing`](#set-lapsadauditing) | LAPS | 5.1 only | 5.1 only | Configures an Active Directory (AD) Organizational Unit (OU) to enable auditing on the Windows Local Administrator Password Solution (LAPS) password schema attributes. | Out of scope |  |
+| [`Set-LapsADComputerSelfPermission`](#set-lapsadcomputerselfpermission) | LAPS | 5.1 only | 5.1 only | Configures permissions on an Active Directory (AD) Organizational Unit (OU) to enable computers in that OU to update their Windows Local Administrator Password Solution (LAPS) passwords. | Out of scope |  |
+| [`Set-LapsADPasswordExpirationTime`](#set-lapsadpasswordexpirationtime) | LAPS | 5.1 only | 5.1 only | Sets the Windows Local Administrator Password Solution (LAPS) password expiration timestamp on an Active Directory (AD) computer or domain controller object. | Out of scope |  |
+| [`Set-LapsADReadPasswordPermission`](#set-lapsadreadpasswordpermission) | LAPS | 5.1 only | 5.1 only | Configures security on an Active Directory (AD) Organizational Unit (OU) to grant specific users or groups permission to query Windows Local Administrator Password Solution (LAPS) passwords. | Out of scope |  |
+| [`Set-LapsADResetPasswordPermission`](#set-lapsadresetpasswordpermission) | LAPS | 5.1 only | 5.1 only | Configures security on an Active Directory (AD) Organizational Unit (OU) to grant specific users or groups permission to set the Windows Local Administrator Password Solution (LAPS) password | Out of scope |  |
+| [`Set-LocalGroup`](#set-localgroup) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Changes a local security group. | Out of scope |  |
+| [`Set-LocalUser`](#set-localuser) | Microsoft.PowerShell.LocalAccounts | 5.1 only | 5.1 only | Modifies a local user account. | Out of scope |  |
+| [`Set-NonRemovableAppsPolicy`](#set-nonremovableappspolicy) | Dism | 5.1 only | 5.1 only | Sets an app package as non-removable (can not be uninstalled). | Out of scope |  |
+| [`Set-OsConfigurationDocument`](#set-osconfigurationdocument) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-OsConfigurationProperty`](#set-osconfigurationproperty) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-OSConfigurationScenarioDefinition`](#set-osconfigurationscenariodefinition) | OsConfiguration | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-ProcessMitigation`](#set-processmitigation) | ProcessMitigations | 5.1 only | 5.1 only | Commands to enable and disable process mitigations or set them in bulk from an XML file. | Out of scope |  |
 | [`Set-PSSessionConfiguration`](#set-pssessionconfiguration) | Microsoft.PowerShell.Core | Both | None | Changes the properties of a registered session configuration. | Out of scope | Remote sessions (requires a remote host; out of scope) |
-| [`Set-RecoveryManagementPluginAltitude`](#set-recoverymanagementpluginaltitude) | Dism | Both | Syntax differs | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-RecoveryRemoteManagementStatus`](#set-recoveryremotemanagementstatus) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Set-ReFSDedupSchedule`](#set-refsdedupschedule) | Microsoft.ReFsDedup.Commands | Both | None | Sets the deduplication schedule on a specified ReFS volume. | Out of scope |  |
-| [`Set-ReFSDedupScrubSchedule`](#set-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | Both | None | Sets the deduplication scrub schedule on the specified ReFS volume. | Out of scope |  |
-| [`Set-RuleOption`](#set-ruleoption) | ConfigCI | Both | None | Modifies rule options in a Code Integrity policy. | Out of scope |  |
-| [`Set-ScheduledJob`](#set-scheduledjob) | PSScheduledJob | Both | None | Changes scheduled jobs. | Out of scope |  |
-| [`Set-ScheduledJobOption`](#set-scheduledjoboption) | PSScheduledJob | Both | None | Changes the job options of a scheduled job. | Out of scope |  |
-| [`Set-SecureBootUEFI`](#set-securebootuefi) | SecureBoot | Both | None | Sets the Secure Boot-related UEFI variables. | Out of scope |  |
+| [`Set-RecoveryManagementPluginAltitude`](#set-recoverymanagementpluginaltitude) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-RecoveryRemoteManagementStatus`](#set-recoveryremotemanagementstatus) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Set-ReFSDedupSchedule`](#set-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Sets the deduplication schedule on a specified ReFS volume. | Out of scope |  |
+| [`Set-ReFSDedupScrubSchedule`](#set-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Sets the deduplication scrub schedule on the specified ReFS volume. | Out of scope |  |
+| [`Set-RuleOption`](#set-ruleoption) | ConfigCI | 5.1 only | 5.1 only | Modifies rule options in a Code Integrity policy. | Out of scope |  |
+| [`Set-ScheduledJob`](#set-scheduledjob) | PSScheduledJob | 5.1 only | 5.1 only | Changes scheduled jobs. | Out of scope |  |
+| [`Set-ScheduledJobOption`](#set-scheduledjoboption) | PSScheduledJob | 5.1 only | 5.1 only | Changes the job options of a scheduled job. | Out of scope |  |
+| [`Set-SecureBootUEFI`](#set-securebootuefi) | SecureBoot | 5.1 only | 5.1 only | Sets the Secure Boot-related UEFI variables. | Out of scope |  |
 | [`Set-Service`](#set-service) | Microsoft.PowerShell.Management | Both | Syntax differs | Starts, stops, and suspends a service, and changes its properties. | Mapped Linux (systemctl start/stop/restart) |  |
-| [`Set-SystemPreferredUILanguage`](#set-systempreferreduilanguage) | LanguagePackManagement | Both | None | Sets the provided language as the System Preferred UI Language. | Out of scope |  |
+| [`Set-SystemPreferredUILanguage`](#set-systempreferreduilanguage) | LanguagePackManagement | 5.1 only | 5.1 only | Sets the provided language as the System Preferred UI Language. | Out of scope |  |
 | [`Set-TimeZone`](#set-timezone) | Microsoft.PowerShell.Management | Both | None | Sets the system time zone to a specified time zone. | Mapped Linux (timedatectl) |  |
-| [`Set-TpmOwnerAuth`](#set-tpmownerauth) | TrustedPlatformModule | Both | Syntax differs | Changes the TPM owner authorization value. | Out of scope |  |
+| [`Set-TpmOwnerAuth`](#set-tpmownerauth) | TrustedPlatformModule | 5.1 only | 5.1 only | Changes the TPM owner authorization value. | Out of scope |  |
 | [`Set-UevConfiguration`](#set-uevconfiguration) | UEV | 5.1 only | 5.1 only | Modifies UE-V configuration settings. | Out of scope |  |
 | [`Set-UevTemplateProfile`](#set-uevtemplateprofile) | UEV | 5.1 only | 5.1 only | Modifies which profile to associate with an individual template. | Out of scope |  |
-| [`Set-WheaMemoryPolicy`](#set-wheamemorypolicy) | Whea | Both | Syntax differs | Sets the WHEA memory policy for a computer. | Out of scope |  |
-| [`Set-WinAcceptLanguageFromLanguageListOptOut`](#set-winacceptlanguagefromlanguagelistoptout) | International | Both | None | Sets the HTTP Accept Language from the Language List opt-out setting for the current user account. | Out of scope |  |
-| [`Set-WinCultureFromLanguageListOptOut`](#set-winculturefromlanguagelistoptout) | International | Both | None | Sets the Culture from language list opt out setting for the current user account. | Out of scope |  |
-| [`Set-WinDefaultInputMethodOverride`](#set-windefaultinputmethodoverride) | International | Both | None | Sets the default input method override for the current user account. | Out of scope |  |
-| [`Set-WindowsEdition`](#set-windowsedition) | Dism | Both | None | Changes a Windows image to a higher edition. | Out of scope |  |
-| [`Set-WindowsProductKey`](#set-windowsproductkey) | Dism | Both | None | Sets the product key for the Windows image. | Out of scope |  |
-| [`Set-WindowsReservedStorageState`](#set-windowsreservedstoragestate) | Dism | Both | None | Sets the reserved storage state of the image. | Out of scope |  |
-| [`Set-WindowsSearchSetting`](#set-windowssearchsetting) | WindowsSearch | Both | None | Modifies values that control Windows Search. | Out of scope |  |
-| [`Set-WinHomeLocation`](#set-winhomelocation) | International | Both | None | Sets the home location setting for the current user account. | Out of scope |  |
-| [`Set-WinLanguageBarOption`](#set-winlanguagebaroption) | International | Both | None | Sets the language bar type and mode for the current user account. | Out of scope |  |
-| [`Set-WinSystemLocale`](#set-winsystemlocale) | International | Both | None | Sets the system locale for the current computer. | Out of scope |  |
-| [`Set-WinUILanguageOverride`](#set-winuilanguageoverride) | International | Both | None | Sets the Windows UI language override setting for the current user account. | Out of scope |  |
-| [`Set-WinUserLanguageList`](#set-winuserlanguagelist) | International | Both | None | Sets the language list and associated properties for the current user account. | Out of scope |  |
-| [`Set-WmiInstance`](#set-wmiinstance) | Microsoft.PowerShell.Management | Both | None | Creates or updates an instance of an existing Windows Management Instrumentation (WMI) class. | Out of scope |  |
+| [`Set-WheaMemoryPolicy`](#set-wheamemorypolicy) | Whea | 5.1 only | 5.1 only | Sets the WHEA memory policy for a computer. | Out of scope |  |
+| [`Set-WinAcceptLanguageFromLanguageListOptOut`](#set-winacceptlanguagefromlanguagelistoptout) | International | 5.1 only | 5.1 only | Sets the HTTP Accept Language from the Language List opt-out setting for the current user account. | Out of scope |  |
+| [`Set-WinCultureFromLanguageListOptOut`](#set-winculturefromlanguagelistoptout) | International | 5.1 only | 5.1 only | Sets the Culture from language list opt out setting for the current user account. | Out of scope |  |
+| [`Set-WinDefaultInputMethodOverride`](#set-windefaultinputmethodoverride) | International | 5.1 only | 5.1 only | Sets the default input method override for the current user account. | Out of scope |  |
+| [`Set-WindowsEdition`](#set-windowsedition) | Dism | 5.1 only | 5.1 only | Changes a Windows image to a higher edition. | Out of scope |  |
+| [`Set-WindowsProductKey`](#set-windowsproductkey) | Dism | 5.1 only | 5.1 only | Sets the product key for the Windows image. | Out of scope |  |
+| [`Set-WindowsReservedStorageState`](#set-windowsreservedstoragestate) | Dism | 5.1 only | 5.1 only | Sets the reserved storage state of the image. | Out of scope |  |
+| [`Set-WindowsSearchSetting`](#set-windowssearchsetting) | WindowsSearch | 5.1 only | 5.1 only | Modifies values that control Windows Search. | Out of scope |  |
+| [`Set-WinHomeLocation`](#set-winhomelocation) | International | 5.1 only | 5.1 only | Sets the home location setting for the current user account. | Out of scope |  |
+| [`Set-WinLanguageBarOption`](#set-winlanguagebaroption) | International | 5.1 only | 5.1 only | Sets the language bar type and mode for the current user account. | Out of scope |  |
+| [`Set-WinSystemLocale`](#set-winsystemlocale) | International | 5.1 only | 5.1 only | Sets the system locale for the current computer. | Out of scope |  |
+| [`Set-WinUILanguageOverride`](#set-winuilanguageoverride) | International | 5.1 only | 5.1 only | Sets the Windows UI language override setting for the current user account. | Out of scope |  |
+| [`Set-WinUserLanguageList`](#set-winuserlanguagelist) | International | 5.1 only | 5.1 only | Sets the language list and associated properties for the current user account. | Out of scope |  |
+| [`Set-WmiInstance`](#set-wmiinstance) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Creates or updates an instance of an existing Windows Management Instrumentation (WMI) class. | Out of scope |  |
 | [`Set-WSManInstance`](#set-wsmaninstance) | Microsoft.WSMan.Management | Both | None | Modifies the management information that is related to a resource. | Out of scope |  |
 | [`Set-WSManQuickConfig`](#set-wsmanquickconfig) | Microsoft.WSMan.Management | Both | None | Configures the local computer for remote management. | Out of scope |  |
 | [`Show-Command`](#show-command) | Microsoft.PowerShell.Utility | Both | None | Displays PowerShell command information in a graphical window. | Out of scope | GUI and printing |
-| [`Show-ControlPanelItem`](#show-controlpanelitem) | Microsoft.PowerShell.Management | Both | None | Opens control panel items. | Out of scope |  |
-| [`Show-EventLog`](#show-eventlog) | Microsoft.PowerShell.Management | Both | None | Displays the event logs of the local or a remote computer in Event Viewer. | Out of scope |  |
-| [`Show-WindowsDeveloperLicenseRegistration`](#show-windowsdeveloperlicenseregistration) | WindowsDeveloperLicense | Both | None | Provides information about how to enable a device for development. | Out of scope |  |
-| [`Split-WindowsImage`](#split-windowsimage) | Dism | Both | Syntax differs | Splits an existing .wim file into multiple read-only split .wim files. | Out of scope |  |
-| [`Start-BitsTransfer`](#start-bitstransfer) | BitsTransfer | Both | None | Creates a BITS transfer job. | Out of scope |  |
-| [`Start-DscConfiguration`](#start-dscconfiguration) | PSDesiredStateConfiguration | Both | None | Applies configuration to nodes. | Out of scope |  |
-| [`Start-DtcDiagnosticResourceManager`](#start-dtcdiagnosticresourcemanager) | MsDtc | Both | None | Starts a diagnostic Resource Manager. | Out of scope |  |
-| [`Start-OSUninstall`](#start-osuninstall) | Dism | Both | None | Windows gives a user the ability to uninstall and roll back to a previous version of Windows. You can use DISM to initiate an uninstall. | Out of scope |  |
-| [`Start-ReFSDedupJob`](#start-refsdedupjob) | Microsoft.ReFsDedup.Commands | Both | None | Starts a deduplication job on the specified ReFS volume. | Out of scope |  |
+| [`Show-ControlPanelItem`](#show-controlpanelitem) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Opens control panel items. | Out of scope |  |
+| [`Show-EventLog`](#show-eventlog) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Displays the event logs of the local or a remote computer in Event Viewer. | Out of scope |  |
+| [`Show-WindowsDeveloperLicenseRegistration`](#show-windowsdeveloperlicenseregistration) | WindowsDeveloperLicense | 5.1 only | 5.1 only | Provides information about how to enable a device for development. | Out of scope |  |
+| [`Split-WindowsImage`](#split-windowsimage) | Dism | 5.1 only | 5.1 only | Splits an existing .wim file into multiple read-only split .wim files. | Out of scope |  |
+| [`Start-BitsTransfer`](#start-bitstransfer) | BitsTransfer | 5.1 only | 5.1 only | Creates a BITS transfer job. | Out of scope |  |
+| [`Start-DscConfiguration`](#start-dscconfiguration) | PSDesiredStateConfiguration | 5.1 only | 5.1 only | Applies configuration to nodes. | Out of scope |  |
+| [`Start-DtcDiagnosticResourceManager`](#start-dtcdiagnosticresourcemanager) | MsDtc | 5.1 only | 5.1 only | Starts a diagnostic Resource Manager. | Out of scope |  |
+| [`Start-OSUninstall`](#start-osuninstall) | Dism | 5.1 only | 5.1 only | Windows gives a user the ability to uninstall and roll back to a previous version of Windows. You can use DISM to initiate an uninstall. | Out of scope |  |
+| [`Start-ReFSDedupJob`](#start-refsdedupjob) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Starts a deduplication job on the specified ReFS volume. | Out of scope |  |
 | [`Start-Service`](#start-service) | Microsoft.PowerShell.Management | Both | None | Starts one or more stopped services. | Mapped Linux (systemctl start/stop/restart) |  |
-| [`Start-Transaction`](#start-transaction) | Microsoft.PowerShell.Management | Both | None | Starts a transaction. | Out of scope |  |
+| [`Start-Transaction`](#start-transaction) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Starts a transaction. | Out of scope |  |
 | [`Stop-AppvClientConnectionGroup`](#stop-appvclientconnectiongroup) | AppvClient | 5.1 only | 5.1 only | Shuts down the shared virtual environment of a connection group. | Out of scope |  |
 | [`Stop-AppvClientPackage`](#stop-appvclientpackage) | AppvClient | 5.1 only | 5.1 only | Shuts down virtual environments for specified packages. | Out of scope |  |
-| [`Stop-DtcDiagnosticResourceManager`](#stop-dtcdiagnosticresourcemanager) | MsDtc | Both | None | Stops and removes a diagnostic Resource Manager job. | Out of scope |  |
-| [`Stop-ReFSDedupJob`](#stop-refsdedupjob) | Microsoft.ReFsDedup.Commands | Both | None | Stops a running deduplication job on a specified ReFS volume. | Out of scope |  |
+| [`Stop-DtcDiagnosticResourceManager`](#stop-dtcdiagnosticresourcemanager) | MsDtc | 5.1 only | 5.1 only | Stops and removes a diagnostic Resource Manager job. | Out of scope |  |
+| [`Stop-ReFSDedupJob`](#stop-refsdedupjob) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Stops a running deduplication job on a specified ReFS volume. | Out of scope |  |
 | [`Stop-Service`](#stop-service) | Microsoft.PowerShell.Management | Both | None | Stops one or more running services. | Mapped Linux (systemctl start/stop/restart) |  |
-| [`Suspend-BitsTransfer`](#suspend-bitstransfer) | BitsTransfer | Both | None | Suspends a BITS transfer job. | Out of scope |  |
+| [`Suspend-BitsTransfer`](#suspend-bitstransfer) | BitsTransfer | 5.1 only | 5.1 only | Suspends a BITS transfer job. | Out of scope |  |
 | [`Suspend-Job`](#suspend-job) | Microsoft.PowerShell.Core | 5.1 only | 5.1 only | Temporarily stops workflow jobs. | Out of scope |  |
-| [`Suspend-ReFSDedupSchedule`](#suspend-refsdedupschedule) | Microsoft.ReFsDedup.Commands | Both | None | Suspends the deduplication schedule on a specified ReFS volume. | Out of scope |  |
+| [`Suspend-ReFSDedupSchedule`](#suspend-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 5.1 only | 5.1 only | Suspends the deduplication schedule on a specified ReFS volume. | Out of scope |  |
 | [`Suspend-Service`](#suspend-service) | Microsoft.PowerShell.Management | Both | None | Suspends (pauses) one or more running services. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
-| [`Switch-Certificate`](#switch-certificate) | PKI | Both | None | Marks one certificate as having been replaced by another certificate. | Out of scope |  |
+| [`Switch-Certificate`](#switch-certificate) | PKI | 5.1 only | 5.1 only | Marks one certificate as having been replaced by another certificate. | Out of scope |  |
 | [`Sync-AppvPublishingServer`](#sync-appvpublishingserver) | AppvClient | 5.1 only | 5.1 only | Initiates the App-V Publishing Refresh operation. | Out of scope |  |
-| [`Test-AppLockerPolicy`](#test-applockerpolicy) | AppLocker | Both | None | Specifies the AppLocker policy to determine whether the input files will be allowed to run for a given user. | Out of scope |  |
-| [`Test-Certificate`](#test-certificate) | PKI | Both | None | Verifies a certificate according to the input parameters. | Out of scope |  |
-| [`Test-ComputerSecureChannel`](#test-computersecurechannel) | Microsoft.PowerShell.Management | Both | None | Tests and repairs the secure channel between the local computer and its domain. | Out of scope |  |
-| [`Test-DscConfiguration`](#test-dscconfiguration) | PSDesiredStateConfiguration | Both | None | Tests whether the actual configuration on the nodes matches the desired configuration. | Out of scope |  |
+| [`Test-AppLockerPolicy`](#test-applockerpolicy) | AppLocker | 5.1 only | 5.1 only | Specifies the AppLocker policy to determine whether the input files will be allowed to run for a given user. | Out of scope |  |
+| [`Test-Certificate`](#test-certificate) | PKI | 5.1 only | 5.1 only | Verifies a certificate according to the input parameters. | Out of scope |  |
+| [`Test-ComputerSecureChannel`](#test-computersecurechannel) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Tests and repairs the secure channel between the local computer and its domain. | Out of scope |  |
+| [`Test-DscConfiguration`](#test-dscconfiguration) | PSDesiredStateConfiguration | 5.1 only | 5.1 only | Tests whether the actual configuration on the nodes matches the desired configuration. | Out of scope |  |
 | [`Test-FileCatalog`](#test-filecatalog) | Microsoft.PowerShell.Security | Both | None | `Test-FileCatalog` validates whether the hashes contained in a catalog file (.cat) matches the hashes of the actual files in order to validate their authenticity. | Out of scope |  |
-| [`Test-KdsRootKey`](#test-kdsrootkey) | Kds | Both | None | Tests the root key configuration. | Out of scope |  |
+| [`Test-KdsRootKey`](#test-kdsrootkey) | Kds | 5.1 only | 5.1 only | Tests the root key configuration. | Out of scope |  |
 | [`Test-PSSessionConfigurationFile`](#test-pssessionconfigurationfile) | Microsoft.PowerShell.Core | Both | None | Verifies the keys and values in a session configuration file. | Out of scope | Remote sessions (requires a remote host; out of scope) |
 | [`Test-UevTemplate`](#test-uevtemplate) | UEV | 5.1 only | 5.1 only | Verifies whether a template complies with the schema for UE-V. | Out of scope |  |
 | [`Test-WSMan`](#test-wsman) | Microsoft.WSMan.Management | Both | None | Tests whether the WinRM service is running on a local or remote computer. | Out of scope |  |
-| [`Unblock-Tpm`](#unblock-tpm) | TrustedPlatformModule | Both | None | Resets a TPM lockout. | Out of scope |  |
-| [`Undo-DtcDiagnosticTransaction`](#undo-dtcdiagnostictransaction) | MsDtc | Both | None | Invokes the Abort process on the specified transaction. | Out of scope |  |
-| [`Undo-Transaction`](#undo-transaction) | Microsoft.PowerShell.Management | Both | None | Rolls back the active transaction. | Out of scope |  |
-| [`Uninstall-Language`](#uninstall-language) | LanguagePackManagement | Both | None | Uninstalls a language from a device. | Out of scope |  |
-| [`Uninstall-ProvisioningPackage`](#uninstall-provisioningpackage) | Provisioning | Both | None | Uninstalls .PPKG package from the local machine. | Out of scope |  |
-| [`Uninstall-TrustedProvisioningCertificate`](#uninstall-trustedprovisioningcertificate) | Provisioning | Both | None | Removes a previously installed provisioning certificate. | Out of scope |  |
+| [`Unblock-Tpm`](#unblock-tpm) | TrustedPlatformModule | 5.1 only | 5.1 only | Resets a TPM lockout. | Out of scope |  |
+| [`Undo-DtcDiagnosticTransaction`](#undo-dtcdiagnostictransaction) | MsDtc | 5.1 only | 5.1 only | Invokes the Abort process on the specified transaction. | Out of scope |  |
+| [`Undo-Transaction`](#undo-transaction) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Rolls back the active transaction. | Out of scope |  |
+| [`Uninstall-Language`](#uninstall-language) | LanguagePackManagement | 5.1 only | 5.1 only | Uninstalls a language from a device. | Out of scope |  |
+| [`Uninstall-ProvisioningPackage`](#uninstall-provisioningpackage) | Provisioning | 5.1 only | 5.1 only | Uninstalls .PPKG package from the local machine. | Out of scope |  |
+| [`Uninstall-TrustedProvisioningCertificate`](#uninstall-trustedprovisioningcertificate) | Provisioning | 5.1 only | 5.1 only | Removes a previously installed provisioning certificate. | Out of scope |  |
 | [`Unpublish-AppvClientPackage`](#unpublish-appvclientpackage) | AppvClient | 5.1 only | 5.1 only | Removes the extension points for packages. | Out of scope |  |
 | [`Unregister-PSSessionConfiguration`](#unregister-pssessionconfiguration) | Microsoft.PowerShell.Core | Both | None | Deletes registered session configurations from the computer. | Out of scope | Remote sessions (requires a remote host; out of scope) |
-| [`Unregister-RecoveryManagementPlugin`](#unregister-recoverymanagementplugin) | Dism | Both | None | - | Out of scope | No documentation accurately describes this command. |
-| [`Unregister-ScheduledJob`](#unregister-scheduledjob) | PSScheduledJob | Both | None | Deletes scheduled jobs on the local computer. | Out of scope |  |
+| [`Unregister-RecoveryManagementPlugin`](#unregister-recoverymanagementplugin) | Dism | 5.1 only | 5.1 only | - | Out of scope | No documentation accurately describes this command. |
+| [`Unregister-ScheduledJob`](#unregister-scheduledjob) | PSScheduledJob | 5.1 only | 5.1 only | Deletes scheduled jobs on the local computer. | Out of scope |  |
 | [`Unregister-UevTemplate`](#unregister-uevtemplate) | UEV | 5.1 only | 5.1 only | Unregisters a settings location template from Microsoft User Experience Virtualization (UE-V). | Out of scope |  |
-| [`Unregister-WindowsDeveloperLicense`](#unregister-windowsdeveloperlicense) | WindowsDeveloperLicense | Both | None | Disables Developer Mode on the current computer. | Out of scope |  |
-| [`Update-LapsADSchema`](#update-lapsadschema) | LAPS | Both | None | Extends the Active Directory (AD) schema with the Windows Local Administrator Password Solution (LAPS) schema attributes. | Out of scope |  |
+| [`Unregister-WindowsDeveloperLicense`](#unregister-windowsdeveloperlicense) | WindowsDeveloperLicense | 5.1 only | 5.1 only | Disables Developer Mode on the current computer. | Out of scope |  |
+| [`Update-LapsADSchema`](#update-lapsadschema) | LAPS | 5.1 only | 5.1 only | Extends the Active Directory (AD) schema with the Windows Local Administrator Password Solution (LAPS) schema attributes. | Out of scope |  |
 | [`Update-UevTemplate`](#update-uevtemplate) | UEV | 5.1 only | 5.1 only | Updates settings location templates in UE-V. | Out of scope |  |
-| [`Update-WIMBootEntry`](#update-wimbootentry) | Dism | Both | None | Updates the Windows image file boot (WIMBoot) configuration entry, associated with either the specified data source ID, the renamed image file path or the moved image file path. | Out of scope |  |
-| [`Use-Transaction`](#use-transaction) | Microsoft.PowerShell.Management | Both | None | Adds the script block to the active transaction. | Out of scope |  |
-| [`Use-WindowsUnattend`](#use-windowsunattend) | Dism | Both | None | Applies an unattended answer file to a Windows image. | Out of scope |  |
-| [`Write-EventLog`](#write-eventlog) | Microsoft.PowerShell.Management | Both | None | Writes an event to an event log. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Update-WIMBootEntry`](#update-wimbootentry) | Dism | 5.1 only | 5.1 only | Updates the Windows image file boot (WIMBoot) configuration entry, associated with either the specified data source ID, the renamed image file path or the moved image file path. | Out of scope |  |
+| [`Use-Transaction`](#use-transaction) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Adds the script block to the active transaction. | Out of scope |  |
+| [`Use-WindowsUnattend`](#use-windowsunattend) | Dism | 5.1 only | 5.1 only | Applies an unattended answer file to a Windows image. | Out of scope |  |
+| [`Write-EventLog`](#write-eventlog) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Writes an event to an event log. | Out of scope | Windows-only (registry / services / recycle bin / hotfixes / event log) |
 
 ## Command Details
 
 ### Add-AppProvisionedSharedPackageContainer
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -543,14 +542,14 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Add-AppSharedPackageContainer
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
 Syntax:
 
 ```powershell
-Add-AppSharedPackageContainer [-Path] <string> [-ForceApplicationShutdown] [-Merge] [-RequirePackagesPresent] [-Force] [<CommonParameters>]
+Add-AppSharedPackageContainer [-Path] <string> [-ForceApplicationShutdown] [-Merge] [-Force] [<CommonParameters>]
 ```
 
 Example: 
@@ -613,7 +612,7 @@ Module: AppvClient
 Syntax:
 
 ```powershell
-Add-AppvPublishingServer [-Name] <string> [-URL] <string> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [<CommonParameters>]
+Add-AppvPublishingServer [-Name] <string> [-URL] <string> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IntervalUnit>] [<CommonParameters>]
 ```
 
 Example: none
@@ -623,18 +622,18 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-AppxPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
 Syntax:
 
 ```powershell
-Add-AppxPackage [-Path] <string> [-DependencyPath <string[]>] [-RequiredContentGroupOnly] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-ForceUpdateFromAnyVersion] [-RetainFilesOnFailure] [-InstallAllResources] [-Volume <AppxVolume>] [-ExternalPackages <string[]>] [-OptionalPackages <string[]>] [-RelatedPackages <string[]>] [-ExternalLocation <string>] [-DeferRegistrationWhenPackagesAreInUse] [-StubPackageOption <StubPackageOption>] [-AllowUnsigned] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-AppxPackage [-Path] <string> [-DependencyPath <string[]>] [-RequiredContentGroupOnly] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-ForceUpdateFromAnyVersion] [-RetainFilesOnFailure] [-InstallAllResources] [-Volume <AppxVolume>] [-ExternalPackages <string[]>] [-OptionalPackages <string[]>] [-RelatedPackages <string[]>] [-ExternalLocation <string>] [-DeferRegistrationWhenPackagesAreInUse] [-StubPackageOption <StubPackageOption>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxPackage [-Path] <string> -AppInstallerFile [-RequiredContentGroupOnly] [-ForceTargetApplicationShutdown] [-InstallAllResources] [-LimitToExistingPackages] [-Volume <AppxVolume>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxPackage [-Path] <string> -Register [-DependencyPath <string[]>] [-DisableDevelopmentMode] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-ForceUpdateFromAnyVersion] [-InstallAllResources] [-ExternalLocation <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxPackage [-Path] <string> -Update [-DependencyPath <string[]>] [-RequiredContentGroupOnly] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-ForceUpdateFromAnyVersion] [-RetainFilesOnFailure] [-InstallAllResources] [-WhatIf] [-Confirm] [<CommonParameters>]
-Add-AppxPackage [-Path] <string> -Stage [-DependencyPath <string[]>] [-RequiredContentGroupOnly] [-ForceUpdateFromAnyVersion] [-Volume <AppxVolume>] [-ExternalPackages <string[]>] [-OptionalPackages <string[]>] [-RelatedPackages <string[]>] [-ExternalLocation <string>] [-StubPackageOption <StubPackageOption>] [-AllowUnsigned] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-AppxPackage [-Path] <string> -Stage [-DependencyPath <string[]>] [-RequiredContentGroupOnly] [-ForceUpdateFromAnyVersion] [-Volume <AppxVolume>] [-ExternalPackages <string[]>] [-OptionalPackages <string[]>] [-RelatedPackages <string[]>] [-ExternalLocation <string>] [-StubPackageOption <StubPackageOption>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxPackage -MainPackage <string> [-Register] [-DependencyPackages <string[]>] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-ForceUpdateFromAnyVersion] [-InstallAllResources] [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxPackage -RegisterByFamilyName -MainPackage <string> [-DependencyPackages <string[]>] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-InstallAllResources] [-OptionalPackages <string[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -650,22 +649,22 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-AppxProvisionedPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
 Syntax (5.1):
 
 ```powershell
-Add-AppxProvisionedPackage -Path <string> [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-FeatureID <uint32>] [-ExternalLocationPath <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Add-AppxProvisionedPackage -Online [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-FeatureID <uint32>] [-ExternalLocationPath <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-AppxProvisionedPackage -Path <string> [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-AppxProvisionedPackage -Online [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Syntax (7):
 
 ```powershell
-Add-AppxProvisionedPackage -Path <string> [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-FeatureID <uint>] [-ExternalLocationPath <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Add-AppxProvisionedPackage -Online [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-FeatureID <uint>] [-ExternalLocationPath <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-AppxProvisionedPackage -Path <string> [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-AppxProvisionedPackage -Online [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: Add an app package to the running operating system
@@ -679,7 +678,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-AppxVolume
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -700,7 +699,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-BitsFile
 
-Version: Both
+Version: 5.1 only
 
 Module: BitsTransfer
 
@@ -721,7 +720,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-CertificateEnrollmentPolicyServer
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -742,7 +741,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-Computer
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -764,7 +763,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Add-JobTrigger
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -788,7 +787,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Add-KdsRootKey
 
-Version: Both
+Version: 5.1 only
 
 Module: Kds
 
@@ -810,7 +809,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-LocalGroupMember
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -854,7 +853,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Add-SignerRule
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -876,15 +875,15 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-WindowsCapability
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
 Syntax:
 
 ```powershell
-Add-WindowsCapability -Name <string> -Online [-LimitAccess] [-Source <string[]>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Add-WindowsCapability -Name <string> -Path <string> [-LimitAccess] [-Source <string[]>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-WindowsCapability [-Name] <string> [-Online] [-LimitAccess] [-Source <string[]>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-WindowsCapability [-Name] <string> [-Path] <string> [-LimitAccess] [-Source <string[]>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: Add a Windows capability package to the running OS via the Windows Update client
@@ -898,7 +897,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-WindowsDriver
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -919,7 +918,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -940,7 +939,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Add-WindowsPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -962,7 +961,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Checkpoint-Computer
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -983,7 +982,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Clear-EventLog
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -1004,7 +1003,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Clear-KdsCache
 
-Version: Both
+Version: 5.1 only
 
 Module: Kds
 
@@ -1025,28 +1024,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Clear-RecycleBin
 
-Version: 7 only
-
-Module: Microsoft.PowerShell.Management
-
-Syntax:
-
-```powershell
-Clear-RecycleBin [[-DriveLetter] <string[]>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-Example: Clear all recycle bins
-
-```powershell
-Clear-RecycleBin
-```
-
-Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Management/Clear-RecycleBin.md)
-
-
-### Clear-Recyclebin
-
-Version: 5.1 only
+Version: Both
 
 Module: Microsoft.PowerShell.Management
 
@@ -1067,7 +1045,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Clear-ReFSDedupSchedule
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -1088,7 +1066,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Clear-ReFSDedupScrubSchedule
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -1109,7 +1087,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Clear-Tpm
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
@@ -1177,7 +1155,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Clear-WindowsCorruptMountPoint
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -1198,7 +1176,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Complete-BitsTransfer
 
-Version: Both
+Version: 5.1 only
 
 Module: BitsTransfer
 
@@ -1219,7 +1197,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Complete-DtcDiagnosticTransaction
 
-Version: Both
+Version: 5.1 only
 
 Module: MsDtc
 
@@ -1241,7 +1219,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Complete-Transaction
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -1265,7 +1243,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Confirm-SecureBootUEFI
 
-Version: Both
+Version: 5.1 only
 
 Module: SecureBoot
 
@@ -1361,7 +1339,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### ConvertFrom-CIPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -1427,7 +1405,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### ConvertTo-ProcessMitigationPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: ProcessMitigations
 
@@ -1448,7 +1426,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### ConvertTo-TpmOwnerAuth
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
@@ -1470,7 +1448,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Copy-BcdEntry
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -1492,14 +1470,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Copy-UserInternationalSettingsToSystem
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
 Syntax:
 
 ```powershell
-Copy-UserInternationalSettingsToSystem [-NewUser] <bool> [<CommonParameters>]
+Copy-UserInternationalSettingsToSystem [-WelcomeScreen <bool>] [-NewUser <bool>] [<CommonParameters>]
 ```
 
 Example: Copy settings into both the Welcome screen and system accounts, and new user accounts
@@ -1513,7 +1491,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-AppBackgroundTaskDiagnosticLog
 
-Version: Both
+Version: 5.1 only
 
 Module: AppBackgroundTask
 
@@ -1541,7 +1519,7 @@ Module: AppvClient
 Syntax:
 
 ```powershell
-Disable-Appv [<CommonParameters>]
+Disable-Appv
 ```
 
 Example: Disable the App-V service
@@ -1578,7 +1556,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-BcdElementBootDebug
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -1600,7 +1578,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-BcdElementBootEms
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -1623,7 +1601,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-BcdElementDebug
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -1645,7 +1623,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-BcdElementEms
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -1667,7 +1645,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-BcdElementEventLogging
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -1690,7 +1668,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-BcdElementHypervisorDebug
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -1713,7 +1691,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-ComputerRestore
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -1734,7 +1712,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Disable-JobTrigger
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -1755,7 +1733,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Disable-LocalUser
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -1826,7 +1804,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Disable-ReFSDedup
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -1847,7 +1825,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-ScheduledJob
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -1870,7 +1848,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Disable-TlsCipherSuite
 
-Version: Both
+Version: 5.1 only
 
 Module: TLS
 
@@ -1891,7 +1869,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-TlsEccCurve
 
-Version: Both
+Version: 5.1 only
 
 Module: TLS
 
@@ -1912,7 +1890,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-TlsSessionTicketKey
 
-Version: Both
+Version: 5.1 only
 
 Module: TLS
 
@@ -1933,7 +1911,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-TpmAutoProvisioning
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
@@ -1990,7 +1968,7 @@ Syntax:
 
 ```powershell
 Disable-UevAppxPackage [-PackageFamilyName] <string[]> [-CurrentComputerUser] [-WhatIf] [-Confirm] [<CommonParameters>]
-Disable-UevAppxPackage [-PackageFamilyName] <string[]> -Computer [-WhatIf] [-Confirm] [<CommonParameters>]
+Disable-UevAppxPackage [-PackageFamilyName] <string[]> [-Computer] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example: Disable synchronization of a Windows 8 app
@@ -2025,7 +2003,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-WindowsErrorReporting
 
-Version: Both
+Version: 5.1 only
 
 Module: WindowsErrorReporting
 
@@ -2046,14 +2024,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Disable-WindowsOptionalFeature
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
 Syntax:
 
 ```powershell
-Disable-WindowsOptionalFeature -FeatureName <string[]> -Online [-PackageName <string>] [-Remove] [-NoRestart] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Disable-WindowsOptionalFeature -FeatureName <string[]> [-PackageName <string>] [-Remove] [-NoRestart] [-Online] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Disable-WindowsOptionalFeature -FeatureName <string[]> -Path <string> [-PackageName <string>] [-Remove] [-NoRestart] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
@@ -2148,7 +2126,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Dismount-AppxVolume
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -2169,15 +2147,15 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Dismount-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
 Syntax:
 
 ```powershell
-Dismount-WindowsImage -Path <string> -Discard [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Dismount-WindowsImage -Path <string> -Save [-CheckIntegrity] [-Append] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Dismount-WindowsImage -Path <string> [-Discard] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Dismount-WindowsImage -Path <string> [-Save] [-CheckIntegrity] [-Append] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: Dismount an operating system image
@@ -2191,7 +2169,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Edit-CIPolicyRule
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -2209,7 +2187,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-AppBackgroundTaskDiagnosticLog
 
-Version: Both
+Version: 5.1 only
 
 Module: AppBackgroundTask
 
@@ -2274,7 +2252,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-BcdElementBootDebug
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -2296,7 +2274,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-BcdElementBootEms
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -2319,7 +2297,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-BcdElementDebug
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -2341,7 +2319,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-BcdElementEms
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -2363,7 +2341,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-BcdElementEventLogging
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -2386,7 +2364,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-BcdElementHypervisorDebug
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -2409,7 +2387,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-ComputerRestore
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -2430,7 +2408,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Enable-JobTrigger
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -2451,7 +2429,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Enable-LocalUser
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -2516,7 +2494,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Enable-ReFSDedup
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -2537,7 +2515,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-ScheduledJob
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -2560,20 +2538,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Enable-TlsCipherSuite
 
-Version: Both
+Version: 5.1 only
 
 Module: TLS
 
-Syntax (5.1):
+Syntax:
 
 ```powershell
-Enable-TlsCipherSuite [-Name] <string> [[-Position] <uint32>] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-Syntax (7):
-
-```powershell
-Enable-TlsCipherSuite [-Name] <string> [[-Position] <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Enable-TlsCipherSuite [[-Position] <uint32>] [-Name] <string> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example: Enable a cipher suite
@@ -2587,20 +2559,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-TlsEccCurve
 
-Version: Both
+Version: 5.1 only
 
 Module: TLS
 
-Syntax (5.1):
+Syntax:
 
 ```powershell
-Enable-TlsEccCurve [-Name] <string> [[-Position] <uint32>] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-Syntax (7):
-
-```powershell
-Enable-TlsEccCurve [-Name] <string> [[-Position] <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Enable-TlsEccCurve [[-Position] <uint32>] [-Name] <string> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example: 
@@ -2614,7 +2580,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-TlsSessionTicketKey
 
-Version: Both
+Version: 5.1 only
 
 Module: TLS
 
@@ -2636,14 +2602,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-TpmAutoProvisioning
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
 Syntax:
 
 ```powershell
-Enable-TpmAutoProvisioning [<CommonParameters>]
+Enable-TpmAutoProvisioning
 ```
 
 Example: Enable auto-provisioning
@@ -2671,7 +2637,7 @@ Module: UEV
 Syntax:
 
 ```powershell
-Enable-Uev [<CommonParameters>]
+Enable-Uev
 ```
 
 Example: Enable the UE-V service
@@ -2728,14 +2694,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-WindowsErrorReporting
 
-Version: Both
+Version: 5.1 only
 
 Module: WindowsErrorReporting
 
 Syntax:
 
 ```powershell
-Enable-WindowsErrorReporting [<CommonParameters>]
+Enable-WindowsErrorReporting
 ```
 
 Example: Enable Windows Error Reporting
@@ -2749,7 +2715,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Enable-WindowsOptionalFeature
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -2792,7 +2758,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Expand-OsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -2809,7 +2775,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Expand-WindowsCustomDataImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -2830,7 +2796,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Expand-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -2846,7 +2812,7 @@ Syntax (7):
 
 ```powershell
 Expand-WindowsImage -ImagePath <string> -Name <string> -ApplyPath <string> [-SplitImageFilePattern <string>] [-CheckIntegrity] [-ConfirmTrustedFile] [-NoRpFix] [-Verify] [-WIMBoot] [-Compact] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Expand-WindowsImage -ImagePath <string> -Index <uint> -ApplyPath <string> [-SplitImageFilePattern <string>] [-CheckIntegrity] [-ConfirmTrustedFile] [-NoRpFix] [-Verify] [-WIMBoot] [-Compact] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Expand-WindowsImage -ImagePath <string> -Index <UInt32> -ApplyPath <string> [-SplitImageFilePattern <string>] [-CheckIntegrity] [-ConfirmTrustedFile] [-NoRpFix] [-Verify] [-WIMBoot] [-Compact] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Expand-WindowsImage -ImagePath <string> -ApplyPath <string> [-SplitImageFilePattern <string>] [-CheckIntegrity] [-ConfirmTrustedFile] [-NoRpFix] [-Verify] [-WIMBoot] [-Compact] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
@@ -2861,7 +2827,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Export-BcdStore
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -2882,7 +2848,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Export-BinaryMiLog
 
-Version: Both
+Version: 5.1 only
 
 Module: CimCmdlets
 
@@ -2903,7 +2869,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Export-Certificate
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -2947,7 +2913,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Export-Counter
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Diagnostics
 
@@ -2968,7 +2934,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Export-OsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -2985,7 +2951,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Export-PfxCertificate
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -3010,7 +2976,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Export-ProvisioningPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Provisioning
 
@@ -3033,7 +2999,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Export-StartLayout
 
-Version: Both
+Version: 5.1 only
 
 Module: StartLayout
 
@@ -3055,7 +3021,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Export-StartLayoutEdgeAssets
 
-Version: Both
+Version: 5.1 only
 
 Module: StartLayout
 
@@ -3077,7 +3043,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Export-TlsSessionTicketKey
 
-Version: Both
+Version: 5.1 only
 
 Module: TLS
 
@@ -3099,7 +3065,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Export-Trace
 
-Version: Both
+Version: 5.1 only
 
 Module: Provisioning
 
@@ -3169,7 +3135,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Export-WindowsCapabilitySource
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -3190,7 +3156,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Export-WindowsDriver
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -3212,7 +3178,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Export-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -3243,7 +3209,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Find-LapsADExtendedRights
 
-Version: Both
+Version: 5.1 only
 
 Module: LAPS
 
@@ -3264,7 +3230,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Format-SecureBootUEFI
 
-Version: Both
+Version: 5.1 only
 
 Module: SecureBoot
 
@@ -3273,7 +3239,7 @@ Syntax:
 ```powershell
 Format-SecureBootUEFI -Name <string> -SignatureOwner <guid> -CertificateFilePath <string[]> [-FormatWithCert] [-SignableFilePath <string>] [-Time <string>] [-AppendWrite] [-ContentFilePath <string>] [<CommonParameters>]
 Format-SecureBootUEFI -Name <string> -SignatureOwner <guid> -Hash <string[]> -Algorithm <string> [-SignableFilePath <string>] [-Time <string>] [-AppendWrite] [-ContentFilePath <string>] [<CommonParameters>]
-Format-SecureBootUEFI -Name <string> -Delete [-SignableFilePath <string>] [-Time <string>] [<CommonParameters>]
+Format-SecureBootUEFI -Name <string> [-Delete] [-SignableFilePath <string>] [-Time <string>] [<CommonParameters>]
 ```
 
 Example: Format a private key
@@ -3322,7 +3288,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-AppLockerFileInformation
 
-Version: Both
+Version: 5.1 only
 
 Module: AppLocker
 
@@ -3332,7 +3298,7 @@ Syntax:
 Get-AppLockerFileInformation [[-Path] <List[string]>] [<CommonParameters>]
 Get-AppLockerFileInformation [[-Packages] <List[AppxPackage]>] [<CommonParameters>]
 Get-AppLockerFileInformation -Directory <string> [-FileType <List[AppLockerFileType]>] [-Recurse] [<CommonParameters>]
-Get-AppLockerFileInformation -EventLog [-LogPath <string>] [-EventType <List[AppLockerEventType]>] [-Statistics] [<CommonParameters>]
+Get-AppLockerFileInformation [-EventLog] [-LogPath <string>] [-EventType <List[AppLockerEventType]>] [-Statistics] [<CommonParameters>]
 ```
 
 Example: Get file information for .exe files and scripts
@@ -3346,16 +3312,16 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-AppLockerPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: AppLocker
 
 Syntax:
 
 ```powershell
-Get-AppLockerPolicy -Local [-Xml] [<CommonParameters>]
-Get-AppLockerPolicy -Domain -Ldap <string> [-Xml] [<CommonParameters>]
-Get-AppLockerPolicy -Effective [-Xml] [<CommonParameters>]
+Get-AppLockerPolicy [-Local] [-Xml] [<CommonParameters>]
+Get-AppLockerPolicy -Ldap <string> [-Domain] [-Xml] [<CommonParameters>]
+Get-AppLockerPolicy [-Effective] [-Xml] [<CommonParameters>]
 ```
 
 Example: Get an AppLocker policy
@@ -3372,7 +3338,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-AppProvisionedSharedPackageContainer
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -3390,14 +3356,14 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Get-AppSharedPackageContainer
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
 Syntax:
 
 ```powershell
-Get-AppSharedPackageContainer [[-Name] <string>] [[-Id] <string>] [<CommonParameters>]
+Get-AppSharedPackageContainer [[-Name] <string>] [[-Id] <string>] [-AllUsers] [<CommonParameters>]
 ```
 
 Example: 
@@ -3557,7 +3523,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-AppxDefaultVolume
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -3578,7 +3544,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-AppxPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -3599,14 +3565,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-AppxPackageAutoUpdateSettings
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
 Syntax:
 
 ```powershell
-Get-AppxPackageAutoUpdateSettings [[-PackageFamilyName] <string>] [-ShowUpdateAvailability] [-AllUsers] [<CommonParameters>]
+Get-AppxPackageAutoUpdateSettings [[-PackageFullName] <string>] [-ShowUpdateAvailability] [-AllUsers] [<CommonParameters>]
 ```
 
 Example: Get all App Package Auto Update settings
@@ -3620,7 +3586,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-AppxPackageManifest
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -3641,7 +3607,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-AppxProvisionedPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -3663,7 +3629,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-AppxVolume
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -3709,7 +3675,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-BcdEntry
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -3730,7 +3696,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-BcdEntryDebugSettings
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -3751,7 +3717,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-BcdEntryHypervisorSettings
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -3772,7 +3738,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-BcdStore
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -3793,7 +3759,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-BitsTransfer
 
-Version: Both
+Version: 5.1 only
 
 Module: BitsTransfer
 
@@ -3822,7 +3788,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-Certificate
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -3853,7 +3819,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-CertificateAutoEnrollmentPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -3874,7 +3840,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-CertificateEnrollmentPolicyServer
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -3895,7 +3861,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-CertificateNotificationTask
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -4050,7 +4016,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-CIPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -4106,7 +4072,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-CIPolicyIdInfo
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -4139,14 +4105,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-CIPolicyInfo
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
 Syntax:
 
 ```powershell
-Get-CIPolicyInfo [<CommonParameters>]
+Get-CIPolicyInfo
 ```
 
 Example: none
@@ -4187,7 +4153,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-ComputerRestorePoint
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -4209,7 +4175,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-ControlPanelItem
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -4253,7 +4219,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-DAPolicyChange
 
-Version: Both
+Version: 5.1 only
 
 Module: NetSecurity
 
@@ -4289,7 +4255,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-DeliveryOptimizationLog
 
-Version: Both
+Version: 5.1 only
 
 Module: DeliveryOptimization
 
@@ -4316,7 +4282,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-DeliveryOptimizationLogAnalysis
 
-Version: Both
+Version: 5.1 only
 
 Module: DeliveryOptimization
 
@@ -4337,7 +4303,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-EventLog
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -4381,7 +4347,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-InstalledLanguage
 
-Version: Both
+Version: 5.1 only
 
 Module: LanguagePackManagement
 
@@ -4402,7 +4368,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-JobTrigger
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -4425,7 +4391,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-KdsConfiguration
 
-Version: Both
+Version: 5.1 only
 
 Module: Kds
 
@@ -4446,7 +4412,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-KdsRootKey
 
-Version: Both
+Version: 5.1 only
 
 Module: Kds
 
@@ -4467,7 +4433,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-LapsADPassword
 
-Version: Both
+Version: 5.1 only
 
 Module: LAPS
 
@@ -4493,7 +4459,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-LocalGroup
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -4515,7 +4481,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-LocalGroupMember
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -4538,7 +4504,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-LocalUser
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -4560,7 +4526,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-NonRemovableAppsPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -4582,7 +4548,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-OSConfiguration
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -4603,7 +4569,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-OsConfigurationDocument
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -4625,7 +4591,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-OsConfigurationDocumentContent
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -4646,7 +4612,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-OsConfigurationDocumentResult
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -4667,14 +4633,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-OsConfigurationProperty
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
 Syntax:
 
 ```powershell
-Get-OsConfigurationProperty [-Name] <string> [[-SourceId] <string>] [[-FriendlyName] <string>] [[-Id] <string>] [<CommonParameters>]
+Get-OsConfigurationProperty [-Name] <string> [[-SourceId] <string>] [[-FriendlyName] <string>] [<CommonParameters>]
 ```
 
 Example: 
@@ -4688,7 +4654,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-OSConfigurationScenarioDefinition
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -4705,7 +4671,7 @@ Source: [OsConfiguration module documentation](https://learn.microsoft.com/en-us
 
 ### Get-OSConfigurationScenarioDefinitionInfo
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -4722,7 +4688,7 @@ Source: [OsConfiguration module documentation](https://learn.microsoft.com/en-us
 
 ### Get-PfxData
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -4745,7 +4711,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-PmemDedicatedMemory
 
-Version: Both
+Version: 5.1 only
 
 Module: PersistentMemory
 
@@ -4767,7 +4733,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-PmemDisk
 
-Version: Both
+Version: 5.1 only
 
 Module: PersistentMemory
 
@@ -4792,7 +4758,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-PmemPhysicalDevice
 
-Version: Both
+Version: 5.1 only
 
 Module: PersistentMemory
 
@@ -4817,7 +4783,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-PmemUnusedRegion
 
-Version: Both
+Version: 5.1 only
 
 Module: PersistentMemory
 
@@ -4838,7 +4804,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-ProcessMitigation
 
-Version: Both
+Version: 5.1 only
 
 Module: ProcessMitigations
 
@@ -4863,7 +4829,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-ProvisioningPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Provisioning
 
@@ -4949,7 +4915,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-RecoveryManagementPluginAltitude
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -4967,7 +4933,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Get-RecoveryManagementPluginInfo
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -4985,7 +4951,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Get-RecoveryManagementPlugins
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -5003,7 +4969,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Get-RecoveryRemoteManagementStatus
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -5021,7 +4987,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Get-ReFSDedupSchedule
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -5042,7 +5008,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-ReFSDedupScrubSchedule
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -5063,7 +5029,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-ReFSDedupStatus
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -5084,7 +5050,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-ScheduledJob
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -5106,7 +5072,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-ScheduledJobOption
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -5129,7 +5095,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-SecureBootPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: SecureBoot
 
@@ -5152,7 +5118,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-SecureBootSVN
 
-Version: Both
+Version: 5.1 only
 
 Module: SecureBoot
 
@@ -5169,7 +5135,7 @@ Source: [SecureBoot module documentation](https://learn.microsoft.com/en-us/powe
 
 ### Get-SecureBootUEFI
 
-Version: Both
+Version: 5.1 only
 
 Module: SecureBoot
 
@@ -5241,7 +5207,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-SystemDriver
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -5288,7 +5254,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-SystemPreferredUILanguage
 
-Version: Both
+Version: 5.1 only
 
 Module: LanguagePackManagement
 
@@ -5309,7 +5275,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-TlsCipherSuite
 
-Version: Both
+Version: 5.1 only
 
 Module: TLS
 
@@ -5330,7 +5296,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-TlsEccCurve
 
-Version: Both
+Version: 5.1 only
 
 Module: TLS
 
@@ -5351,7 +5317,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-Tpm
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
@@ -5372,7 +5338,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-TpmEndorsementKeyInfo
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
@@ -5418,7 +5384,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-TpmSupportedFeature
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
@@ -5440,7 +5406,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-Transaction
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -5462,7 +5428,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-TroubleshootingPack
 
-Version: Both
+Version: 5.1 only
 
 Module: TroubleshootingPack
 
@@ -5483,7 +5449,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-TrustedProvisioningCertificate
 
-Version: Both
+Version: 5.1 only
 
 Module: Provisioning
 
@@ -5661,7 +5627,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WheaMemoryPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: Whea
 
@@ -5688,7 +5654,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WIMBootEntry
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -5709,7 +5675,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WinAcceptLanguageFromLanguageListOptOut
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -5731,7 +5697,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WinCultureFromLanguageListOptOut
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -5752,7 +5718,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WinDefaultInputMethodOverride
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -5776,7 +5742,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsCapability
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -5798,7 +5764,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsDeveloperLicense
 
-Version: Both
+Version: 5.1 only
 
 Module: WindowsDeveloperLicense
 
@@ -5819,7 +5785,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsDriver
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -5841,7 +5807,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsEdition
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -5863,7 +5829,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsErrorReporting
 
-Version: Both
+Version: 5.1 only
 
 Module: WindowsErrorReporting
 
@@ -5884,7 +5850,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -5917,7 +5883,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsImageContent
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -5948,7 +5914,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsOptionalFeature
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -5970,7 +5936,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -5992,7 +5958,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsReservedStorageState
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -6013,7 +5979,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WindowsSearchSetting
 
-Version: Both
+Version: 5.1 only
 
 Module: WindowsSearch
 
@@ -6061,7 +6027,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-WinHomeLocation
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -6085,7 +6051,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WinLanguageBarOption
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -6109,7 +6075,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WinSystemLocale
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -6133,7 +6099,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WinUILanguageOverride
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -6157,7 +6123,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WinUserLanguageList
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -6192,7 +6158,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Get-WmiObject
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -6260,7 +6226,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Import-BcdStore
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -6281,7 +6247,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Import-BinaryMiLog
 
-Version: Both
+Version: 5.1 only
 
 Module: CimCmdlets
 
@@ -6302,7 +6268,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Import-Certificate
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -6327,7 +6293,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Import-Counter
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Diagnostics
 
@@ -6350,7 +6316,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Import-PfxCertificate
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -6378,7 +6344,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Import-StartLayout
 
-Version: Both
+Version: 5.1 only
 
 Module: StartLayout
 
@@ -6400,7 +6366,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Import-TpmOwnerAuth
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
@@ -6451,7 +6417,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Initialize-PmemPhysicalDevice
 
-Version: Both
+Version: 5.1 only
 
 Module: PersistentMemory
 
@@ -6472,7 +6438,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Initialize-Tpm
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
@@ -6498,7 +6464,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Install-Language
 
-Version: Both
+Version: 5.1 only
 
 Module: LanguagePackManagement
 
@@ -6519,7 +6485,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Install-ProvisioningPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Provisioning
 
@@ -6540,7 +6506,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Install-TrustedProvisioningCertificate
 
-Version: Both
+Version: 5.1 only
 
 Module: Provisioning
 
@@ -6589,8 +6555,8 @@ Invoke-CimMethod [-InputObject] <ciminstance> [[-Arguments] <IDictionary>] [-Met
 Invoke-CimMethod [-InputObject] <ciminstance> [[-Arguments] <IDictionary>] [-MethodName] <string> -CimSession <CimSession[]> [-ResourceUri <uri>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Invoke-CimMethod [[-Arguments] <IDictionary>] [-MethodName] <string> -ResourceUri <uri> [-ComputerName <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Invoke-CimMethod [[-Arguments] <IDictionary>] [-MethodName] <string> -ResourceUri <uri> -CimSession <CimSession[]> [-Namespace <string>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Invoke-CimMethod [-CimClass] <cimclass> [[-Arguments] <IDictionary>] [-MethodName] <string> [-ComputerName <string[]>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Invoke-CimMethod [-CimClass] <cimclass> [[-Arguments] <IDictionary>] [-MethodName] <string> -CimSession <CimSession[]> [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-CimMethod [-CimClass] <cimclass> [[-Arguments] <IDictionary>] [-MethodName] <string> [-ComputerName <string[]>] [-OperationTimeoutSec <UInt32>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-CimMethod [-CimClass] <cimclass> [[-Arguments] <IDictionary>] [-MethodName] <string> -CimSession <CimSession[]> [-OperationTimeoutSec <UInt32>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Invoke-CimMethod [[-Arguments] <IDictionary>] [-MethodName] <string> -Query <string> [-QueryDialect <string>] [-ComputerName <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Invoke-CimMethod [[-Arguments] <IDictionary>] [-MethodName] <string> -Query <string> -CimSession <CimSession[]> [-QueryDialect <string>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -6610,14 +6576,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Invoke-CommandInDesktopPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
 Syntax:
 
 ```powershell
-Invoke-CommandInDesktopPackage [-PackageFamilyName] <string> [[-AppId] <string>] [-Command] <string> [[-Args] <string>] [-PreventBreakaway] [<CommonParameters>]
+Invoke-CommandInDesktopPackage [-PackageFamilyName] <string> [-AppId] <string> [-Command] <string> [[-Args] <string>] [-PreventBreakaway] [<CommonParameters>]
 ```
 
 Example: Invoke Notepad to read virtualized files
@@ -6636,7 +6602,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Invoke-DscResource
 
-Version: Both
+Version: 7 only
 
 Module: PSDesiredStateConfiguration
 
@@ -6660,14 +6626,14 @@ Source: [Official English docs (5.1)](https://learn.microsoft.com/en-us/powershe
 
 ### Invoke-LapsPolicyProcessing
 
-Version: Both
+Version: 5.1 only
 
 Module: LAPS
 
 Syntax:
 
 ```powershell
-Invoke-LapsPolicyProcessing [<CommonParameters>]
+Invoke-LapsPolicyProcessing
 ```
 
 Example: 
@@ -6681,7 +6647,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Invoke-TroubleshootingPack
 
-Version: Both
+Version: 5.1 only
 
 Module: TroubleshootingPack
 
@@ -6702,7 +6668,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Invoke-WmiMethod
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -6758,7 +6724,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Join-DtcDiagnosticResourceManager
 
-Version: Both
+Version: 5.1 only
 
 Module: MsDtc
 
@@ -6780,7 +6746,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Limit-EventLog
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -6801,7 +6767,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Merge-CIPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -6916,7 +6882,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Mount-AppxVolume
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -6937,7 +6903,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Mount-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -6946,17 +6912,15 @@ Syntax (5.1):
 ```powershell
 Mount-WindowsImage -Path <string> -ImagePath <string> -Index <uint32> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Mount-WindowsImage -Path <string> -ImagePath <string> -Name <string> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Mount-WindowsImage -Path <string> -ImagePath <string> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Mount-WindowsImage -Path <string> -Remount [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Mount-WindowsImage -Path <string> [-Remount] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Syntax (7):
 
 ```powershell
-Mount-WindowsImage -Path <string> -ImagePath <string> -Index <uint> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Mount-WindowsImage -Path <string> -ImagePath <string> -Index <UInt32> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Mount-WindowsImage -Path <string> -ImagePath <string> -Name <string> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Mount-WindowsImage -Path <string> -ImagePath <string> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Mount-WindowsImage -Path <string> -Remount [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Mount-WindowsImage -Path <string> [-Remount] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: Mount an image from the install.vhd file to a directory
@@ -6970,7 +6934,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Move-AppxPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -6991,7 +6955,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-AppLockerPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: AppLocker
 
@@ -6999,7 +6963,7 @@ Syntax:
 
 ```powershell
 New-AppLockerPolicy [-FileInformation] <List[FileInformation]> [-AllowWindows] [-RuleType <List[RuleType]>] [-RuleNamePrefix <string>] [-User <string>] [-Optimize] [-IgnoreMissingFileInformation] [-Xml] [-ServiceEnforcement <ServiceEnforcementMode>] [<CommonParameters>]
-New-AppLockerPolicy -AllowWindows [-RuleType <List[RuleType]>] [-RuleNamePrefix <string>] [-User <string>] [-Optimize] [-IgnoreMissingFileInformation] [-Xml] [-ServiceEnforcement <ServiceEnforcementMode>] [<CommonParameters>]
+New-AppLockerPolicy [-AllowWindows] [-RuleType <List[RuleType]>] [-RuleNamePrefix <string>] [-User <string>] [-Optimize] [-IgnoreMissingFileInformation] [-Xml] [-ServiceEnforcement <ServiceEnforcementMode>] [<CommonParameters>]
 ```
 
 Example: Create an AppLocker policy with allow rules
@@ -7017,7 +6981,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-BcdEntry
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -7025,7 +6989,7 @@ Syntax:
 
 ```powershell
 New-BcdEntry [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Application <string> [-Description <string>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-BcdEntry [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Device [-Description <string>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-BcdEntry [[-Id] <string>] [[-Store] <BcdStoreInfo>] [-Description <string>] [-Device] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 New-BcdEntry [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Inherit <string> [-Description <string>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 New-BcdEntry [-Id] <string> [[-Store] <BcdStoreInfo>] [-Description <string>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -7041,7 +7005,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-BcdStore
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -7062,7 +7026,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-CertificateNotificationTask
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -7107,12 +7071,12 @@ New-CimInstance [-CimClass] <cimclass> [[-Property] <IDictionary>] [-OperationTi
 Syntax (7):
 
 ```powershell
-New-CimInstance [-ClassName] <string> [[-Property] <IDictionary>] [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-ComputerName <string[]>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-CimInstance [-ClassName] <string> [[-Property] <IDictionary>] -CimSession <CimSession[]> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-CimInstance [[-Property] <IDictionary>] -ResourceUri <uri> -CimSession <CimSession[]> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-CimInstance [[-Property] <IDictionary>] -ResourceUri <uri> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-ComputerName <string[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [-ClassName] <string> [[-Property] <IDictionary>] [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <UInt32>] [-ComputerName <string[]>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [-ClassName] <string> [[-Property] <IDictionary>] -CimSession <CimSession[]> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <UInt32>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [[-Property] <IDictionary>] -ResourceUri <uri> -CimSession <CimSession[]> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <UInt32>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [[-Property] <IDictionary>] -ResourceUri <uri> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <UInt32>] [-ComputerName <string[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
 New-CimInstance [-CimClass] <cimclass> [[-Property] <IDictionary>] -CimSession <CimSession[]> [-OperationTimeoutSec <uint>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-CimInstance [-CimClass] <cimclass> [[-Property] <IDictionary>] [-OperationTimeoutSec <uint>] [-ComputerName <string[]>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [-CimClass] <cimclass> [[-Property] <IDictionary>] [-OperationTimeoutSec <UInt32>] [-ComputerName <string[]>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example: Create an instance of a CIM class
@@ -7192,7 +7156,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### New-CIPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -7376,7 +7340,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-CIPolicyRule
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -7439,7 +7403,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-DtcDiagnosticTransaction
 
-Version: Both
+Version: 5.1 only
 
 Module: MsDtc
 
@@ -7463,7 +7427,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-EventLog
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -7510,7 +7474,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### New-JobTrigger
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -7535,7 +7499,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### New-LocalGroup
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -7556,7 +7520,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### New-LocalUser
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -7578,7 +7542,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### New-NetIPsecAuthProposal
 
-Version: Both
+Version: 5.1 only
 
 Module: NetSecurity
 
@@ -7618,7 +7582,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-NetIPsecMainModeCryptoProposal
 
-Version: Both
+Version: 5.1 only
 
 Module: NetSecurity
 
@@ -7659,7 +7623,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-NetIPsecQuickModeCryptoProposal
 
-Version: Both
+Version: 5.1 only
 
 Module: NetSecurity
 
@@ -7694,7 +7658,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-PmemDedicatedMemory
 
-Version: Both
+Version: 5.1 only
 
 Module: PersistentMemory
 
@@ -7715,7 +7679,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-PmemDisk
 
-Version: Both
+Version: 5.1 only
 
 Module: PersistentMemory
 
@@ -7737,7 +7701,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-ProvisioningRepro
 
-Version: Both
+Version: 5.1 only
 
 Module: Provisioning
 
@@ -7750,7 +7714,7 @@ Source: [Provisioning module documentation](https://learn.microsoft.com/en-us/po
 
 ### New-PSWorkflowExecutionOption
 
-Version: Both
+Version: 5.1 only
 
 Module: PSWorkflow
 
@@ -7771,7 +7735,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### New-ScheduledJobOption
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -7792,7 +7756,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### New-SelfSignedCertificate
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -7844,7 +7808,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### New-TlsSessionTicketKey
 
-Version: Both
+Version: 5.1 only
 
 Module: TLS
 
@@ -7866,7 +7830,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-WebServiceProxy
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -7889,7 +7853,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### New-WindowsCustomImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -7910,7 +7874,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### New-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -7952,7 +7916,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### New-WinUserLanguageList
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -8021,14 +7985,15 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Optimize-AppxProvisionedPackages
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
 Syntax:
 
 ```powershell
-Optimize-AppXProvisionedPackages -Path <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>] Optimize-AppXProvisionedPackages -Online [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Optimize-AppXProvisionedPackages -Path <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Optimize-AppXProvisionedPackages -Online [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: none
@@ -8038,7 +8003,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Optimize-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -8126,7 +8091,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Publish-DscConfiguration
 
-Version: Both
+Version: 5.1 only
 
 Module: PSDesiredStateConfiguration
 
@@ -8148,7 +8113,7 @@ Source: [Official English docs (5.1)](https://learn.microsoft.com/en-us/powershe
 
 ### Receive-DtcDiagnosticTransaction
 
-Version: Both
+Version: 5.1 only
 
 Module: MsDtc
 
@@ -8285,22 +8250,15 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Register-RecoveryManagementPlugin
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
-Syntax (5.1):
+Syntax:
 
 ```powershell
 Register-RecoveryManagementPlugin -BinaryLocation <string> -ClassID <string> -CapabilitiesRequired <uint32> -Path <string> [-CapabilitiesDesired <uint32>] [-ThreadingModel <string>] [-ExceptionHandling <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Register-RecoveryManagementPlugin -BinaryLocation <string> -ClassID <string> -CapabilitiesRequired <uint32> -Online [-CapabilitiesDesired <uint32>] [-ThreadingModel <string>] [-ExceptionHandling <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-```
-
-Syntax (7):
-
-```powershell
-Register-RecoveryManagementPlugin -BinaryLocation <string> -ClassID <string> -CapabilitiesRequired <uint> -Path <string> [-CapabilitiesDesired <uint>] [-ThreadingModel <string>] [-ExceptionHandling <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Register-RecoveryManagementPlugin -BinaryLocation <string> -ClassID <string> -CapabilitiesRequired <uint> -Online [-CapabilitiesDesired <uint>] [-ThreadingModel <string>] [-ExceptionHandling <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: none
@@ -8310,7 +8268,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Register-ScheduledJob
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -8357,7 +8315,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Register-WmiEvent
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -8379,7 +8337,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Remove-AppProvisionedSharedPackageContainer
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -8397,14 +8355,14 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Remove-AppSharedPackageContainer
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
 Syntax:
 
 ```powershell
-Remove-AppSharedPackageContainer [-Name] <string> [-ForceApplicationShutdown] [<CommonParameters>]
+Remove-AppSharedPackageContainer [-Name] <string> [-ForceApplicationShutdown] [-AllUsers] [<CommonParameters>]
 ```
 
 Example: 
@@ -8487,7 +8445,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-AppxPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -8511,7 +8469,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-AppxPackageAutoUpdateSettings
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -8532,7 +8490,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-AppxProvisionedPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -8554,7 +8512,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-AppxVolume
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -8575,7 +8533,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-BcdElement
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -8597,7 +8555,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-BcdEntry
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -8619,7 +8577,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-BitsTransfer
 
-Version: Both
+Version: 5.1 only
 
 Module: BitsTransfer
 
@@ -8640,7 +8598,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-CertificateEnrollmentPolicyServer
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -8665,7 +8623,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-CertificateNotificationTask
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -8702,10 +8660,10 @@ Remove-CimInstance [-Query] <string> [[-Namespace] <string>] [-ComputerName <str
 Syntax (7):
 
 ```powershell
-Remove-CimInstance [-InputObject] <ciminstance> [-ResourceUri <uri>] [-ComputerName <string[]>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Remove-CimInstance [-InputObject] <ciminstance> -CimSession <CimSession[]> [-ResourceUri <uri>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Remove-CimInstance [-Query] <string> [[-Namespace] <string>] -CimSession <CimSession[]> [-OperationTimeoutSec <uint>] [-QueryDialect <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Remove-CimInstance [-Query] <string> [[-Namespace] <string>] [-ComputerName <string[]>] [-OperationTimeoutSec <uint>] [-QueryDialect <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-CimInstance [-InputObject] <ciminstance> [-ResourceUri <uri>] [-ComputerName <string[]>] [-OperationTimeoutSec <UInt32>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-CimInstance [-InputObject] <ciminstance> -CimSession <CimSession[]> [-ResourceUri <uri>] [-OperationTimeoutSec <UInt32>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-CimInstance [-Query] <string> [[-Namespace] <string>] -CimSession <CimSession[]> [-OperationTimeoutSec <UInt32>] [-QueryDialect <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-CimInstance [-Query] <string> [[-Namespace] <string>] [-ComputerName <string[]>] [-OperationTimeoutSec <UInt32>] [-QueryDialect <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example: Remove the CIM instance
@@ -8738,7 +8696,7 @@ Syntax (7):
 ```powershell
 Remove-CimSession [-CimSession] <CimSession[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-CimSession [-ComputerName] <string[]> [-WhatIf] [-Confirm] [<CommonParameters>]
-Remove-CimSession [-Id] <uint[]> [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-CimSession [-Id] <UInt32[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-CimSession -InstanceId <guid[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-CimSession -Name <string[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -8754,7 +8712,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Remove-CIPolicyRule
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -8771,7 +8729,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-Computer
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -8793,7 +8751,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Remove-EventLog
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -8815,7 +8773,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Remove-JobTrigger
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -8838,7 +8796,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Remove-LocalGroup
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -8861,7 +8819,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Remove-LocalGroupMember
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -8885,7 +8843,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Remove-LocalUser
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -8908,7 +8866,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Remove-OsConfigurationDocument
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -8929,7 +8887,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-OSConfigurationScenarioDefinition
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -8946,7 +8904,7 @@ Source: [OsConfiguration module documentation](https://learn.microsoft.com/en-us
 
 ### Remove-PmemDedicatedMemory
 
-Version: Both
+Version: 5.1 only
 
 Module: PersistentMemory
 
@@ -8967,7 +8925,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-PmemDisk
 
-Version: Both
+Version: 5.1 only
 
 Module: PersistentMemory
 
@@ -9010,7 +8968,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Remove-RecoveryManagementPluginAltitude
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -9050,15 +9008,15 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Remove-WindowsCapability
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
 Syntax:
 
 ```powershell
-Remove-WindowsCapability -Name <string> -Online [-DelayExecutionIfPending] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Remove-WindowsCapability -Name <string> -Path <string> [-DelayExecutionIfPending] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Remove-WindowsCapability [-Name] <string> [-Online] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Remove-WindowsCapability [-Name] <string> [-Path] <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: Remove Windows capabilities for an image
@@ -9072,7 +9030,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-WindowsDriver
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -9093,7 +9051,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -9108,7 +9066,7 @@ Syntax (7):
 
 ```powershell
 Remove-WindowsImage -ImagePath <string> -Name <string> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Remove-WindowsImage -ImagePath <string> -Index <uint> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Remove-WindowsImage -ImagePath <string> -Index <UInt32> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: Remove the first image from a WIM file
@@ -9122,7 +9080,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-WindowsPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -9144,7 +9102,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Remove-WmiObject
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -9152,7 +9110,7 @@ Syntax:
 
 ```powershell
 Remove-WmiObject [-Class] <string> [-AsJob] [-Impersonation <ImpersonationLevel>] [-Authentication <AuthenticationLevel>] [-Locale <string>] [-EnableAllPrivileges] [-Authority <string>] [-Credential <pscredential>] [-ThrottleLimit <int>] [-ComputerName <string[]>] [-Namespace <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Remove-WmiObject -InputObject <wmi> [-AsJob] [-ThrottleLimit <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-WmiObject -InputObject <ManagementObject> [-AsJob] [-ThrottleLimit <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-WmiObject -Path <string> [-AsJob] [-Impersonation <ImpersonationLevel>] [-Authentication <AuthenticationLevel>] [-Locale <string>] [-EnableAllPrivileges] [-Authority <string>] [-Credential <pscredential>] [-ThrottleLimit <int>] [-ComputerName <string[]>] [-Namespace <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-WmiObject [-AsJob] [-Impersonation <ImpersonationLevel>] [-Authentication <AuthenticationLevel>] [-Locale <string>] [-EnableAllPrivileges] [-Authority <string>] [-Credential <pscredential>] [-ThrottleLimit <int>] [-ComputerName <string[]>] [-Namespace <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-WmiObject [-AsJob] [-Impersonation <ImpersonationLevel>] [-Authentication <AuthenticationLevel>] [-Locale <string>] [-EnableAllPrivileges] [-Authority <string>] [-Credential <pscredential>] [-ThrottleLimit <int>] [-ComputerName <string[]>] [-Namespace <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
@@ -9235,7 +9193,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Rename-LocalGroup
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -9258,7 +9216,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Rename-LocalUser
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -9348,7 +9306,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Repair-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -9370,7 +9328,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Reset-AppSharedPackageContainer
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -9391,7 +9349,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Reset-AppxPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -9412,7 +9370,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Reset-ComputerMachinePassword
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -9433,7 +9391,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Reset-LapsPassword
 
-Version: Both
+Version: 5.1 only
 
 Module: LAPS
 
@@ -9454,7 +9412,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Resolve-DnsName
 
-Version: Both
+Version: 5.1 only
 
 Module: DnsClient
 
@@ -9498,7 +9456,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: mapped Linux command (`systemctl` + sudo).
-- Companions: Stop-Service, Restart-Service, Resume-Service.
+- Companions: Start-Service, Stop-Service, Restart-Service, Resume-Service.
 - Distro: systemd-based + sudo.
 - Function: starts/stops/restarts services.
 
@@ -9512,7 +9470,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Restore-Computer
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -9576,7 +9534,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Resume-BitsTransfer
 
-Version: Both
+Version: 5.1 only
 
 Module: BitsTransfer
 
@@ -9628,7 +9586,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Resume-ProvisioningSession
 
-Version: Both
+Version: 5.1 only
 
 Module: Provisioning
 
@@ -9641,7 +9599,7 @@ Source: [Provisioning module documentation](https://learn.microsoft.com/en-us/po
 
 ### Resume-ReFSDedupSchedule
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -9685,7 +9643,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: mapped Linux command (`systemctl` + sudo).
-- Companions: Stop-Service, Restart-Service, Resume-Service.
+- Companions: Start-Service, Stop-Service, Restart-Service, Resume-Service.
 - Distro: systemd-based + sudo.
 - Function: starts/stops/restarts services.
 
@@ -9699,7 +9657,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Save-OsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -9716,7 +9674,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Save-SoftwareInventory
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -9734,7 +9692,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Save-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -9777,7 +9735,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Send-DtcDiagnosticTransaction
 
-Version: Both
+Version: 5.1 only
 
 Module: MsDtc
 
@@ -9831,7 +9789,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-AppBackgroundTaskResourcePolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: AppBackgroundTask
 
@@ -9852,7 +9810,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-AppLockerPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: AppLocker
 
@@ -9902,8 +9860,8 @@ Module: AppvClient
 Syntax:
 
 ```powershell
-Set-AppvClientMode -Normal [<CommonParameters>]
-Set-AppvClientMode -Uninstall [<CommonParameters>]
+Set-AppvClientMode [-Normal] [<CommonParameters>]
+Set-AppvClientMode [-Uninstall] [<CommonParameters>]
 ```
 
 Example: none
@@ -9943,8 +9901,8 @@ Module: AppvClient
 Syntax:
 
 ```powershell
-Set-AppvPublishingServer [-ServerId] <uint32> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [<CommonParameters>]
-Set-AppvPublishingServer [-Server] <AppvPublishingServer> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [<CommonParameters>]
+Set-AppvPublishingServer [-ServerId] <uint32> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IntervalUnit>] [<CommonParameters>]
+Set-AppvPublishingServer [-Server] <AppvPublishingServer> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IntervalUnit>] [<CommonParameters>]
 ```
 
 Example: none
@@ -9954,7 +9912,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-AppxDefaultVolume
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
@@ -9975,24 +9933,15 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-AppxPackageAutoUpdateSettings
 
-Version: Both
+Version: 5.1 only
 
 Module: Appx
 
-Syntax (5.1):
+Syntax:
 
 ```powershell
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> [-AppInstallerUri <string>] [-UpdateUris <string[]>] [-RepairUris <string[]>] [-OptionalPackages <string[]>] [-DependencyPackages <string[]>] [-EnableAutomaticBackgroundTask <bool>] [-ForceUpdateFromAnyVersion <bool>] [-DisableAutoRepairs <bool>] [-CheckOnLaunch <bool>] [-ShowPrompt <bool>] [-UpdateBlocksActivation <bool>] [-UseSystemPolicySource] [-AllUsers] [-HoursBetweenUpdateChecks <uint32>] [-Version <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -AppInstallerUri <string> -ClearPreviousSettings [-UpdateUris <string[]>] [-RepairUris <string[]>] [-OptionalPackages <string[]>] [-DependencyPackages <string[]>] [-EnableAutomaticBackgroundTask <bool>] [-ForceUpdateFromAnyVersion <bool>] [-DisableAutoRepairs <bool>] [-CheckOnLaunch <bool>] [-ShowPrompt <bool>] [-UpdateBlocksActivation <bool>] [-UseSystemPolicySource] [-AllUsers] [-HoursBetweenUpdateChecks <uint32>] [-Version <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -PauseUpdates -HoursToPause <uint32> [-UseSystemPolicySource] [-AllUsers] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-Syntax (7):
-
-```powershell
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> [-AppInstallerUri <string>] [-UpdateUris <string[]>] [-RepairUris <string[]>] [-OptionalPackages <string[]>] [-DependencyPackages <string[]>] [-EnableAutomaticBackgroundTask <bool>] [-ForceUpdateFromAnyVersion <bool>] [-DisableAutoRepairs <bool>] [-CheckOnLaunch <bool>] [-ShowPrompt <bool>] [-UpdateBlocksActivation <bool>] [-UseSystemPolicySource] [-AllUsers] [-HoursBetweenUpdateChecks <uint>] [-Version <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -AppInstallerUri <string> -ClearPreviousSettings [-UpdateUris <string[]>] [-RepairUris <string[]>] [-OptionalPackages <string[]>] [-DependencyPackages <string[]>] [-EnableAutomaticBackgroundTask <bool>] [-ForceUpdateFromAnyVersion <bool>] [-DisableAutoRepairs <bool>] [-CheckOnLaunch <bool>] [-ShowPrompt <bool>] [-UpdateBlocksActivation <bool>] [-UseSystemPolicySource] [-AllUsers] [-HoursBetweenUpdateChecks <uint>] [-Version <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -PauseUpdates -HoursToPause <uint> [-UseSystemPolicySource] [-AllUsers] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -AppInstallerUri <string> [-UpdateUris <string[]>] [-RepairUris <string[]>] [-OptionalPackages <string[]>] [-DependencyPackages <string[]>] [-EnableAutomaticBackgroundTask] [-ForceUpdateFromAnyVersion] [-DisableAutoRepairs] [-CheckOnLaunch] [-ShowPrompt] [-UpdateBlocksActivation] [-UseSystemPolicySource] [-HoursBetweenUpdateChecks <uint32>] [-Version <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -HoursToPause <uint32> [-PauseUpdates] [-UseSystemPolicySource] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example: Update the Auto Update settings for an App
@@ -10015,7 +9964,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-AppXProvisionedDataFile
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -10023,7 +9972,7 @@ Syntax:
 
 ```powershell
 Set-AppXProvisionedDataFile -PackageName <string> -CustomDataPath <string> -Path <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Set-AppXProvisionedDataFile -PackageName <string> -CustomDataPath <string> -Online [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Set-AppXProvisionedDataFile -PackageName <string> -CustomDataPath <string> [-Online] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: Add a custom data file to an app package for the running operating system
@@ -10073,7 +10022,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-BcdBootDefault
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
@@ -10095,19 +10044,19 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-BcdBootDisplayOrder
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
 Syntax:
 
 ```powershell
-Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -10123,19 +10072,19 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-BcdBootSequence
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
 Syntax:
 
 ```powershell
-Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -10151,14 +10100,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-BcdBootTimeout
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
 Syntax:
 
 ```powershell
-Set-BcdBootTimeout [-Value] <long> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootTimeout [-Value] <Int64> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example: 
@@ -10172,19 +10121,19 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-BcdBootToolsDisplayOrder
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
 Syntax:
 
 ```powershell
-Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -10200,20 +10149,20 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-BcdDebugSettings
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
 Syntax:
 
 ```powershell
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -DebugPort <long> -Serial [-Baudrate <long>] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Serial [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -DebugPort <long> [-Serial] [-Baudrate <long>] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] [-Serial] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
 Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Port <long> -HostIp <string> -Net -Key <string> [-NoDhcp] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Port <long> -HostIp <string> -Net [-NewKey] [-NoDhcp] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Channel <long> -Ieee1394 [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Usb [-TargetName <string>] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Local [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Port <long> -HostIp <string> [-Net] [-NewKey] [-NoDhcp] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Channel <long> [-Ieee1394] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] [-Usb] [-TargetName <string>] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] [-Local] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
 ```
 
 Example: 
@@ -10227,17 +10176,17 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-BcdElement
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
 Syntax:
 
 ```powershell
-Set-BcdElement [-Element] <string> [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Type <SetBcdElementCommand+ElementType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdElement [-Element] <string> [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Device <SetBcdElementCommand+DeviceType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdElement [-Element] <string> [-Entry] <BcdEntryInfo> -Type <SetBcdElementCommand+ElementType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdElement [-Element] <string> [-Entry] <BcdEntryInfo> -Device <SetBcdElementCommand+DeviceType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdElement [-Element] <string> [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Type <ElementType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdElement [-Element] <string> [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Device <DeviceType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdElement [-Element] <string> [-Entry] <BcdEntryInfo> -Type <ElementType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdElement [-Element] <string> [-Entry] <BcdEntryInfo> -Device <DeviceType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example: 
@@ -10251,17 +10200,17 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-BcdHypervisorSettings
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.Windows.Bcd.Cmdlets
 
 Syntax:
 
 ```powershell
-Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -DebugPort <long> -Serial [-Baudrate <long>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -Ieee1394 [-Channel <long>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -HostIp <string> -Port <long> -Net [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -Serial [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -DebugPort <long> [-Serial] [-Baudrate <long>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] [-Ieee1394] [-Channel <long>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -HostIp <string> -Port <long> [-Net] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] [-Serial] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example: 
@@ -10275,7 +10224,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-BitsTransfer
 
-Version: Both
+Version: 5.1 only
 
 Module: BitsTransfer
 
@@ -10297,7 +10246,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-CertificateAutoEnrollmentPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -10305,7 +10254,7 @@ Syntax:
 
 ```powershell
 Set-CertificateAutoEnrollmentPolicy -PolicyState <PolicySetting> -context <Context> [-StoreName <string[]>] [-ExpirationPercentage <int>] [-EnableTemplateCheck] [-EnableMyStoreManagement] [-EnableBalloonNotifications] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-CertificateAutoEnrollmentPolicy -EnableAll -context <Context> [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-CertificateAutoEnrollmentPolicy [-EnableAll] -context <Context> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example: 
@@ -10362,14 +10311,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-CIPolicyIdInfo
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
 Syntax:
 
 ```powershell
-Set-CIPolicyIdInfo [-FilePath] <string> [-PolicyName <string>] [-SupplementsBasePolicyID <guid>] [-BasePolicyToSupplementPath <string>] [-ResetPolicyID] [-PolicyId <string>] [-AppIdTaggingPolicy] [-AppIdTaggingKey <string[]>] [-AppIdTaggingValue <string[]>] [<CommonParameters>]
+Set-CIPolicyIdInfo [-FilePath] <string> [-PolicyName <string>] [-SupplementsBasePolicyID <guid>] [-BasePolicyToSupplementPath <string>] [-ResetPolicyID] [-PolicyId <string>] [<CommonParameters>]
 ```
 
 Example: Modify the ID and name of a policy
@@ -10383,7 +10332,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-CIPolicySetting
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -10405,7 +10354,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-CIPolicyVersion
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -10431,7 +10380,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-Culture
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -10452,7 +10401,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-DscLocalConfigurationManager
 
-Version: Both
+Version: 5.1 only
 
 Module: PSDesiredStateConfiguration
 
@@ -10474,7 +10423,7 @@ Source: [Official English docs (5.1)](https://learn.microsoft.com/en-us/powershe
 
 ### Set-HVCIOptions
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -10501,7 +10450,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-JobTrigger
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -10515,6 +10464,7 @@ Example (5.1): Change the days in a job trigger
 
 ```powershell
 Get-JobTrigger -Name "DeployPackage"
+Get-JobTrigger -Name "DeployPackage" | Set-JobTrigger -DaysOfWeek "Wednesday", "Sunday" -PassThru
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/5.1/PSScheduledJob/Set-JobTrigger.md)
@@ -10522,7 +10472,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-KdsConfiguration
 
-Version: Both
+Version: 5.1 only
 
 Module: Kds
 
@@ -10530,7 +10480,7 @@ Syntax:
 
 ```powershell
 Set-KdsConfiguration [-LocalTestOnly] [-SecretAgreementPublicKeyLength <int>] [-SecretAgreementPrivateKeyLength <int>] [-SecretAgreementParameters <byte[]>] [-SecretAgreementAlgorithm <string>] [-KdfParameters <byte[]>] [-KdfAlgorithm <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-KdsConfiguration -RevertToDefault [-LocalTestOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-KdsConfiguration [-RevertToDefault] [-LocalTestOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-KdsConfiguration [-InputObject] <KdsServerConfiguration> [-LocalTestOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
@@ -10546,7 +10496,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-LapsADAuditing
 
-Version: Both
+Version: 5.1 only
 
 Module: LAPS
 
@@ -10568,7 +10518,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-LapsADComputerSelfPermission
 
-Version: Both
+Version: 5.1 only
 
 Module: LAPS
 
@@ -10589,7 +10539,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-LapsADPasswordExpirationTime
 
-Version: Both
+Version: 5.1 only
 
 Module: LAPS
 
@@ -10610,7 +10560,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-LapsADReadPasswordPermission
 
-Version: Both
+Version: 5.1 only
 
 Module: LAPS
 
@@ -10631,7 +10581,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-LapsADResetPasswordPermission
 
-Version: Both
+Version: 5.1 only
 
 Module: LAPS
 
@@ -10652,7 +10602,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-LocalGroup
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -10675,7 +10625,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-LocalUser
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.LocalAccounts
 
@@ -10698,7 +10648,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-NonRemovableAppsPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -10720,7 +10670,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-OsConfigurationDocument
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -10741,7 +10691,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-OsConfigurationProperty
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -10762,7 +10712,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-OSConfigurationScenarioDefinition
 
-Version: Both
+Version: 5.1 only
 
 Module: OsConfiguration
 
@@ -10779,7 +10729,7 @@ Source: [OsConfiguration module documentation](https://learn.microsoft.com/en-us
 
 ### Set-ProcessMitigation
 
-Version: Both
+Version: 5.1 only
 
 Module: ProcessMitigations
 
@@ -10833,22 +10783,15 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-RecoveryManagementPluginAltitude
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
-Syntax (5.1):
+Syntax:
 
 ```powershell
 Set-RecoveryManagementPluginAltitude -ClassID <string> -Altitude <uint32> -Path <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Set-RecoveryManagementPluginAltitude -ClassID <string> -Altitude <uint32> -Online [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-```
-
-Syntax (7):
-
-```powershell
-Set-RecoveryManagementPluginAltitude -ClassID <string> -Altitude <uint> -Path <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Set-RecoveryManagementPluginAltitude -ClassID <string> -Altitude <uint> -Online [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: none
@@ -10858,7 +10801,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Set-RecoveryRemoteManagementStatus
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -10876,7 +10819,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Set-ReFSDedupSchedule
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -10897,7 +10840,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-ReFSDedupScrubSchedule
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -10924,7 +10867,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-RuleOption
 
-Version: Both
+Version: 5.1 only
 
 Module: ConfigCI
 
@@ -10986,7 +10929,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-ScheduledJob
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -11002,6 +10945,8 @@ Example (5.1): Change the script that a job runs
 
 ```powershell
 Get-ScheduledJob -Name "Inventory"
+Get-ScheduledJob -Name "Inventory" |
+    Set-ScheduledJob -FilePath "C:\Scripts\Get-FullInventory.ps1" -PassThru
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/5.1/PSScheduledJob/Set-ScheduledJob.md)
@@ -11009,7 +10954,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-ScheduledJobOption
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -11022,7 +10967,8 @@ Set-ScheduledJobOption [-InputObject] <ScheduledJobOptions> [-PassThru] [-RunEle
 Example (5.1): Change job options
 
 ```powershell
-Get-ScheduledJobOption -Name "DeployPackage"
+Get-ScheduledJobOption -Name "DeployPackage" |
+    Set-ScheduledJobOption -WakeToRun -RequireNetwork:$false -PassThru
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/5.1/PSScheduledJob/Set-ScheduledJobOption.md)
@@ -11030,7 +10976,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-SecureBootUEFI
 
-Version: Both
+Version: 5.1 only
 
 Module: SecureBoot
 
@@ -11103,7 +11049,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-SystemPreferredUILanguage
 
-Version: Both
+Version: 5.1 only
 
 Module: LanguagePackManagement
 
@@ -11158,15 +11104,15 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Set-TpmOwnerAuth
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
 Syntax (5.1):
 
 ```powershell
-Set-TpmOwnerAuth -File <string> -NewFile <string> [<CommonParameters>]
 Set-TpmOwnerAuth -File <string> -NewOwnerAuthorization <string> [<CommonParameters>]
+Set-TpmOwnerAuth -File <string> -NewFile <string> [<CommonParameters>]
 Set-TpmOwnerAuth [[-OwnerAuthorization] <string>] -NewOwnerAuthorization <string> [<CommonParameters>]
 Set-TpmOwnerAuth [[-OwnerAuthorization] <string>] -NewFile <string> [<CommonParameters>]
 ```
@@ -11242,20 +11188,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WheaMemoryPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: Whea
 
-Syntax (5.1):
+Syntax:
 
 ```powershell
 Set-WheaMemoryPolicy [-ComputerName <string>] [-DisableOffline <bool>] [-DisablePFA <bool>] [-PersistMemoryOffline <bool>] [-PFAPageCount <uint32>] [-PFAErrorThreshold <uint32>] [-PFATimeout <uint32>] [<CommonParameters>]
-```
-
-Syntax (7):
-
-```powershell
-Set-WheaMemoryPolicy [-ComputerName <string>] [-DisableOffline <bool>] [-DisablePFA <bool>] [-PersistMemoryOffline <bool>] [-PFAPageCount <uint>] [-PFAErrorThreshold <uint>] [-PFATimeout <uint>] [<CommonParameters>]
 ```
 
 Example: Enable WHEA predictive failure analysis
@@ -11269,7 +11209,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WinAcceptLanguageFromLanguageListOptOut
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -11290,7 +11230,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WinCultureFromLanguageListOptOut
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -11311,7 +11251,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WinDefaultInputMethodOverride
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -11332,7 +11272,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WindowsEdition
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -11353,7 +11293,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WindowsProductKey
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -11374,7 +11314,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WindowsReservedStorageState
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -11395,7 +11335,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WindowsSearchSetting
 
-Version: Both
+Version: 5.1 only
 
 Module: WindowsSearch
 
@@ -11416,7 +11356,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WinHomeLocation
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -11437,7 +11377,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WinLanguageBarOption
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -11458,7 +11398,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WinSystemLocale
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -11479,7 +11419,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WinUILanguageOverride
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -11500,7 +11440,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WinUserLanguageList
 
-Version: Both
+Version: 5.1 only
 
 Module: International
 
@@ -11523,7 +11463,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Set-WmiInstance
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -11618,7 +11558,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Show-ControlPanelItem
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -11641,7 +11581,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Show-EventLog
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -11662,7 +11602,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Show-WindowsDeveloperLicenseRegistration
 
-Version: Both
+Version: 5.1 only
 
 Module: WindowsDeveloperLicense
 
@@ -11683,20 +11623,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Split-WindowsImage
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
-Syntax (5.1):
+Syntax:
 
 ```powershell
-Split-WindowsImage -ImagePath <string> -SplitImagePath <string> -FileSize <uint64> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-```
-
-Syntax (7):
-
-```powershell
-Split-WindowsImage -ImagePath <string> -SplitImagePath <string> -FileSize <ulong> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Split-WindowsImage -ImagePath <string> -SplitImagePath <string> -FileSize <UInt64> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 Example: Split a .wim file
@@ -11710,7 +11644,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Start-BitsTransfer
 
-Version: Both
+Version: 5.1 only
 
 Module: BitsTransfer
 
@@ -11731,7 +11665,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Start-DscConfiguration
 
-Version: Both
+Version: 5.1 only
 
 Module: PSDesiredStateConfiguration
 
@@ -11755,7 +11689,7 @@ Source: [Official English docs (5.1)](https://learn.microsoft.com/en-us/powershe
 
 ### Start-DtcDiagnosticResourceManager
 
-Version: Both
+Version: 5.1 only
 
 Module: MsDtc
 
@@ -11776,7 +11710,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Start-OSUninstall
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -11798,7 +11732,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Start-ReFSDedupJob
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -11842,7 +11776,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: mapped Linux command (`systemctl` + sudo).
-- Companions: Stop-Service, Restart-Service, Resume-Service.
+- Companions: Start-Service, Stop-Service, Restart-Service, Resume-Service.
 - Distro: systemd-based + sudo.
 - Function: starts/stops/restarts services.
 
@@ -11856,7 +11790,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Start-Transaction
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -11927,7 +11861,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Stop-DtcDiagnosticResourceManager
 
-Version: Both
+Version: 5.1 only
 
 Module: MsDtc
 
@@ -11950,7 +11884,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Stop-ReFSDedupJob
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -11994,7 +11928,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: mapped Linux command (`systemctl` + sudo).
-- Companions: Stop-Service, Restart-Service, Resume-Service.
+- Companions: Start-Service, Stop-Service, Restart-Service, Resume-Service.
 - Distro: systemd-based + sudo.
 - Function: starts/stops/restarts services.
 
@@ -12008,7 +11942,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Suspend-BitsTransfer
 
-Version: Both
+Version: 5.1 only
 
 Module: BitsTransfer
 
@@ -12056,6 +11990,7 @@ workflow Get-SystemLog
 }
 Get-SystemLog -AsJob -JobName "LogflowJob"
 Get-Job -Name LogflowJob
+Suspend-Job -Name LogflowJob
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/5.1/Microsoft.PowerShell.Core/Suspend-Job.md)
@@ -12063,7 +11998,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Suspend-ReFSDedupSchedule
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.ReFsDedup.Commands
 
@@ -12107,7 +12042,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Switch-Certificate
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -12156,7 +12091,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Test-AppLockerPolicy
 
-Version: Both
+Version: 5.1 only
 
 Module: AppLocker
 
@@ -12179,7 +12114,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Test-Certificate
 
-Version: Both
+Version: 5.1 only
 
 Module: PKI
 
@@ -12201,7 +12136,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Test-ComputerSecureChannel
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -12222,7 +12157,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Test-DscConfiguration
 
-Version: Both
+Version: 5.1 only
 
 Module: PSDesiredStateConfiguration
 
@@ -12280,7 +12215,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Test-KdsRootKey
 
-Version: Both
+Version: 5.1 only
 
 Module: Kds
 
@@ -12368,7 +12303,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Unblock-Tpm
 
-Version: Both
+Version: 5.1 only
 
 Module: TrustedPlatformModule
 
@@ -12390,7 +12325,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Undo-DtcDiagnosticTransaction
 
-Version: Both
+Version: 5.1 only
 
 Module: MsDtc
 
@@ -12412,7 +12347,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Undo-Transaction
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -12433,7 +12368,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Uninstall-Language
 
-Version: Both
+Version: 5.1 only
 
 Module: LanguagePackManagement
 
@@ -12454,7 +12389,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Uninstall-ProvisioningPackage
 
-Version: Both
+Version: 5.1 only
 
 Module: Provisioning
 
@@ -12478,7 +12413,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Uninstall-TrustedProvisioningCertificate
 
-Version: Both
+Version: 5.1 only
 
 Module: Provisioning
 
@@ -12543,7 +12478,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Unregister-RecoveryManagementPlugin
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -12561,7 +12496,7 @@ Source: [Dism module documentation](https://learn.microsoft.com/en-us/powershell
 
 ### Unregister-ScheduledJob
 
-Version: Both
+Version: 5.1 only
 
 Module: PSScheduledJob
 
@@ -12606,7 +12541,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Unregister-WindowsDeveloperLicense
 
-Version: Both
+Version: 5.1 only
 
 Module: WindowsDeveloperLicense
 
@@ -12627,7 +12562,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Update-LapsADSchema
 
-Version: Both
+Version: 5.1 only
 
 Module: LAPS
 
@@ -12670,7 +12605,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Update-WIMBootEntry
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -12691,7 +12626,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Use-Transaction
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -12716,7 +12651,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Use-WindowsUnattend
 
-Version: Both
+Version: 5.1 only
 
 Module: Dism
 
@@ -12738,7 +12673,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/windows-pow
 
 ### Write-EventLog
 
-Version: Both
+Version: 5.1 only
 
 Module: Microsoft.PowerShell.Management
 
@@ -12755,5 +12690,4 @@ PS C:\> Write-EventLog -LogName "Application" -Source "MyApp" -EventID 3001 -Ent
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/5.1/Microsoft.PowerShell.Management/Write-EventLog.md)
-
 

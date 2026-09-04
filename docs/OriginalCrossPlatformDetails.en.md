@@ -121,7 +121,7 @@ Status legend:
 | [`Get-Unique`](#get-unique) | Microsoft.PowerShell.Utility | Both | Syntax differs | Returns unique items from a sorted list. | Go implementation | Deduplicates by object string; inputs need not be adjacent. |
 | [`Get-Uptime`](#get-uptime) | Microsoft.PowerShell.Utility | 7 only | 7 only | Get the **TimeSpan** since last boot. | Go implementation | Always 0 on other platforms. |
 | [`Get-Variable`](#get-variable) | Microsoft.PowerShell.Utility | Both | None | Gets the variables in the current console. | Go implementation |  |
-| [`Get-Verb`](#get-verb) | Microsoft.PowerShell.Utility | 7 only | 7 only | Gets approved PowerShell verbs. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
+| [`Get-Verb`](#get-verb) | 5.1 in Microsoft.PowerShell.Core<br>7 in Microsoft.PowerShell.Utility | Both | None | Gets approved PowerShell verbs. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
 | [`Group-Object`](#group-object) | Microsoft.PowerShell.Utility | Both | None | Groups objects that contain the same value for specified properties. | Go implementation | Behaves identically. |
 | [`Import-Alias`](#import-alias) | Microsoft.PowerShell.Utility | Both | None | Imports an alias list from a file. | Go implementation |  |
 | [`Import-Clixml`](#import-clixml) | Microsoft.PowerShell.Utility | Both | Syntax differs | Imports a CLIXML file and creates corresponding objects in PowerShell. | Not implemented | Serialization / markup / formatting (rarely used) |
@@ -129,7 +129,7 @@ Status legend:
 | [`Import-LocalizedData`](#import-localizeddata) | Microsoft.PowerShell.Utility | Both | None | Imports language-specific data into scripts and functions based on the UI culture that's selected for the operating system. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
 | [`Import-Module`](#import-module) | Microsoft.PowerShell.Core | Both | Syntax differs | Adds modules to the current session. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
 | [`Import-PackageProvider`](#import-packageprovider) | PackageManagement | Both | None | Adds Package Management package providers to the current session. | Not implemented |  |
-| [`Import-PowerShellDataFile`](#import-powershelldatafile) | Microsoft.PowerShell.Utility | 7 only | 7 only | Imports values from a `.psd1` file without invoking its contents. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
+| [`Import-PowerShellDataFile`](#import-powershelldatafile) | Microsoft.PowerShell.Utility | Both | None | Imports values from a `.psd1` file without invoking its contents. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
 | [`Import-PSSession`](#import-pssession) | Microsoft.PowerShell.Utility | Both | None | Imports commands from another session into the current session. | Not implemented | Remote sessions (requires a remote host; out of scope) |
 | [`Install-Package`](#install-package) | PackageManagement | Both | Syntax differs | Installs one or more software packages. | Not implemented |  |
 | [`Install-PackageProvider`](#install-packageprovider) | PackageManagement | Both | None | Installs one or more Package Management package providers. | Not implemented |  |
@@ -483,7 +483,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 #### Implementation in PowerShell For Linux:
 
-- Differs from the original: Nonexistent paths silently create an empty file (PowerShell errors with path-not-found).
+- Differs from the original: none. Only existing files are emptied; nonexistent paths raise an error.
 
 - Type: Go implementation.
 - Function: empties files.
@@ -511,6 +511,8 @@ Clear-History [[-Count] <int>] [-CommandLine <string[]>] [-Newest] [-WhatIf] [-C
 Example: Delete the command history from a PowerShell session
 
 ```powershell
+Get-History
+Clear-History
 Get-History
 ```
 
@@ -614,7 +616,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: New-Variable, Remove-Variable, Clear-Variable.
+- Companions: Set-Variable, New-Variable, Remove-Variable, Clear-Variable.
 - Function: sets/creates/removes/empties variables.
 
 | Parameter | Type | Meaning |
@@ -623,7 +625,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | `-Value` (position 1) | object | Value (New-Variable's `-Value` also takes position 1) |
 | `-Force` | switch | Lets New-Variable overwrite an existing variable |
 
-- Behavior: creating over an existing variable without -Force → error; assigning to read-only automatic variables (PID etc.) → error. Remove deletes straight from the map; Clear sets $null.
+- Behavior: creating over an existing variable without -Force → error; assigning to read-only automatic variables (PID etc.) → error with Set/New, silently ignored with Clear. Remove deletes straight from the map; Clear sets $null.
 
 
 ### Compare-Object
@@ -704,8 +706,8 @@ Convert-Path -LiteralPath <string[]> [-UseTransaction] [<CommonParameters>]
 Syntax (7):
 
 ```powershell
-Convert-Path [-Path] <string[]> [-Force] [<CommonParameters>]
-Convert-Path -LiteralPath <string[]> [-Force] [<CommonParameters>]
+Convert-Path [-Path] <string[]> [<CommonParameters>]
+Convert-Path -LiteralPath <string[]> [<CommonParameters>]
 ```
 
 Example: Convert the working directory to a standard file system path
@@ -745,6 +747,20 @@ Example: Convert a process object to CliXml and back
 ```powershell
 $process = Get-Process -Id $PID
 $process.pstypenames
+```
+
+```powershell
+$process | Get-Member | Group-Object MemberType | Select-Object Name, Count
+```
+
+```powershell
+$xml = $process | ConvertTo-CliXml
+$fromXML = ConvertFrom-CliXml $xml
+$fromXML.pstypenames
+```
+
+```powershell
+$fromXML | Get-Member | Group-Object MemberType | Select-Object Name, Count
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/ConvertFrom-CliXml.md)
@@ -941,6 +957,20 @@ $process = Get-Process -Id $PID
 $process.pstypenames
 ```
 
+```powershell
+$process | Get-Member | Group-Object MemberType | Select-Object Name, Count
+```
+
+```powershell
+$xml = $process | ConvertTo-CliXml
+$fromXML = ConvertFrom-CliXml $xml
+$fromXML.pstypenames
+```
+
+```powershell
+$fromXML | Get-Member | Group-Object MemberType | Select-Object Name, Count
+```
+
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/ConvertTo-CliXml.md)
 
 
@@ -960,8 +990,8 @@ ConvertTo-Csv [-InputObject] <psobject> [-UseCulture] [-NoTypeInformation] [<Com
 Syntax (7):
 
 ```powershell
-ConvertTo-Csv [-InputObject] <psobject> [[-Delimiter] <char>] [-IncludeTypeInformation] [-NoTypeInformation] [-QuoteFields <string[]>] [-UseQuotes <BaseCsvWritingCommand+QuoteKind>] [-NoHeader] [<CommonParameters>]
-ConvertTo-Csv [-InputObject] <psobject> [-UseCulture] [-IncludeTypeInformation] [-NoTypeInformation] [-QuoteFields <string[]>] [-UseQuotes <BaseCsvWritingCommand+QuoteKind>] [-NoHeader] [<CommonParameters>]
+ConvertTo-Csv [-InputObject] <psobject> [[-Delimiter] <char>] [-IncludeTypeInformation] [-NoTypeInformation] [-QuoteFields <string[]>] [-UseQuotes <QuoteKind>] [-NoHeader] [<CommonParameters>]
+ConvertTo-Csv [-InputObject] <psobject> [-UseCulture] [-IncludeTypeInformation] [-NoTypeInformation] [-QuoteFields <string[]>] [-UseQuotes <QuoteKind>] [-NoHeader] [<CommonParameters>]
 ```
 
 Example (5.1): Convert an object to CSV
@@ -1649,14 +1679,12 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: New-Alias, Remove-Alias, Import-Alias, Export-Alias.
+- Companions: Set-Alias, New-Alias, Remove-Alias, Import-Alias, Export-Alias.
 - Function: manages aliases.
 
 | Parameter | Type | Meaning |
 | :--- | :--- | :--- |
-| `-Name` (position 0) | string | Alias name |
-| `-Value` (position 1) | string | Target command |
-| `-Force` | switch | Lets New-Alias overwrite an existing alias |
+| `-Path` (position 0) | path | Alias file path |
 
 - Set-Alias overwrites; New-Alias errors on an existing alias without -Force; Remove-Alias deletes; Export-Alias writes one `name=target` per line; Import-Alias reads them back.
 
@@ -1706,8 +1734,8 @@ Export-Csv [[-Path] <string>] -InputObject <psobject> [-LiteralPath <string>] [-
 Syntax (7):
 
 ```powershell
-Export-Csv [[-Path] <string>] [[-Delimiter] <char>] -InputObject <psobject> [-LiteralPath <string>] [-Force] [-NoClobber] [-Encoding <Encoding>] [-Append] [-IncludeTypeInformation] [-NoTypeInformation] [-QuoteFields <string[]>] [-UseQuotes <BaseCsvWritingCommand+QuoteKind>] [-NoHeader] [-WhatIf] [-Confirm] [<CommonParameters>]
-Export-Csv [[-Path] <string>] -InputObject <psobject> [-LiteralPath <string>] [-Force] [-NoClobber] [-Encoding <Encoding>] [-Append] [-UseCulture] [-IncludeTypeInformation] [-NoTypeInformation] [-QuoteFields <string[]>] [-UseQuotes <BaseCsvWritingCommand+QuoteKind>] [-NoHeader] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-Csv [[-Path] <string>] [[-Delimiter] <char>] -InputObject <psobject> [-LiteralPath <string>] [-Force] [-NoClobber] [-Encoding <Encoding>] [-Append] [-IncludeTypeInformation] [-NoTypeInformation] [-QuoteFields <string[]>] [-UseQuotes <QuoteKind>] [-NoHeader] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-Csv [[-Path] <string>] -InputObject <psobject> [-LiteralPath <string>] [-Force] [-NoClobber] [-Encoding <Encoding>] [-Append] [-UseCulture] [-IncludeTypeInformation] [-NoTypeInformation] [-QuoteFields <string[]>] [-UseQuotes <QuoteKind>] [-NoHeader] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 Example (5.1): Export process properties to a CSV file
@@ -1953,15 +1981,14 @@ Syntax (5.1):
 Format-Hex [-Path] <string[]> [<CommonParameters>]
 Format-Hex -LiteralPath <string[]> [<CommonParameters>]
 Format-Hex -InputObject <Object> [-Encoding <string>] [-Raw] [<CommonParameters>]
-Format-Hex -Path .\File.t7f
 ```
 
 Syntax (7):
 
 ```powershell
-Format-Hex [-Path] <string[]> [-Count <long>] [-Offset <long>] [<CommonParameters>]
-Format-Hex -LiteralPath <string[]> [-Count <long>] [-Offset <long>] [<CommonParameters>]
-Format-Hex -InputObject <psobject> [-Encoding <Encoding>] [-Count <long>] [-Offset <long>] [-Raw] [<CommonParameters>]
+Format-Hex [-Path] <string[]> [-Count <Int64>] [-Offset <Int64>] [<CommonParameters>]
+Format-Hex -LiteralPath <string[]> [-Count <Int64>] [-Offset <Int64>] [<CommonParameters>]
+Format-Hex -InputObject <psobject> [-Encoding <Encoding>] [-Count <Int64>] [-Offset <Int64>] [-Raw] [<CommonParameters>]
 ```
 
 Example: Get the hexadecimal representation of a string
@@ -2136,7 +2163,7 @@ Syntax (5.1):
 
 ```powershell
 Get-ChildItem [[-Path] <string[]>] [[-Filter] <string>] [-Include <string[]>] [-Exclude <string[]>] [-Recurse] [-Depth <uint32>] [-Force] [-Name] [-UseTransaction] [-Attributes <FlagsExpression[FileAttributes]>] [-FollowSymlink] [-Directory] [-File] [-Hidden] [-ReadOnly] [-System] [<CommonParameters>]
-Get-ChildItem [[-Filter] <string>] -LiteralPath <string[]> [-Include <string[]>] [-Exclude <string[]>] [-Recurse] [-Depth <uint32>] [-Force] [-Name] [-UseTransaction] [-Attributes <FlagsExpression[FileAttributes]>] [-FollowSymlink] [-Directory] [-File] [-Hidden] [-ReadOnly] [-System] [<CommonParameters>]
+Get-ChildItem [[-Filter] <string>] -LiteralPath <string[]> [-Include <string[]>] [-Exclude <string[]>] [-Recurse] [-Depth <uint>] [-Force] [-Name] [-UseTransaction] [-Attributes <FlagsExpression[FileAttributes]>] [-FollowSymlink] [-Directory] [-File] [-Hidden] [-ReadOnly] [-System] [<CommonParameters>]
 ```
 
 Syntax (7):
@@ -2201,7 +2228,7 @@ Get-Clipboard [-Format <ClipboardFormat>] [-TextFormatType <TextDataFormat>] [-R
 Syntax (7):
 
 ```powershell
-Get-Clipboard [-Raw] [-Delimiter <string[]>] [<CommonParameters>]
+Get-Clipboard [-Raw] [<CommonParameters>]
 ```
 
 Example: Get the content of the clipboard
@@ -2377,14 +2404,14 @@ Module: Microsoft.PowerShell.Utility
 Syntax (5.1):
 
 ```powershell
-Get-Culture [<CommonParameters>]
+Get-Culture
 ```
 
 Syntax (7):
 
 ```powershell
 Get-Culture [-NoUserOverrides] [<CommonParameters>]
-Get-Culture [[-Name] <string[]>] [-NoUserOverrides] [<CommonParameters>]
+Get-Culture [-Name <string[]>] [-NoUserOverrides] [<CommonParameters>]
 Get-Culture [-ListAvailable] [<CommonParameters>]
 ```
 
@@ -2424,9 +2451,9 @@ Syntax (7):
 
 ```powershell
 Get-Date [[-Date] <datetime>] [-Year <int>] [-Month <int>] [-Day <int>] [-Hour <int>] [-Minute <int>] [-Second <int>] [-Millisecond <int>] [-DisplayHint <DisplayHintType>] [-Format <string>] [-AsUTC] [<CommonParameters>]
-Get-Date [[-Date] <datetime>] -UFormat <string> [-Year <int>] [-Month <int>] [-Day <int>] [-Hour <int>] [-Minute <int>] [-Second <int>] [-Millisecond <int>] [-DisplayHint <DisplayHintType>] [-AsUTC] [<CommonParameters>]
+Get-Date [[-Date] <datetime>] -UFormat <string> [-Year <int>] [-Month <int>] [-Day <int>] [-Hour <int>] [-Minute <int>] [-Second <int>] [-Millisecond <int>] [-DisplayHint <DisplayHintType>] [<CommonParameters>]
 Get-Date -UnixTimeSeconds <long> [-Year <int>] [-Month <int>] [-Day <int>] [-Hour <int>] [-Minute <int>] [-Second <int>] [-Millisecond <int>] [-DisplayHint <DisplayHintType>] [-Format <string>] [-AsUTC] [<CommonParameters>]
-Get-Date -UnixTimeSeconds <long> -UFormat <string> [-Year <int>] [-Month <int>] [-Day <int>] [-Hour <int>] [-Minute <int>] [-Second <int>] [-Millisecond <int>] [-DisplayHint <DisplayHintType>] [-AsUTC] [<CommonParameters>]
+Get-Date -UnixTimeSeconds <long> -UFormat <string> [-Year <int>] [-Month <int>] [-Day <int>] [-Hour <int>] [-Minute <int>] [-Second <int>] [-Millisecond <int>] [-DisplayHint <DisplayHintType>] [<CommonParameters>]
 ```
 
 Example: Get the current date and time
@@ -2460,8 +2487,7 @@ Module: Microsoft.PowerShell.Utility
 Syntax:
 
 ```powershell
-Get-Error [-Newest <int>] [<CommonParameters>]
-Get-Error [[-InputObject] <psobject>] [<CommonParameters>]
+Get-Error [[-Newest] <int>] [-InputObject <psobject>] [<CommonParameters>]
 ```
 
 Example: Get the most recent error details
@@ -2573,8 +2599,6 @@ Syntax (5.1):
 Get-FileHash [-Path] <String[]> [-Algorithm <String>] [<CommonParameters>]
 Get-FileHash -LiteralPath <String[]> [-Algorithm <String>] [<CommonParameters>]
 Get-FileHash -InputStream <Stream> [-Algorithm <String>] [<CommonParameters>]
-Get-FileHash $PSHOME\powershell.exe | Format-List
-Get-FileHash C:\Users\user1\Downloads\Contoso8_1_ENT.iso -Algorithm SHA384 | Format-List
 ```
 
 Syntax (7):
@@ -2730,7 +2754,7 @@ Module: Microsoft.PowerShell.Utility
 Syntax:
 
 ```powershell
-Get-Host [<CommonParameters>]
+Get-Host
 ```
 
 Example: Get information about the PowerShell console host
@@ -2752,7 +2776,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | :--- | :--- |
 | `Name` | "ConsoleHost" |
 | `InstanceId` | A random UUID for this session (changes each start) |
-| `UI` | Host UI object carrying `SupportsVirtualTerminal` (always True) and a RawUI type name |
+| `UI` | Host UI object containing only `SupportsVirtualTerminal` (always True) |
 | `CurrentCulture` | CultureInfo object (LCID/Name/DisplayName), returned from the registry table of the interface language, zh-CN when that language has no registered locale |
 | `CurrentUICulture` | Same as CurrentCulture |
 
@@ -3055,9 +3079,8 @@ Module: PackageManagement
 Syntax (5.1):
 
 ```powershell
-Get-Package [[-Name] <string[]>] [-RequiredVersion <string>] [-MinimumVersion <string>] [-MaximumVersion <string>] [-AllVersions] [-Force] [-ForceBootstrap] [-ProviderName <string[]>] [-IncludeWindowsInstaller] [-IncludeSystemComponent] [<CommonParameters>]
-Get-Package [[-Name] <string[]>] [-RequiredVersion <string>] [-MinimumVersion <string>] [-MaximumVersion <string>] [-AllVersions] [-Force] [-ForceBootstrap] [-ProviderName <string[]>] [-AdditionalArguments <string[]>] [<CommonParameters>]
-Get-Package [[-Name] <string[]>] [-RequiredVersion <string>] [-MinimumVersion <string>] [-MaximumVersion <string>] [-AllVersions] [-Force] [-ForceBootstrap] [-ProviderName <string[]>] [-PackageManagementProvider <string>] [-Type <string>] [-Scope <string>] [-AllowClobber] [-SkipPublisherCheck] [-InstallUpdate] [-NoPathUpdate] [<CommonParameters>]
+Get-Package [[-Name] <string[]>] [-RequiredVersion <string>] [-MinimumVersion <string>] [-MaximumVersion <string>] [-AllVersions] [-Force] [-ForceBootstrap] [-ProviderName <string[]>] [-Destination <string>] [-ExcludeVersion] [-Scope <string>] [-SkipDependencies] [<CommonParameters>]
+Get-Package [[-Name] <string[]>] [-RequiredVersion <string>] [-MinimumVersion <string>] [-MaximumVersion <string>] [-AllVersions] [-Force] [-ForceBootstrap] [-ProviderName <string[]>] [-Scope <string>] [-PackageManagementProvider <string>] [-Type <string>] [-AllowClobber] [-SkipPublisherCheck] [-InstallUpdate] [-NoPathUpdate] [-AllowPrereleaseVersions] [<CommonParameters>]
 ```
 
 Syntax (7):
@@ -3106,6 +3129,7 @@ Module: PackageManagement
 Syntax (5.1):
 
 ```powershell
+Get-PackageSource [[-Name] <string>] [-Location <string>] [-Force] [-ForceBootstrap] [-ProviderName <string[]>] [-ConfigFile <string>] [-SkipValidate] [<CommonParameters>]
 Get-PackageSource [[-Name] <string>] [-Location <string>] [-Force] [-ForceBootstrap] [-ProviderName <string[]>] [-PackageManagementProvider <string>] [-PublishLocation <string>] [-ScriptSourceLocation <string>] [-ScriptPublishLocation <string>] [<CommonParameters>]
 ```
 
@@ -3224,7 +3248,7 @@ Module: Microsoft.PowerShell.Utility
 Syntax (5.1):
 
 ```powershell
-Get-PSBreakpoint [[-Script] <string[]>] [<CommonParameters>]
+Get-PSBreakpoint [-Script] <string[]> [<CommonParameters>]
 Get-PSBreakpoint -Variable <string[]> [-Script <string[]>] [<CommonParameters>]
 Get-PSBreakpoint -Command <string[]> [-Script <string[]>] [<CommonParameters>]
 Get-PSBreakpoint [-Type] <BreakpointType[]> [-Script <string[]>] [<CommonParameters>]
@@ -3584,7 +3608,7 @@ Module: Microsoft.PowerShell.Utility
 Syntax (5.1):
 
 ```powershell
-Get-Random [[-Maximum] <Object>] [-SetSeed <int>] [-Minimum <Object>] [<CommonParameters>]
+Get-Random [[-Maximum] <Object>] [-SetSeed <int>] [-Minimum <Object>] [-Count <int>] [<CommonParameters>]
 Get-Random [-InputObject] <Object[]> [-SetSeed <int>] [-Count <int>] [<CommonParameters>]
 ```
 
@@ -3609,7 +3633,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 - Consistent with the original 5.1/7.
 
 - Type: Go implementation.
-- Function: randomness. `shuf` counterpart.
+- Function: randomness. `shuf` / `$RANDOM` counterpart.
 
 | Parameter | Type | Meaning |
 | :--- | :--- | :--- |
@@ -3906,9 +3930,9 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 ### Get-Verb
 
-Version: 7 only
+Version: Both
 
-Module: Microsoft.PowerShell.Utility
+Module: 5.1 in Microsoft.PowerShell.Core, 7 in Microsoft.PowerShell.Utility
 
 Syntax:
 
@@ -3922,7 +3946,7 @@ Example: Get a list of all verbs
 Get-Verb
 ```
 
-Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/Get-Verb.md)
+Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/5.1/Microsoft.PowerShell.Core/Get-Verb.md) / [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/Get-Verb.md)
 
 
 ### Group-Object
@@ -3988,14 +4012,12 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: New-Alias, Remove-Alias, Import-Alias, Export-Alias.
+- Companions: Set-Alias, New-Alias, Remove-Alias, Import-Alias, Export-Alias.
 - Function: manages aliases.
 
 | Parameter | Type | Meaning |
 | :--- | :--- | :--- |
-| `-Name` (position 0) | string | Alias name |
-| `-Value` (position 1) | string | Target command |
-| `-Force` | switch | Lets New-Alias overwrite an existing alias |
+| `-Path` (position 0) | path | Alias file path |
 
 - Set-Alias overwrites; New-Alias errors on an existing alias without -Force; Remove-Alias deletes; Export-Alias writes one `name=target` per line; Import-Alias reads them back.
 
@@ -4148,7 +4170,7 @@ Source: [Official English docs (5.1)](https://learn.microsoft.com/en-us/powershe
 
 ### Import-PowerShellDataFile
 
-Version: 7 only
+Version: Both
 
 Module: Microsoft.PowerShell.Utility
 
@@ -4167,7 +4189,7 @@ $config = Import-PowerShellDataFile .\Configuration.psd1
 $config.AllNodes
 ```
 
-Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/Import-PowerShellDataFile.md)
+Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/5.1/Microsoft.PowerShell.Utility/Import-PowerShellDataFile.md) / [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/Import-PowerShellDataFile.md)
 
 
 ### Import-PSSession
@@ -4349,6 +4371,7 @@ Example: Evaluate an expression
 ```powershell
 $Command = "Get-Process"
 $Command
+Invoke-Expression $Command
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/Invoke-Expression.md)
@@ -4827,7 +4850,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: New-Alias, Remove-Alias, Import-Alias, Export-Alias.
+- Companions: Set-Alias, New-Alias, Remove-Alias, Import-Alias, Export-Alias.
 - Function: manages aliases.
 
 | Parameter | Type | Meaning |
@@ -4870,7 +4893,6 @@ Syntax (5.1):
 
 ```powershell
 New-Guid [<CommonParameters>]
-New-Guid
 ```
 
 Syntax (7):
@@ -5345,7 +5367,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: New-Variable, Remove-Variable, Clear-Variable.
+- Companions: Set-Variable, New-Variable, Remove-Variable, Clear-Variable.
 - Function: sets/creates/removes/empties variables.
 
 | Parameter | Type | Meaning |
@@ -5354,7 +5376,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | `-Value` (position 1) | object | Value (New-Variable's `-Value` also takes position 1) |
 | `-Force` | switch | Lets New-Variable overwrite an existing variable |
 
-- Behavior: creating over an existing variable without -Force → error; assigning to read-only automatic variables (PID etc.) → error. Remove deletes straight from the map; Clear sets $null.
+- Behavior: creating over an existing variable without -Force → error; assigning to read-only automatic variables (PID etc.) → error with Set/New, silently ignored with Clear. Remove deletes straight from the map; Clear sets $null.
 
 
 ### Out-Default
@@ -5445,11 +5467,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 #### Implementation in PowerShell For Linux:
 
-- Consistent with the original 5.1/7.
+- Differs from the original: `-Paging` is not supported.
 
 - Type: Go implementation.
 - Function: outputs to the screen (the default behavior).
-- Parameters: none.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-InputObject` (position 0) | object | Object to output |
 - Implementation: formats input objects and writes to stdout.
 
 
@@ -5479,7 +5504,10 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 - Type: Go implementation.
 - Function: discards output. `> /dev/null` counterpart.
-- Parameters: none.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-InputObject` (position 0) | object | Input object, discarded |
 
 
 ### Out-String
@@ -5512,13 +5540,14 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 #### Implementation in PowerShell For Linux:
 
-- Consistent with the original 5.1/7.
+- Differs from the original: `-Width` / `-NoNewline` are not supported.
 
 - Type: Go implementation.
 - Function: formats objects into a string.
 
 | Parameter | Type | Meaning |
 | :--- | :--- | :--- |
+| `-InputObject` (position 0) | object | Object to stringify |
 | `-Stream` | switch | One line per object (`command | Out-String -Stream` ≈ verbatim text); otherwise one whole string |
 
 - Implementation: reuses the object formatter writing into a buffer.
@@ -5765,7 +5794,6 @@ Syntax (7):
 ```powershell
 Register-ArgumentCompleter -CommandName <string[]> -ScriptBlock <scriptblock> [-Native] [<CommonParameters>]
 Register-ArgumentCompleter -ParameterName <string> -ScriptBlock <scriptblock> [-CommandName <string[]>] [<CommonParameters>]
-Register-ArgumentCompleter -ScriptBlock <scriptblock> [-NativeFallback] [<CommonParameters>]
 ```
 
 Example: Register a custom argument completer
@@ -5881,8 +5909,9 @@ Module: Microsoft.PowerShell.PSResourceGet
 Syntax:
 
 ```powershell
-Register-PSResourceRepository [-Name] <string> [-Uri] <string> [-Trusted] [-Priority <int>] [-ApiVersion <PSRepositoryInfo+APIVersion>] [-CredentialInfo <PSCredentialInfo>] [-PassThru] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Register-PSResourceRepository [-Name] <string> [-Uri] <string> [-Trusted] [-Priority <int>] [-ApiVersion <PSRepositoryInfo+APIVersion>] [-CredentialInfo <PSCredentialInfo>] [-CredentialProvider <CredentialProvider>] [-PassThru] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Register-PSResourceRepository -PSGallery [-Trusted] [-Priority <int>] [-PassThru] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Register-PSResourceRepository -MicrosoftArtifactRegistry [-Trusted] [-Priority <int>] [-PassThru] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Register-PSResourceRepository -Repository <hashtable[]> [-PassThru] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
@@ -5919,14 +5948,12 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: New-Alias, Remove-Alias, Import-Alias, Export-Alias.
+- Companions: Set-Alias, New-Alias, Remove-Alias, Import-Alias, Export-Alias.
 - Function: manages aliases.
 
 | Parameter | Type | Meaning |
 | :--- | :--- | :--- |
 | `-Name` (position 0) | string | Alias name |
-| `-Value` (position 1) | string | Target command |
-| `-Force` | switch | Lets New-Alias overwrite an existing alias |
 
 - Set-Alias overwrites; New-Alias errors on an existing alias without -Force; Remove-Alias deletes; Export-Alias writes one `name=target` per line; Import-Alias reads them back.
 
@@ -6242,7 +6269,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: New-Variable, Remove-Variable, Clear-Variable.
+- Companions: Set-Variable, New-Variable, Remove-Variable, Clear-Variable.
 - Function: sets/creates/removes/empties variables.
 
 | Parameter | Type | Meaning |
@@ -6251,7 +6278,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | `-Value` (position 1) | object | Value (New-Variable's `-Value` also takes position 1) |
 | `-Force` | switch | Lets New-Variable overwrite an existing variable |
 
-- Behavior: creating over an existing variable without -Force → error; assigning to read-only automatic variables (PID etc.) → error. Remove deletes straight from the map; Clear sets $null.
+- Behavior: creating over an existing variable without -Force → error; assigning to read-only automatic variables (PID etc.) → error with Set/New, silently ignored with Clear. Remove deletes straight from the map; Clear sets $null.
 
 
 ### Rename-Item
@@ -6734,14 +6761,13 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 - Consistent with the original 5.1/7.
 
 - Type: Go implementation.
-- Companions: New-Alias, Remove-Alias, Import-Alias, Export-Alias.
+- Companions: Set-Alias, New-Alias, Remove-Alias, Import-Alias, Export-Alias.
 - Function: manages aliases.
 
 | Parameter | Type | Meaning |
 | :--- | :--- | :--- |
 | `-Name` (position 0) | string | Alias name |
 | `-Value` (position 1) | string | Target command |
-| `-Force` | switch | Lets New-Alias overwrite an existing alias |
 
 - Set-Alias overwrites; New-Alias errors on an existing alias without -Force; Remove-Alias deletes; Export-Alias writes one `name=target` per line; Import-Alias reads them back.
 
@@ -6813,6 +6839,11 @@ Example: Replace the contents of multiple files in a directory
 
 ```powershell
 Get-ChildItem -Path .\Test*.txt
+```
+
+```powershell
+Set-Content -Path .\Test*.txt -Value 'Hello, World'
+Get-Content -Path .\Test*.txt
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Management/Set-Content.md)
@@ -7021,7 +7052,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | :--- | :--- | :--- |
 | `-Path` (position 0) | path | Target directory. Accepts relative paths, `..`, `~`/`~/...` (home). Bash's `cd` equivalent |
 
-- Behavior: nonexistent or non-directory target → error onto stderr, $?=false. On success the current directory changes.
+- Behavior: nonexistent or non-directory target → error onto stderr, $?=false. On success the current directory changes; bare invocation returns to the home directory.
 
 
 ### Set-MarkdownOption
@@ -7172,7 +7203,7 @@ Set-PSReadLineOption [-EditMode <EditMode>] [-ContinuationPrompt <string>] [-His
 Syntax (7):
 
 ```powershell
-Set-PSReadLineOption [-EditMode <EditMode>] [-ContinuationPrompt <string>] [-HistoryNoDuplicates] [-AddToHistoryHandler <Func[string,Object]>] [-CommandValidationHandler <Action[CommandAst]>] [-HistorySearchCursorMovesToEnd] [-MaximumHistoryCount <int>] [-MaximumKillRingCount <int>] [-ShowToolTips] [-ExtraPromptLineCount <int>] [-DingTone <int>] [-DingDuration <int>] [-BellStyle <BellStyle>] [-CompletionQueryItems <int>] [-WordDelimiters <string>] [-HistorySearchCaseSensitive] [-HistorySaveStyle <HistorySaveStyle>] [-HistorySavePath <string>] [-AnsiEscapeTimeout <int>] [-PromptText <string[]>] [-ViModeIndicator <ViModeStyle>] [-ViModeChangeHandler <scriptblock>] [-PredictionSource <PredictionSource>] [-PredictionViewStyle <PredictionViewStyle>] [-Colors <hashtable>] [-TerminateOrphanedConsoleApps] [-EnableScreenReaderMode] [<CommonParameters>]
+Set-PSReadLineOption [-EditMode <EditMode>] [-ContinuationPrompt <string>] [-HistoryNoDuplicates] [-AddToHistoryHandler <Func[string,Object]>] [-CommandValidationHandler <Action[CommandAst]>] [-HistorySearchCursorMovesToEnd] [-MaximumHistoryCount <int>] [-MaximumKillRingCount <int>] [-ShowToolTips] [-ExtraPromptLineCount <int>] [-DingTone <int>] [-DingDuration <int>] [-BellStyle <BellStyle>] [-CompletionQueryItems <int>] [-WordDelimiters <string>] [-HistorySearchCaseSensitive] [-HistorySaveStyle <HistorySaveStyle>] [-HistorySavePath <string>] [-AnsiEscapeTimeout <int>] [-PromptText <string[]>] [-ViModeIndicator <ViModeStyle>] [-ViModeChangeHandler <scriptblock>] [-PredictionSource <PredictionSource>] [-PredictionViewStyle <PredictionViewStyle>] [-Colors <hashtable>] [-TerminateOrphanedConsoleApps] [<CommonParameters>]
 ```
 
 Example (5.1): Set foreground and background colors
@@ -7199,7 +7230,7 @@ Module: Microsoft.PowerShell.PSResourceGet
 Syntax:
 
 ```powershell
-Set-PSResourceRepository [-Name] <string> [-Uri <string>] [-Trusted] [-Priority <int>] [-ApiVersion <PSRepositoryInfo+APIVersion>] [-CredentialInfo <PSCredentialInfo>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-PSResourceRepository [-Name] <string> [-Uri <string>] [-Trusted] [-Priority <int>] [-ApiVersion <PSRepositoryInfo+APIVersion>] [-CredentialInfo <PSCredentialInfo>] [-CredentialProvider <CredentialProvider>] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-PSResourceRepository -Repository <hashtable[]> [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
@@ -7222,7 +7253,7 @@ Syntax:
 
 ```powershell
 Set-StrictMode -Version <version> [<CommonParameters>]
-Set-StrictMode -Off [<CommonParameters>]
+Set-StrictMode [-Off] [<CommonParameters>]
 ```
 
 Example: Turn on strict mode as version 1.0
@@ -7290,7 +7321,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 - Differs from the original: Assignment to read-only automatic variables (PID etc.) is rejected.
 
 - Type: Go implementation.
-- Companions: New-Variable, Remove-Variable, Clear-Variable.
+- Companions: Set-Variable, New-Variable, Remove-Variable, Clear-Variable.
 - Function: sets/creates/removes/empties variables.
 
 | Parameter | Type | Meaning |
@@ -7299,7 +7330,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | `-Value` (position 1) | object | Value (New-Variable's `-Value` also takes position 1) |
 | `-Force` | switch | Lets New-Variable overwrite an existing variable |
 
-- Behavior: creating over an existing variable without -Force → error; assigning to read-only automatic variables (PID etc.) → error. Remove deletes straight from the map; Clear sets $null.
+- Behavior: creating over an existing variable without -Force → error; assigning to read-only automatic variables (PID etc.) → error with Set/New, silently ignored with Clear. Remove deletes straight from the map; Clear sets $null.
 
 
 ### Show-Markdown
@@ -7784,8 +7815,8 @@ Tee-Object -Variable <string> [-InputObject <psobject>] [<CommonParameters>]
 Syntax (7):
 
 ```powershell
-Tee-Object [-FilePath] <string> [-InputObject <psobject>] [-Append] [-Encoding <Encoding>] [<CommonParameters>]
-Tee-Object -LiteralPath <string> [-InputObject <psobject>] [-Encoding <Encoding>] [<CommonParameters>]
+Tee-Object [-FilePath] <string> [[-Encoding] <Encoding>] [-InputObject <psobject>] [-Append] [<CommonParameters>]
+Tee-Object [[-Encoding] <Encoding>] -LiteralPath <string> [-InputObject <psobject>] [<CommonParameters>]
 Tee-Object -Variable <string> [-InputObject <psobject>] [<CommonParameters>]
 ```
 
@@ -7939,6 +7970,8 @@ Syntax (5.1):
 ```powershell
 Test-Path [-Path] <string[]> [-Filter <string>] [-Include <string[]>] [-Exclude <string[]>] [-PathType <TestPathType>] [-IsValid] [-Credential <pscredential>] [-UseTransaction] [-OlderThan <datetime>] [-NewerThan <datetime>] [<CommonParameters>]
 Test-Path -LiteralPath <string[]> [-Filter <string>] [-Include <string[]>] [-Exclude <string[]>] [-PathType <TestPathType>] [-IsValid] [-Credential <pscredential>] [-UseTransaction] [-OlderThan <datetime>] [-NewerThan <datetime>] [<CommonParameters>]
+Test-Path [-Path] <string[]> [-Filter <string>] [-Include <string[]>] [-Exclude <string[]>] [-PathType <TestPathType>] [-IsValid] [-Credential <pscredential>] [-UseTransaction] [<CommonParameters>]
+Test-Path -LiteralPath <string[]> [-Filter <string>] [-Include <string[]>] [-Exclude <string[]>] [-PathType <TestPathType>] [-IsValid] [-Credential <pscredential>] [-UseTransaction] [<CommonParameters>]
 ```
 
 Syntax (7):
@@ -7946,6 +7979,8 @@ Syntax (7):
 ```powershell
 Test-Path [-Path] <string[]> [-Filter <string>] [-Include <string[]>] [-Exclude <string[]>] [-PathType <TestPathType>] [-IsValid] [-Credential <pscredential>] [-OlderThan <datetime>] [-NewerThan <datetime>] [<CommonParameters>]
 Test-Path -LiteralPath <string[]> [-Filter <string>] [-Include <string[]>] [-Exclude <string[]>] [-PathType <TestPathType>] [-IsValid] [-Credential <pscredential>] [-OlderThan <datetime>] [-NewerThan <datetime>] [<CommonParameters>]
+Test-Path [-Path] <string[]> [-Filter <string>] [-Include <string[]>] [-Exclude <string[]>] [-PathType <TestPathType>] [-IsValid] [-Credential <pscredential>] [<CommonParameters>]
+Test-Path -LiteralPath <string[]> [-Filter <string>] [-Include <string[]>] [-Exclude <string[]>] [-PathType <TestPathType>] [-IsValid] [-Credential <pscredential>] [<CommonParameters>]
 ```
 
 Example: Test a path
@@ -8047,12 +8082,10 @@ Syntax (5.1):
 ```powershell
 Uninstall-Package [-InputObject] <SoftwareIdentity[]> [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [<CommonParameters>]
 Uninstall-Package [-Name] <string[]> [-RequiredVersion <string>] [-MinimumVersion <string>] [-MaximumVersion <string>] [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-ProviderName <string[]>] [<CommonParameters>]
-Uninstall-Package [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-IncludeWindowsInstaller] [-IncludeSystemComponent] [<CommonParameters>]
-Uninstall-Package [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-IncludeWindowsInstaller] [-IncludeSystemComponent] [<CommonParameters>]
-Uninstall-Package [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-AdditionalArguments <string[]>] [<CommonParameters>]
-Uninstall-Package [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-AdditionalArguments <string[]>] [<CommonParameters>]
-Uninstall-Package [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-PackageManagementProvider <string>] [-Type <string>] [-Scope <string>] [-AllowClobber] [-SkipPublisherCheck] [-InstallUpdate] [-NoPathUpdate] [<CommonParameters>]
-Uninstall-Package [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-PackageManagementProvider <string>] [-Type <string>] [-Scope <string>] [-AllowClobber] [-SkipPublisherCheck] [-InstallUpdate] [-NoPathUpdate] [<CommonParameters>]
+Uninstall-Package [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-Destination <string>] [-ExcludeVersion] [-Scope <string>] [-SkipDependencies] [<CommonParameters>]
+Uninstall-Package [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-Destination <string>] [-ExcludeVersion] [-Scope <string>] [-SkipDependencies] [<CommonParameters>]
+Uninstall-Package [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-Scope <string>] [-PackageManagementProvider <string>] [-Type <string>] [-AllowClobber] [-SkipPublisherCheck] [-InstallUpdate] [-NoPathUpdate] [-AllowPrereleaseVersions] [<CommonParameters>]
+Uninstall-Package [-AllVersions] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-Scope <string>] [-PackageManagementProvider <string>] [-Type <string>] [-AllowClobber] [-SkipPublisherCheck] [-InstallUpdate] [-NoPathUpdate] [-AllowPrereleaseVersions] [<CommonParameters>]
 ```
 
 Syntax (7):
@@ -8158,6 +8191,8 @@ Syntax (5.1):
 ```powershell
 Unregister-PackageSource [[-Source] <string>] [-Location <string>] [-Credential <pscredential>] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-ProviderName <string>] [<CommonParameters>]
 Unregister-PackageSource -InputObject <PackageSource[]> [-Credential <pscredential>] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [<CommonParameters>]
+Unregister-PackageSource [-Credential <pscredential>] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-ConfigFile <string>] [-SkipValidate] [<CommonParameters>]
+Unregister-PackageSource [-Credential <pscredential>] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-ConfigFile <string>] [-SkipValidate] [<CommonParameters>]
 Unregister-PackageSource [-Credential <pscredential>] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-PackageManagementProvider <string>] [-PublishLocation <string>] [-ScriptSourceLocation <string>] [-ScriptPublishLocation <string>] [<CommonParameters>]
 Unregister-PackageSource [-Credential <pscredential>] [-Force] [-ForceBootstrap] [-WhatIf] [-Confirm] [-PackageManagementProvider <string>] [-PublishLocation <string>] [-ScriptSourceLocation <string>] [-ScriptPublishLocation <string>] [<CommonParameters>]
 ```
@@ -8197,6 +8232,8 @@ Unregister-PSResourceRepository [-Name] <string[]> [-PassThru] [-WhatIf] [-Confi
 Example: 
 
 ```powershell
+Get-PSResourceRepository
+Unregister-PSResourceRepository -Name PSGv3
 Get-PSResourceRepository
 ```
 
@@ -8386,6 +8423,8 @@ Example:
 
 ```powershell
 Get-PSResource -Name "TestModule"
+Update-PSResource -Name "TestModule"
+Get-PSResource -Name "TestModule"
 ```
 
 Source: [Official English docs (7)](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.psresourceget/update-psresource?view=powershell-7.5)
@@ -8430,7 +8469,7 @@ Syntax:
 
 ```powershell
 Update-TypeData [[-AppendPath] <string[]>] [-PrependPath <string[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Update-TypeData -TypeName <string> [-MemberType <PSMemberTypes>] [-MemberName <string>] [-Value <Object>] [-SecondValue <Object>] [-TypeConverter <type>] [-TypeAdapter <type>] [-SerializationMethod <string>] [-TargetTypeForDeserialization <type>] [-SerializationDepth <int>] [-DefaultDisplayProperty <string>] [-InheritPropertySerializationSet <bool>] [-StringSerializationSource <string>] [-DefaultDisplayPropertySet <string[]>] [-DefaultKeyPropertySet <string[]>] [-PropertySerializationSet <string[]>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-TypeData -TypeName <string> [-MemberType <PSMemberTypes>] [-MemberName <string>] [-Value <Object>] [-SecondValue <Object>] [-TypeConverter <type>] [-TypeAdapter <type>] [-SerializationMethod <string>] [-TargetTypeForDeserialization <type>] [-SerializationDepth <int>] [-DefaultDisplayProperty <string>] [-InheritPropertySerializationSet <Nullable`1>] [-StringSerializationSource <string>] [-DefaultDisplayPropertySet <string[]>] [-DefaultKeyPropertySet <string[]>] [-PropertySerializationSet <string[]>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Update-TypeData [-TypeData] <TypeData[]> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
@@ -8579,7 +8618,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | `-Name` (position 0) | string | Process name |
 | `-Id` | int | Process ID |
 
-- Implementation: on Linux checks whether /proc/<pid> disappears; by name, polls the process list until it does.
+- Implementation: on Linux reads `/proc/<pid>/stat` to judge liveness (Z/X count as ended), polling every 100ms; by name, polls the process list until it disappears.
 
 
 ### Where-Object
@@ -8712,7 +8751,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: Write-Warning, Write-Verbose, Write-Debug, Write-Information.
+- Companions: Write-Error, Write-Warning, Write-Verbose, Write-Debug, Write-Information.
 - Function: writes leveled messages onto stderr/stdout.
 
 | Parameter | Type | Meaning |
@@ -8766,7 +8805,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 - Differs from the original: Prefixes follow the UI language (Chinese: 错误/警告/详细/调试; English: ERROR/WARNING/VERBOSE/DEBUG).
 
 - Type: Go implementation.
-- Companions: Write-Warning, Write-Verbose, Write-Debug, Write-Information.
+- Companions: Write-Error, Write-Warning, Write-Verbose, Write-Debug, Write-Information.
 - Function: writes leveled messages onto stderr/stdout.
 
 | Parameter | Type | Meaning |
@@ -8836,7 +8875,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: Write-Warning, Write-Verbose, Write-Debug, Write-Information.
+- Companions: Write-Error, Write-Warning, Write-Verbose, Write-Debug, Write-Information.
 - Function: writes leveled messages onto stderr/stdout.
 
 | Parameter | Type | Meaning |
@@ -8861,7 +8900,7 @@ Write-Output [-InputObject] <psobject[]> [-NoEnumerate] [<CommonParameters>]
 Syntax (7):
 
 ```powershell
-Write-Output [-InputObject] <psobject> [-NoEnumerate] [<CommonParameters>]
+Write-Output [-InputObject] <PSObject[]> [-NoEnumerate] [<CommonParameters>]
 ```
 
 Example: Get objects and write them to the console
@@ -8941,7 +8980,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: Write-Warning, Write-Verbose, Write-Debug, Write-Information.
+- Companions: Write-Error, Write-Warning, Write-Verbose, Write-Debug, Write-Information.
 - Function: writes leveled messages onto stderr/stdout.
 
 | Parameter | Type | Meaning |
@@ -8974,7 +9013,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 #### Implementation in PowerShell For Linux:
 
 - Type: Go implementation.
-- Companions: Write-Warning, Write-Verbose, Write-Debug, Write-Information.
+- Companions: Write-Error, Write-Warning, Write-Verbose, Write-Debug, Write-Information.
 - Function: writes leveled messages onto stderr/stdout.
 
 | Parameter | Type | Meaning |

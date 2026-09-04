@@ -13,135 +13,134 @@ PowerShell For Linux默认不实现它们，但有时候会因为特殊原因实
 
 | 指令 | 模块 | 版本 | 差异 | 用途 | 实现状态 | 备注 |
 |---|---|---|---|---|---|---|
-| [`Add-AppProvisionedSharedPackageContainer`](#add-appprovisionedsharedpackagecontainer) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Add-AppSharedPackageContainer`](#add-appsharedpackagecontainer) | Appx | 都有 | 无 | 部署共享包容器定义。 | 不实现 |  |
+| [`Add-AppProvisionedSharedPackageContainer`](#add-appprovisionedsharedpackagecontainer) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Add-AppSharedPackageContainer`](#add-appsharedpackagecontainer) | Appx | 仅5.1 | 仅5.1提供 | 部署共享包容器定义。 | 不实现 |  |
 | [`Add-AppvClientConnectionGroup`](#add-appvclientconnectiongroup) | AppvClient | 仅5.1 | 仅5.1提供 | 创建多个包的组合。 | 不实现 |  |
 | [`Add-AppvClientPackage`](#add-appvclientpackage) | AppvClient | 仅5.1 | 仅5.1提供 | 向运行 App-V 客户端的计算机添加包。 | 不实现 |  |
 | [`Add-AppvPublishingServer`](#add-appvpublishingserver) | AppvClient | 仅5.1 | 仅5.1提供 | 为运行 App-V 客户端的计算机添加发布服务器。 | 不实现 |  |
-| [`Add-AppxPackage`](#add-appxpackage) | Appx | 都有 | 无 | 向用户帐户添加已签名的应用包。 | 不实现 |  |
-| [`Add-AppxProvisionedPackage`](#add-appxprovisionedpackage) | Dism | 都有 | 语法不同 | 向 Windows 映像添加应用包 (.appx)，使其为每个新用户安装。 | 不实现 |  |
-| [`Add-AppxVolume`](#add-appxvolume) | Appx | 都有 | 无 | 向包管理器添加 appx 卷。 | 不实现 |  |
-| [`Add-BitsFile`](#add-bitsfile) | BitsTransfer | 都有 | 无 | 向现有 BITS 传输作业添加一个或多个文件。 | 不实现 |  |
-| [`Add-CertificateEnrollmentPolicyServer`](#add-certificateenrollmentpolicyserver) | PKI | 都有 | 无 | 向当前用户或本地系统配置添加注册策略服务器。 | 不实现 |  |
-| [`Add-Computer`](#add-computer) | Microsoft.PowerShell.Management | 都有 | 无 | 将本地计算机添加到域或工作组中。 | 不实现 |  |
-| [`Add-JobTrigger`](#add-jobtrigger) | PSScheduledJob | 都有 | 无 | 将作业触发器添加到计划作业。 | 不实现 |  |
-| [`Add-KdsRootKey`](#add-kdsrootkey) | Kds | 都有 | 无 | 为 AD 中的 KdsSvc 生成新根密钥。 | 不实现 |  |
-| [`Add-LocalGroupMember`](#add-localgroupmember) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 将成员添加到本地组。 | 不实现 |  |
+| [`Add-AppxPackage`](#add-appxpackage) | Appx | 仅5.1 | 仅5.1提供 | 向用户帐户添加已签名的应用包。 | 不实现 |  |
+| [`Add-AppxProvisionedPackage`](#add-appxprovisionedpackage) | Dism | 仅5.1 | 仅5.1提供 | 向 Windows 映像添加应用包 (.appx)，使其为每个新用户安装。 | 不实现 |  |
+| [`Add-AppxVolume`](#add-appxvolume) | Appx | 仅5.1 | 仅5.1提供 | 向包管理器添加 appx 卷。 | 不实现 |  |
+| [`Add-BitsFile`](#add-bitsfile) | BitsTransfer | 仅5.1 | 仅5.1提供 | 向现有 BITS 传输作业添加一个或多个文件。 | 不实现 |  |
+| [`Add-CertificateEnrollmentPolicyServer`](#add-certificateenrollmentpolicyserver) | PKI | 仅5.1 | 仅5.1提供 | 向当前用户或本地系统配置添加注册策略服务器。 | 不实现 |  |
+| [`Add-Computer`](#add-computer) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 将本地计算机添加到域或工作组中。 | 不实现 |  |
+| [`Add-JobTrigger`](#add-jobtrigger) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 将作业触发器添加到计划作业。 | 不实现 |  |
+| [`Add-KdsRootKey`](#add-kdsrootkey) | Kds | 仅5.1 | 仅5.1提供 | 为 AD 中的 KdsSvc 生成新根密钥。 | 不实现 |  |
+| [`Add-LocalGroupMember`](#add-localgroupmember) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 将成员添加到本地组。 | 不实现 |  |
 | [`Add-PSSnapin`](#add-pssnapin) | Microsoft.PowerShell.Core | 仅5.1 | 仅5.1提供 | 将一个或多个 Windows PowerShell 管理单元添加到当前会话。 | 不实现 |  |
-| [`Add-SignerRule`](#add-signerrule) | ConfigCI | 都有 | 无 | 创建签名者规则并添加到策略。 | 不实现 |  |
-| [`Add-WindowsCapability`](#add-windowscapability) | Dism | 都有 | 无 | 在指定操作系统映像安装 Windows 功能包。 | 不实现 |  |
-| [`Add-WindowsDriver`](#add-windowsdriver) | Dism | 都有 | 无 | 向脱机 Windows 映像添加驱动程序。 | 不实现 |  |
-| [`Add-WindowsImage`](#add-windowsimage) | Dism | 都有 | 无 | 向现有映像 (.wim) 文件添加附加映像。 | 不实现 |  |
-| [`Add-WindowsPackage`](#add-windowspackage) | Dism | 都有 | 无 | 向 Windows 映像添加单个 .cab 或 .msu 文件。 | 不实现 |  |
-| [`Checkpoint-Computer`](#checkpoint-computer) | Microsoft.PowerShell.Management | 都有 | 无 | 在本地计算机上创建系统还原点。 | 不实现 |  |
-| [`Clear-EventLog`](#clear-eventlog) | Microsoft.PowerShell.Management | 都有 | 无 | 清除本地或远程计算机上的指定事件日志中的所有条目。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
-| [`Clear-KdsCache`](#clear-kdscache) | Kds | 都有 | 无 | 清除本地计算机的组密钥缓存。 | 不实现 |  |
-| [`Clear-RecycleBin`](#clear-recyclebin) | Microsoft.PowerShell.Management | 仅7 | 仅7提供，5.1 中以 Clear-Recyclebin 形式提供（名称大小写不同） | 清除当前用户的回收站的内容。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
-| [`Clear-Recyclebin`](#clear-recyclebin) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供，7 中以 Clear-RecycleBin 形式提供（名称大小写不同） | 清除当前用户的回收站的内容。 | 不实现 |  |
-| [`Clear-ReFSDedupSchedule`](#clear-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 清除指定 ReFS 卷上的重复数据删除计划任务。 | 不实现 |  |
-| [`Clear-ReFSDedupScrubSchedule`](#clear-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 清除指定 ReFS 卷上的重复数据删除清理计划。 | 不实现 |  |
-| [`Clear-Tpm`](#clear-tpm) | TrustedPlatformModule | 都有 | 无 | 将 TPM 重置为默认状态。 | 不实现 |  |
+| [`Add-SignerRule`](#add-signerrule) | ConfigCI | 仅5.1 | 仅5.1提供 | 创建签名者规则并添加到策略。 | 不实现 |  |
+| [`Add-WindowsCapability`](#add-windowscapability) | Dism | 仅5.1 | 仅5.1提供 | 在指定操作系统映像安装 Windows 功能包。 | 不实现 |  |
+| [`Add-WindowsDriver`](#add-windowsdriver) | Dism | 仅5.1 | 仅5.1提供 | 向脱机 Windows 映像添加驱动程序。 | 不实现 |  |
+| [`Add-WindowsImage`](#add-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 向现有映像 (.wim) 文件添加附加映像。 | 不实现 |  |
+| [`Add-WindowsPackage`](#add-windowspackage) | Dism | 仅5.1 | 仅5.1提供 | 向 Windows 映像添加单个 .cab 或 .msu 文件。 | 不实现 |  |
+| [`Checkpoint-Computer`](#checkpoint-computer) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 在本地计算机上创建系统还原点。 | 不实现 |  |
+| [`Clear-EventLog`](#clear-eventlog) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 清除本地或远程计算机上的指定事件日志中的所有条目。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
+| [`Clear-KdsCache`](#clear-kdscache) | Kds | 仅5.1 | 仅5.1提供 | 清除本地计算机的组密钥缓存。 | 不实现 |  |
+| [`Clear-RecycleBin`](#clear-recyclebin) | Microsoft.PowerShell.Management | 都有 | 无 | 清除当前用户的回收站的内容。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
+| [`Clear-ReFSDedupSchedule`](#clear-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 清除指定 ReFS 卷上的重复数据删除计划任务。 | 不实现 |  |
+| [`Clear-ReFSDedupScrubSchedule`](#clear-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 清除指定 ReFS 卷上的重复数据删除清理计划。 | 不实现 |  |
+| [`Clear-Tpm`](#clear-tpm) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 将 TPM 重置为默认状态。 | 不实现 |  |
 | [`Clear-UevAppxPackage`](#clear-uevappxpackage) | UEV | 仅5.1 | 仅5.1提供 | 清除注册表计算机或用户节中的设置。 | 不实现 |  |
 | [`Clear-UevConfiguration`](#clear-uevconfiguration) | UEV | 仅5.1 | 仅5.1提供 | 清除 UE-V 配置设置。 | 不实现 |  |
-| [`Clear-WindowsCorruptMountPoint`](#clear-windowscorruptmountpoint) | Dism | 都有 | 无 | 删除与已损坏的已装载映像关联的全部资源。 | 不实现 |  |
-| [`Complete-BitsTransfer`](#complete-bitstransfer) | BitsTransfer | 都有 | 无 | 完成 BITS 传输作业。 | 不实现 |  |
-| [`Complete-DtcDiagnosticTransaction`](#complete-dtcdiagnostictransaction) | MsDtc | 都有 | 无 | 指定的事务是根事务则调用提交，否则对事务对象调用完成方法。 | 不实现 |  |
-| [`Complete-Transaction`](#complete-transaction) | Microsoft.PowerShell.Management | 都有 | 无 | 提交活动事务。 | 不实现 |  |
-| [`Confirm-SecureBootUEFI`](#confirm-securebootuefi) | SecureBoot | 都有 | 无 | 检查本地计算机安全启动状态，确认安全启动已启用。 | 不实现 |  |
+| [`Clear-WindowsCorruptMountPoint`](#clear-windowscorruptmountpoint) | Dism | 仅5.1 | 仅5.1提供 | 删除与已损坏的已装载映像关联的全部资源。 | 不实现 |  |
+| [`Complete-BitsTransfer`](#complete-bitstransfer) | BitsTransfer | 仅5.1 | 仅5.1提供 | 完成 BITS 传输作业。 | 不实现 |  |
+| [`Complete-DtcDiagnosticTransaction`](#complete-dtcdiagnostictransaction) | MsDtc | 仅5.1 | 仅5.1提供 | 指定的事务是根事务则调用提交，否则对事务对象调用完成方法。 | 不实现 |  |
+| [`Complete-Transaction`](#complete-transaction) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 提交活动事务。 | 不实现 |  |
+| [`Confirm-SecureBootUEFI`](#confirm-securebootuefi) | SecureBoot | 仅5.1 | 仅5.1提供 | 检查本地计算机安全启动状态，确认安全启动已启用。 | 不实现 |  |
 | [`Connect-PSSession`](#connect-pssession) | Microsoft.PowerShell.Core | 都有 | 无 | 重新连接到断开连接的会话。 | 不实现 | 远程会话，远程操作不在实现范围内 |
 | [`Connect-WSMan`](#connect-wsman) | Microsoft.WSMan.Management | 都有 | 无 | 连接到远程计算机上的 WinRM 服务。 | 不实现 |  |
 | [`Convert-String`](#convert-string) | Microsoft.PowerShell.Utility | 仅5.1 | 仅5.1提供 | 设置字符串的格式以匹配示例。 | 不实现 |  |
-| [`ConvertFrom-CIPolicy`](#convertfrom-cipolicy) | ConfigCI | 都有 | 无 | 将包含代码完整性策略的 .xml 文件转换为二进制格式。 | 不实现 |  |
+| [`ConvertFrom-CIPolicy`](#convertfrom-cipolicy) | ConfigCI | 仅5.1 | 仅5.1提供 | 将包含代码完整性策略的 .xml 文件转换为二进制格式。 | 不实现 |  |
 | [`ConvertFrom-SddlString`](#convertfrom-sddlstring) | Microsoft.PowerShell.Utility | 仅7 | 仅7提供 | 将 SDDL 字符串转换为自定义对象。 | 不实现 | 序列化 / 标记 / 格式（少用） |
 | [`ConvertFrom-String`](#convertfrom-string) | Microsoft.PowerShell.Utility | 仅5.1 | 仅5.1提供 | 从字符串内容中提取和分析结构化属性。 | 不实现 |  |
-| [`ConvertTo-ProcessMitigationPolicy`](#convertto-processmitigationpolicy) | ProcessMitigations | 都有 | 无 | 转换缓解策略文件格式。 | 不实现 |  |
-| [`ConvertTo-TpmOwnerAuth`](#convertto-tpmownerauth) | TrustedPlatformModule | 都有 | 无 | 从给定字符串创建 TPM 所有者授权值。 | 不实现 |  |
-| [`Copy-BcdEntry`](#copy-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Copy-UserInternationalSettingsToSystem`](#copy-userinternationalsettingstosystem) | International | 都有 | 无 | 将当前用户的区域设置复制到系统。 | 不实现 |  |
-| [`Disable-AppBackgroundTaskDiagnosticLog`](#disable-appbackgroundtaskdiagnosticlog) | AppBackgroundTask | 都有 | 无 | 禁用事件查看器中的后台任务日志。 | 不实现 |  |
+| [`ConvertTo-ProcessMitigationPolicy`](#convertto-processmitigationpolicy) | ProcessMitigations | 仅5.1 | 仅5.1提供 | 转换缓解策略文件格式。 | 不实现 |  |
+| [`ConvertTo-TpmOwnerAuth`](#convertto-tpmownerauth) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 从给定字符串创建 TPM 所有者授权值。 | 不实现 |  |
+| [`Copy-BcdEntry`](#copy-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Copy-UserInternationalSettingsToSystem`](#copy-userinternationalsettingstosystem) | International | 仅5.1 | 仅5.1提供 | 将当前用户的区域设置复制到系统。 | 不实现 |  |
+| [`Disable-AppBackgroundTaskDiagnosticLog`](#disable-appbackgroundtaskdiagnosticlog) | AppBackgroundTask | 仅5.1 | 仅5.1提供 | 禁用事件查看器中的后台任务日志。 | 不实现 |  |
 | [`Disable-Appv`](#disable-appv) | AppvClient | 仅5.1 | 仅5.1提供 | 禁用 App-V 服务。 | 不实现 |  |
 | [`Disable-AppvClientConnectionGroup`](#disable-appvclientconnectiongroup) | AppvClient | 仅5.1 | 仅5.1提供 | 禁用运行 App-V 客户端的计算机上的连接组。 | 不实现 |  |
-| [`Disable-BcdElementBootDebug`](#disable-bcdelementbootdebug) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Disable-BcdElementBootEms`](#disable-bcdelementbootems) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Disable-BcdElementDebug`](#disable-bcdelementdebug) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Disable-BcdElementEms`](#disable-bcdelementems) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Disable-BcdElementEventLogging`](#disable-bcdelementeventlogging) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Disable-BcdElementHypervisorDebug`](#disable-bcdelementhypervisordebug) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Disable-ComputerRestore`](#disable-computerrestore) | Microsoft.PowerShell.Management | 都有 | 无 | 禁用指定文件系统驱动器上的系统还原功能。 | 不实现 |  |
-| [`Disable-JobTrigger`](#disable-jobtrigger) | PSScheduledJob | 都有 | 无 | 禁用计划作业的作业触发器。 | 不实现 |  |
-| [`Disable-LocalUser`](#disable-localuser) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 禁用本地用户帐户。 | 不实现 |  |
+| [`Disable-BcdElementBootDebug`](#disable-bcdelementbootdebug) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Disable-BcdElementBootEms`](#disable-bcdelementbootems) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Disable-BcdElementDebug`](#disable-bcdelementdebug) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Disable-BcdElementEms`](#disable-bcdelementems) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Disable-BcdElementEventLogging`](#disable-bcdelementeventlogging) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Disable-BcdElementHypervisorDebug`](#disable-bcdelementhypervisordebug) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Disable-ComputerRestore`](#disable-computerrestore) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 禁用指定文件系统驱动器上的系统还原功能。 | 不实现 |  |
+| [`Disable-JobTrigger`](#disable-jobtrigger) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 禁用计划作业的作业触发器。 | 不实现 |  |
+| [`Disable-LocalUser`](#disable-localuser) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 禁用本地用户帐户。 | 不实现 |  |
 | [`Disable-PSRemoting`](#disable-psremoting) | Microsoft.PowerShell.Core | 都有 | 无 | 阻止 PowerShell 终结点接收远程连接。 | 不实现 |  |
 | [`Disable-PSSessionConfiguration`](#disable-pssessionconfiguration) | Microsoft.PowerShell.Core | 都有 | 无 | 在本地计算机上禁用会话配置。 | 不实现 | 远程会话，远程操作不在实现范围内 |
-| [`Disable-ReFSDedup`](#disable-refsdedup) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 在指定 ReFS 卷禁用数据重复删除。 | 不实现 |  |
-| [`Disable-ScheduledJob`](#disable-scheduledjob) | PSScheduledJob | 都有 | 无 | 禁用计划作业。 | 不实现 |  |
-| [`Disable-TlsCipherSuite`](#disable-tlsciphersuite) | TLS | 都有 | 无 | 禁用 TLS 密码套件。 | 不实现 |  |
-| [`Disable-TlsEccCurve`](#disable-tlsecccurve) | TLS | 都有 | 无 | 禁用计算机上 TLS 的 ECC 密码套件。 | 不实现 |  |
-| [`Disable-TlsSessionTicketKey`](#disable-tlssessionticketkey) | TLS | 都有 | 无 | 禁用 TLS 会话票证密钥。 | 不实现 |  |
-| [`Disable-TpmAutoProvisioning`](#disable-tpmautoprovisioning) | TrustedPlatformModule | 都有 | 无 | 禁用 TPM 自动预配。 | 不实现 |  |
+| [`Disable-ReFSDedup`](#disable-refsdedup) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 在指定 ReFS 卷禁用数据重复删除。 | 不实现 |  |
+| [`Disable-ScheduledJob`](#disable-scheduledjob) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 禁用计划作业。 | 不实现 |  |
+| [`Disable-TlsCipherSuite`](#disable-tlsciphersuite) | TLS | 仅5.1 | 仅5.1提供 | 禁用 TLS 密码套件。 | 不实现 |  |
+| [`Disable-TlsEccCurve`](#disable-tlsecccurve) | TLS | 仅5.1 | 仅5.1提供 | 禁用计算机上 TLS 的 ECC 密码套件。 | 不实现 |  |
+| [`Disable-TlsSessionTicketKey`](#disable-tlssessionticketkey) | TLS | 仅5.1 | 仅5.1提供 | 禁用 TLS 会话票证密钥。 | 不实现 |  |
+| [`Disable-TpmAutoProvisioning`](#disable-tpmautoprovisioning) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 禁用 TPM 自动预配。 | 不实现 |  |
 | [`Disable-Uev`](#disable-uev) | UEV | 仅5.1 | 仅5.1提供 | 禁用 UE-V 服务。 | 不实现 |  |
 | [`Disable-UevAppxPackage`](#disable-uevappxpackage) | UEV | 仅5.1 | 仅5.1提供 | 禁用 UE-V 对 Windows 8 应用的同步。 | 不实现 |  |
 | [`Disable-UevTemplate`](#disable-uevtemplate) | UEV | 仅5.1 | 仅5.1提供 | 禁用设置位置模板。 | 不实现 |  |
-| [`Disable-WindowsErrorReporting`](#disable-windowserrorreporting) | WindowsErrorReporting | 都有 | 无 | 禁用 Windows 错误报告。 | 不实现 |  |
-| [`Disable-WindowsOptionalFeature`](#disable-windowsoptionalfeature) | Dism | 都有 | 无 | 禁用 Windows 映像中的功能。 | 不实现 |  |
+| [`Disable-WindowsErrorReporting`](#disable-windowserrorreporting) | WindowsErrorReporting | 仅5.1 | 仅5.1提供 | 禁用 Windows 错误报告。 | 不实现 |  |
+| [`Disable-WindowsOptionalFeature`](#disable-windowsoptionalfeature) | Dism | 仅5.1 | 仅5.1提供 | 禁用 Windows 映像中的功能。 | 不实现 |  |
 | [`Disable-WSManCredSSP`](#disable-wsmancredssp) | Microsoft.WSMan.Management | 都有 | 无 | 在计算机上禁用 CredSSP 身份验证。 | 不实现 |  |
 | [`Disconnect-PSSession`](#disconnect-pssession) | Microsoft.PowerShell.Core | 都有 | 语法不同 | 断开与会话的连接。 | 不实现 | 远程会话，远程操作不在实现范围内 |
 | [`Disconnect-WSMan`](#disconnect-wsman) | Microsoft.WSMan.Management | 都有 | 无 | 断开客户端与远程计算机上的 WinRM 服务的连接。 | 不实现 |  |
-| [`Dismount-AppxVolume`](#dismount-appxvolume) | Appx | 都有 | 无 | 卸载 appx 卷。 | 不实现 |  |
-| [`Dismount-WindowsImage`](#dismount-windowsimage) | Dism | 都有 | 无 | 从其映射目录卸载 Windows 映像。 | 不实现 |  |
-| [`Edit-CIPolicyRule`](#edit-cipolicyrule) | ConfigCI | 都有 | 无 | 此 cmdlet 不受支持。 | 不实现 |  |
-| [`Enable-AppBackgroundTaskDiagnosticLog`](#enable-appbackgroundtaskdiagnosticlog) | AppBackgroundTask | 都有 | 无 | 启用事件查看器中的后台任务日志。 | 不实现 |  |
+| [`Dismount-AppxVolume`](#dismount-appxvolume) | Appx | 仅5.1 | 仅5.1提供 | 卸载 appx 卷。 | 不实现 |  |
+| [`Dismount-WindowsImage`](#dismount-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 从其映射目录卸载 Windows 映像。 | 不实现 |  |
+| [`Edit-CIPolicyRule`](#edit-cipolicyrule) | ConfigCI | 仅5.1 | 仅5.1提供 | 此 cmdlet 不受支持。 | 不实现 |  |
+| [`Enable-AppBackgroundTaskDiagnosticLog`](#enable-appbackgroundtaskdiagnosticlog) | AppBackgroundTask | 仅5.1 | 仅5.1提供 | 启用事件查看器中的后台任务日志。 | 不实现 |  |
 | [`Enable-Appv`](#enable-appv) | AppvClient | 仅5.1 | 仅5.1提供 | 启用 App-V 服务。 | 不实现 |  |
 | [`Enable-AppvClientConnectionGroup`](#enable-appvclientconnectiongroup) | AppvClient | 仅5.1 | 仅5.1提供 | 启用运行 App-V 客户端的计算机上正在运行的连接组。 | 不实现 |  |
-| [`Enable-BcdElementBootDebug`](#enable-bcdelementbootdebug) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Enable-BcdElementBootEms`](#enable-bcdelementbootems) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Enable-BcdElementDebug`](#enable-bcdelementdebug) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Enable-BcdElementEms`](#enable-bcdelementems) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Enable-BcdElementEventLogging`](#enable-bcdelementeventlogging) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Enable-BcdElementHypervisorDebug`](#enable-bcdelementhypervisordebug) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Enable-ComputerRestore`](#enable-computerrestore) | Microsoft.PowerShell.Management | 都有 | 无 | 在指定的文件系统驱动器上启用系统还原功能。 | 不实现 |  |
-| [`Enable-JobTrigger`](#enable-jobtrigger) | PSScheduledJob | 都有 | 无 | 启用计划作业的作业触发器。 | 不实现 |  |
-| [`Enable-LocalUser`](#enable-localuser) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 启用本地用户帐户。 | 不实现 |  |
+| [`Enable-BcdElementBootDebug`](#enable-bcdelementbootdebug) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Enable-BcdElementBootEms`](#enable-bcdelementbootems) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Enable-BcdElementDebug`](#enable-bcdelementdebug) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Enable-BcdElementEms`](#enable-bcdelementems) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Enable-BcdElementEventLogging`](#enable-bcdelementeventlogging) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Enable-BcdElementHypervisorDebug`](#enable-bcdelementhypervisordebug) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Enable-ComputerRestore`](#enable-computerrestore) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 在指定的文件系统驱动器上启用系统还原功能。 | 不实现 |  |
+| [`Enable-JobTrigger`](#enable-jobtrigger) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 启用计划作业的作业触发器。 | 不实现 |  |
+| [`Enable-LocalUser`](#enable-localuser) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 启用本地用户帐户。 | 不实现 |  |
 | [`Enable-PSRemoting`](#enable-psremoting) | Microsoft.PowerShell.Core | 都有 | 无 | 将计算机配置为接收远程命令。 | 不实现 |  |
 | [`Enable-PSSessionConfiguration`](#enable-pssessionconfiguration) | Microsoft.PowerShell.Core | 都有 | 无 | 在本地计算机上启用会话配置。 | 不实现 | 远程会话，远程操作不在实现范围内 |
-| [`Enable-ReFSDedup`](#enable-refsdedup) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 在指定 ReFS 卷启用数据重复删除。 | 不实现 |  |
-| [`Enable-ScheduledJob`](#enable-scheduledjob) | PSScheduledJob | 都有 | 无 | 启用计划作业。 | 不实现 |  |
-| [`Enable-TlsCipherSuite`](#enable-tlsciphersuite) | TLS | 都有 | 语法不同 | 启用 TLS 密码套件。 | 不实现 |  |
-| [`Enable-TlsEccCurve`](#enable-tlsecccurve) | TLS | 都有 | 语法不同 | 启用 TLS 的 ECC 密码套件。 | 不实现 |  |
-| [`Enable-TlsSessionTicketKey`](#enable-tlssessionticketkey) | TLS | 都有 | 无 | 用 TLS 会话票证密钥配置 TLS 服务器。 | 不实现 |  |
-| [`Enable-TpmAutoProvisioning`](#enable-tpmautoprovisioning) | TrustedPlatformModule | 都有 | 无 | 启用 TPM 自动预配。 | 不实现 |  |
+| [`Enable-ReFSDedup`](#enable-refsdedup) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 在指定 ReFS 卷启用数据重复删除。 | 不实现 |  |
+| [`Enable-ScheduledJob`](#enable-scheduledjob) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 启用计划作业。 | 不实现 |  |
+| [`Enable-TlsCipherSuite`](#enable-tlsciphersuite) | TLS | 仅5.1 | 仅5.1提供 | 启用 TLS 密码套件。 | 不实现 |  |
+| [`Enable-TlsEccCurve`](#enable-tlsecccurve) | TLS | 仅5.1 | 仅5.1提供 | 启用 TLS 的 ECC 密码套件。 | 不实现 |  |
+| [`Enable-TlsSessionTicketKey`](#enable-tlssessionticketkey) | TLS | 仅5.1 | 仅5.1提供 | 用 TLS 会话票证密钥配置 TLS 服务器。 | 不实现 |  |
+| [`Enable-TpmAutoProvisioning`](#enable-tpmautoprovisioning) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 启用 TPM 自动预配。 | 不实现 |  |
 | [`Enable-Uev`](#enable-uev) | UEV | 仅5.1 | 仅5.1提供 | 启用 UE-V 服务。 | 不实现 |  |
 | [`Enable-UevAppxPackage`](#enable-uevappxpackage) | UEV | 仅5.1 | 仅5.1提供 | 启用 UE-V 对 Windows 8 应用的同步。 | 不实现 |  |
 | [`Enable-UevTemplate`](#enable-uevtemplate) | UEV | 仅5.1 | 仅5.1提供 | 启用设置位置模板。 | 不实现 |  |
-| [`Enable-WindowsErrorReporting`](#enable-windowserrorreporting) | WindowsErrorReporting | 都有 | 无 | 启用 Windows 错误报告。 | 不实现 |  |
-| [`Enable-WindowsOptionalFeature`](#enable-windowsoptionalfeature) | Dism | 都有 | 无 | 启用 Windows 映像中的功能。 | 不实现 |  |
+| [`Enable-WindowsErrorReporting`](#enable-windowserrorreporting) | WindowsErrorReporting | 仅5.1 | 仅5.1提供 | 启用 Windows 错误报告。 | 不实现 |  |
+| [`Enable-WindowsOptionalFeature`](#enable-windowsoptionalfeature) | Dism | 仅5.1 | 仅5.1提供 | 启用 Windows 映像中的功能。 | 不实现 |  |
 | [`Enable-WSManCredSSP`](#enable-wsmancredssp) | Microsoft.WSMan.Management | 都有 | 无 | 在计算机上启用凭据安全支持提供程序（CredSSP）身份验证。 | 不实现 |  |
-| [`Expand-OsImage`](#expand-osimage) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Expand-WindowsCustomDataImage`](#expand-windowscustomdataimage) | Dism | 都有 | 无 | 展开自定义数据映像。 | 不实现 |  |
-| [`Expand-WindowsImage`](#expand-windowsimage) | Dism | 都有 | 语法不同 | 将映像应用到指定位置。 | 不实现 |  |
-| [`Export-BcdStore`](#export-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Export-BinaryMiLog`](#export-binarymilog) | CimCmdlets | 都有 | 无 | 创建对象或对象的二进制编码表示形式，并将其存储在文件中。 | 不实现 | Windows 专属（CIM/WMI 体系） |
-| [`Export-Certificate`](#export-certificate) | PKI | 都有 | 无 | 从证书存储导出证书到文件。 | 不实现 |  |
+| [`Expand-OsImage`](#expand-osimage) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Expand-WindowsCustomDataImage`](#expand-windowscustomdataimage) | Dism | 仅5.1 | 仅5.1提供 | 展开自定义数据映像。 | 不实现 |  |
+| [`Expand-WindowsImage`](#expand-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 将映像应用到指定位置。 | 不实现 |  |
+| [`Export-BcdStore`](#export-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Export-BinaryMiLog`](#export-binarymilog) | CimCmdlets | 仅5.1 | 仅5.1提供 | 创建对象或对象的二进制编码表示形式，并将其存储在文件中。 | 不实现 | Windows 专属（CIM/WMI 体系） |
+| [`Export-Certificate`](#export-certificate) | PKI | 仅5.1 | 仅5.1提供 | 从证书存储导出证书到文件。 | 不实现 |  |
 | [`Export-Console`](#export-console) | Microsoft.PowerShell.Core | 仅5.1 | 仅5.1提供 | 将当前会话中管理单元的名称导出到控制台文件。 | 不实现 |  |
-| [`Export-Counter`](#export-counter) | Microsoft.PowerShell.Diagnostics | 都有 | 无 | 将性能计数器数据导出到日志文件。 | 不实现 |  |
-| [`Export-OsImage`](#export-osimage) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Export-PfxCertificate`](#export-pfxcertificate) | PKI | 都有 | 无 | 将证书或 PFXData 对象导出到 PFX 文件。 | 不实现 |  |
-| [`Export-ProvisioningPackage`](#export-provisioningpackage) | Provisioning | 都有 | 无 | 提取预配包内容。 | 不实现 |  |
-| [`Export-StartLayout`](#export-startlayout) | StartLayout | 都有 | 无 | 导出开始屏幕布局。 | 不实现 |  |
-| [`Export-StartLayoutEdgeAssets`](#export-startlayoutedgeassets) | StartLayout | 都有 | 无 | 导出显示自定义图像的 Edge 辅助磁贴。 | 不实现 |  |
-| [`Export-TlsSessionTicketKey`](#export-tlssessionticketkey) | TLS | 都有 | 无 | 导出 TLS 会话票证密钥。 | 不实现 |  |
-| [`Export-Trace`](#export-trace) | Provisioning | 都有 | 无 | 为预配导出事件跟踪日志文件。 | 不实现 |  |
+| [`Export-Counter`](#export-counter) | Microsoft.PowerShell.Diagnostics | 仅5.1 | 仅5.1提供 | 将性能计数器数据导出到日志文件。 | 不实现 |  |
+| [`Export-OsImage`](#export-osimage) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Export-PfxCertificate`](#export-pfxcertificate) | PKI | 仅5.1 | 仅5.1提供 | 将证书或 PFXData 对象导出到 PFX 文件。 | 不实现 |  |
+| [`Export-ProvisioningPackage`](#export-provisioningpackage) | Provisioning | 仅5.1 | 仅5.1提供 | 提取预配包内容。 | 不实现 |  |
+| [`Export-StartLayout`](#export-startlayout) | StartLayout | 仅5.1 | 仅5.1提供 | 导出开始屏幕布局。 | 不实现 |  |
+| [`Export-StartLayoutEdgeAssets`](#export-startlayoutedgeassets) | StartLayout | 仅5.1 | 仅5.1提供 | 导出显示自定义图像的 Edge 辅助磁贴。 | 不实现 |  |
+| [`Export-TlsSessionTicketKey`](#export-tlssessionticketkey) | TLS | 仅5.1 | 仅5.1提供 | 导出 TLS 会话票证密钥。 | 不实现 |  |
+| [`Export-Trace`](#export-trace) | Provisioning | 仅5.1 | 仅5.1提供 | 为预配导出事件跟踪日志文件。 | 不实现 |  |
 | [`Export-UevConfiguration`](#export-uevconfiguration) | UEV | 仅5.1 | 仅5.1提供 | 导出 UE-V 配置。 | 不实现 |  |
 | [`Export-UevPackage`](#export-uevpackage) | UEV | 仅5.1 | 仅5.1提供 | 导出设置包中存储的设置。 | 不实现 |  |
-| [`Export-WindowsCapabilitySource`](#export-windowscapabilitysource) | Dism | 都有 | 无 | 创建自定义 FOD 存储库，收录支持指定功能安装的包。 | 不实现 |  |
-| [`Export-WindowsDriver`](#export-windowsdriver) | Dism | 都有 | 无 | 将 Windows 映像中的第三方驱动程序导出到目标文件夹。 | 不实现 |  |
-| [`Export-WindowsImage`](#export-windowsimage) | Dism | 都有 | 语法不同 | 将指定映像复制到另一个映像文件。 | 不实现 |  |
-| [`Find-LapsADExtendedRights`](#find-lapsadextendedrights) | LAPS | 都有 | 无 | 在 AD 中查询被授予读取 LAPS 密码属性权限的主体。 | 不实现 |  |
-| [`Format-SecureBootUEFI`](#format-securebootuefi) | SecureBoot | 都有 | 无 | 将证书或哈希格式化为返回的内容对象，并创建待签名的文件。 | 不实现 |  |
+| [`Export-WindowsCapabilitySource`](#export-windowscapabilitysource) | Dism | 仅5.1 | 仅5.1提供 | 创建自定义 FOD 存储库，收录支持指定功能安装的包。 | 不实现 |  |
+| [`Export-WindowsDriver`](#export-windowsdriver) | Dism | 仅5.1 | 仅5.1提供 | 将 Windows 映像中的第三方驱动程序导出到目标文件夹。 | 不实现 |  |
+| [`Export-WindowsImage`](#export-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 将指定映像复制到另一个映像文件。 | 不实现 |  |
+| [`Find-LapsADExtendedRights`](#find-lapsadextendedrights) | LAPS | 仅5.1 | 仅5.1提供 | 在 AD 中查询被授予读取 LAPS 密码属性权限的主体。 | 不实现 |  |
+| [`Format-SecureBootUEFI`](#format-securebootuefi) | SecureBoot | 仅5.1 | 仅5.1提供 | 将证书或哈希格式化为返回的内容对象，并创建待签名的文件。 | 不实现 |  |
 | [`Get-Acl`](#get-acl) | Microsoft.PowerShell.Security | 都有 | 语法不同 | 获取资源（如文件或注册表项）的安全描述符。 | 不实现 |  |
-| [`Get-AppLockerFileInformation`](#get-applockerfileinformation) | AppLocker | 都有 | 无 | 获取从文件列表或事件日志创建 AppLocker 规则所需的文件信息。 | 不实现 |  |
-| [`Get-AppLockerPolicy`](#get-applockerpolicy) | AppLocker | 都有 | 无 | 获取本地、有效或域 AppLocker 策略。 | 不实现 |  |
-| [`Get-AppProvisionedSharedPackageContainer`](#get-appprovisionedsharedpackagecontainer) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-AppSharedPackageContainer`](#get-appsharedpackagecontainer) | Appx | 都有 | 无 | 获取共享包容器的信息。 | 不实现 |  |
+| [`Get-AppLockerFileInformation`](#get-applockerfileinformation) | AppLocker | 仅5.1 | 仅5.1提供 | 获取从文件列表或事件日志创建 AppLocker 规则所需的文件信息。 | 不实现 |  |
+| [`Get-AppLockerPolicy`](#get-applockerpolicy) | AppLocker | 仅5.1 | 仅5.1提供 | 获取本地、有效或域 AppLocker 策略。 | 不实现 |  |
+| [`Get-AppProvisionedSharedPackageContainer`](#get-appprovisionedsharedpackagecontainer) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-AppSharedPackageContainer`](#get-appsharedpackagecontainer) | Appx | 仅5.1 | 仅5.1提供 | 获取共享包容器的信息。 | 不实现 |  |
 | [`Get-AppvClientApplication`](#get-appvclientapplication) | AppvClient | 仅5.1 | 仅5.1提供 | 返回 App-V 客户端包中的应用。 | 不实现 |  |
 | [`Get-AppvClientConfiguration`](#get-appvclientconfiguration) | AppvClient | 仅5.1 | 仅5.1提供 | 返回 App-V 客户端配置。 | 不实现 |  |
 | [`Get-AppvClientConnectionGroup`](#get-appvclientconnectiongroup) | AppvClient | 仅5.1 | 仅5.1提供 | 返回 App-V 连接组对象。 | 不实现 |  |
@@ -149,383 +148,383 @@ PowerShell For Linux默认不实现它们，但有时候会因为特殊原因实
 | [`Get-AppvClientPackage`](#get-appvclientpackage) | AppvClient | 仅5.1 | 仅5.1提供 | 返回 App-V 客户端包。 | 不实现 |  |
 | [`Get-AppvPublishingServer`](#get-appvpublishingserver) | AppvClient | 仅5.1 | 仅5.1提供 | 返回 App-V 服务器对象。 | 不实现 |  |
 | [`Get-AppvStatus`](#get-appvstatus) | AppvClient | 仅5.1 | 仅5.1提供 | 获取 App-V 服务状态。 | 不实现 |  |
-| [`Get-AppxDefaultVolume`](#get-appxdefaultvolume) | Appx | 都有 | 无 | 获取默认 appx 卷。 | 不实现 |  |
-| [`Get-AppxPackage`](#get-appxpackage) | Appx | 都有 | 无 | 获取用户配置文件中安装的应用包列表。 | 不实现 |  |
-| [`Get-AppxPackageAutoUpdateSettings`](#get-appxpackageautoupdatesettings) | Appx | 都有 | 无 | 显示特定 Windows 应用的配置设置。 | 不实现 |  |
-| [`Get-AppxPackageManifest`](#get-appxpackagemanifest) | Appx | 都有 | 无 | 获取应用包的清单。 | 不实现 |  |
-| [`Get-AppxProvisionedPackage`](#get-appxprovisionedpackage) | Dism | 都有 | 无 | 获取映像中为每个新用户安装的应用包 (.appx) 信息。 | 不实现 |  |
-| [`Get-AppxVolume`](#get-appxvolume) | Appx | 都有 | 无 | 获取计算机的 appx 卷。 | 不实现 |  |
+| [`Get-AppxDefaultVolume`](#get-appxdefaultvolume) | Appx | 仅5.1 | 仅5.1提供 | 获取默认 appx 卷。 | 不实现 |  |
+| [`Get-AppxPackage`](#get-appxpackage) | Appx | 仅5.1 | 仅5.1提供 | 获取用户配置文件中安装的应用包列表。 | 不实现 |  |
+| [`Get-AppxPackageAutoUpdateSettings`](#get-appxpackageautoupdatesettings) | Appx | 仅5.1 | 仅5.1提供 | 显示特定 Windows 应用的配置设置。 | 不实现 |  |
+| [`Get-AppxPackageManifest`](#get-appxpackagemanifest) | Appx | 仅5.1 | 仅5.1提供 | 获取应用包的清单。 | 不实现 |  |
+| [`Get-AppxProvisionedPackage`](#get-appxprovisionedpackage) | Dism | 仅5.1 | 仅5.1提供 | 获取映像中为每个新用户安装的应用包 (.appx) 信息。 | 不实现 |  |
+| [`Get-AppxVolume`](#get-appxvolume) | Appx | 仅5.1 | 仅5.1提供 | 获取计算机的 appx 卷。 | 不实现 |  |
 | [`Get-AuthenticodeSignature`](#get-authenticodesignature) | Microsoft.PowerShell.Security | 都有 | 无 | 获取有关文件的验证码签名的信息。 | 不实现 |  |
-| [`Get-BcdEntry`](#get-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-BcdEntryDebugSettings`](#get-bcdentrydebugsettings) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-BcdEntryHypervisorSettings`](#get-bcdentryhypervisorsettings) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-BcdStore`](#get-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-BitsTransfer`](#get-bitstransfer) | BitsTransfer | 都有 | 无 | 获取现有 BITS 传输作业的关联 BitsJob 对象。 | 不实现 |  |
-| [`Get-Certificate`](#get-certificate) | PKI | 都有 | 无 | 向注册服务器提交证书申请并安装响应，或取回已提交申请的证书。 | 不实现 |  |
-| [`Get-CertificateAutoEnrollmentPolicy`](#get-certificateautoenrollmentpolicy) | PKI | 都有 | 无 | 检索证书自动注册策略设置。 | 不实现 |  |
-| [`Get-CertificateEnrollmentPolicyServer`](#get-certificateenrollmentpolicyserver) | PKI | 都有 | 无 | 返回全部证书注册策略服务器 URL 配置。 | 不实现 |  |
-| [`Get-CertificateNotificationTask`](#get-certificatenotificationtask) | PKI | 都有 | 无 | 返回全部已注册证书通知任务。 | 不实现 |  |
+| [`Get-BcdEntry`](#get-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-BcdEntryDebugSettings`](#get-bcdentrydebugsettings) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-BcdEntryHypervisorSettings`](#get-bcdentryhypervisorsettings) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-BcdStore`](#get-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-BitsTransfer`](#get-bitstransfer) | BitsTransfer | 仅5.1 | 仅5.1提供 | 获取现有 BITS 传输作业的关联 BitsJob 对象。 | 不实现 |  |
+| [`Get-Certificate`](#get-certificate) | PKI | 仅5.1 | 仅5.1提供 | 向注册服务器提交证书申请并安装响应，或取回已提交申请的证书。 | 不实现 |  |
+| [`Get-CertificateAutoEnrollmentPolicy`](#get-certificateautoenrollmentpolicy) | PKI | 仅5.1 | 仅5.1提供 | 检索证书自动注册策略设置。 | 不实现 |  |
+| [`Get-CertificateEnrollmentPolicyServer`](#get-certificateenrollmentpolicyserver) | PKI | 仅5.1 | 仅5.1提供 | 返回全部证书注册策略服务器 URL 配置。 | 不实现 |  |
+| [`Get-CertificateNotificationTask`](#get-certificatenotificationtask) | PKI | 仅5.1 | 仅5.1提供 | 返回全部已注册证书通知任务。 | 不实现 |  |
 | [`Get-CimAssociatedInstance`](#get-cimassociatedinstance) | CimCmdlets | 都有 | 语法不同 | 通过关联检索连接到特定 CIM 实例的 CIM 实例。 | 不实现 | Windows 专属（CIM/WMI 体系） |
 | [`Get-CimClass`](#get-cimclass) | CimCmdlets | 都有 | 语法不同 | 获取特定命名空间中的 CIM 类的列表。 | 不实现 | Windows 专属（CIM/WMI 体系） |
 | [`Get-CimInstance`](#get-ciminstance) | CimCmdlets | 都有 | 语法不同 | 从 CIM 服务器获取类的 CIM 实例。 | 不实现 | Windows 专属（CIM/WMI 体系） |
 | [`Get-CimSession`](#get-cimsession) | CimCmdlets | 都有 | 语法不同 | 从当前会话中获取 CIM 会话对象。 | 不实现 | Windows 专属（CIM/WMI 体系） |
-| [`Get-CIPolicy`](#get-cipolicy) | ConfigCI | 都有 | 无 | 获取代码完整性策略中的规则。 | 不实现 |  |
-| [`Get-CIPolicyIdInfo`](#get-cipolicyidinfo) | ConfigCI | 都有 | 无 | 显示代码完整性策略信息。 | 不实现 |  |
-| [`Get-CIPolicyInfo`](#get-cipolicyinfo) | ConfigCI | 都有 | 无 | 此 cmdlet 不受支持。 | 不实现 |  |
+| [`Get-CIPolicy`](#get-cipolicy) | ConfigCI | 仅5.1 | 仅5.1提供 | 获取代码完整性策略中的规则。 | 不实现 |  |
+| [`Get-CIPolicyIdInfo`](#get-cipolicyidinfo) | ConfigCI | 仅5.1 | 仅5.1提供 | 显示代码完整性策略信息。 | 不实现 |  |
+| [`Get-CIPolicyInfo`](#get-cipolicyinfo) | ConfigCI | 仅5.1 | 仅5.1提供 | 此 cmdlet 不受支持。 | 不实现 |  |
 | [`Get-ComputerInfo`](#get-computerinfo) | Microsoft.PowerShell.Management | 都有 | 无 | 获取系统和作系统属性的合并对象。 | Go实现 | 字段精简。 |
-| [`Get-ComputerRestorePoint`](#get-computerrestorepoint) | Microsoft.PowerShell.Management | 都有 | 无 | 获取本地计算机上的还原点。 | 不实现 |  |
-| [`Get-ControlPanelItem`](#get-controlpanelitem) | Microsoft.PowerShell.Management | 都有 | 无 | 获取控制面板项。 | 不实现 |  |
+| [`Get-ComputerRestorePoint`](#get-computerrestorepoint) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 获取本地计算机上的还原点。 | 不实现 |  |
+| [`Get-ControlPanelItem`](#get-controlpanelitem) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 获取控制面板项。 | 不实现 |  |
 | [`Get-Counter`](#get-counter) | Microsoft.PowerShell.Diagnostics | 都有 | 无 | 从本地和远程计算机获取性能计数器数据。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
-| [`Get-DAPolicyChange`](#get-dapolicychange) | NetSecurity | 都有 | 无 | 获取需增删的 IP 地址列表以更新 IPsec 规则，并生成更新规则的脚本。 | 不实现 |  |
-| [`Get-DeliveryOptimizationLog`](#get-deliveryoptimizationlog) | DeliveryOptimization | 都有 | 语法不同 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-DeliveryOptimizationLogAnalysis`](#get-deliveryoptimizationloganalysis) | DeliveryOptimization | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-EventLog`](#get-eventlog) | Microsoft.PowerShell.Management | 都有 | 无 | 获取本地计算机或远程计算机上事件日志中的事件或事件日志列表。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
+| [`Get-DAPolicyChange`](#get-dapolicychange) | NetSecurity | 仅5.1 | 仅5.1提供 | 获取需增删的 IP 地址列表以更新 IPsec 规则，并生成更新规则的脚本。 | 不实现 |  |
+| [`Get-DeliveryOptimizationLog`](#get-deliveryoptimizationlog) | DeliveryOptimization | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-DeliveryOptimizationLogAnalysis`](#get-deliveryoptimizationloganalysis) | DeliveryOptimization | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-EventLog`](#get-eventlog) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 获取本地计算机或远程计算机上事件日志中的事件或事件日志列表。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
 | [`Get-HotFix`](#get-hotfix) | Microsoft.PowerShell.Management | 都有 | 无 | 获取在本地或远程计算机上安装的修补程序。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
-| [`Get-InstalledLanguage`](#get-installedlanguage) | LanguagePackManagement | 都有 | 无 | 返回设备上已安装语言的信息。 | 不实现 |  |
-| [`Get-JobTrigger`](#get-jobtrigger) | PSScheduledJob | 都有 | 无 | 获取计划作业的作业触发器。 | 不实现 |  |
-| [`Get-KdsConfiguration`](#get-kdsconfiguration) | Kds | 都有 | 无 | 从 AD 检索 KdsSvc 的当前配置。 | 不实现 |  |
-| [`Get-KdsRootKey`](#get-kdsrootkey) | Kds | 都有 | 无 | 检索 KdsSvc 存储的根密钥值列表。 | 不实现 |  |
-| [`Get-LapsADPassword`](#get-lapsadpassword) | LAPS | 都有 | 无 | 从 AD 指定计算机或域控制器对象查询 LAPS 凭据。 | 不实现 |  |
-| [`Get-LocalGroup`](#get-localgroup) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 获取本地安全组。 | 不实现 |  |
-| [`Get-LocalGroupMember`](#get-localgroupmember) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 从本地组获取成员。 | 不实现 |  |
-| [`Get-LocalUser`](#get-localuser) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 获取本地用户帐户。 | 不实现 |  |
-| [`Get-NonRemovableAppsPolicy`](#get-nonremovableappspolicy) | Dism | 都有 | 无 | 返回已安装且配置为不可移除的应用包列表。 | 不实现 |  |
-| [`Get-OSConfiguration`](#get-osconfiguration) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-OsConfigurationDocument`](#get-osconfigurationdocument) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-OsConfigurationDocumentContent`](#get-osconfigurationdocumentcontent) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-OsConfigurationDocumentResult`](#get-osconfigurationdocumentresult) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-OsConfigurationProperty`](#get-osconfigurationproperty) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-OSConfigurationScenarioDefinition`](#get-osconfigurationscenariodefinition) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-OSConfigurationScenarioDefinitionInfo`](#get-osconfigurationscenariodefinitioninfo) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-PfxData`](#get-pfxdata) | PKI | 都有 | 无 | 将 PFX 文件内容提取为结构，不导入证书存储。 | 不实现 |  |
-| [`Get-PmemDedicatedMemory`](#get-pmemdedicatedmemory) | PersistentMemory | 都有 | 无 | 获取专用持久内存。 | 不实现 |  |
-| [`Get-PmemDisk`](#get-pmemdisk) | PersistentMemory | 都有 | 无 | 获取持久内存磁盘。 | 不实现 |  |
-| [`Get-PmemPhysicalDevice`](#get-pmemphysicaldevice) | PersistentMemory | 都有 | 无 | 获取与持久内存关联的物理设备。 | 不实现 |  |
-| [`Get-PmemUnusedRegion`](#get-pmemunusedregion) | PersistentMemory | 都有 | 无 | 获取持久内存中未使用的区域。 | 不实现 |  |
-| [`Get-ProcessMitigation`](#get-processmitigation) | ProcessMitigations | 都有 | 无 | 从注册表或运行中的进程获取当前进程缓解设置，或全部保存到 XML。 | 不实现 |  |
-| [`Get-ProvisioningPackage`](#get-provisioningpackage) | Provisioning | 都有 | 无 | 获取已安装预配包的信息。 | 不实现 |  |
+| [`Get-InstalledLanguage`](#get-installedlanguage) | LanguagePackManagement | 仅5.1 | 仅5.1提供 | 返回设备上已安装语言的信息。 | 不实现 |  |
+| [`Get-JobTrigger`](#get-jobtrigger) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 获取计划作业的作业触发器。 | 不实现 |  |
+| [`Get-KdsConfiguration`](#get-kdsconfiguration) | Kds | 仅5.1 | 仅5.1提供 | 从 AD 检索 KdsSvc 的当前配置。 | 不实现 |  |
+| [`Get-KdsRootKey`](#get-kdsrootkey) | Kds | 仅5.1 | 仅5.1提供 | 检索 KdsSvc 存储的根密钥值列表。 | 不实现 |  |
+| [`Get-LapsADPassword`](#get-lapsadpassword) | LAPS | 仅5.1 | 仅5.1提供 | 从 AD 指定计算机或域控制器对象查询 LAPS 凭据。 | 不实现 |  |
+| [`Get-LocalGroup`](#get-localgroup) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 获取本地安全组。 | 不实现 |  |
+| [`Get-LocalGroupMember`](#get-localgroupmember) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 从本地组获取成员。 | 不实现 |  |
+| [`Get-LocalUser`](#get-localuser) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 获取本地用户帐户。 | 不实现 |  |
+| [`Get-NonRemovableAppsPolicy`](#get-nonremovableappspolicy) | Dism | 仅5.1 | 仅5.1提供 | 返回已安装且配置为不可移除的应用包列表。 | 不实现 |  |
+| [`Get-OSConfiguration`](#get-osconfiguration) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-OsConfigurationDocument`](#get-osconfigurationdocument) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-OsConfigurationDocumentContent`](#get-osconfigurationdocumentcontent) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-OsConfigurationDocumentResult`](#get-osconfigurationdocumentresult) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-OsConfigurationProperty`](#get-osconfigurationproperty) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-OSConfigurationScenarioDefinition`](#get-osconfigurationscenariodefinition) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-OSConfigurationScenarioDefinitionInfo`](#get-osconfigurationscenariodefinitioninfo) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-PfxData`](#get-pfxdata) | PKI | 仅5.1 | 仅5.1提供 | 将 PFX 文件内容提取为结构，不导入证书存储。 | 不实现 |  |
+| [`Get-PmemDedicatedMemory`](#get-pmemdedicatedmemory) | PersistentMemory | 仅5.1 | 仅5.1提供 | 获取专用持久内存。 | 不实现 |  |
+| [`Get-PmemDisk`](#get-pmemdisk) | PersistentMemory | 仅5.1 | 仅5.1提供 | 获取持久内存磁盘。 | 不实现 |  |
+| [`Get-PmemPhysicalDevice`](#get-pmemphysicaldevice) | PersistentMemory | 仅5.1 | 仅5.1提供 | 获取与持久内存关联的物理设备。 | 不实现 |  |
+| [`Get-PmemUnusedRegion`](#get-pmemunusedregion) | PersistentMemory | 仅5.1 | 仅5.1提供 | 获取持久内存中未使用的区域。 | 不实现 |  |
+| [`Get-ProcessMitigation`](#get-processmitigation) | ProcessMitigations | 仅5.1 | 仅5.1提供 | 从注册表或运行中的进程获取当前进程缓解设置，或全部保存到 XML。 | 不实现 |  |
+| [`Get-ProvisioningPackage`](#get-provisioningpackage) | Provisioning | 仅5.1 | 仅5.1提供 | 获取已安装预配包的信息。 | 不实现 |  |
 | [`Get-PSSessionCapability`](#get-pssessioncapability) | Microsoft.PowerShell.Core | 都有 | 简介不同 | 5.1：获取受约束会话配置上特定用户的功能。 / 7：在特定会话配置中获取特定用户的权限。 | 不实现 | 远程会话，远程操作不在实现范围内 |
 | [`Get-PSSessionConfiguration`](#get-pssessionconfiguration) | Microsoft.PowerShell.Core | 都有 | 简介不同 | 5.1：获取计算机上的已注册会话配置。 / 7：获取计算机上已注册的会话配置。 | 不实现 | 远程会话，远程操作不在实现范围内 |
 | [`Get-PSSnapin`](#get-pssnapin) | Microsoft.PowerShell.Core | 仅5.1 | 仅5.1提供 | 获取计算机上的 Windows PowerShell 管理单元。 | 不实现 |  |
-| [`Get-RecoveryManagementPluginAltitude`](#get-recoverymanagementpluginaltitude) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-RecoveryManagementPluginInfo`](#get-recoverymanagementplugininfo) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-RecoveryManagementPlugins`](#get-recoverymanagementplugins) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-RecoveryRemoteManagementStatus`](#get-recoveryremotemanagementstatus) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-ReFSDedupSchedule`](#get-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 检索指定 ReFS 卷上的重复数据删除计划。 | 不实现 |  |
-| [`Get-ReFSDedupScrubSchedule`](#get-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 检索指定 ReFS 卷上的重复数据删除清理计划。 | 不实现 |  |
-| [`Get-ReFSDedupStatus`](#get-refsdedupstatus) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 检索指定 ReFS 卷上数据重复删除的状态。 | 不实现 |  |
-| [`Get-ScheduledJob`](#get-scheduledjob) | PSScheduledJob | 都有 | 无 | 获取本地计算机上的计划作业。 | 不实现 |  |
-| [`Get-ScheduledJobOption`](#get-scheduledjoboption) | PSScheduledJob | 都有 | 无 | 获取计划作业的作业选项。 | 不实现 |  |
-| [`Get-SecureBootPolicy`](#get-securebootpolicy) | SecureBoot | 都有 | 无 | 获取安全启动配置策略的发布者 GUID 和策略版本。 | 不实现 |  |
-| [`Get-SecureBootSVN`](#get-securebootsvn) | SecureBoot | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Get-SecureBootUEFI`](#get-securebootuefi) | SecureBoot | 都有 | 无 | 获取与安全启动相关的 UEFI 变量值。 | 不实现 |  |
+| [`Get-RecoveryManagementPluginAltitude`](#get-recoverymanagementpluginaltitude) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-RecoveryManagementPluginInfo`](#get-recoverymanagementplugininfo) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-RecoveryManagementPlugins`](#get-recoverymanagementplugins) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-RecoveryRemoteManagementStatus`](#get-recoveryremotemanagementstatus) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-ReFSDedupSchedule`](#get-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 检索指定 ReFS 卷上的重复数据删除计划。 | 不实现 |  |
+| [`Get-ReFSDedupScrubSchedule`](#get-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 检索指定 ReFS 卷上的重复数据删除清理计划。 | 不实现 |  |
+| [`Get-ReFSDedupStatus`](#get-refsdedupstatus) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 检索指定 ReFS 卷上数据重复删除的状态。 | 不实现 |  |
+| [`Get-ScheduledJob`](#get-scheduledjob) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 获取本地计算机上的计划作业。 | 不实现 |  |
+| [`Get-ScheduledJobOption`](#get-scheduledjoboption) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 获取计划作业的作业选项。 | 不实现 |  |
+| [`Get-SecureBootPolicy`](#get-securebootpolicy) | SecureBoot | 仅5.1 | 仅5.1提供 | 获取安全启动配置策略的发布者 GUID 和策略版本。 | 不实现 |  |
+| [`Get-SecureBootSVN`](#get-securebootsvn) | SecureBoot | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Get-SecureBootUEFI`](#get-securebootuefi) | SecureBoot | 仅5.1 | 仅5.1提供 | 获取与安全启动相关的 UEFI 变量值。 | 不实现 |  |
 | [`Get-Service`](#get-service) | Microsoft.PowerShell.Management | 都有 | 简介不同；语法不同 | 5.1：获取本地或远程计算机上的服务。 / 7：获取计算机上的服务。 | 映射 Linux（systemctl） |  |
-| [`Get-SystemDriver`](#get-systemdriver) | ConfigCI | 都有 | 无 | 扫描系统驱动程序。 | 不实现 |  |
-| [`Get-SystemPreferredUILanguage`](#get-systempreferreduilanguage) | LanguagePackManagement | 都有 | 无 | 返回当前系统首选语言。 | 不实现 |  |
-| [`Get-TlsCipherSuite`](#get-tlsciphersuite) | TLS | 都有 | 无 | 获取计算机的 TLS 密码套件。 | 不实现 |  |
-| [`Get-TlsEccCurve`](#get-tlsecccurve) | TLS | 都有 | 无 | 获取计算机上 TLS 可用的 ECC 密码套件列表。 | 不实现 |  |
-| [`Get-Tpm`](#get-tpm) | TrustedPlatformModule | 都有 | 无 | 获取包含 TPM 信息的对象。 | 不实现 |  |
-| [`Get-TpmEndorsementKeyInfo`](#get-tpmendorsementkeyinfo) | TrustedPlatformModule | 都有 | 无 | 获取 TPM 背书密钥和证书的信息。 | 不实现 |  |
-| [`Get-TpmSupportedFeature`](#get-tpmsupportedfeature) | TrustedPlatformModule | 都有 | 无 | 验证 TPM 是否支持指定功能。 | 不实现 |  |
-| [`Get-Transaction`](#get-transaction) | Microsoft.PowerShell.Management | 都有 | 无 | 获取当前（活动）事务。 | 不实现 |  |
-| [`Get-TroubleshootingPack`](#get-troubleshootingpack) | TroubleshootingPack | 都有 | 无 | 获取疑难解答包或生成应答文件。 | 不实现 |  |
-| [`Get-TrustedProvisioningCertificate`](#get-trustedprovisioningcertificate) | Provisioning | 都有 | 无 | 列出已安装的受信任预配证书。 | 不实现 |  |
+| [`Get-SystemDriver`](#get-systemdriver) | ConfigCI | 仅5.1 | 仅5.1提供 | 扫描系统驱动程序。 | 不实现 |  |
+| [`Get-SystemPreferredUILanguage`](#get-systempreferreduilanguage) | LanguagePackManagement | 仅5.1 | 仅5.1提供 | 返回当前系统首选语言。 | 不实现 |  |
+| [`Get-TlsCipherSuite`](#get-tlsciphersuite) | TLS | 仅5.1 | 仅5.1提供 | 获取计算机的 TLS 密码套件。 | 不实现 |  |
+| [`Get-TlsEccCurve`](#get-tlsecccurve) | TLS | 仅5.1 | 仅5.1提供 | 获取计算机上 TLS 可用的 ECC 密码套件列表。 | 不实现 |  |
+| [`Get-Tpm`](#get-tpm) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 获取包含 TPM 信息的对象。 | 不实现 |  |
+| [`Get-TpmEndorsementKeyInfo`](#get-tpmendorsementkeyinfo) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 获取 TPM 背书密钥和证书的信息。 | 不实现 |  |
+| [`Get-TpmSupportedFeature`](#get-tpmsupportedfeature) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 验证 TPM 是否支持指定功能。 | 不实现 |  |
+| [`Get-Transaction`](#get-transaction) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 获取当前（活动）事务。 | 不实现 |  |
+| [`Get-TroubleshootingPack`](#get-troubleshootingpack) | TroubleshootingPack | 仅5.1 | 仅5.1提供 | 获取疑难解答包或生成应答文件。 | 不实现 |  |
+| [`Get-TrustedProvisioningCertificate`](#get-trustedprovisioningcertificate) | Provisioning | 仅5.1 | 仅5.1提供 | 列出已安装的受信任预配证书。 | 不实现 |  |
 | [`Get-UevAppxPackage`](#get-uevappxpackage) | UEV | 仅5.1 | 仅5.1提供 | 获取 Windows 8 应用及同步状态列表。 | 不实现 |  |
 | [`Get-UevConfiguration`](#get-uevconfiguration) | UEV | 仅5.1 | 仅5.1提供 | 获取 UE-V 配置设置。 | 不实现 |  |
 | [`Get-UevStatus`](#get-uevstatus) | UEV | 仅5.1 | 仅5.1提供 | 获取 UE-V 服务状态。 | 不实现 |  |
 | [`Get-UevTemplate`](#get-uevtemplate) | UEV | 仅5.1 | 仅5.1提供 | 获取 UE-V 设置位置模板。 | 不实现 |  |
 | [`Get-UevTemplateProgram`](#get-uevtemplateprogram) | UEV | 仅5.1 | 仅5.1提供 | 获取设置位置模板定义的程序信息。 | 不实现 |  |
-| [`Get-WheaMemoryPolicy`](#get-wheamemorypolicy) | Whea | 都有 | 无 | 获取计算机的 WHEA 内存策略。 | 不实现 |  |
-| [`Get-WIMBootEntry`](#get-wimbootentry) | Dism | 都有 | 无 | 显示指定磁盘卷的 WIMBoot 配置项。 | 不实现 |  |
-| [`Get-WinAcceptLanguageFromLanguageListOptOut`](#get-winacceptlanguagefromlanguagelistoptout) | International | 都有 | 无 | 获取当前用户帐户语言列表退出设置的 HTTP 接受语言。 | 不实现 |  |
-| [`Get-WinCultureFromLanguageListOptOut`](#get-winculturefromlanguagelistoptout) | International | 都有 | 无 | 获取当前用户帐户语言列表退出设置的区域。 | 不实现 |  |
-| [`Get-WinDefaultInputMethodOverride`](#get-windefaultinputmethodoverride) | International | 都有 | 无 | 获取当前用户帐户的默认输入法替代设置。 | 不实现 |  |
-| [`Get-WindowsCapability`](#get-windowscapability) | Dism | 都有 | 无 | 获取映像或正在运行的操作系统的 Windows 功能。 | 不实现 |  |
-| [`Get-WindowsDeveloperLicense`](#get-windowsdeveloperlicense) | WindowsDeveloperLicense | 都有 | 无 | 提供当前计算机开发者模式的信息。 | 不实现 |  |
-| [`Get-WindowsDriver`](#get-windowsdriver) | Dism | 都有 | 无 | 显示 Windows 映像中的驱动程序信息。 | 不实现 |  |
-| [`Get-WindowsEdition`](#get-windowsedition) | Dism | 都有 | 无 | 获取 Windows 映像的版本信息。 | 不实现 |  |
-| [`Get-WindowsErrorReporting`](#get-windowserrorreporting) | WindowsErrorReporting | 都有 | 无 | 检索 Windows 错误报告状态。 | 不实现 |  |
-| [`Get-WindowsImage`](#get-windowsimage) | Dism | 都有 | 语法不同 | 获取 WIM 或 VHD 文件中 Windows 映像的信息。 | 不实现 |  |
-| [`Get-WindowsImageContent`](#get-windowsimagecontent) | Dism | 都有 | 语法不同 | 显示指定映像中的文件和文件夹列表。 | 不实现 |  |
-| [`Get-WindowsOptionalFeature`](#get-windowsoptionalfeature) | Dism | 都有 | 无 | 获取 Windows 映像中可选功能的信息。 | 不实现 |  |
-| [`Get-WindowsPackage`](#get-windowspackage) | Dism | 都有 | 无 | 获取 Windows 映像中包的信息。 | 不实现 |  |
-| [`Get-WindowsReservedStorageState`](#get-windowsreservedstoragestate) | Dism | 都有 | 无 | 获取映像的保留存储状态。 | 不实现 |  |
-| [`Get-WindowsSearchSetting`](#get-windowssearchsetting) | WindowsSearch | 都有 | 无 | 获取 Windows 搜索的设置值。 | 不实现 |  |
+| [`Get-WheaMemoryPolicy`](#get-wheamemorypolicy) | Whea | 仅5.1 | 仅5.1提供 | 获取计算机的 WHEA 内存策略。 | 不实现 |  |
+| [`Get-WIMBootEntry`](#get-wimbootentry) | Dism | 仅5.1 | 仅5.1提供 | 显示指定磁盘卷的 WIMBoot 配置项。 | 不实现 |  |
+| [`Get-WinAcceptLanguageFromLanguageListOptOut`](#get-winacceptlanguagefromlanguagelistoptout) | International | 仅5.1 | 仅5.1提供 | 获取当前用户帐户语言列表退出设置的 HTTP 接受语言。 | 不实现 |  |
+| [`Get-WinCultureFromLanguageListOptOut`](#get-winculturefromlanguagelistoptout) | International | 仅5.1 | 仅5.1提供 | 获取当前用户帐户语言列表退出设置的区域。 | 不实现 |  |
+| [`Get-WinDefaultInputMethodOverride`](#get-windefaultinputmethodoverride) | International | 仅5.1 | 仅5.1提供 | 获取当前用户帐户的默认输入法替代设置。 | 不实现 |  |
+| [`Get-WindowsCapability`](#get-windowscapability) | Dism | 仅5.1 | 仅5.1提供 | 获取映像或正在运行的操作系统的 Windows 功能。 | 不实现 |  |
+| [`Get-WindowsDeveloperLicense`](#get-windowsdeveloperlicense) | WindowsDeveloperLicense | 仅5.1 | 仅5.1提供 | 提供当前计算机开发者模式的信息。 | 不实现 |  |
+| [`Get-WindowsDriver`](#get-windowsdriver) | Dism | 仅5.1 | 仅5.1提供 | 显示 Windows 映像中的驱动程序信息。 | 不实现 |  |
+| [`Get-WindowsEdition`](#get-windowsedition) | Dism | 仅5.1 | 仅5.1提供 | 获取 Windows 映像的版本信息。 | 不实现 |  |
+| [`Get-WindowsErrorReporting`](#get-windowserrorreporting) | WindowsErrorReporting | 仅5.1 | 仅5.1提供 | 检索 Windows 错误报告状态。 | 不实现 |  |
+| [`Get-WindowsImage`](#get-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 获取 WIM 或 VHD 文件中 Windows 映像的信息。 | 不实现 |  |
+| [`Get-WindowsImageContent`](#get-windowsimagecontent) | Dism | 仅5.1 | 仅5.1提供 | 显示指定映像中的文件和文件夹列表。 | 不实现 |  |
+| [`Get-WindowsOptionalFeature`](#get-windowsoptionalfeature) | Dism | 仅5.1 | 仅5.1提供 | 获取 Windows 映像中可选功能的信息。 | 不实现 |  |
+| [`Get-WindowsPackage`](#get-windowspackage) | Dism | 仅5.1 | 仅5.1提供 | 获取 Windows 映像中包的信息。 | 不实现 |  |
+| [`Get-WindowsReservedStorageState`](#get-windowsreservedstoragestate) | Dism | 仅5.1 | 仅5.1提供 | 获取映像的保留存储状态。 | 不实现 |  |
+| [`Get-WindowsSearchSetting`](#get-windowssearchsetting) | WindowsSearch | 仅5.1 | 仅5.1提供 | 获取 Windows 搜索的设置值。 | 不实现 |  |
 | [`Get-WinEvent`](#get-winevent) | Microsoft.PowerShell.Diagnostics | 都有 | 简介不同 | 5.1：从本地和远程计算机上的事件日志和事件跟踪日志文件中获取事件。 / 7：获取本地和远程计算机上的事件日志和事件跟踪日志文件中的事件。 | 不实现 |  |
-| [`Get-WinHomeLocation`](#get-winhomelocation) | International | 都有 | 无 | 获取当前用户帐户的 Windows GeoID 主位置设置。 | 不实现 |  |
-| [`Get-WinLanguageBarOption`](#get-winlanguagebaroption) | International | 都有 | 无 | 获取当前用户帐户的语言栏模式和类型。 | 不实现 |  |
-| [`Get-WinSystemLocale`](#get-winsystemlocale) | International | 都有 | 无 | 获取当前计算机的系统区域设置。 | 不实现 |  |
-| [`Get-WinUILanguageOverride`](#get-winuilanguageoverride) | International | 都有 | 无 | 获取当前用户帐户的 Windows UI 语言替代设置。 | 不实现 |  |
-| [`Get-WinUserLanguageList`](#get-winuserlanguagelist) | International | 都有 | 无 | 获取当前用户帐户的语言列表。 | 不实现 |  |
-| [`Get-WmiObject`](#get-wmiobject) | Microsoft.PowerShell.Management | 都有 | 无 | 获取 Windows Management Instrumentation （WMI） 类的实例或有关可用类的信息。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
+| [`Get-WinHomeLocation`](#get-winhomelocation) | International | 仅5.1 | 仅5.1提供 | 获取当前用户帐户的 Windows GeoID 主位置设置。 | 不实现 |  |
+| [`Get-WinLanguageBarOption`](#get-winlanguagebaroption) | International | 仅5.1 | 仅5.1提供 | 获取当前用户帐户的语言栏模式和类型。 | 不实现 |  |
+| [`Get-WinSystemLocale`](#get-winsystemlocale) | International | 仅5.1 | 仅5.1提供 | 获取当前计算机的系统区域设置。 | 不实现 |  |
+| [`Get-WinUILanguageOverride`](#get-winuilanguageoverride) | International | 仅5.1 | 仅5.1提供 | 获取当前用户帐户的 Windows UI 语言替代设置。 | 不实现 |  |
+| [`Get-WinUserLanguageList`](#get-winuserlanguagelist) | International | 仅5.1 | 仅5.1提供 | 获取当前用户帐户的语言列表。 | 不实现 |  |
+| [`Get-WmiObject`](#get-wmiobject) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 获取 Windows Management Instrumentation （WMI） 类的实例或有关可用类的信息。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
 | [`Get-WSManCredSSP`](#get-wsmancredssp) | Microsoft.WSMan.Management | 都有 | 无 | 获取客户端的凭据安全支持提供程序相关配置。 | 不实现 |  |
 | [`Get-WSManInstance`](#get-wsmaninstance) | Microsoft.WSMan.Management | 都有 | 无 | 显示资源 URI 指定的资源实例的管理信息。 | 不实现 |  |
-| [`Import-BcdStore`](#import-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Import-BinaryMiLog`](#import-binarymilog) | CimCmdlets | 都有 | 无 | 用于根据导出文件的内容重新创建已保存的对象。 | 不实现 | Windows 专属（CIM/WMI 体系） |
-| [`Import-Certificate`](#import-certificate) | PKI | 都有 | 无 | 将一个或多个证书导入证书存储。 | 不实现 |  |
-| [`Import-Counter`](#import-counter) | Microsoft.PowerShell.Diagnostics | 都有 | 无 | 导入性能计数器日志文件，并创建表示日志中每个计数器示例的对象。 | 不实现 |  |
-| [`Import-PfxCertificate`](#import-pfxcertificate) | PKI | 都有 | 无 | 将 PFX 文件中的证书和私钥导入目标存储。 | 不实现 |  |
-| [`Import-StartLayout`](#import-startlayout) | StartLayout | 都有 | 无 | 将开始布局导入已装载的 Windows 映像。 | 不实现 |  |
-| [`Import-TpmOwnerAuth`](#import-tpmownerauth) | TrustedPlatformModule | 都有 | 无 | 将 TPM 所有者授权值导入注册表。 | 不实现 |  |
+| [`Import-BcdStore`](#import-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Import-BinaryMiLog`](#import-binarymilog) | CimCmdlets | 仅5.1 | 仅5.1提供 | 用于根据导出文件的内容重新创建已保存的对象。 | 不实现 | Windows 专属（CIM/WMI 体系） |
+| [`Import-Certificate`](#import-certificate) | PKI | 仅5.1 | 仅5.1提供 | 将一个或多个证书导入证书存储。 | 不实现 |  |
+| [`Import-Counter`](#import-counter) | Microsoft.PowerShell.Diagnostics | 仅5.1 | 仅5.1提供 | 导入性能计数器日志文件，并创建表示日志中每个计数器示例的对象。 | 不实现 |  |
+| [`Import-PfxCertificate`](#import-pfxcertificate) | PKI | 仅5.1 | 仅5.1提供 | 将 PFX 文件中的证书和私钥导入目标存储。 | 不实现 |  |
+| [`Import-StartLayout`](#import-startlayout) | StartLayout | 仅5.1 | 仅5.1提供 | 将开始布局导入已装载的 Windows 映像。 | 不实现 |  |
+| [`Import-TpmOwnerAuth`](#import-tpmownerauth) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 将 TPM 所有者授权值导入注册表。 | 不实现 |  |
 | [`Import-UevConfiguration`](#import-uevconfiguration) | UEV | 仅5.1 | 仅5.1提供 | 导入 UE-V 配置。 | 不实现 |  |
-| [`Initialize-PmemPhysicalDevice`](#initialize-pmemphysicaldevice) | PersistentMemory | 都有 | 无 | 初始化物理持久内存设备的标签存储区。 | 不实现 |  |
-| [`Initialize-Tpm`](#initialize-tpm) | TrustedPlatformModule | 都有 | 无 | 执行 TPM 预配流程的一部分。 | 不实现 |  |
-| [`Install-Language`](#install-language) | LanguagePackManagement | 都有 | 无 | 在设备上安装语言。 | 不实现 |  |
-| [`Install-ProvisioningPackage`](#install-provisioningpackage) | Provisioning | 都有 | 无 | 在本地计算机安装 .PPKG 包。 | 不实现 |  |
-| [`Install-TrustedProvisioningCertificate`](#install-trustedprovisioningcertificate) | Provisioning | 都有 | 无 | 向受信任证书存储添加证书。 | 不实现 |  |
+| [`Initialize-PmemPhysicalDevice`](#initialize-pmemphysicaldevice) | PersistentMemory | 仅5.1 | 仅5.1提供 | 初始化物理持久内存设备的标签存储区。 | 不实现 |  |
+| [`Initialize-Tpm`](#initialize-tpm) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 执行 TPM 预配流程的一部分。 | 不实现 |  |
+| [`Install-Language`](#install-language) | LanguagePackManagement | 仅5.1 | 仅5.1提供 | 在设备上安装语言。 | 不实现 |  |
+| [`Install-ProvisioningPackage`](#install-provisioningpackage) | Provisioning | 仅5.1 | 仅5.1提供 | 在本地计算机安装 .PPKG 包。 | 不实现 |  |
+| [`Install-TrustedProvisioningCertificate`](#install-trustedprovisioningcertificate) | Provisioning | 仅5.1 | 仅5.1提供 | 向受信任证书存储添加证书。 | 不实现 |  |
 | [`Invoke-CimMethod`](#invoke-cimmethod) | CimCmdlets | 都有 | 语法不同 | 调用 CIM 类的方法。 | 不实现 | Windows 专属（CIM/WMI 体系） |
-| [`Invoke-CommandInDesktopPackage`](#invoke-commandindesktoppackage) | Appx | 都有 | 无 | 在打包应用的上下文中创建新进程的调试工具。 | 不实现 |  |
-| [`Invoke-DscResource`](#invoke-dscresource) | PSDesiredStateConfiguration | 都有 | 无 | 运行指定的 PowerShell Desired State Configuration （DSC） 资源的方法。 | 不实现 |  |
-| [`Invoke-LapsPolicyProcessing`](#invoke-lapspolicyprocessing) | LAPS | 都有 | 无 | 使 LAPS 处理当前配置的策略。 | 不实现 |  |
-| [`Invoke-TroubleshootingPack`](#invoke-troubleshootingpack) | TroubleshootingPack | 都有 | 无 | 运行疑难解答包。 | 不实现 |  |
-| [`Invoke-WmiMethod`](#invoke-wmimethod) | Microsoft.PowerShell.Management | 都有 | 无 | 调用 WMI 方法。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
+| [`Invoke-CommandInDesktopPackage`](#invoke-commandindesktoppackage) | Appx | 仅5.1 | 仅5.1提供 | 在打包应用的上下文中创建新进程的调试工具。 | 不实现 |  |
+| [`Invoke-DscResource`](#invoke-dscresource) | PSDesiredStateConfiguration | 仅7 | 仅7提供 | 运行指定的 PowerShell Desired State Configuration （DSC） 资源的方法。 | 不实现 |  |
+| [`Invoke-LapsPolicyProcessing`](#invoke-lapspolicyprocessing) | LAPS | 仅5.1 | 仅5.1提供 | 使 LAPS 处理当前配置的策略。 | 不实现 |  |
+| [`Invoke-TroubleshootingPack`](#invoke-troubleshootingpack) | TroubleshootingPack | 仅5.1 | 仅5.1提供 | 运行疑难解答包。 | 不实现 |  |
+| [`Invoke-WmiMethod`](#invoke-wmimethod) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 调用 WMI 方法。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
 | [`Invoke-WSManAction`](#invoke-wsmanaction) | Microsoft.WSMan.Management | 都有 | 无 | 对资源 URI 和选择器指定的对象调用作。 | 不实现 |  |
-| [`Join-DtcDiagnosticResourceManager`](#join-dtcdiagnosticresourcemanager) | MsDtc | 都有 | 无 | 为事务对象登记诊断资源管理器。 | 不实现 |  |
-| [`Limit-EventLog`](#limit-eventlog) | Microsoft.PowerShell.Management | 都有 | 无 | 设置用于限制事件日志大小及其条目期限的事件日志属性。 | 不实现 |  |
-| [`Merge-CIPolicy`](#merge-cipolicy) | ConfigCI | 都有 | 无 | 合并多个代码完整性策略文件中的规则。 | 不实现 |  |
+| [`Join-DtcDiagnosticResourceManager`](#join-dtcdiagnosticresourcemanager) | MsDtc | 仅5.1 | 仅5.1提供 | 为事务对象登记诊断资源管理器。 | 不实现 |  |
+| [`Limit-EventLog`](#limit-eventlog) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 设置用于限制事件日志大小及其条目期限的事件日志属性。 | 不实现 |  |
+| [`Merge-CIPolicy`](#merge-cipolicy) | ConfigCI | 仅5.1 | 仅5.1提供 | 合并多个代码完整性策略文件中的规则。 | 不实现 |  |
 | [`Mount-AppvClientConnectionGroup`](#mount-appvclientconnectiongroup) | AppvClient | 仅5.1 | 仅5.1提供 | 将包内容流式传输到本地磁盘。 | 不实现 |  |
 | [`Mount-AppvClientPackage`](#mount-appvclientpackage) | AppvClient | 仅5.1 | 仅5.1提供 | 将包加载到 App-V 缓存。 | 不实现 |  |
-| [`Mount-AppxVolume`](#mount-appxvolume) | Appx | 都有 | 无 | 装载 appx 卷。 | 不实现 |  |
-| [`Mount-WindowsImage`](#mount-windowsimage) | Dism | 都有 | 语法不同 | 将 WIM 或 VHD 文件中的 Windows 映像装载到本地目录。 | 不实现 |  |
-| [`Move-AppxPackage`](#move-appxpackage) | Appx | 都有 | 无 | 将包从当前位置移到另一个 appx 卷。 | 不实现 |  |
-| [`New-AppLockerPolicy`](#new-applockerpolicy) | AppLocker | 都有 | 无 | 从文件信息列表创建新的 AppLocker 策略。 | 不实现 |  |
-| [`New-BcdEntry`](#new-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`New-BcdStore`](#new-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`New-CertificateNotificationTask`](#new-certificatenotificationtask) | PKI | 都有 | 无 | 在证书被替换、过期或即将过期时，在任务计划程序中创建新任务。 | 不实现 |  |
+| [`Mount-AppxVolume`](#mount-appxvolume) | Appx | 仅5.1 | 仅5.1提供 | 装载 appx 卷。 | 不实现 |  |
+| [`Mount-WindowsImage`](#mount-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 将 WIM 或 VHD 文件中的 Windows 映像装载到本地目录。 | 不实现 |  |
+| [`Move-AppxPackage`](#move-appxpackage) | Appx | 仅5.1 | 仅5.1提供 | 将包从当前位置移到另一个 appx 卷。 | 不实现 |  |
+| [`New-AppLockerPolicy`](#new-applockerpolicy) | AppLocker | 仅5.1 | 仅5.1提供 | 从文件信息列表创建新的 AppLocker 策略。 | 不实现 |  |
+| [`New-BcdEntry`](#new-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`New-BcdStore`](#new-bcdstore) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`New-CertificateNotificationTask`](#new-certificatenotificationtask) | PKI | 仅5.1 | 仅5.1提供 | 在证书被替换、过期或即将过期时，在任务计划程序中创建新任务。 | 不实现 |  |
 | [`New-CimInstance`](#new-ciminstance) | CimCmdlets | 都有 | 语法不同 | 创建 CIM 实例。 | 不实现 | Windows 专属（CIM/WMI 体系） |
 | [`New-CimSession`](#new-cimsession) | CimCmdlets | 都有 | 语法不同 | 创建 CIM 会话。 | 不实现 | Windows 专属（CIM/WMI 体系） |
 | [`New-CimSessionOption`](#new-cimsessionoption) | CimCmdlets | 都有 | 语法不同 | 指定 New-CimSession cmdlet 的高级选项。 | 不实现 | Windows 专属（CIM/WMI 体系） |
-| [`New-CIPolicy`](#new-cipolicy) | ConfigCI | 都有 | 无 | 创建代码完整性策略 .xml 文件。 | 不实现 |  |
-| [`New-CIPolicyRule`](#new-cipolicyrule) | ConfigCI | 都有 | 无 | 为用户模式代码和驱动程序生成代码完整性策略规则。 | 不实现 |  |
-| [`New-DtcDiagnosticTransaction`](#new-dtcdiagnostictransaction) | MsDtc | 都有 | 无 | 在本地计算机的事务管理器中创建新事务。 | 不实现 |  |
-| [`New-EventLog`](#new-eventlog) | Microsoft.PowerShell.Management | 都有 | 无 | 在本地或远程计算机上创建新的事件日志和新事件源。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
+| [`New-CIPolicy`](#new-cipolicy) | ConfigCI | 仅5.1 | 仅5.1提供 | 创建代码完整性策略 .xml 文件。 | 不实现 |  |
+| [`New-CIPolicyRule`](#new-cipolicyrule) | ConfigCI | 仅5.1 | 仅5.1提供 | 为用户模式代码和驱动程序生成代码完整性策略规则。 | 不实现 |  |
+| [`New-DtcDiagnosticTransaction`](#new-dtcdiagnostictransaction) | MsDtc | 仅5.1 | 仅5.1提供 | 在本地计算机的事务管理器中创建新事务。 | 不实现 |  |
+| [`New-EventLog`](#new-eventlog) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 在本地或远程计算机上创建新的事件日志和新事件源。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
 | [`New-FileCatalog`](#new-filecatalog) | Microsoft.PowerShell.Security | 都有 | 无 | 创建一个Windows目录文件，其中包含指定路径中文件和文件夹的加密哈希。 | 不实现 |  |
-| [`New-JobTrigger`](#new-jobtrigger) | PSScheduledJob | 都有 | 无 | 为计划作业创建作业触发器。 | 不实现 |  |
-| [`New-LocalGroup`](#new-localgroup) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 创建本地安全组。 | 不实现 |  |
-| [`New-LocalUser`](#new-localuser) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 创建本地用户帐户。 | 不实现 |  |
-| [`New-NetIPsecAuthProposal`](#new-netipsecauthproposal) | NetSecurity | 都有 | 无 | 创建主模式身份验证建议，指定 IPsec 主模式协商中提供的身份验证协议套件。 | 不实现 |  |
-| [`New-NetIPsecMainModeCryptoProposal`](#new-netipsecmainmodecryptoproposal) | NetSecurity | 都有 | 无 | 创建主模式加密建议，指定 IPsec 主模式协商中提供的加密协议套件。 | 不实现 |  |
-| [`New-NetIPsecQuickModeCryptoProposal`](#new-netipsecquickmodecryptoproposal) | NetSecurity | 都有 | 语法不同 | 创建快速模式加密建议，指定 IPsec 快速模式协商中提供的加密协议套件。 | 不实现 |  |
-| [`New-PmemDedicatedMemory`](#new-pmemdedicatedmemory) | PersistentMemory | 都有 | 无 | 在指定区域中创建专用持久内存。 | 不实现 |  |
-| [`New-PmemDisk`](#new-pmemdisk) | PersistentMemory | 都有 | 无 | 在未使用的持久内存区域中创建持久内存磁盘。 | 不实现 |  |
-| [`New-ProvisioningRepro`](#new-provisioningrepro) | Provisioning | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`New-PSWorkflowExecutionOption`](#new-psworkflowexecutionoption) | PSWorkflow | 都有 | 无 | 创建一个对象，其中包含工作流会话的会话配置选项。 | 不实现 |  |
-| [`New-ScheduledJobOption`](#new-scheduledjoboption) | PSScheduledJob | 都有 | 无 | 创建一个对象，该对象包含计划作业的高级选项。 | 不实现 |  |
-| [`New-SelfSignedCertificate`](#new-selfsignedcertificate) | PKI | 都有 | 无 | 创建用于测试的新自签名证书。 | 不实现 |  |
+| [`New-JobTrigger`](#new-jobtrigger) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 为计划作业创建作业触发器。 | 不实现 |  |
+| [`New-LocalGroup`](#new-localgroup) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 创建本地安全组。 | 不实现 |  |
+| [`New-LocalUser`](#new-localuser) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 创建本地用户帐户。 | 不实现 |  |
+| [`New-NetIPsecAuthProposal`](#new-netipsecauthproposal) | NetSecurity | 仅5.1 | 仅5.1提供 | 创建主模式身份验证建议，指定 IPsec 主模式协商中提供的身份验证协议套件。 | 不实现 |  |
+| [`New-NetIPsecMainModeCryptoProposal`](#new-netipsecmainmodecryptoproposal) | NetSecurity | 仅5.1 | 仅5.1提供 | 创建主模式加密建议，指定 IPsec 主模式协商中提供的加密协议套件。 | 不实现 |  |
+| [`New-NetIPsecQuickModeCryptoProposal`](#new-netipsecquickmodecryptoproposal) | NetSecurity | 仅5.1 | 仅5.1提供 | 创建快速模式加密建议，指定 IPsec 快速模式协商中提供的加密协议套件。 | 不实现 |  |
+| [`New-PmemDedicatedMemory`](#new-pmemdedicatedmemory) | PersistentMemory | 仅5.1 | 仅5.1提供 | 在指定区域中创建专用持久内存。 | 不实现 |  |
+| [`New-PmemDisk`](#new-pmemdisk) | PersistentMemory | 仅5.1 | 仅5.1提供 | 在未使用的持久内存区域中创建持久内存磁盘。 | 不实现 |  |
+| [`New-ProvisioningRepro`](#new-provisioningrepro) | Provisioning | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`New-PSWorkflowExecutionOption`](#new-psworkflowexecutionoption) | PSWorkflow | 仅5.1 | 仅5.1提供 | 创建一个对象，其中包含工作流会话的会话配置选项。 | 不实现 |  |
+| [`New-ScheduledJobOption`](#new-scheduledjoboption) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 创建一个对象，该对象包含计划作业的高级选项。 | 不实现 |  |
+| [`New-SelfSignedCertificate`](#new-selfsignedcertificate) | PKI | 仅5.1 | 仅5.1提供 | 创建用于测试的新自签名证书。 | 不实现 |  |
 | [`New-Service`](#new-service) | Microsoft.PowerShell.Management | 都有 | 语法不同 | 创建新的 Windows 服务。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
-| [`New-TlsSessionTicketKey`](#new-tlssessionticketkey) | TLS | 都有 | 无 | 创建 TLS 会话票证密钥配置文件。 | 不实现 |  |
-| [`New-WebServiceProxy`](#new-webserviceproxy) | Microsoft.PowerShell.Management | 都有 | 无 | 创建一个 Web 服务代理对象，该对象允许你在 PowerShell 中使用和管理 Web 服务。 | 不实现 |  |
-| [`New-WindowsCustomImage`](#new-windowscustomimage) | Dism | 都有 | 无 | 在配置了 WIMBoot 的设备上捕获定制或维护过的 Windows 组件映像。 | 不实现 |  |
-| [`New-WindowsImage`](#new-windowsimage) | Dism | 都有 | 无 | 将驱动器映像捕获到新 WIM 文件。 | 不实现 |  |
+| [`New-TlsSessionTicketKey`](#new-tlssessionticketkey) | TLS | 仅5.1 | 仅5.1提供 | 创建 TLS 会话票证密钥配置文件。 | 不实现 |  |
+| [`New-WebServiceProxy`](#new-webserviceproxy) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 创建一个 Web 服务代理对象，该对象允许你在 PowerShell 中使用和管理 Web 服务。 | 不实现 |  |
+| [`New-WindowsCustomImage`](#new-windowscustomimage) | Dism | 仅5.1 | 仅5.1提供 | 在配置了 WIMBoot 的设备上捕获定制或维护过的 Windows 组件映像。 | 不实现 |  |
+| [`New-WindowsImage`](#new-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 将驱动器映像捕获到新 WIM 文件。 | 不实现 |  |
 | [`New-WinEvent`](#new-winevent) | Microsoft.PowerShell.Diagnostics | 都有 | 无 | 为指定的事件提供程序创建新的 Windows 事件。 | 不实现 |  |
-| [`New-WinUserLanguageList`](#new-winuserlanguagelist) | International | 都有 | 无 | 实例化新语言列表对象。 | 不实现 |  |
+| [`New-WinUserLanguageList`](#new-winuserlanguagelist) | International | 仅5.1 | 仅5.1提供 | 实例化新语言列表对象。 | 不实现 |  |
 | [`New-WSManInstance`](#new-wsmaninstance) | Microsoft.WSMan.Management | 都有 | 无 | 创建管理资源的新实例。 | 不实现 |  |
 | [`New-WSManSessionOption`](#new-wsmansessionoption) | Microsoft.WSMan.Management | 都有 | 无 | 创建会话选项哈希表，用作 WS-Management cmdlet 的输入参数。 | 不实现 |  |
-| [`Optimize-AppxProvisionedPackages`](#optimize-appxprovisionedpackages) | Dism | 都有 | 无 | 用硬链接替换相同文件，优化映像中预配包的总大小。 | 不实现 |  |
-| [`Optimize-WindowsImage`](#optimize-windowsimage) | Dism | 都有 | 无 | 按指定优化配置 Windows 映像。 | 不实现 |  |
+| [`Optimize-AppxProvisionedPackages`](#optimize-appxprovisionedpackages) | Dism | 仅5.1 | 仅5.1提供 | 用硬链接替换相同文件，优化映像中预配包的总大小。 | 不实现 |  |
+| [`Optimize-WindowsImage`](#optimize-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 按指定优化配置 Windows 映像。 | 不实现 |  |
 | [`Out-GridView`](#out-gridview) | Microsoft.PowerShell.Utility | 都有 | 无 | 将输出发送到单独窗口中的交互式表中。 | 不实现 | GUI 与打印 |
 | [`Out-Printer`](#out-printer) | Microsoft.PowerShell.Utility | 都有 | 无 | 将输出发送到打印机。 | 不实现 | GUI 与打印 |
 | [`Publish-AppvClientPackage`](#publish-appvclientpackage) | AppvClient | 仅5.1 | 仅5.1提供 | 发布 App-V 包。 | 不实现 |  |
-| [`Publish-DscConfiguration`](#publish-dscconfiguration) | PSDesiredStateConfiguration | 都有 | 无 | 将 DSC 配置发布到一组计算机。 | 不实现 |  |
-| [`Receive-DtcDiagnosticTransaction`](#receive-dtcdiagnostictransaction) | MsDtc | 都有 | 无 | 从给定诊断资源管理器传播事务。 | 不实现 |  |
+| [`Publish-DscConfiguration`](#publish-dscconfiguration) | PSDesiredStateConfiguration | 仅5.1 | 仅5.1提供 | 将 DSC 配置发布到一组计算机。 | 不实现 |  |
+| [`Receive-DtcDiagnosticTransaction`](#receive-dtcdiagnostictransaction) | MsDtc | 仅5.1 | 仅5.1提供 | 从给定诊断资源管理器传播事务。 | 不实现 |  |
 | [`Receive-PSSession`](#receive-pssession) | Microsoft.PowerShell.Core | 都有 | 语法不同 | 获取断开连接的会话中的命令的结果 | 不实现 | 远程会话，远程操作不在实现范围内 |
 | [`Register-CimIndicationEvent`](#register-cimindicationevent) | CimCmdlets | 都有 | 语法不同 | 使用筛选器表达式或查询表达式订阅指示。 | 不实现 | Windows 专属（CIM/WMI 体系） |
 | [`Register-PSSessionConfiguration`](#register-pssessionconfiguration) | Microsoft.PowerShell.Core | 都有 | 语法不同 | 创建并注册新的会话配置。 | 不实现 | 远程会话，远程操作不在实现范围内 |
-| [`Register-RecoveryManagementPlugin`](#register-recoverymanagementplugin) | Dism | 都有 | 语法不同 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Register-ScheduledJob`](#register-scheduledjob) | PSScheduledJob | 都有 | 无 | 创建计划作业。 | 不实现 |  |
+| [`Register-RecoveryManagementPlugin`](#register-recoverymanagementplugin) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Register-ScheduledJob`](#register-scheduledjob) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 创建计划作业。 | 不实现 |  |
 | [`Register-UevTemplate`](#register-uevtemplate) | UEV | 仅5.1 | 仅5.1提供 | 向 UE-V 注册设置位置模板。 | 不实现 |  |
-| [`Register-WmiEvent`](#register-wmievent) | Microsoft.PowerShell.Management | 都有 | 无 | 订阅 Windows Management Instrumentation （WMI） 事件。 | 不实现 |  |
-| [`Remove-AppProvisionedSharedPackageContainer`](#remove-appprovisionedsharedpackagecontainer) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Remove-AppSharedPackageContainer`](#remove-appsharedpackagecontainer) | Appx | 都有 | 无 | 删除共享包容器。 | 不实现 |  |
+| [`Register-WmiEvent`](#register-wmievent) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 订阅 Windows Management Instrumentation （WMI） 事件。 | 不实现 |  |
+| [`Remove-AppProvisionedSharedPackageContainer`](#remove-appprovisionedsharedpackagecontainer) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Remove-AppSharedPackageContainer`](#remove-appsharedpackagecontainer) | Appx | 仅5.1 | 仅5.1提供 | 删除共享包容器。 | 不实现 |  |
 | [`Remove-AppvClientConnectionGroup`](#remove-appvclientconnectiongroup) | AppvClient | 仅5.1 | 仅5.1提供 | 删除客户端上的 App-V 连接组。 | 不实现 |  |
 | [`Remove-AppvClientPackage`](#remove-appvclientpackage) | AppvClient | 仅5.1 | 仅5.1提供 | 从计算机删除包。 | 不实现 |  |
 | [`Remove-AppvPublishingServer`](#remove-appvpublishingserver) | AppvClient | 仅5.1 | 仅5.1提供 | 删除 App-V 发布服务器。 | 不实现 |  |
-| [`Remove-AppxPackage`](#remove-appxpackage) | Appx | 都有 | 无 | 从一个或多个用户帐户删除应用包。 | 不实现 |  |
-| [`Remove-AppxPackageAutoUpdateSettings`](#remove-appxpackageautoupdatesettings) | Appx | 都有 | 无 | 删除特定 Windows 应用的设置。 | 不实现 |  |
-| [`Remove-AppxProvisionedPackage`](#remove-appxprovisionedpackage) | Dism | 都有 | 无 | 从 Windows 映像删除应用包 (.appx)。 | 不实现 |  |
-| [`Remove-AppxVolume`](#remove-appxvolume) | Appx | 都有 | 无 | 删除 appx 卷。 | 不实现 |  |
-| [`Remove-BcdElement`](#remove-bcdelement) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Remove-BcdEntry`](#remove-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Remove-BitsTransfer`](#remove-bitstransfer) | BitsTransfer | 都有 | 无 | 取消 BITS 传输作业。 | 不实现 |  |
-| [`Remove-CertificateEnrollmentPolicyServer`](#remove-certificateenrollmentpolicyserver) | PKI | 都有 | 无 | 从当前用户或本地计算机配置删除注册策略服务器及其 URL。 | 不实现 |  |
-| [`Remove-CertificateNotificationTask`](#remove-certificatenotificationtask) | PKI | 都有 | 无 | 从任务计划程序删除证书通知任务。 | 不实现 |  |
+| [`Remove-AppxPackage`](#remove-appxpackage) | Appx | 仅5.1 | 仅5.1提供 | 从一个或多个用户帐户删除应用包。 | 不实现 |  |
+| [`Remove-AppxPackageAutoUpdateSettings`](#remove-appxpackageautoupdatesettings) | Appx | 仅5.1 | 仅5.1提供 | 删除特定 Windows 应用的设置。 | 不实现 |  |
+| [`Remove-AppxProvisionedPackage`](#remove-appxprovisionedpackage) | Dism | 仅5.1 | 仅5.1提供 | 从 Windows 映像删除应用包 (.appx)。 | 不实现 |  |
+| [`Remove-AppxVolume`](#remove-appxvolume) | Appx | 仅5.1 | 仅5.1提供 | 删除 appx 卷。 | 不实现 |  |
+| [`Remove-BcdElement`](#remove-bcdelement) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Remove-BcdEntry`](#remove-bcdentry) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Remove-BitsTransfer`](#remove-bitstransfer) | BitsTransfer | 仅5.1 | 仅5.1提供 | 取消 BITS 传输作业。 | 不实现 |  |
+| [`Remove-CertificateEnrollmentPolicyServer`](#remove-certificateenrollmentpolicyserver) | PKI | 仅5.1 | 仅5.1提供 | 从当前用户或本地计算机配置删除注册策略服务器及其 URL。 | 不实现 |  |
+| [`Remove-CertificateNotificationTask`](#remove-certificatenotificationtask) | PKI | 仅5.1 | 仅5.1提供 | 从任务计划程序删除证书通知任务。 | 不实现 |  |
 | [`Remove-CimInstance`](#remove-ciminstance) | CimCmdlets | 都有 | 语法不同 | 从计算机中删除 CIM 实例。 | 不实现 | Windows 专属（CIM/WMI 体系） |
 | [`Remove-CimSession`](#remove-cimsession) | CimCmdlets | 都有 | 语法不同 | 删除一个或多个 CIM 会话。 | 不实现 | Windows 专属（CIM/WMI 体系） |
-| [`Remove-CIPolicyRule`](#remove-cipolicyrule) | ConfigCI | 都有 | 无 | 此 cmdlet 不受支持。 | 不实现 |  |
-| [`Remove-Computer`](#remove-computer) | Microsoft.PowerShell.Management | 都有 | 无 | 从其域中删除本地计算机。 | 不实现 |  |
-| [`Remove-EventLog`](#remove-eventlog) | Microsoft.PowerShell.Management | 都有 | 无 | 删除事件日志或取消注册事件源。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
-| [`Remove-JobTrigger`](#remove-jobtrigger) | PSScheduledJob | 都有 | 无 | 从计划作业中删除作业触发器。 | 不实现 |  |
-| [`Remove-LocalGroup`](#remove-localgroup) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 删除本地安全组。 | 不实现 |  |
-| [`Remove-LocalGroupMember`](#remove-localgroupmember) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 从本地组中删除成员。 | 不实现 |  |
-| [`Remove-LocalUser`](#remove-localuser) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 删除本地用户帐户。 | 不实现 |  |
-| [`Remove-OsConfigurationDocument`](#remove-osconfigurationdocument) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Remove-OSConfigurationScenarioDefinition`](#remove-osconfigurationscenariodefinition) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Remove-PmemDedicatedMemory`](#remove-pmemdedicatedmemory) | PersistentMemory | 都有 | 无 | 获取专用持久内存。 | 不实现 |  |
-| [`Remove-PmemDisk`](#remove-pmemdisk) | PersistentMemory | 都有 | 无 | 删除持久内存磁盘。 | 不实现 |  |
+| [`Remove-CIPolicyRule`](#remove-cipolicyrule) | ConfigCI | 仅5.1 | 仅5.1提供 | 此 cmdlet 不受支持。 | 不实现 |  |
+| [`Remove-Computer`](#remove-computer) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 从其域中删除本地计算机。 | 不实现 |  |
+| [`Remove-EventLog`](#remove-eventlog) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 删除事件日志或取消注册事件源。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
+| [`Remove-JobTrigger`](#remove-jobtrigger) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 从计划作业中删除作业触发器。 | 不实现 |  |
+| [`Remove-LocalGroup`](#remove-localgroup) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 删除本地安全组。 | 不实现 |  |
+| [`Remove-LocalGroupMember`](#remove-localgroupmember) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 从本地组中删除成员。 | 不实现 |  |
+| [`Remove-LocalUser`](#remove-localuser) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 删除本地用户帐户。 | 不实现 |  |
+| [`Remove-OsConfigurationDocument`](#remove-osconfigurationdocument) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Remove-OSConfigurationScenarioDefinition`](#remove-osconfigurationscenariodefinition) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Remove-PmemDedicatedMemory`](#remove-pmemdedicatedmemory) | PersistentMemory | 仅5.1 | 仅5.1提供 | 获取专用持久内存。 | 不实现 |  |
+| [`Remove-PmemDisk`](#remove-pmemdisk) | PersistentMemory | 仅5.1 | 仅5.1提供 | 删除持久内存磁盘。 | 不实现 |  |
 | [`Remove-PSSnapin`](#remove-pssnapin) | Microsoft.PowerShell.Core | 仅5.1 | 仅5.1提供 | 从当前会话中删除 Windows PowerShell 管理单元。 | 不实现 |  |
-| [`Remove-RecoveryManagementPluginAltitude`](#remove-recoverymanagementpluginaltitude) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Remove-RecoveryManagementPluginAltitude`](#remove-recoverymanagementpluginaltitude) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
 | [`Remove-Service`](#remove-service) | Microsoft.PowerShell.Management | 仅7 | 仅7提供 | 删除 Windows 服务。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
-| [`Remove-WindowsCapability`](#remove-windowscapability) | Dism | 都有 | 无 | 从映像卸载 Windows 功能包。 | 不实现 |  |
-| [`Remove-WindowsDriver`](#remove-windowsdriver) | Dism | 都有 | 无 | 从脱机 Windows 映像删除驱动程序。 | 不实现 |  |
-| [`Remove-WindowsImage`](#remove-windowsimage) | Dism | 都有 | 语法不同 | 从包含多个卷映像的 WIM 文件删除指定卷映像。 | 不实现 |  |
-| [`Remove-WindowsPackage`](#remove-windowspackage) | Dism | 都有 | 无 | 从 Windows 映像删除包。 | 不实现 |  |
-| [`Remove-WmiObject`](#remove-wmiobject) | Microsoft.PowerShell.Management | 都有 | 无 | 删除现有 Windows Management Instrumentation （WMI） 类的实例。 | 不实现 |  |
+| [`Remove-WindowsCapability`](#remove-windowscapability) | Dism | 仅5.1 | 仅5.1提供 | 从映像卸载 Windows 功能包。 | 不实现 |  |
+| [`Remove-WindowsDriver`](#remove-windowsdriver) | Dism | 仅5.1 | 仅5.1提供 | 从脱机 Windows 映像删除驱动程序。 | 不实现 |  |
+| [`Remove-WindowsImage`](#remove-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 从包含多个卷映像的 WIM 文件删除指定卷映像。 | 不实现 |  |
+| [`Remove-WindowsPackage`](#remove-windowspackage) | Dism | 仅5.1 | 仅5.1提供 | 从 Windows 映像删除包。 | 不实现 |  |
+| [`Remove-WmiObject`](#remove-wmiobject) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 删除现有 Windows Management Instrumentation （WMI） 类的实例。 | 不实现 |  |
 | [`Remove-WSManInstance`](#remove-wsmaninstance) | Microsoft.WSMan.Management | 都有 | 无 | 删除管理资源实例。 | 不实现 |  |
 | [`Rename-Computer`](#rename-computer) | Microsoft.PowerShell.Management | 都有 | 语法不同 | 重命名计算机。 | 映射 Linux（sudo reboot / shutdown / hostnamectl） |  |
-| [`Rename-LocalGroup`](#rename-localgroup) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 重命名本地安全组。 | 不实现 |  |
-| [`Rename-LocalUser`](#rename-localuser) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 重命名本地用户帐户。 | 不实现 |  |
+| [`Rename-LocalGroup`](#rename-localgroup) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 重命名本地安全组。 | 不实现 |  |
+| [`Rename-LocalUser`](#rename-localuser) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 重命名本地用户帐户。 | 不实现 |  |
 | [`Repair-AppvClientConnectionGroup`](#repair-appvclientconnectiongroup) | AppvClient | 仅5.1 | 仅5.1提供 | 重置连接组的用户包设置。 | 不实现 |  |
 | [`Repair-AppvClientPackage`](#repair-appvclientpackage) | AppvClient | 仅5.1 | 仅5.1提供 | 重置包的用户设置。 | 不实现 |  |
 | [`Repair-UevTemplateIndex`](#repair-uevtemplateindex) | UEV | 仅5.1 | 仅5.1提供 | 修复损坏的 UE-V 模板索引。 | 不实现 |  |
-| [`Repair-WindowsImage`](#repair-windowsimage) | Dism | 都有 | 无 | 修复 WIM 或 VHD 文件中的 Windows 映像。 | 不实现 |  |
-| [`Reset-AppSharedPackageContainer`](#reset-appsharedpackagecontainer) | Appx | 都有 | 无 | 销毁容器的全部应用数据。 | 不实现 |  |
-| [`Reset-AppxPackage`](#reset-appxpackage) | Appx | 都有 | 无 | 将 Windows 应用恢复到初始配置。 | 不实现 |  |
-| [`Reset-ComputerMachinePassword`](#reset-computermachinepassword) | Microsoft.PowerShell.Management | 都有 | 无 | 重置计算机的计算机帐户密码。 | 不实现 |  |
-| [`Reset-LapsPassword`](#reset-lapspassword) | LAPS | 都有 | 无 | 使 LAPS 立即轮换当前受管本地帐户的密码。 | 不实现 |  |
-| [`Resolve-DnsName`](#resolve-dnsname) | DnsClient | 都有 | 无 | 对指定名称执行 DNS 解析。 | 不实现 |  |
+| [`Repair-WindowsImage`](#repair-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 修复 WIM 或 VHD 文件中的 Windows 映像。 | 不实现 |  |
+| [`Reset-AppSharedPackageContainer`](#reset-appsharedpackagecontainer) | Appx | 仅5.1 | 仅5.1提供 | 销毁容器的全部应用数据。 | 不实现 |  |
+| [`Reset-AppxPackage`](#reset-appxpackage) | Appx | 仅5.1 | 仅5.1提供 | 将 Windows 应用恢复到初始配置。 | 不实现 |  |
+| [`Reset-ComputerMachinePassword`](#reset-computermachinepassword) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 重置计算机的计算机帐户密码。 | 不实现 |  |
+| [`Reset-LapsPassword`](#reset-lapspassword) | LAPS | 仅5.1 | 仅5.1提供 | 使 LAPS 立即轮换当前受管本地帐户的密码。 | 不实现 |  |
+| [`Resolve-DnsName`](#resolve-dnsname) | DnsClient | 仅5.1 | 仅5.1提供 | 对指定名称执行 DNS 解析。 | 不实现 |  |
 | [`Restart-Service`](#restart-service) | Microsoft.PowerShell.Management | 都有 | 无 | 停止并接着启动一个或更多服务。 | 映射 Linux（systemctl start/stop/restart） |  |
-| [`Restore-Computer`](#restore-computer) | Microsoft.PowerShell.Management | 都有 | 无 | 在本地计算机上启动系统还原。 | 不实现 |  |
+| [`Restore-Computer`](#restore-computer) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 在本地计算机上启动系统还原。 | 不实现 |  |
 | [`Restore-UevBackup`](#restore-uevbackup) | UEV | 仅5.1 | 仅5.1提供 | 将另一台计算机备份的设置应用到本机。 | 不实现 |  |
 | [`Restore-UevUserSetting`](#restore-uevusersetting) | UEV | 仅5.1 | 仅5.1提供 | 为用户设置设置还原标志。 | 不实现 |  |
-| [`Resume-BitsTransfer`](#resume-bitstransfer) | BitsTransfer | 都有 | 无 | 恢复 BITS 传输作业。 | 不实现 |  |
+| [`Resume-BitsTransfer`](#resume-bitstransfer) | BitsTransfer | 仅5.1 | 仅5.1提供 | 恢复 BITS 传输作业。 | 不实现 |  |
 | [`Resume-Job`](#resume-job) | Microsoft.PowerShell.Core | 仅5.1 | 仅5.1提供 | 重启挂起的作业。 | 不实现 |  |
-| [`Resume-ProvisioningSession`](#resume-provisioningsession) | Provisioning | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Resume-ReFSDedupSchedule`](#resume-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 恢复指定 ReFS 卷上的重复数据删除计划。 | 不实现 |  |
+| [`Resume-ProvisioningSession`](#resume-provisioningsession) | Provisioning | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Resume-ReFSDedupSchedule`](#resume-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 恢复指定 ReFS 卷上的重复数据删除计划。 | 不实现 |  |
 | [`Resume-Service`](#resume-service) | Microsoft.PowerShell.Management | 都有 | 无 | 恢复一个或多个挂起（已暂停）服务。 | 映射 Linux（systemctl start/stop/restart） |  |
-| [`Save-OsImage`](#save-osimage) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Save-SoftwareInventory`](#save-softwareinventory) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Save-WindowsImage`](#save-windowsimage) | Dism | 都有 | 无 | 将对已装载映像的更改保存到其 WIM 或 VHD 文件。 | 不实现 |  |
+| [`Save-OsImage`](#save-osimage) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Save-SoftwareInventory`](#save-softwareinventory) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Save-WindowsImage`](#save-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 将对已装载映像的更改保存到其 WIM 或 VHD 文件。 | 不实现 |  |
 | [`Send-AppvClientReport`](#send-appvclientreport) | AppvClient | 仅5.1 | 仅5.1提供 | 从客户端发送报告数据。 | 不实现 |  |
-| [`Send-DtcDiagnosticTransaction`](#send-dtcdiagnostictransaction) | MsDtc | 都有 | 无 | 向指定诊断资源管理器传播事务。 | 不实现 |  |
+| [`Send-DtcDiagnosticTransaction`](#send-dtcdiagnostictransaction) | MsDtc | 仅5.1 | 仅5.1提供 | 向指定诊断资源管理器传播事务。 | 不实现 |  |
 | [`Set-Acl`](#set-acl) | Microsoft.PowerShell.Security | 都有 | 语法不同 | 更改指定项（如文件或注册表项）的安全描述符。 | 不实现 |  |
-| [`Set-AppBackgroundTaskResourcePolicy`](#set-appbackgroundtaskresourcepolicy) | AppBackgroundTask | 都有 | 无 | 配置后台任务对全局池的使用。 | 不实现 |  |
-| [`Set-AppLockerPolicy`](#set-applockerpolicy) | AppLocker | 都有 | 无 | 为指定 GPO 设置 AppLocker 策略。 | 不实现 |  |
+| [`Set-AppBackgroundTaskResourcePolicy`](#set-appbackgroundtaskresourcepolicy) | AppBackgroundTask | 仅5.1 | 仅5.1提供 | 配置后台任务对全局池的使用。 | 不实现 |  |
+| [`Set-AppLockerPolicy`](#set-applockerpolicy) | AppLocker | 仅5.1 | 仅5.1提供 | 为指定 GPO 设置 AppLocker 策略。 | 不实现 |  |
 | [`Set-AppvClientConfiguration`](#set-appvclientconfiguration) | AppvClient | 仅5.1 | 仅5.1提供 | 配置 App-V 客户端的设置。 | 不实现 |  |
 | [`Set-AppvClientMode`](#set-appvclientmode) | AppvClient | 仅5.1 | 仅5.1提供 | 设置客户端运行模式。 | 不实现 |  |
 | [`Set-AppvClientPackage`](#set-appvclientpackage) | AppvClient | 仅5.1 | 仅5.1提供 | 配置 App-V 客户端包。 | 不实现 |  |
 | [`Set-AppvPublishingServer`](#set-appvpublishingserver) | AppvClient | 仅5.1 | 仅5.1提供 | 修改 App-V 发布服务器属性。 | 不实现 |  |
-| [`Set-AppxDefaultVolume`](#set-appxdefaultvolume) | Appx | 都有 | 无 | 指定默认 appx 卷。 | 不实现 |  |
-| [`Set-AppxPackageAutoUpdateSettings`](#set-appxpackageautoupdatesettings) | Appx | 都有 | 语法不同 | 配置指定 Windows 应用的自动更新和修复设置。 | 不实现 |  |
-| [`Set-AppXProvisionedDataFile`](#set-appxprovisioneddatafile) | Dism | 都有 | 无 | 向 Windows 映像中已预配的指定应用 (.appx) 包添加自定义数据。 | 不实现 |  |
+| [`Set-AppxDefaultVolume`](#set-appxdefaultvolume) | Appx | 仅5.1 | 仅5.1提供 | 指定默认 appx 卷。 | 不实现 |  |
+| [`Set-AppxPackageAutoUpdateSettings`](#set-appxpackageautoupdatesettings) | Appx | 仅5.1 | 仅5.1提供 | 配置指定 Windows 应用的自动更新和修复设置。 | 不实现 |  |
+| [`Set-AppXProvisionedDataFile`](#set-appxprovisioneddatafile) | Dism | 仅5.1 | 仅5.1提供 | 向 Windows 映像中已预配的指定应用 (.appx) 包添加自定义数据。 | 不实现 |  |
 | [`Set-AuthenticodeSignature`](#set-authenticodesignature) | Microsoft.PowerShell.Security | 都有 | 无 | 将验证码签名添加到 PowerShell 脚本或其他文件。 | 不实现 |  |
-| [`Set-BcdBootDefault`](#set-bcdbootdefault) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-BcdBootDisplayOrder`](#set-bcdbootdisplayorder) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-BcdBootSequence`](#set-bcdbootsequence) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-BcdBootTimeout`](#set-bcdboottimeout) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-BcdBootToolsDisplayOrder`](#set-bcdboottoolsdisplayorder) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-BcdDebugSettings`](#set-bcddebugsettings) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-BcdElement`](#set-bcdelement) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-BcdHypervisorSettings`](#set-bcdhypervisorsettings) | Microsoft.Windows.Bcd.Cmdlets | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-BitsTransfer`](#set-bitstransfer) | BitsTransfer | 都有 | 无 | 修改现有 BITS 传输作业的属性。 | 不实现 |  |
-| [`Set-CertificateAutoEnrollmentPolicy`](#set-certificateautoenrollmentpolicy) | PKI | 都有 | 无 | 设置本地证书自动注册策略。 | 不实现 |  |
+| [`Set-BcdBootDefault`](#set-bcdbootdefault) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-BcdBootDisplayOrder`](#set-bcdbootdisplayorder) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-BcdBootSequence`](#set-bcdbootsequence) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-BcdBootTimeout`](#set-bcdboottimeout) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-BcdBootToolsDisplayOrder`](#set-bcdboottoolsdisplayorder) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-BcdDebugSettings`](#set-bcddebugsettings) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-BcdElement`](#set-bcdelement) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-BcdHypervisorSettings`](#set-bcdhypervisorsettings) | Microsoft.Windows.Bcd.Cmdlets | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-BitsTransfer`](#set-bitstransfer) | BitsTransfer | 仅5.1 | 仅5.1提供 | 修改现有 BITS 传输作业的属性。 | 不实现 |  |
+| [`Set-CertificateAutoEnrollmentPolicy`](#set-certificateautoenrollmentpolicy) | PKI | 仅5.1 | 仅5.1提供 | 设置本地证书自动注册策略。 | 不实现 |  |
 | [`Set-CimInstance`](#set-ciminstance) | CimCmdlets | 都有 | 语法不同 | 通过调用 CIM 类的 ModifyInstance 方法修改 CIM 服务器上的 CIM 实例。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
-| [`Set-CIPolicyIdInfo`](#set-cipolicyidinfo) | ConfigCI | 都有 | 无 | 修改代码完整性策略的名称和 ID。 | 不实现 |  |
-| [`Set-CIPolicySetting`](#set-cipolicysetting) | ConfigCI | 都有 | 无 | 修改代码完整性策略中的 SecureSettings。 | 不实现 |  |
-| [`Set-CIPolicyVersion`](#set-cipolicyversion) | ConfigCI | 都有 | 无 | 更新策略版本号。 | 不实现 |  |
-| [`Set-Culture`](#set-culture) | International | 都有 | 无 | 设置当前用户帐户的用户区域。 | 不实现 |  |
-| [`Set-DscLocalConfigurationManager`](#set-dsclocalconfigurationmanager) | PSDesiredStateConfiguration | 都有 | 无 | 将本地配置管理器（LCM）设置应用于节点。 | 不实现 |  |
-| [`Set-HVCIOptions`](#set-hvcioptions) | ConfigCI | 都有 | 无 | 修改策略的 Hypervisor 代码完整性选项。 | 不实现 |  |
-| [`Set-JobTrigger`](#set-jobtrigger) | PSScheduledJob | 都有 | 无 | 更改计划作业的作业触发器。 | 不实现 |  |
-| [`Set-KdsConfiguration`](#set-kdsconfiguration) | Kds | 都有 | 无 | 设置 KdsSvc 的配置。 | 不实现 |  |
-| [`Set-LapsADAuditing`](#set-lapsadauditing) | LAPS | 都有 | 无 | 配置 AD 组织单位，启用对 LAPS 密码架构属性的审核。 | 不实现 |  |
-| [`Set-LapsADComputerSelfPermission`](#set-lapsadcomputerselfpermission) | LAPS | 都有 | 无 | 配置 AD 组织单位权限，允许其中计算机更新 LAPS 密码。 | 不实现 |  |
-| [`Set-LapsADPasswordExpirationTime`](#set-lapsadpasswordexpirationtime) | LAPS | 都有 | 无 | 在 AD 计算机或域控制器对象上设置 LAPS 密码过期时间戳。 | 不实现 |  |
-| [`Set-LapsADReadPasswordPermission`](#set-lapsadreadpasswordpermission) | LAPS | 都有 | 无 | 配置 AD 组织单位安全，授予指定用户或组查询 LAPS 密码的权限。 | 不实现 |  |
-| [`Set-LapsADResetPasswordPermission`](#set-lapsadresetpasswordpermission) | LAPS | 都有 | 无 | 配置 AD 组织单位安全，授予指定用户或组设置 LAPS 密码过期时间的权限。 | 不实现 |  |
-| [`Set-LocalGroup`](#set-localgroup) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 更改本地安全组。 | 不实现 |  |
-| [`Set-LocalUser`](#set-localuser) | Microsoft.PowerShell.LocalAccounts | 都有 | 无 | 修改本地用户帐户。 | 不实现 |  |
-| [`Set-NonRemovableAppsPolicy`](#set-nonremovableappspolicy) | Dism | 都有 | 无 | 将应用包设为不可移除（不可卸载）。 | 不实现 |  |
-| [`Set-OsConfigurationDocument`](#set-osconfigurationdocument) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-OsConfigurationProperty`](#set-osconfigurationproperty) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-OSConfigurationScenarioDefinition`](#set-osconfigurationscenariodefinition) | OsConfiguration | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-ProcessMitigation`](#set-processmitigation) | ProcessMitigations | 都有 | 无 | 启用或禁用进程缓解措施，或从 XML 文件批量设置。 | 不实现 |  |
+| [`Set-CIPolicyIdInfo`](#set-cipolicyidinfo) | ConfigCI | 仅5.1 | 仅5.1提供 | 修改代码完整性策略的名称和 ID。 | 不实现 |  |
+| [`Set-CIPolicySetting`](#set-cipolicysetting) | ConfigCI | 仅5.1 | 仅5.1提供 | 修改代码完整性策略中的 SecureSettings。 | 不实现 |  |
+| [`Set-CIPolicyVersion`](#set-cipolicyversion) | ConfigCI | 仅5.1 | 仅5.1提供 | 更新策略版本号。 | 不实现 |  |
+| [`Set-Culture`](#set-culture) | International | 仅5.1 | 仅5.1提供 | 设置当前用户帐户的用户区域。 | 不实现 |  |
+| [`Set-DscLocalConfigurationManager`](#set-dsclocalconfigurationmanager) | PSDesiredStateConfiguration | 仅5.1 | 仅5.1提供 | 将本地配置管理器（LCM）设置应用于节点。 | 不实现 |  |
+| [`Set-HVCIOptions`](#set-hvcioptions) | ConfigCI | 仅5.1 | 仅5.1提供 | 修改策略的 Hypervisor 代码完整性选项。 | 不实现 |  |
+| [`Set-JobTrigger`](#set-jobtrigger) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 更改计划作业的作业触发器。 | 不实现 |  |
+| [`Set-KdsConfiguration`](#set-kdsconfiguration) | Kds | 仅5.1 | 仅5.1提供 | 设置 KdsSvc 的配置。 | 不实现 |  |
+| [`Set-LapsADAuditing`](#set-lapsadauditing) | LAPS | 仅5.1 | 仅5.1提供 | 配置 AD 组织单位，启用对 LAPS 密码架构属性的审核。 | 不实现 |  |
+| [`Set-LapsADComputerSelfPermission`](#set-lapsadcomputerselfpermission) | LAPS | 仅5.1 | 仅5.1提供 | 配置 AD 组织单位权限，允许其中计算机更新 LAPS 密码。 | 不实现 |  |
+| [`Set-LapsADPasswordExpirationTime`](#set-lapsadpasswordexpirationtime) | LAPS | 仅5.1 | 仅5.1提供 | 在 AD 计算机或域控制器对象上设置 LAPS 密码过期时间戳。 | 不实现 |  |
+| [`Set-LapsADReadPasswordPermission`](#set-lapsadreadpasswordpermission) | LAPS | 仅5.1 | 仅5.1提供 | 配置 AD 组织单位安全，授予指定用户或组查询 LAPS 密码的权限。 | 不实现 |  |
+| [`Set-LapsADResetPasswordPermission`](#set-lapsadresetpasswordpermission) | LAPS | 仅5.1 | 仅5.1提供 | 配置 AD 组织单位安全，授予指定用户或组设置 LAPS 密码过期时间的权限。 | 不实现 |  |
+| [`Set-LocalGroup`](#set-localgroup) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 更改本地安全组。 | 不实现 |  |
+| [`Set-LocalUser`](#set-localuser) | Microsoft.PowerShell.LocalAccounts | 仅5.1 | 仅5.1提供 | 修改本地用户帐户。 | 不实现 |  |
+| [`Set-NonRemovableAppsPolicy`](#set-nonremovableappspolicy) | Dism | 仅5.1 | 仅5.1提供 | 将应用包设为不可移除（不可卸载）。 | 不实现 |  |
+| [`Set-OsConfigurationDocument`](#set-osconfigurationdocument) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-OsConfigurationProperty`](#set-osconfigurationproperty) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-OSConfigurationScenarioDefinition`](#set-osconfigurationscenariodefinition) | OsConfiguration | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-ProcessMitigation`](#set-processmitigation) | ProcessMitigations | 仅5.1 | 仅5.1提供 | 启用或禁用进程缓解措施，或从 XML 文件批量设置。 | 不实现 |  |
 | [`Set-PSSessionConfiguration`](#set-pssessionconfiguration) | Microsoft.PowerShell.Core | 都有 | 无 | 更改已注册会话配置的属性。 | 不实现 | 远程会话，远程操作不在实现范围内 |
-| [`Set-RecoveryManagementPluginAltitude`](#set-recoverymanagementpluginaltitude) | Dism | 都有 | 语法不同 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-RecoveryRemoteManagementStatus`](#set-recoveryremotemanagementstatus) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Set-ReFSDedupSchedule`](#set-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 设置指定 ReFS 卷上的重复数据删除计划。 | 不实现 |  |
-| [`Set-ReFSDedupScrubSchedule`](#set-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 设置指定 ReFS 卷上的重复数据删除清理计划。 | 不实现 |  |
-| [`Set-RuleOption`](#set-ruleoption) | ConfigCI | 都有 | 无 | 修改代码完整性策略中的规则选项。 | 不实现 |  |
-| [`Set-ScheduledJob`](#set-scheduledjob) | PSScheduledJob | 都有 | 无 | 更改计划作业。 | 不实现 |  |
-| [`Set-ScheduledJobOption`](#set-scheduledjoboption) | PSScheduledJob | 都有 | 无 | 更改计划作业的作业选项。 | 不实现 |  |
-| [`Set-SecureBootUEFI`](#set-securebootuefi) | SecureBoot | 都有 | 无 | 设置与安全启动相关的 UEFI 变量。 | 不实现 |  |
+| [`Set-RecoveryManagementPluginAltitude`](#set-recoverymanagementpluginaltitude) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-RecoveryRemoteManagementStatus`](#set-recoveryremotemanagementstatus) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Set-ReFSDedupSchedule`](#set-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 设置指定 ReFS 卷上的重复数据删除计划。 | 不实现 |  |
+| [`Set-ReFSDedupScrubSchedule`](#set-refsdedupscrubschedule) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 设置指定 ReFS 卷上的重复数据删除清理计划。 | 不实现 |  |
+| [`Set-RuleOption`](#set-ruleoption) | ConfigCI | 仅5.1 | 仅5.1提供 | 修改代码完整性策略中的规则选项。 | 不实现 |  |
+| [`Set-ScheduledJob`](#set-scheduledjob) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 更改计划作业。 | 不实现 |  |
+| [`Set-ScheduledJobOption`](#set-scheduledjoboption) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 更改计划作业的作业选项。 | 不实现 |  |
+| [`Set-SecureBootUEFI`](#set-securebootuefi) | SecureBoot | 仅5.1 | 仅5.1提供 | 设置与安全启动相关的 UEFI 变量。 | 不实现 |  |
 | [`Set-Service`](#set-service) | Microsoft.PowerShell.Management | 都有 | 简介不同；语法不同 | 5.1：启动、停止和挂起服务，并更改其属性。 / 7：启动、停止和暂停服务，并更改其属性。 | 映射 Linux（systemctl start/stop/restart） |  |
-| [`Set-SystemPreferredUILanguage`](#set-systempreferreduilanguage) | LanguagePackManagement | 都有 | 无 | 将给定语言设为系统首选 UI 语言。 | 不实现 |  |
+| [`Set-SystemPreferredUILanguage`](#set-systempreferreduilanguage) | LanguagePackManagement | 仅5.1 | 仅5.1提供 | 将给定语言设为系统首选 UI 语言。 | 不实现 |  |
 | [`Set-TimeZone`](#set-timezone) | Microsoft.PowerShell.Management | 都有 | 无 | 将系统时区设置为指定的时区。 | 映射 Linux（timedatectl） |  |
-| [`Set-TpmOwnerAuth`](#set-tpmownerauth) | TrustedPlatformModule | 都有 | 语法不同 | 更改 TPM 所有者授权值。 | 不实现 |  |
+| [`Set-TpmOwnerAuth`](#set-tpmownerauth) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 更改 TPM 所有者授权值。 | 不实现 |  |
 | [`Set-UevConfiguration`](#set-uevconfiguration) | UEV | 仅5.1 | 仅5.1提供 | 修改 UE-V 配置设置。 | 不实现 |  |
 | [`Set-UevTemplateProfile`](#set-uevtemplateprofile) | UEV | 仅5.1 | 仅5.1提供 | 修改模板关联的配置文件。 | 不实现 |  |
-| [`Set-WheaMemoryPolicy`](#set-wheamemorypolicy) | Whea | 都有 | 语法不同 | 设置计算机的 WHEA 内存策略。 | 不实现 |  |
-| [`Set-WinAcceptLanguageFromLanguageListOptOut`](#set-winacceptlanguagefromlanguagelistoptout) | International | 都有 | 无 | 设置当前用户帐户语言列表退出设置的 HTTP 接受语言。 | 不实现 |  |
-| [`Set-WinCultureFromLanguageListOptOut`](#set-winculturefromlanguagelistoptout) | International | 都有 | 无 | 设置当前用户帐户语言列表退出设置的区域。 | 不实现 |  |
-| [`Set-WinDefaultInputMethodOverride`](#set-windefaultinputmethodoverride) | International | 都有 | 无 | 设置当前用户帐户的默认输入法替代。 | 不实现 |  |
-| [`Set-WindowsEdition`](#set-windowsedition) | Dism | 都有 | 无 | 将 Windows 映像更改为更高版本。 | 不实现 |  |
-| [`Set-WindowsProductKey`](#set-windowsproductkey) | Dism | 都有 | 无 | 设置 Windows 映像的产品密钥。 | 不实现 |  |
-| [`Set-WindowsReservedStorageState`](#set-windowsreservedstoragestate) | Dism | 都有 | 无 | 设置映像的保留存储状态。 | 不实现 |  |
-| [`Set-WindowsSearchSetting`](#set-windowssearchsetting) | WindowsSearch | 都有 | 无 | 修改控制 Windows 搜索的值。 | 不实现 |  |
-| [`Set-WinHomeLocation`](#set-winhomelocation) | International | 都有 | 无 | 设置当前用户帐户的主位置。 | 不实现 |  |
-| [`Set-WinLanguageBarOption`](#set-winlanguagebaroption) | International | 都有 | 无 | 设置当前用户帐户的语言栏类型和模式。 | 不实现 |  |
-| [`Set-WinSystemLocale`](#set-winsystemlocale) | International | 都有 | 无 | 设置当前计算机的系统区域。 | 不实现 |  |
-| [`Set-WinUILanguageOverride`](#set-winuilanguageoverride) | International | 都有 | 无 | 设置当前用户帐户的 Windows UI 语言替代。 | 不实现 |  |
-| [`Set-WinUserLanguageList`](#set-winuserlanguagelist) | International | 都有 | 无 | 设置当前用户帐户的语言列表及关联属性。 | 不实现 |  |
-| [`Set-WmiInstance`](#set-wmiinstance) | Microsoft.PowerShell.Management | 都有 | 无 | 创建或更新现有 Windows Management Instrumentation （WMI） 类的实例。 | 不实现 |  |
+| [`Set-WheaMemoryPolicy`](#set-wheamemorypolicy) | Whea | 仅5.1 | 仅5.1提供 | 设置计算机的 WHEA 内存策略。 | 不实现 |  |
+| [`Set-WinAcceptLanguageFromLanguageListOptOut`](#set-winacceptlanguagefromlanguagelistoptout) | International | 仅5.1 | 仅5.1提供 | 设置当前用户帐户语言列表退出设置的 HTTP 接受语言。 | 不实现 |  |
+| [`Set-WinCultureFromLanguageListOptOut`](#set-winculturefromlanguagelistoptout) | International | 仅5.1 | 仅5.1提供 | 设置当前用户帐户语言列表退出设置的区域。 | 不实现 |  |
+| [`Set-WinDefaultInputMethodOverride`](#set-windefaultinputmethodoverride) | International | 仅5.1 | 仅5.1提供 | 设置当前用户帐户的默认输入法替代。 | 不实现 |  |
+| [`Set-WindowsEdition`](#set-windowsedition) | Dism | 仅5.1 | 仅5.1提供 | 将 Windows 映像更改为更高版本。 | 不实现 |  |
+| [`Set-WindowsProductKey`](#set-windowsproductkey) | Dism | 仅5.1 | 仅5.1提供 | 设置 Windows 映像的产品密钥。 | 不实现 |  |
+| [`Set-WindowsReservedStorageState`](#set-windowsreservedstoragestate) | Dism | 仅5.1 | 仅5.1提供 | 设置映像的保留存储状态。 | 不实现 |  |
+| [`Set-WindowsSearchSetting`](#set-windowssearchsetting) | WindowsSearch | 仅5.1 | 仅5.1提供 | 修改控制 Windows 搜索的值。 | 不实现 |  |
+| [`Set-WinHomeLocation`](#set-winhomelocation) | International | 仅5.1 | 仅5.1提供 | 设置当前用户帐户的主位置。 | 不实现 |  |
+| [`Set-WinLanguageBarOption`](#set-winlanguagebaroption) | International | 仅5.1 | 仅5.1提供 | 设置当前用户帐户的语言栏类型和模式。 | 不实现 |  |
+| [`Set-WinSystemLocale`](#set-winsystemlocale) | International | 仅5.1 | 仅5.1提供 | 设置当前计算机的系统区域。 | 不实现 |  |
+| [`Set-WinUILanguageOverride`](#set-winuilanguageoverride) | International | 仅5.1 | 仅5.1提供 | 设置当前用户帐户的 Windows UI 语言替代。 | 不实现 |  |
+| [`Set-WinUserLanguageList`](#set-winuserlanguagelist) | International | 仅5.1 | 仅5.1提供 | 设置当前用户帐户的语言列表及关联属性。 | 不实现 |  |
+| [`Set-WmiInstance`](#set-wmiinstance) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 创建或更新现有 Windows Management Instrumentation （WMI） 类的实例。 | 不实现 |  |
 | [`Set-WSManInstance`](#set-wsmaninstance) | Microsoft.WSMan.Management | 都有 | 无 | 修改与资源相关的管理信息。 | 不实现 |  |
 | [`Set-WSManQuickConfig`](#set-wsmanquickconfig) | Microsoft.WSMan.Management | 都有 | 无 | 配置用于远程管理的本地计算机。 | 不实现 |  |
 | [`Show-Command`](#show-command) | Microsoft.PowerShell.Utility | 都有 | 无 | 在图形窗口中显示 PowerShell 命令信息。 | 不实现 | GUI 与打印 |
-| [`Show-ControlPanelItem`](#show-controlpanelitem) | Microsoft.PowerShell.Management | 都有 | 无 | 打开控制面板项。 | 不实现 |  |
-| [`Show-EventLog`](#show-eventlog) | Microsoft.PowerShell.Management | 都有 | 无 | 在事件查看器中显示本地或远程计算机的事件日志。 | 不实现 |  |
-| [`Show-WindowsDeveloperLicenseRegistration`](#show-windowsdeveloperlicenseregistration) | WindowsDeveloperLicense | 都有 | 无 | 提供如何启用设备进行开发的信息。 | 不实现 |  |
-| [`Split-WindowsImage`](#split-windowsimage) | Dism | 都有 | 语法不同 | 将现有 .wim 文件拆分为多个只读拆分 .wim 文件。 | 不实现 |  |
-| [`Start-BitsTransfer`](#start-bitstransfer) | BitsTransfer | 都有 | 无 | 创建 BITS 传输作业。 | 不实现 |  |
-| [`Start-DscConfiguration`](#start-dscconfiguration) | PSDesiredStateConfiguration | 都有 | 无 | 将配置应用于节点。 | 不实现 |  |
-| [`Start-DtcDiagnosticResourceManager`](#start-dtcdiagnosticresourcemanager) | MsDtc | 都有 | 无 | 启动诊断资源管理器。 | 不实现 |  |
-| [`Start-OSUninstall`](#start-osuninstall) | Dism | 都有 | 无 | Windows 允许用户卸载并回滚到先前版本，可用 DISM 发起卸载。 | 不实现 |  |
-| [`Start-ReFSDedupJob`](#start-refsdedupjob) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 在指定 ReFS 卷启动重复数据删除作业。 | 不实现 |  |
+| [`Show-ControlPanelItem`](#show-controlpanelitem) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 打开控制面板项。 | 不实现 |  |
+| [`Show-EventLog`](#show-eventlog) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 在事件查看器中显示本地或远程计算机的事件日志。 | 不实现 |  |
+| [`Show-WindowsDeveloperLicenseRegistration`](#show-windowsdeveloperlicenseregistration) | WindowsDeveloperLicense | 仅5.1 | 仅5.1提供 | 提供如何启用设备进行开发的信息。 | 不实现 |  |
+| [`Split-WindowsImage`](#split-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 将现有 .wim 文件拆分为多个只读拆分 .wim 文件。 | 不实现 |  |
+| [`Start-BitsTransfer`](#start-bitstransfer) | BitsTransfer | 仅5.1 | 仅5.1提供 | 创建 BITS 传输作业。 | 不实现 |  |
+| [`Start-DscConfiguration`](#start-dscconfiguration) | PSDesiredStateConfiguration | 仅5.1 | 仅5.1提供 | 将配置应用于节点。 | 不实现 |  |
+| [`Start-DtcDiagnosticResourceManager`](#start-dtcdiagnosticresourcemanager) | MsDtc | 仅5.1 | 仅5.1提供 | 启动诊断资源管理器。 | 不实现 |  |
+| [`Start-OSUninstall`](#start-osuninstall) | Dism | 仅5.1 | 仅5.1提供 | Windows 允许用户卸载并回滚到先前版本，可用 DISM 发起卸载。 | 不实现 |  |
+| [`Start-ReFSDedupJob`](#start-refsdedupjob) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 在指定 ReFS 卷启动重复数据删除作业。 | 不实现 |  |
 | [`Start-Service`](#start-service) | Microsoft.PowerShell.Management | 都有 | 无 | 启动一个或多个已停止的服务。 | 映射 Linux（systemctl start/stop/restart） |  |
-| [`Start-Transaction`](#start-transaction) | Microsoft.PowerShell.Management | 都有 | 无 | 启动事务。 | 不实现 |  |
+| [`Start-Transaction`](#start-transaction) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 启动事务。 | 不实现 |  |
 | [`Stop-AppvClientConnectionGroup`](#stop-appvclientconnectiongroup) | AppvClient | 仅5.1 | 仅5.1提供 | 关闭连接组的共享虚拟环境。 | 不实现 |  |
 | [`Stop-AppvClientPackage`](#stop-appvclientpackage) | AppvClient | 仅5.1 | 仅5.1提供 | 关闭指定包的虚拟环境。 | 不实现 |  |
-| [`Stop-DtcDiagnosticResourceManager`](#stop-dtcdiagnosticresourcemanager) | MsDtc | 都有 | 无 | 停止并删除诊断资源管理器作业。 | 不实现 |  |
-| [`Stop-ReFSDedupJob`](#stop-refsdedupjob) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 停止指定 ReFS 卷上正在运行的重复数据删除作业。 | 不实现 |  |
+| [`Stop-DtcDiagnosticResourceManager`](#stop-dtcdiagnosticresourcemanager) | MsDtc | 仅5.1 | 仅5.1提供 | 停止并删除诊断资源管理器作业。 | 不实现 |  |
+| [`Stop-ReFSDedupJob`](#stop-refsdedupjob) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 停止指定 ReFS 卷上正在运行的重复数据删除作业。 | 不实现 |  |
 | [`Stop-Service`](#stop-service) | Microsoft.PowerShell.Management | 都有 | 无 | 停止一个或多个正在运行的服务。 | 映射 Linux（systemctl start/stop/restart） |  |
-| [`Suspend-BitsTransfer`](#suspend-bitstransfer) | BitsTransfer | 都有 | 无 | 挂起 BITS 传输作业。 | 不实现 |  |
+| [`Suspend-BitsTransfer`](#suspend-bitstransfer) | BitsTransfer | 仅5.1 | 仅5.1提供 | 挂起 BITS 传输作业。 | 不实现 |  |
 | [`Suspend-Job`](#suspend-job) | Microsoft.PowerShell.Core | 仅5.1 | 仅5.1提供 | 暂时停止工作流作业。 | 不实现 |  |
-| [`Suspend-ReFSDedupSchedule`](#suspend-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 都有 | 无 | 挂起指定 ReFS 卷上的重复数据删除计划。 | 不实现 |  |
+| [`Suspend-ReFSDedupSchedule`](#suspend-refsdedupschedule) | Microsoft.ReFsDedup.Commands | 仅5.1 | 仅5.1提供 | 挂起指定 ReFS 卷上的重复数据删除计划。 | 不实现 |  |
 | [`Suspend-Service`](#suspend-service) | Microsoft.PowerShell.Management | 都有 | 无 | 挂起（暂停）一个或多个正在运行的服务。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
-| [`Switch-Certificate`](#switch-certificate) | PKI | 都有 | 无 | 将一个证书标记为被另一证书替换。 | 不实现 |  |
+| [`Switch-Certificate`](#switch-certificate) | PKI | 仅5.1 | 仅5.1提供 | 将一个证书标记为被另一证书替换。 | 不实现 |  |
 | [`Sync-AppvPublishingServer`](#sync-appvpublishingserver) | AppvClient | 仅5.1 | 仅5.1提供 | 启动 App-V 发布刷新操作。 | 不实现 |  |
-| [`Test-AppLockerPolicy`](#test-applockerpolicy) | AppLocker | 都有 | 无 | 指定 AppLocker 策略，判断输入文件是否允许指定用户运行。 | 不实现 |  |
-| [`Test-Certificate`](#test-certificate) | PKI | 都有 | 无 | 按输入参数验证证书。 | 不实现 |  |
-| [`Test-ComputerSecureChannel`](#test-computersecurechannel) | Microsoft.PowerShell.Management | 都有 | 无 | 测试和修复本地计算机与其域之间的安全通道。 | 不实现 |  |
-| [`Test-DscConfiguration`](#test-dscconfiguration) | PSDesiredStateConfiguration | 都有 | 无 | 测试节点上的实际配置是否与所需配置匹配。 | 不实现 |  |
-| [`Test-FileCatalog`](#test-filecatalog) | Microsoft.PowerShell.Security | 都有 | 无 | Test-FileCatalog 验证目录文件 （.cat） 中包含的哈希是否与实际文件的哈希匹配，以验证其真实性。 | 不实现 |  |
-| [`Test-KdsRootKey`](#test-kdsrootkey) | Kds | 都有 | 无 | 测试根密钥配置。 | 不实现 |  |
+| [`Test-AppLockerPolicy`](#test-applockerpolicy) | AppLocker | 仅5.1 | 仅5.1提供 | 指定 AppLocker 策略，判断输入文件是否允许指定用户运行。 | 不实现 |  |
+| [`Test-Certificate`](#test-certificate) | PKI | 仅5.1 | 仅5.1提供 | 按输入参数验证证书。 | 不实现 |  |
+| [`Test-ComputerSecureChannel`](#test-computersecurechannel) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 测试和修复本地计算机与其域之间的安全通道。 | 不实现 |  |
+| [`Test-DscConfiguration`](#test-dscconfiguration) | PSDesiredStateConfiguration | 仅5.1 | 仅5.1提供 | 测试节点上的实际配置是否与所需配置匹配。 | 不实现 |  |
+| [`Test-FileCatalog`](#test-filecatalog) | Microsoft.PowerShell.Security | 都有 | 无 | 验证目录文件（.cat）中的哈希是否与实际文件的哈希匹配，以验证其真实性。 | 不实现 |  |
+| [`Test-KdsRootKey`](#test-kdsrootkey) | Kds | 仅5.1 | 仅5.1提供 | 测试根密钥配置。 | 不实现 |  |
 | [`Test-PSSessionConfigurationFile`](#test-pssessionconfigurationfile) | Microsoft.PowerShell.Core | 都有 | 无 | 验证会话配置文件中的密钥和值。 | 不实现 | 远程会话，远程操作不在实现范围内 |
 | [`Test-UevTemplate`](#test-uevtemplate) | UEV | 仅5.1 | 仅5.1提供 | 验证模板是否符合 UE-V 架构。 | 不实现 |  |
 | [`Test-WSMan`](#test-wsman) | Microsoft.WSMan.Management | 都有 | 无 | 测试 WinRM 服务是在本地还是远程计算机上运行。 | 不实现 |  |
-| [`Unblock-Tpm`](#unblock-tpm) | TrustedPlatformModule | 都有 | 无 | 重置 TPM 锁定。 | 不实现 |  |
-| [`Undo-DtcDiagnosticTransaction`](#undo-dtcdiagnostictransaction) | MsDtc | 都有 | 无 | 对指定事务调用中止流程。 | 不实现 |  |
-| [`Undo-Transaction`](#undo-transaction) | Microsoft.PowerShell.Management | 都有 | 无 | 回滚活动事务。 | 不实现 |  |
-| [`Uninstall-Language`](#uninstall-language) | LanguagePackManagement | 都有 | 无 | 从设备卸载语言。 | 不实现 |  |
-| [`Uninstall-ProvisioningPackage`](#uninstall-provisioningpackage) | Provisioning | 都有 | 无 | 从本地计算机卸载 .PPKG 包。 | 不实现 |  |
-| [`Uninstall-TrustedProvisioningCertificate`](#uninstall-trustedprovisioningcertificate) | Provisioning | 都有 | 无 | 删除以前安装的预配证书。 | 不实现 |  |
+| [`Unblock-Tpm`](#unblock-tpm) | TrustedPlatformModule | 仅5.1 | 仅5.1提供 | 重置 TPM 锁定。 | 不实现 |  |
+| [`Undo-DtcDiagnosticTransaction`](#undo-dtcdiagnostictransaction) | MsDtc | 仅5.1 | 仅5.1提供 | 对指定事务调用中止流程。 | 不实现 |  |
+| [`Undo-Transaction`](#undo-transaction) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 回滚活动事务。 | 不实现 |  |
+| [`Uninstall-Language`](#uninstall-language) | LanguagePackManagement | 仅5.1 | 仅5.1提供 | 从设备卸载语言。 | 不实现 |  |
+| [`Uninstall-ProvisioningPackage`](#uninstall-provisioningpackage) | Provisioning | 仅5.1 | 仅5.1提供 | 从本地计算机卸载 .PPKG 包。 | 不实现 |  |
+| [`Uninstall-TrustedProvisioningCertificate`](#uninstall-trustedprovisioningcertificate) | Provisioning | 仅5.1 | 仅5.1提供 | 删除以前安装的预配证书。 | 不实现 |  |
 | [`Unpublish-AppvClientPackage`](#unpublish-appvclientpackage) | AppvClient | 仅5.1 | 仅5.1提供 | 删除包的扩展点。 | 不实现 |  |
 | [`Unregister-PSSessionConfiguration`](#unregister-pssessionconfiguration) | Microsoft.PowerShell.Core | 都有 | 无 | 从计算机中删除已注册的会话配置。 | 不实现 | 远程会话，远程操作不在实现范围内 |
-| [`Unregister-RecoveryManagementPlugin`](#unregister-recoverymanagementplugin) | Dism | 都有 | 无 | - | 不实现 | 没有文档准确说明指令的作用 |
-| [`Unregister-ScheduledJob`](#unregister-scheduledjob) | PSScheduledJob | 都有 | 无 | 删除本地计算机上的计划作业。 | 不实现 |  |
+| [`Unregister-RecoveryManagementPlugin`](#unregister-recoverymanagementplugin) | Dism | 仅5.1 | 仅5.1提供 | - | 不实现 | 没有文档准确说明指令的作用 |
+| [`Unregister-ScheduledJob`](#unregister-scheduledjob) | PSScheduledJob | 仅5.1 | 仅5.1提供 | 删除本地计算机上的计划作业。 | 不实现 |  |
 | [`Unregister-UevTemplate`](#unregister-uevtemplate) | UEV | 仅5.1 | 仅5.1提供 | 从 UE-V 注销设置位置模板。 | 不实现 |  |
-| [`Unregister-WindowsDeveloperLicense`](#unregister-windowsdeveloperlicense) | WindowsDeveloperLicense | 都有 | 无 | 在当前计算机禁用开发者模式。 | 不实现 |  |
-| [`Update-LapsADSchema`](#update-lapsadschema) | LAPS | 都有 | 无 | 用 LAPS 架构属性扩展 AD 架构。 | 不实现 |  |
+| [`Unregister-WindowsDeveloperLicense`](#unregister-windowsdeveloperlicense) | WindowsDeveloperLicense | 仅5.1 | 仅5.1提供 | 在当前计算机禁用开发者模式。 | 不实现 |  |
+| [`Update-LapsADSchema`](#update-lapsadschema) | LAPS | 仅5.1 | 仅5.1提供 | 用 LAPS 架构属性扩展 AD 架构。 | 不实现 |  |
 | [`Update-UevTemplate`](#update-uevtemplate) | UEV | 仅5.1 | 仅5.1提供 | 更新 UE-V 中的设置位置模板。 | 不实现 |  |
-| [`Update-WIMBootEntry`](#update-wimbootentry) | Dism | 都有 | 无 | 更新与数据源 ID、重命名映像路径或移动映像路径关联的 WIMBoot 配置项。 | 不实现 |  |
-| [`Use-Transaction`](#use-transaction) | Microsoft.PowerShell.Management | 都有 | 无 | 将脚本块添加到活动事务。 | 不实现 |  |
-| [`Use-WindowsUnattend`](#use-windowsunattend) | Dism | 都有 | 无 | 将无人参与应答文件应用到 Windows 映像。 | 不实现 |  |
-| [`Write-EventLog`](#write-eventlog) | Microsoft.PowerShell.Management | 都有 | 无 | 将事件写入事件日志。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
+| [`Update-WIMBootEntry`](#update-wimbootentry) | Dism | 仅5.1 | 仅5.1提供 | 更新与数据源 ID、重命名映像路径或移动映像路径关联的 WIMBoot 配置项。 | 不实现 |  |
+| [`Use-Transaction`](#use-transaction) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 将脚本块添加到活动事务。 | 不实现 |  |
+| [`Use-WindowsUnattend`](#use-windowsunattend) | Dism | 仅5.1 | 仅5.1提供 | 将无人参与应答文件应用到 Windows 映像。 | 不实现 |  |
+| [`Write-EventLog`](#write-eventlog) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 将事件写入事件日志。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
 
 ## 指令详细说明
 
 ### Add-AppProvisionedSharedPackageContainer
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -542,14 +541,14 @@ Add-AppProvisionedSharedPackageContainer -DefinitionFile <string> -Online [-Wind
 
 ### Add-AppSharedPackageContainer
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
 语法：
 
 ```powershell
-Add-AppSharedPackageContainer [-Path] <string> [-ForceApplicationShutdown] [-Merge] [-RequirePackagesPresent] [-Force] [<CommonParameters>]
+Add-AppSharedPackageContainer [-Path] <string> [-ForceApplicationShutdown] [-Merge] [-Force] [<CommonParameters>]
 ```
 
 示例：
@@ -558,7 +557,7 @@ Add-AppSharedPackageContainer [-Path] <string> [-ForceApplicationShutdown] [-Mer
 Add-AppSharedPackageContainer -Path C:\MyFolder\ContosoTestContainer.xml
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/add-appsharedpackagecontainer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/add-appsharedpackagecontainer?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/add-appsharedpackagecontainer?view=windowsserver2025-ps)
 
 ### Add-AppvClientConnectionGroup
 
@@ -609,7 +608,7 @@ PS C:\> Add-AppvClientPackage -Path "http://MyServer/content/package.APPV"
 语法：
 
 ```powershell
-Add-AppvPublishingServer [-Name] <string> [-URL] <string> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [<CommonParameters>]
+Add-AppvPublishingServer [-Name] <string> [-URL] <string> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IntervalUnit>] [<CommonParameters>]
 ```
 
 示例：暂无
@@ -618,18 +617,18 @@ Add-AppvPublishingServer [-Name] <string> [-URL] <string> [[-GlobalRefreshEnable
 
 ### Add-AppxPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
 语法：
 
 ```powershell
-Add-AppxPackage [-Path] <string> [-DependencyPath <string[]>] [-RequiredContentGroupOnly] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-ForceUpdateFromAnyVersion] [-RetainFilesOnFailure] [-InstallAllResources] [-Volume <AppxVolume>] [-ExternalPackages <string[]>] [-OptionalPackages <string[]>] [-RelatedPackages <string[]>] [-ExternalLocation <string>] [-DeferRegistrationWhenPackagesAreInUse] [-StubPackageOption <StubPackageOption>] [-AllowUnsigned] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-AppxPackage [-Path] <string> [-DependencyPath <string[]>] [-RequiredContentGroupOnly] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-ForceUpdateFromAnyVersion] [-RetainFilesOnFailure] [-InstallAllResources] [-Volume <AppxVolume>] [-ExternalPackages <string[]>] [-OptionalPackages <string[]>] [-RelatedPackages <string[]>] [-ExternalLocation <string>] [-DeferRegistrationWhenPackagesAreInUse] [-StubPackageOption <StubPackageOption>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxPackage [-Path] <string> -AppInstallerFile [-RequiredContentGroupOnly] [-ForceTargetApplicationShutdown] [-InstallAllResources] [-LimitToExistingPackages] [-Volume <AppxVolume>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxPackage [-Path] <string> -Register [-DependencyPath <string[]>] [-DisableDevelopmentMode] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-ForceUpdateFromAnyVersion] [-InstallAllResources] [-ExternalLocation <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxPackage [-Path] <string> -Update [-DependencyPath <string[]>] [-RequiredContentGroupOnly] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-ForceUpdateFromAnyVersion] [-RetainFilesOnFailure] [-InstallAllResources] [-WhatIf] [-Confirm] [<CommonParameters>]
-Add-AppxPackage [-Path] <string> -Stage [-DependencyPath <string[]>] [-RequiredContentGroupOnly] [-ForceUpdateFromAnyVersion] [-Volume <AppxVolume>] [-ExternalPackages <string[]>] [-OptionalPackages <string[]>] [-RelatedPackages <string[]>] [-ExternalLocation <string>] [-StubPackageOption <StubPackageOption>] [-AllowUnsigned] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-AppxPackage [-Path] <string> -Stage [-DependencyPath <string[]>] [-RequiredContentGroupOnly] [-ForceUpdateFromAnyVersion] [-Volume <AppxVolume>] [-ExternalPackages <string[]>] [-OptionalPackages <string[]>] [-RelatedPackages <string[]>] [-ExternalLocation <string>] [-StubPackageOption <StubPackageOption>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxPackage -MainPackage <string> [-Register] [-DependencyPackages <string[]>] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-ForceUpdateFromAnyVersion] [-InstallAllResources] [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxPackage -RegisterByFamilyName -MainPackage <string> [-DependencyPackages <string[]>] [-ForceApplicationShutdown] [-ForceTargetApplicationShutdown] [-InstallAllResources] [-OptionalPackages <string[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -640,26 +639,26 @@ Add-AppxPackage -RegisterByFamilyName -MainPackage <string> [-DependencyPackages
 Add-AppxPackage -Path '.\MyApp.msix' -DependencyPath '.\winjs.msix'
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/add-appxpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/add-appxpackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/add-appxpackage?view=windowsserver2025-ps)
 
 ### Add-AppxProvisionedPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
 语法（5.1）：
 
 ```powershell
-Add-AppxProvisionedPackage -Path <string> [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-FeatureID <uint32>] [-ExternalLocationPath <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Add-AppxProvisionedPackage -Online [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-FeatureID <uint32>] [-ExternalLocationPath <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-AppxProvisionedPackage -Path <string> [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-AppxProvisionedPackage -Online [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 语法（7）：
 
 ```powershell
-Add-AppxProvisionedPackage -Path <string> [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-FeatureID <uint>] [-ExternalLocationPath <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Add-AppxProvisionedPackage -Online [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-FeatureID <uint>] [-ExternalLocationPath <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-AppxProvisionedPackage -Path <string> [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-AppxProvisionedPackage -Online [-FolderPath <string>] [-PackagePath <string>] [-DependencyPackagePath <string[]>] [-OptionalPackagePath <string[]>] [-LicensePath <string[]>] [-SkipLicense] [-CustomDataPath <string>] [-Regions <string>] [-StubPackageOption <StubPackageOption>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：向正在运行的操作系统添加应用包
@@ -668,11 +667,11 @@ Add-AppxProvisionedPackage -Online [-FolderPath <string>] [-PackagePath <string>
 PS C:\> Add-AppxProvisionedPackage -Online -FolderPath "c:\Appx"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-appxprovisionedpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-appxprovisionedpackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-appxprovisionedpackage?view=windowsserver2025-ps)
 
 ### Add-AppxVolume
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -688,11 +687,11 @@ Add-AppxVolume [-Path] <string[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 Add-AppxVolume -Path "E:\WindowsApps"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/add-appxvolume?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/add-appxvolume?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/add-appxvolume?view=windowsserver2025-ps)
 
 ### Add-BitsFile
 
-版本：都有
+版本：仅5.1
 
 模块：BitsTransfer
 
@@ -708,11 +707,11 @@ Add-BitsFile [-BitsJob] <BitsJob[]> [-Source] <string[]> [[-Destination] <string
 PS C:\> Get-BitsTransfer -JobId 10778CFA-C1D7-4A82-8A9D-80B19224879C | Add-BitsFile -Source http://server01/servertestdir/testfile1.txt -Destination "c:\clienttestdir\testfile1.txt"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/add-bitsfile?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/add-bitsfile?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/add-bitsfile?view=windowsserver2025-ps)
 
 ### Add-CertificateEnrollmentPolicyServer
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -728,11 +727,11 @@ Add-CertificateEnrollmentPolicyServer -Url <uri> -context <Context> [-NoClobber]
 Add-CertificateEnrollmentPolicyServer -Url $url -Context Machine
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/add-certificateenrollmentpolicyserver?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/add-certificateenrollmentpolicyserver?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/add-certificateenrollmentpolicyserver?view=windowsserver2025-ps)
 
 ### Add-Computer
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -749,11 +748,11 @@ Add-Computer [-WorkgroupName] <string> [-ComputerName <string[]>] [-LocalCredent
 Add-Computer -DomainName Domain01 -Restart
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/add-computer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/add-computer?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/add-computer?view=powershell-5.1)
 
 ### Add-JobTrigger
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -772,11 +771,11 @@ $Daily = New-JobTrigger -Daily -At 3AMPS
 Add-JobTrigger -Trigger $Daily -Name "TestJob"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/add-jobtrigger?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/add-jobtrigger?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/add-jobtrigger?view=powershell-5.1)
 
 ### Add-KdsRootKey
 
-版本：都有
+版本：仅5.1
 
 模块：Kds
 
@@ -793,11 +792,11 @@ Add-KdsRootKey -EffectiveImmediately [-LocalTestOnly] [-WhatIf] [-Confirm] [<Com
 PS C:\> Add-KdsRootKey
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/kds/add-kdsrootkey?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/kds/add-kdsrootkey?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/kds/add-kdsrootkey?view=windowsserver2025-ps)
 
 ### Add-LocalGroupMember
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -815,7 +814,7 @@ Add-LocalGroupMember [-SID] <SecurityIdentifier> [-Member] <LocalPrincipal[]> [-
 Add-LocalGroupMember -Group "Administrators" -Member "Admin02", "MicrosoftAccount\username@Outlook.com", "AzureAD\DavidChew@contoso.com", "CONTOSO\Domain Admins"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/add-localgroupmember?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/add-localgroupmember?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/add-localgroupmember?view=powershell-5.1)
 
 ### Add-PSSnapin
 
@@ -839,7 +838,7 @@ PS C:\> Add-PSSnapin -Name Microsoft.Exchange, Microsoft.Windows.AD
 
 ### Add-SignerRule
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -856,19 +855,19 @@ Add-SignerRule -FilePath <string> -CertStorePath <string> [-Kernel] [-User] [-Up
 PS C:\> Add-SignerRule -FilePath '.\Policy.xml' -CertificatePath '.\certificate07.cer' -User
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/add-signerrule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/add-signerrule?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/add-signerrule?view=windowsserver2025-ps)
 
 ### Add-WindowsCapability
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
 语法：
 
 ```powershell
-Add-WindowsCapability -Name <string> -Online [-LimitAccess] [-Source <string[]>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Add-WindowsCapability -Name <string> -Path <string> [-LimitAccess] [-Source <string[]>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-WindowsCapability [-Name] <string> [-Online] [-LimitAccess] [-Source <string[]>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Add-WindowsCapability [-Name] <string> [-Path] <string> [-LimitAccess] [-Source <string[]>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：通过 Windows 更新客户端向正在运行的操作系统添加 Windows 功能包
@@ -877,11 +876,11 @@ Add-WindowsCapability -Name <string> -Path <string> [-LimitAccess] [-Source <str
 PS C:\> Add-WindowsCapability -Online -Name "Msix.PackagingTool.Driver~~~~0.0.1.0"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowscapability?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowscapability?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowscapability?view=windowsserver2025-ps)
 
 ### Add-WindowsDriver
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -897,11 +896,11 @@ Add-WindowsDriver -Path <string> [-Recurse] [-ForceUnsigned] [-Driver <string>] 
 PS C:\> Add-WindowsDriver -Path "c:\offline" -Driver "c:\test\drivers" -Recurse
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowsdriver?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowsdriver?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowsdriver?view=windowsserver2025-ps)
 
 ### Add-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -917,11 +916,11 @@ Add-WindowsImage -ImagePath <string> -CapturePath <string> [-ConfigFilePath <str
 PS C:\> Add-WindowsImage -ImagePath "C:\imagestore\custom.wim" -CapturePath d:\ -Name "Drive D"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowsimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowsimage?view=windowsserver2025-ps)
 
 ### Add-WindowsPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -938,11 +937,11 @@ Add-WindowsPackage -PackagePath <string> -Path <string> [-IgnoreCheck] [-Prevent
 PS C:\> Add-WindowsPackage -Online -PackagePath "c:\packages\package.cab"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowspackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowspackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/add-windowspackage?view=windowsserver2025-ps)
 
 ### Checkpoint-Computer
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -958,11 +957,11 @@ Checkpoint-Computer [-Description] <string> [[-RestorePointType] <string>] [<Com
 Checkpoint-Computer -Description "Install MyApp"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/checkpoint-computer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/checkpoint-computer?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/checkpoint-computer?view=powershell-5.1)
 
 ### Clear-EventLog
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -978,11 +977,11 @@ Clear-EventLog [-LogName] <string[]> [[-ComputerName] <string[]>] [-WhatIf] [-Co
 Clear-EventLog "Windows PowerShell"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/clear-eventlog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/clear-eventlog?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/clear-eventlog?view=powershell-5.1)
 
 ### Clear-KdsCache
 
-版本：都有
+版本：仅5.1
 
 模块：Kds
 
@@ -998,11 +997,11 @@ Clear-KdsCache [-CacheOwnerSid <string>] [-WhatIf] [-Confirm] [<CommonParameters
 PS C:\> Clear-KdsCache
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/kds/clear-kdscache?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/kds/clear-kdscache?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/kds/clear-kdscache?view=windowsserver2025-ps)
 
 ### Clear-RecycleBin
 
-版本：仅7
+版本：都有
 
 模块：Microsoft.PowerShell.Management
 
@@ -1018,31 +1017,11 @@ Clear-RecycleBin [[-DriveLetter] <string[]>] [-Force] [-WhatIf] [-Confirm] [<Com
 Clear-RecycleBin
 ```
 
-出处：[官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/clear-recyclebin?view=powershell-7.5)
-
-### Clear-Recyclebin
-
-版本：仅5.1
-
-模块：Microsoft.PowerShell.Management
-
-语法：
-
-```powershell
-Clear-RecycleBin [[-DriveLetter] <string[]>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-示例：清除所有回收站
-
-```powershell
-Clear-RecycleBin
-```
-
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/clear-recyclebin?view=powershell-5.1)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/clear-recyclebin?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/clear-recyclebin?view=powershell-7.5)
 
 ### Clear-ReFSDedupSchedule
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -1058,11 +1037,11 @@ Clear-ReFSDedupSchedule [-Volume] <string> [<CommonParameters>]
 Clear-ReFSDedupSchedule -Volume "D:"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/clear-refsdedupschedule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/clear-refsdedupschedule?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/clear-refsdedupschedule?view=windowsserver2025-ps)
 
 ### Clear-ReFSDedupScrubSchedule
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -1078,11 +1057,11 @@ Clear-ReFSDedupScrubSchedule [-Volume] <string> [<CommonParameters>]
 Clear-ReFSDedupScrubSchedule -Volume "D:"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/clear-refsdedupscrubschedule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/clear-refsdedupscrubschedule?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/clear-refsdedupscrubschedule?view=windowsserver2025-ps)
 
 ### Clear-Tpm
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
@@ -1099,7 +1078,7 @@ Clear-Tpm -File <string> [<CommonParameters>]
 Clear-Tpm
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/clear-tpm?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/clear-tpm?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/clear-tpm?view=windowsserver2025-ps)
 
 ### Clear-UevAppxPackage
 
@@ -1147,7 +1126,7 @@ PS C:\> Clear-UevConfiguration -Computer -MaxPackageSizeInBytes
 
 ### Clear-WindowsCorruptMountPoint
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -1163,11 +1142,11 @@ Clear-WindowsCorruptMountPoint [-LogPath <string>] [-ScratchDirectory <string>] 
 PS C:\> Clear-WindowsCorruptMountPoint
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/clear-windowscorruptmountpoint?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/clear-windowscorruptmountpoint?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/clear-windowscorruptmountpoint?view=windowsserver2025-ps)
 
 ### Complete-BitsTransfer
 
-版本：都有
+版本：仅5.1
 
 模块：BitsTransfer
 
@@ -1183,11 +1162,11 @@ Complete-BitsTransfer [-BitsJob] <BitsJob[]> [-WhatIf] [-Confirm] [<CommonParame
 C:\PS>Get-BitsTransfer | Complete-BitsTransfer
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/complete-bitstransfer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/complete-bitstransfer?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/complete-bitstransfer?view=windowsserver2025-ps)
 
 ### Complete-DtcDiagnosticTransaction
 
-版本：都有
+版本：仅5.1
 
 模块：MsDtc
 
@@ -1204,11 +1183,11 @@ PS C:\> $Tx = New-DtcDiagnosticTransaction
 PS C:\> Complete-DtcDiagnosticTransaction -Transaction $Tx
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/complete-dtcdiagnostictransaction?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/complete-dtcdiagnostictransaction?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/complete-dtcdiagnostictransaction?view=windowsserver2025-ps)
 
 ### Complete-Transaction
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -1227,11 +1206,11 @@ New-Item MyCompany -UseTransaction
 Get-ChildItem m*
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/complete-transaction?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/complete-transaction?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/complete-transaction?view=powershell-5.1)
 
 ### Confirm-SecureBootUEFI
 
-版本：都有
+版本：仅5.1
 
 模块：SecureBoot
 
@@ -1248,7 +1227,7 @@ PS C:\> Confirm-SecureBootUEFI
 True
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/confirm-securebootuefi?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/confirm-securebootuefi?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/confirm-securebootuefi?view=windowsserver2025-ps)
 
 ### Connect-PSSession
 
@@ -1323,7 +1302,7 @@ Convert-String -InputObject <string> [-Example <List[psobject]>] [<CommonParamet
 
 ### ConvertFrom-CIPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -1340,7 +1319,7 @@ PS C:\> ConvertFrom-CIPolicy -XmlFilePath ".\Policy03.xml" -BinaryFilePath "Poli
 C:\Policies\Policy03.bin
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/convertfrom-cipolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/convertfrom-cipolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/convertfrom-cipolicy?view=windowsserver2025-ps)
 
 ### ConvertFrom-SddlString
 
@@ -1386,7 +1365,7 @@ ConvertFrom-String [-InputObject] <string> [-TemplateFile <string[]>] [-Template
 
 ### ConvertTo-ProcessMitigationPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：ProcessMitigations
 
@@ -1402,11 +1381,11 @@ ConvertTo-ProcessMitigationPolicy [-EMETFilePath] <string> [-OutputFilePath] <st
 PS C:\> ConvertTo-ProcessMitigationPolicy -EMETFilePath policy.xml -OutputFilePath result.xml
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/processmitigations/convertto-processmitigationpolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/processmitigations/convertto-processmitigationpolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/processmitigations/convertto-processmitigationpolicy?view=windowsserver2025-ps)
 
 ### ConvertTo-TpmOwnerAuth
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
@@ -1423,11 +1402,11 @@ PS C:\> ConvertTo-TpmOwnerAuth -PassPhrase "Saturn1977&&"
 puJvGK4O6Qvl0loP8r1bIxipDVo=
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/convertto-tpmownerauth?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/convertto-tpmownerauth?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/convertto-tpmownerauth?view=windowsserver2025-ps)
 
 ### Copy-BcdEntry
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -1444,18 +1423,18 @@ Copy-BcdEntry [-SourceEntry] <BcdEntryInfo> -TargetStore <BcdStoreInfo[]> [-Desc
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/copy-bcdentry?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/copy-bcdentry?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/copy-bcdentry?view=windowsserver2025-ps)
 
 ### Copy-UserInternationalSettingsToSystem
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
 语法：
 
 ```powershell
-Copy-UserInternationalSettingsToSystem [-NewUser] <bool> [<CommonParameters>]
+Copy-UserInternationalSettingsToSystem [-WelcomeScreen <bool>] [-NewUser <bool>] [<CommonParameters>]
 ```
 
 示例：将设置复制到欢迎屏幕、系统帐户和新用户帐户
@@ -1464,11 +1443,11 @@ Copy-UserInternationalSettingsToSystem [-NewUser] <bool> [<CommonParameters>]
 PS C:\> Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/copy-userinternationalsettingstosystem?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/copy-userinternationalsettingstosystem?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/international/copy-userinternationalsettingstosystem?view=windowsserver2025-ps)
 
 ### Disable-AppBackgroundTaskDiagnosticLog
 
-版本：都有
+版本：仅5.1
 
 模块：AppBackgroundTask
 
@@ -1484,7 +1463,7 @@ Disable-AppBackgroundTaskDiagnosticLog [-WhatIf] [-Confirm] [<CommonParameters>]
 PS C:\> Disable-AppBackgroundTaskDiagnosticLog
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appbackgroundtask/disable-appbackgroundtaskdiagnosticlog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appbackgroundtask/disable-appbackgroundtaskdiagnosticlog?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appbackgroundtask/disable-appbackgroundtaskdiagnosticlog?view=windowsserver2025-ps)
 
 ### Disable-Appv
 
@@ -1495,7 +1474,7 @@ PS C:\> Disable-AppBackgroundTaskDiagnosticLog
 语法：
 
 ```powershell
-Disable-Appv [<CommonParameters>]
+Disable-Appv
 ```
 
 示例：禁用 App-V 服务
@@ -1530,7 +1509,7 @@ PS C:\> Disable-AppvClientConnectionGroup -Name "MyGroup"
 
 ### Disable-BcdElementBootDebug
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -1547,11 +1526,11 @@ Disable-BcdElementBootDebug [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confirm
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementbootdebug?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementbootdebug?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementbootdebug?view=windowsserver2025-ps)
 
 ### Disable-BcdElementBootEms
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -1569,11 +1548,11 @@ Disable-BcdElementBootEms [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confirm] 
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementbootems?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementbootems?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementbootems?view=windowsserver2025-ps)
 
 ### Disable-BcdElementDebug
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -1590,11 +1569,11 @@ Disable-BcdElementDebug [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confirm] [<
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementdebug?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementdebug?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementdebug?view=windowsserver2025-ps)
 
 ### Disable-BcdElementEms
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -1611,11 +1590,11 @@ Disable-BcdElementEms [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confirm] [<Co
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementems?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementems?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementems?view=windowsserver2025-ps)
 
 ### Disable-BcdElementEventLogging
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -1633,11 +1612,11 @@ Disable-BcdElementEventLogging [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Conf
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementeventlogging?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementeventlogging?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementeventlogging?view=windowsserver2025-ps)
 
 ### Disable-BcdElementHypervisorDebug
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -1655,11 +1634,11 @@ Disable-BcdElementHypervisorDebug [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-C
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementhypervisordebug?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementhypervisordebug?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/disable-bcdelementhypervisordebug?view=windowsserver2025-ps)
 
 ### Disable-ComputerRestore
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -1675,11 +1654,11 @@ Disable-ComputerRestore [-Drive] <string[]> [-WhatIf] [-Confirm] [<CommonParamet
 Disable-ComputerRestore -Drive "C:\"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/disable-computerrestore?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/disable-computerrestore?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/disable-computerrestore?view=powershell-5.1)
 
 ### Disable-JobTrigger
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -1695,11 +1674,11 @@ Disable-JobTrigger [-InputObject] <ScheduledJobTrigger[]> [-PassThru] [-WhatIf] 
 PS C:\> Get-JobTrigger -Name "Backup-Archives" -TriggerId 1 | Disable-JobTrigger
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/disable-jobtrigger?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/disable-jobtrigger?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/disable-jobtrigger?view=powershell-5.1)
 
 ### Disable-LocalUser
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -1717,7 +1696,7 @@ Disable-LocalUser [-SID] <SecurityIdentifier[]> [-WhatIf] [-Confirm] [<CommonPar
 Disable-LocalUser -Name "Admin02"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/disable-localuser?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/disable-localuser?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/disable-localuser?view=powershell-5.1)
 
 ### Disable-PSRemoting
 
@@ -1767,7 +1746,7 @@ Disable-PSSessionConfiguration
 
 ### Disable-ReFSDedup
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -1783,11 +1762,11 @@ Disable-ReFSDedup [-Volume] <string> [<CommonParameters>]
 Disable-ReFSDedup -Volume "D:"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/disable-refsdedup?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/disable-refsdedup?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/disable-refsdedup?view=windowsserver2025-ps)
 
 ### Disable-ScheduledJob
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -1805,11 +1784,11 @@ Disable-ScheduledJob [-Name] <string> [-PassThru] [-WhatIf] [-Confirm] [<CommonP
 Disable-ScheduledJob -Id 2 -PassThru
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/disable-scheduledjob?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/disable-scheduledjob?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/disable-scheduledjob?view=powershell-5.1)
 
 ### Disable-TlsCipherSuite
 
-版本：都有
+版本：仅5.1
 
 模块：TLS
 
@@ -1825,11 +1804,11 @@ Disable-TlsCipherSuite [-Name] <string> [-WhatIf] [-Confirm] [<CommonParameters>
 Disable-TlsCipherSuite -Name 'TLS_RSA_WITH_3DES_EDE_CBC_SHA'
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/disable-tlsciphersuite?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/tls/disable-tlsciphersuite?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/tls/disable-tlsciphersuite?view=windowsserver2025-ps)
 
 ### Disable-TlsEccCurve
 
-版本：都有
+版本：仅5.1
 
 模块：TLS
 
@@ -1845,11 +1824,11 @@ Disable-TlsEccCurve [-Name] <string> [-WhatIf] [-Confirm] [<CommonParameters>]
 Disable-TlsEccCurve -Name curve25519
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/disable-tlsecccurve?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/tls/disable-tlsecccurve?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/tls/disable-tlsecccurve?view=windowsserver2025-ps)
 
 ### Disable-TlsSessionTicketKey
 
-版本：都有
+版本：仅5.1
 
 模块：TLS
 
@@ -1865,11 +1844,11 @@ Disable-TlsSessionTicketKey [-ServiceAccountName] <NTAccount> [-WhatIf] [-Confir
 Disable-TlsSessionTicketKey -ServiceAccountName NetworkService
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/disable-tlssessionticketkey?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/tls/disable-tlssessionticketkey?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/tls/disable-tlssessionticketkey?view=windowsserver2025-ps)
 
 ### Disable-TpmAutoProvisioning
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
@@ -1892,7 +1871,7 @@ LockedOut : False
 SelfTest : {191, 191, 245, 191...}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/disable-tpmautoprovisioning?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/disable-tpmautoprovisioning?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/disable-tpmautoprovisioning?view=windowsserver2025-ps)
 
 ### Disable-Uev
 
@@ -1924,7 +1903,7 @@ PS C:\>Disable-Uev
 
 ```powershell
 Disable-UevAppxPackage [-PackageFamilyName] <string[]> [-CurrentComputerUser] [-WhatIf] [-Confirm] [<CommonParameters>]
-Disable-UevAppxPackage [-PackageFamilyName] <string[]> -Computer [-WhatIf] [-Confirm] [<CommonParameters>]
+Disable-UevAppxPackage [-PackageFamilyName] <string[]> [-Computer] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 示例：禁用 Windows 8 应用的同步
@@ -1957,7 +1936,7 @@ PS C:\> Disable-UevTemplate -ID "MicrosoftCalculator6"
 
 ### Disable-WindowsErrorReporting
 
-版本：都有
+版本：仅5.1
 
 模块：WindowsErrorReporting
 
@@ -1973,18 +1952,18 @@ Disable-WindowsErrorReporting [<CommonParameters>]
 PS C:\> Disable-WindowsErrorReporting
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowserrorreporting/disable-windowserrorreporting?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/windowserrorreporting/disable-windowserrorreporting?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/windowserrorreporting/disable-windowserrorreporting?view=windowsserver2025-ps)
 
 ### Disable-WindowsOptionalFeature
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
 语法：
 
 ```powershell
-Disable-WindowsOptionalFeature -FeatureName <string[]> -Online [-PackageName <string>] [-Remove] [-NoRestart] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Disable-WindowsOptionalFeature -FeatureName <string[]> [-PackageName <string>] [-Remove] [-NoRestart] [-Online] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Disable-WindowsOptionalFeature -FeatureName <string[]> -Path <string> [-PackageName <string>] [-Remove] [-NoRestart] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
@@ -1994,7 +1973,7 @@ Disable-WindowsOptionalFeature -FeatureName <string[]> -Path <string> [-PackageN
 PS C:\> Disable-WindowsOptionalFeature -Online -FeatureName "Hearts"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/disable-windowsoptionalfeature?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/disable-windowsoptionalfeature?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/disable-windowsoptionalfeature?view=windowsserver2025-ps)
 
 ### Disable-WSManCredSSP
 
@@ -2075,7 +2054,7 @@ PS WSMan:\> dir
 
 ### Dismount-AppxVolume
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -2091,19 +2070,19 @@ Dismount-AppxVolume [-Volume] <AppxVolume[]> [-WhatIf] [-Confirm] [<CommonParame
 Dismount-AppxVolume -Volume E:\
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/dismount-appxvolume?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/dismount-appxvolume?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/dismount-appxvolume?view=windowsserver2025-ps)
 
 ### Dismount-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
 语法：
 
 ```powershell
-Dismount-WindowsImage -Path <string> -Discard [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Dismount-WindowsImage -Path <string> -Save [-CheckIntegrity] [-Append] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Dismount-WindowsImage -Path <string> [-Discard] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Dismount-WindowsImage -Path <string> [-Save] [-CheckIntegrity] [-Append] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：卸载操作系统映像
@@ -2112,11 +2091,11 @@ Dismount-WindowsImage -Path <string> -Save [-CheckIntegrity] [-Append] [-LogPath
 PS C:\> Dismount-WindowsImage -Path "c:\offline" -Save
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/dismount-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/dismount-windowsimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/dismount-windowsimage?view=windowsserver2025-ps)
 
 ### Edit-CIPolicyRule
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -2129,11 +2108,11 @@ Edit-CIPolicyRule [-Id] <string> -FilePath <string> [-Name <string>] [-RType <st
 
 示例：暂无
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/edit-cipolicyrule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/edit-cipolicyrule?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/edit-cipolicyrule?view=windowsserver2025-ps)
 
 ### Enable-AppBackgroundTaskDiagnosticLog
 
-版本：都有
+版本：仅5.1
 
 模块：AppBackgroundTask
 
@@ -2149,7 +2128,7 @@ Enable-AppBackgroundTaskDiagnosticLog [-WhatIf] [-Confirm] [<CommonParameters>]
 PS C:\> Enable-AppBackgroundTaskDiagnosticLog
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appbackgroundtask/enable-appbackgroundtaskdiagnosticlog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appbackgroundtask/enable-appbackgroundtaskdiagnosticlog?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appbackgroundtask/enable-appbackgroundtaskdiagnosticlog?view=windowsserver2025-ps)
 
 ### Enable-Appv
 
@@ -2195,7 +2174,7 @@ PS C:\> Enable-AppvClientConnectionGroup -Name "MyGroup" -Global
 
 ### Enable-BcdElementBootDebug
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -2212,11 +2191,11 @@ Enable-BcdElementBootDebug [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confirm]
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementbootdebug?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementbootdebug?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementbootdebug?view=windowsserver2025-ps)
 
 ### Enable-BcdElementBootEms
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -2234,11 +2213,11 @@ Enable-BcdElementBootEms [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confirm] [
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementbootems?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementbootems?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementbootems?view=windowsserver2025-ps)
 
 ### Enable-BcdElementDebug
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -2255,11 +2234,11 @@ Enable-BcdElementDebug [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confirm] [<C
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementdebug?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementdebug?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementdebug?view=windowsserver2025-ps)
 
 ### Enable-BcdElementEms
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -2276,11 +2255,11 @@ Enable-BcdElementEms [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confirm] [<Com
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementems?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementems?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementems?view=windowsserver2025-ps)
 
 ### Enable-BcdElementEventLogging
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -2298,11 +2277,11 @@ Enable-BcdElementEventLogging [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confi
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementeventlogging?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementeventlogging?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementeventlogging?view=windowsserver2025-ps)
 
 ### Enable-BcdElementHypervisorDebug
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -2320,11 +2299,11 @@ Enable-BcdElementHypervisorDebug [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Co
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementhypervisordebug?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementhypervisordebug?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/enable-bcdelementhypervisordebug?view=windowsserver2025-ps)
 
 ### Enable-ComputerRestore
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -2340,11 +2319,11 @@ Enable-ComputerRestore [-Drive] <string[]> [-WhatIf] [-Confirm] [<CommonParamete
 Enable-ComputerRestore -Drive "C:\"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/enable-computerrestore?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/enable-computerrestore?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/enable-computerrestore?view=powershell-5.1)
 
 ### Enable-JobTrigger
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -2360,11 +2339,11 @@ Enable-JobTrigger [-InputObject] <ScheduledJobTrigger[]> [-PassThru] [-WhatIf] [
 Get-JobTrigger -Name Backup-Archives -TriggerId 1 | Enable-JobTrigger
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/enable-jobtrigger?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/enable-jobtrigger?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/enable-jobtrigger?view=powershell-5.1)
 
 ### Enable-LocalUser
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -2382,7 +2361,7 @@ Enable-LocalUser [-SID] <SecurityIdentifier[]> [-WhatIf] [-Confirm] [<CommonPara
 Enable-LocalUser -Name "Admin02"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/enable-localuser?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/enable-localuser?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/enable-localuser?view=powershell-5.1)
 
 ### Enable-PSRemoting
 
@@ -2426,7 +2405,7 @@ Enable-PSSessionConfiguration
 
 ### Enable-ReFSDedup
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -2442,11 +2421,11 @@ Enable-ReFSDedup [-Volume] <string> [-Type] <DedupVolumeType> [<CommonParameters
 Enable-ReFSDedup -Volume "D:" -Type DedupAndCompress
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/enable-refsdedup?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/enable-refsdedup?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/enable-refsdedup?view=powershell-5.1)
 
 ### Enable-ScheduledJob
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -2464,24 +2443,18 @@ Enable-ScheduledJob [-Name] <string> [-PassThru] [-WhatIf] [-Confirm] [<CommonPa
 Enable-ScheduledJob -Id 2 -PassThru
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/enable-scheduledjob?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/enable-scheduledjob?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/enable-scheduledjob?view=powershell-5.1)
 
 ### Enable-TlsCipherSuite
 
-版本：都有
+版本：仅5.1
 
 模块：TLS
 
-语法（5.1）：
+语法：
 
 ```powershell
-Enable-TlsCipherSuite [-Name] <string> [[-Position] <uint32>] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-语法（7）：
-
-```powershell
-Enable-TlsCipherSuite [-Name] <string> [[-Position] <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Enable-TlsCipherSuite [[-Position] <uint32>] [-Name] <string> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 示例：启用密码套件
@@ -2490,24 +2463,18 @@ Enable-TlsCipherSuite [-Name] <string> [[-Position] <uint>] [-WhatIf] [-Confirm]
 Enable-TlsCipherSuite -Name TLS_DHE_DSS_WITH_AES_256_CBC_SHA
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/enable-tlsciphersuite?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/tls/enable-tlsciphersuite?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/tls/enable-tlsciphersuite?view=windowsserver2025-ps)
 
 ### Enable-TlsEccCurve
 
-版本：都有
+版本：仅5.1
 
 模块：TLS
 
-语法（5.1）：
+语法：
 
 ```powershell
-Enable-TlsEccCurve [-Name] <string> [[-Position] <uint32>] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-语法（7）：
-
-```powershell
-Enable-TlsEccCurve [-Name] <string> [[-Position] <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Enable-TlsEccCurve [[-Position] <uint32>] [-Name] <string> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 示例：
@@ -2516,11 +2483,11 @@ Enable-TlsEccCurve [-Name] <string> [[-Position] <uint>] [-WhatIf] [-Confirm] [<
 Enable-TlsEccCurve 'NistP384' -Position 0
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/enable-tlsecccurve?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/tls/enable-tlsecccurve?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/tls/enable-tlsecccurve?view=windowsserver2025-ps)
 
 ### Enable-TlsSessionTicketKey
 
-版本：都有
+版本：仅5.1
 
 模块：TLS
 
@@ -2537,18 +2504,18 @@ $Password = Read-Host -AsSecureString
 Enable-TlsSessionTicketKey -Password $Password -Path 'C:\KeyConfig\TlsSessionTicketKey.config' -ServiceAccountName NetworkService
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/enable-tlssessionticketkey?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/tls/enable-tlssessionticketkey?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/tls/enable-tlssessionticketkey?view=windowsserver2025-ps)
 
 ### Enable-TpmAutoProvisioning
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
 语法：
 
 ```powershell
-Enable-TpmAutoProvisioning [<CommonParameters>]
+Enable-TpmAutoProvisioning
 ```
 
 示例：启用自动预配
@@ -2564,7 +2531,7 @@ LockedOut : False
 SelfTest : {191, 191, 245, 191...}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/enable-tpmautoprovisioning?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/enable-tpmautoprovisioning?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/enable-tpmautoprovisioning?view=powershell-5.1)
 
 ### Enable-Uev
 
@@ -2575,7 +2542,7 @@ SelfTest : {191, 191, 245, 191...}
 语法：
 
 ```powershell
-Enable-Uev [<CommonParameters>]
+Enable-Uev
 ```
 
 示例：启用 UE-V 服务
@@ -2629,14 +2596,14 @@ PS C:\> Enable-UevTemplate -ID "MicrosoftCalculator6"
 
 ### Enable-WindowsErrorReporting
 
-版本：都有
+版本：仅5.1
 
 模块：WindowsErrorReporting
 
 语法：
 
 ```powershell
-Enable-WindowsErrorReporting [<CommonParameters>]
+Enable-WindowsErrorReporting
 ```
 
 示例：启用 Windows 错误报告
@@ -2645,11 +2612,11 @@ Enable-WindowsErrorReporting [<CommonParameters>]
 PS C:\> Enable-WindowsErrorReporting
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowserrorreporting/enable-windowserrorreporting?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/windowserrorreporting/enable-windowserrorreporting?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowserrorreporting/enable-windowserrorreporting?view=powershell-5.1)
 
 ### Enable-WindowsOptionalFeature
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -2666,7 +2633,7 @@ Enable-WindowsOptionalFeature -FeatureName <string[]> -Path <string> [-PackageNa
 PS C:\> Enable-WindowsOptionalFeature -Online -FeatureName "Hearts" -All
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/enable-windowsoptionalfeature?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/enable-windowsoptionalfeature?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/enable-windowsoptionalfeature?view=windowsserver2025-ps)
 
 ### Enable-WSManCredSSP
 
@@ -2690,7 +2657,7 @@ Enable-WSManCredSSP -Role "Client" -DelegateComputer "Server02.fabrikam.com"
 
 ### Expand-OsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -2706,7 +2673,7 @@ Expand-OsImage -ImagePath <string> -ApplyPath <string> [-LogPath <string>] [-Scr
 
 ### Expand-WindowsCustomDataImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -2722,11 +2689,11 @@ Expand-WindowsCustomDataImage -ImagePath <string> -CustomDataImage <string> -Sin
 PS C:\> Expand-WindowsCustomDataImage -CustomDataImage "C:\oem.ppkg" -ImagePath "C:\" -SingleInstance
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/expand-windowscustomdataimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/expand-windowscustomdataimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/expand-windowscustomdataimage?view=windowsserver2025-ps)
 
 ### Expand-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -2742,7 +2709,7 @@ Expand-WindowsImage -ImagePath <string> -ApplyPath <string> [-SplitImageFilePatt
 
 ```powershell
 Expand-WindowsImage -ImagePath <string> -Name <string> -ApplyPath <string> [-SplitImageFilePattern <string>] [-CheckIntegrity] [-ConfirmTrustedFile] [-NoRpFix] [-Verify] [-WIMBoot] [-Compact] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Expand-WindowsImage -ImagePath <string> -Index <uint> -ApplyPath <string> [-SplitImageFilePattern <string>] [-CheckIntegrity] [-ConfirmTrustedFile] [-NoRpFix] [-Verify] [-WIMBoot] [-Compact] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Expand-WindowsImage -ImagePath <string> -Index <UInt32> -ApplyPath <string> [-SplitImageFilePattern <string>] [-CheckIntegrity] [-ConfirmTrustedFile] [-NoRpFix] [-Verify] [-WIMBoot] [-Compact] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Expand-WindowsImage -ImagePath <string> -ApplyPath <string> [-SplitImageFilePattern <string>] [-CheckIntegrity] [-ConfirmTrustedFile] [-NoRpFix] [-Verify] [-WIMBoot] [-Compact] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
@@ -2752,11 +2719,11 @@ Expand-WindowsImage -ImagePath <string> -ApplyPath <string> [-SplitImageFilePatt
 PS C:\> Expand-WindowsImage -ImagePath "c:\imagestore\custom.wim" -ApplyPath "d:\" -Index 1
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/expand-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/expand-windowsimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/expand-windowsimage?view=windowsserver2025-ps)
 
 ### Export-BcdStore
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -2772,11 +2739,11 @@ Export-BcdStore [-Path] <string> [-Force] [-WhatIf] [-Confirm] [<CommonParameter
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/export-bcdstore?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/export-bcdstore?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/export-bcdstore?view=windowsserver2025-ps)
 
 ### Export-BinaryMiLog
 
-版本：都有
+版本：仅5.1
 
 模块：CimCmdlets
 
@@ -2792,11 +2759,11 @@ Export-BinaryMiLog [-Path] <string> [-InputObject <ciminstance>] [<CommonParamet
 Get-CimInstance Win32_Process | Export-BinaryMiLog -Path "Processes.bmil"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/cimcmdlets/export-binarymilog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/cimcmdlets/export-binarymilog?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/cimcmdlets/export-binarymilog?view=powershell-5.1)
 
 ### Export-Certificate
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -2814,7 +2781,7 @@ $cert = Get-ChildItem -Path Cert:\CurrentUser\My\EEDEF61D4FF6EDBAAD538BB08CCAADD
 Export-Certificate -Cert $cert -FilePath C:\Certs\user.sst -Type SST
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/export-certificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/export-certificate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/export-certificate?view=windowsserver2025-ps)
 
 ### Export-Console
 
@@ -2838,7 +2805,7 @@ PS C:\> Export-Console -Path $PSHOME\Consoles\ConsoleS1.psc1
 
 ### Export-Counter
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Diagnostics
 
@@ -2854,11 +2821,11 @@ Export-Counter [-Path] <string> -InputObject <PerformanceCounterSampleSet[]> [-F
 Get-Counter "\Processor(*)\% Processor Time" | Export-Counter -Path $HOME\Counters.blg
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.diagnostics/export-counter?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.diagnostics/export-counter?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.diagnostics/export-counter?view=powershell-5.1)
 
 ### Export-OsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -2874,7 +2841,7 @@ Export-OsImage -SrcImagePath <string> -DestImagePath <string> [-LogPath <string>
 
 ### Export-PfxCertificate
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -2894,11 +2861,11 @@ Get-ChildItem -Path Cert:\LocalMachine\My\5F98EBBFE735CDDAE00E33E0FD69050EF92202
  Export-PfxCertificate -FilePath C:\mypfx.pfx -Password $mypwd
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/export-pfxcertificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/export-pfxcertificate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/export-pfxcertificate?view=windowsserver2025-ps)
 
 ### Export-ProvisioningPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Provisioning
 
@@ -2916,11 +2883,11 @@ Export-ProvisioningPackage [-RuntimeMetadata] <RuntimeProvPackageMetadata> [-Out
 PS C:\> Export-ProvisioningPackage -PackageId {e2ea11f5-d8b0-4db9-bf96-8c909dc2fed5} -OutputFolder D:\Package
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/export-provisioningpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/export-provisioningpackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/export-provisioningpackage?view=windowsserver2025-ps)
 
 ### Export-StartLayout
 
-版本：都有
+版本：仅5.1
 
 模块：StartLayout
 
@@ -2937,11 +2904,11 @@ Export-StartLayout -LiteralPath <string> [-UseDesktopApplicationID] [-WhatIf] [-
 PS C:\> Export-StartLayout -Path "C:\Layouts\Marketing.xml"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/startlayout/export-startlayout?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/startlayout/export-startlayout?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/startlayout/export-startlayout?view=windowsserver2025-ps)
 
 ### Export-StartLayoutEdgeAssets
 
-版本：都有
+版本：仅5.1
 
 模块：StartLayout
 
@@ -2958,11 +2925,11 @@ Export-StartLayoutEdgeAssets -LiteralPath <string> [-WhatIf] [-Confirm] [<Common
 Export-StartLayoutEdgeAssets -Path "C:\Layouts\assets.xml"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/startlayout/export-startlayoutedgeassets?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/startlayout/export-startlayoutedgeassets?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/startlayout/export-startlayoutedgeassets?view=windowsserver2025-ps)
 
 ### Export-TlsSessionTicketKey
 
-版本：都有
+版本：仅5.1
 
 模块：TLS
 
@@ -2979,11 +2946,11 @@ $Password = Read-Host -AsSecureString
 Export-TlsSessionTicketKey -Password $Password -Path 'C:\KeyConfig\TlsSessionTicketKey.config' -ServiceAccountName NetworkService
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/export-tlssessionticketkey?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/tls/export-tlssessionticketkey?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/tls/export-tlssessionticketkey?view=windowsserver2025-ps)
 
 ### Export-Trace
 
-版本：都有
+版本：仅5.1
 
 模块：Provisioning
 
@@ -2999,7 +2966,7 @@ Export-Trace [-ETLFile] <string> [-Overwrite] [-LogsDirectoryPath <string>] [-Wp
 PS C:\> Export-Trace -ETLFile C:\Windows\Logs\WindowsUpdate\WindowsUpdate.20211013.074054.819.1.etl -LogsDirectoryPath C:\ETL\Logs
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/export-trace?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/export-trace?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/export-trace?view=windowsserver2025-ps)
 
 ### Export-UevConfiguration
 
@@ -3050,7 +3017,7 @@ PS C:\> Export-UevPackage -Path "MicrosoftCalculator6.pkgx"
 
 ### Export-WindowsCapabilitySource
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -3066,11 +3033,11 @@ Export-WindowsCapabilitySource -Name <string> -Source <string> -Target <string> 
 Export-WindowsCapabilitySource -Path c:\mount\windows -Source D:\ -Target C:\repository -Name App.StepsRecorder~~~~0.0.1.0
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/export-windowscapabilitysource?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/export-windowscapabilitysource?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/export-windowscapabilitysource?view=windowsserver2025-ps)
 
 ### Export-WindowsDriver
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -3087,11 +3054,11 @@ Export-WindowsDriver -Online [-Destination <string>] [-WindowsDirectory <string>
 PS C:\> Export-WindowsDriver -Online -Destination d:\drivers
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/export-windowsdriver?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/export-windowsdriver?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/export-windowsdriver?view=windowsserver2025-ps)
 
 ### Export-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -3117,11 +3084,11 @@ Export-WindowsImage -DestinationImagePath <string> -SourceImagePath <string> [-C
 PS C:\> Export-WindowsImage -SourceImagePath C:\imagestore\custom.wim -SourceIndex 1 -DestinationImagePath c:\imagestore\export.wim -DestinationName "Exported Image"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/export-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/export-windowsimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/export-windowsimage?view=windowsserver2025-ps)
 
 ### Find-LapsADExtendedRights
 
-版本：都有
+版本：仅5.1
 
 模块：LAPS
 
@@ -3137,11 +3104,11 @@ Find-LapsADExtendedRights -Identity <string[]> [-Credential <pscredential>] [-Do
 Find-LapsADExtendedRights -Identity LapsTestOU
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/laps/find-lapsadextendedrights?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/laps/find-lapsadextendedrights?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/laps/find-lapsadextendedrights?view=windowsserver2025-ps)
 
 ### Format-SecureBootUEFI
 
-版本：都有
+版本：仅5.1
 
 模块：SecureBoot
 
@@ -3150,7 +3117,7 @@ Find-LapsADExtendedRights -Identity LapsTestOU
 ```powershell
 Format-SecureBootUEFI -Name <string> -SignatureOwner <guid> -CertificateFilePath <string[]> [-FormatWithCert] [-SignableFilePath <string>] [-Time <string>] [-AppendWrite] [-ContentFilePath <string>] [<CommonParameters>]
 Format-SecureBootUEFI -Name <string> -SignatureOwner <guid> -Hash <string[]> -Algorithm <string> [-SignableFilePath <string>] [-Time <string>] [-AppendWrite] [-ContentFilePath <string>] [<CommonParameters>]
-Format-SecureBootUEFI -Name <string> -Delete [-SignableFilePath <string>] [-Time <string>] [<CommonParameters>]
+Format-SecureBootUEFI -Name <string> [-Delete] [-SignableFilePath <string>] [-Time <string>] [<CommonParameters>]
 ```
 
 示例：格式化私钥
@@ -3163,7 +3130,7 @@ AppendWrite : False
 Content : {232, 102, 87, 60...}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/format-securebootuefi?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/format-securebootuefi?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/format-securebootuefi?view=windowsserver2025-ps)
 
 ### Get-Acl
 
@@ -3197,7 +3164,7 @@ Get-Acl C:\Windows
 
 ### Get-AppLockerFileInformation
 
-版本：都有
+版本：仅5.1
 
 模块：AppLocker
 
@@ -3207,7 +3174,7 @@ Get-Acl C:\Windows
 Get-AppLockerFileInformation [[-Path] <List[string]>] [<CommonParameters>]
 Get-AppLockerFileInformation [[-Packages] <List[AppxPackage]>] [<CommonParameters>]
 Get-AppLockerFileInformation -Directory <string> [-FileType <List[AppLockerFileType]>] [-Recurse] [<CommonParameters>]
-Get-AppLockerFileInformation -EventLog [-LogPath <string>] [-EventType <List[AppLockerEventType]>] [-Statistics] [<CommonParameters>]
+Get-AppLockerFileInformation [-EventLog] [-LogPath <string>] [-EventType <List[AppLockerEventType]>] [-Statistics] [<CommonParameters>]
 ```
 
 示例：获取 .exe 文件和脚本的文件信息
@@ -3216,20 +3183,20 @@ Get-AppLockerFileInformation -EventLog [-LogPath <string>] [-EventType <List[App
 PS C:\> Get-AppLockerFileInformation -Directory C:\Windows\system32\ -Recurse -FileType exe, script
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/get-applockerfileinformation?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/get-applockerfileinformation?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/get-applockerfileinformation?view=powershell-5.1)
 
 ### Get-AppLockerPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：AppLocker
 
 语法：
 
 ```powershell
-Get-AppLockerPolicy -Local [-Xml] [<CommonParameters>]
-Get-AppLockerPolicy -Domain -Ldap <string> [-Xml] [<CommonParameters>]
-Get-AppLockerPolicy -Effective [-Xml] [<CommonParameters>]
+Get-AppLockerPolicy [-Local] [-Xml] [<CommonParameters>]
+Get-AppLockerPolicy -Ldap <string> [-Domain] [-Xml] [<CommonParameters>]
+Get-AppLockerPolicy [-Effective] [-Xml] [<CommonParameters>]
 ```
 
 示例：获取 AppLocker 策略
@@ -3241,11 +3208,11 @@ PS C:\> Get-AppLockerPolicy -Local
  1 {} {}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/get-applockerpolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/get-applockerpolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/get-applockerpolicy?view=windowsserver2025-ps)
 
 ### Get-AppProvisionedSharedPackageContainer
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -3262,14 +3229,14 @@ Get-AppProvisionedSharedPackageContainer -Online [-WindowsDirectory <string>] [-
 
 ### Get-AppSharedPackageContainer
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
 语法：
 
 ```powershell
-Get-AppSharedPackageContainer [[-Name] <string>] [[-Id] <string>] [<CommonParameters>]
+Get-AppSharedPackageContainer [[-Name] <string>] [[-Id] <string>] [-AllUsers] [<CommonParameters>]
 ```
 
 示例：
@@ -3278,7 +3245,7 @@ Get-AppSharedPackageContainer [[-Name] <string>] [[-Id] <string>] [<CommonParame
 Get-AppSharedPackageContainer -Name Contoso*
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appsharedpackagecontainer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appsharedpackagecontainer?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appsharedpackagecontainer?view=windowsserver2025-ps)
 
 ### Get-AppvClientApplication
 
@@ -3421,7 +3388,7 @@ PS C:\> Get-AppvStatus
 
 ### Get-AppxDefaultVolume
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -3437,11 +3404,11 @@ Get-AppxDefaultVolume [<CommonParameters>]
 Get-AppxDefaultVolume
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxdefaultvolume?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxdefaultvolume?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxdefaultvolume?view=windowsserver2025-ps)
 
 ### Get-AppxPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -3457,18 +3424,18 @@ Get-AppxPackage [[-Name] <string>] [[-Publisher] <string>] [-AllUsers] [-Package
 Get-AppxPackage -AllUsers
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxpackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxpackage?view=windowsserver2025-ps)
 
 ### Get-AppxPackageAutoUpdateSettings
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
 语法：
 
 ```powershell
-Get-AppxPackageAutoUpdateSettings [[-PackageFamilyName] <string>] [-ShowUpdateAvailability] [-AllUsers] [<CommonParameters>]
+Get-AppxPackageAutoUpdateSettings [[-PackageFullName] <string>] [-ShowUpdateAvailability] [-AllUsers] [<CommonParameters>]
 ```
 
 示例：获取全部应用包自动更新设置
@@ -3477,11 +3444,11 @@ Get-AppxPackageAutoUpdateSettings [[-PackageFamilyName] <string>] [-ShowUpdateAv
 Get-AppxPackageAutoUpdateSettings
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxpackageautoupdatesettings?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxpackageautoupdatesettings?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxpackageautoupdatesettings?view=windowsserver2025-ps)
 
 ### Get-AppxPackageManifest
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -3497,11 +3464,11 @@ Get-AppxPackageManifest [-Package] <string> [[-User] <string>] [<CommonParameter
 Get-AppxPackageManifest -Package "package1_1.0.0.0_neutral__8wekyb3d8bbwe"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxpackagemanifest?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxpackagemanifest?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxpackagemanifest?view=windowsserver2025-ps)
 
 ### Get-AppxProvisionedPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -3518,11 +3485,11 @@ Get-AppxProvisionedPackage -Online [-WindowsDirectory <string>] [-SystemDrive <s
 PS C:\> Get-AppxProvisionedPackage -Path "c:\offline"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-appxprovisionedpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-appxprovisionedpackage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-appxprovisionedpackage?view=powershell-5.1)
 
 ### Get-AppxVolume
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -3540,7 +3507,7 @@ Get-AppxVolume -Offline [-Path <string>] [<CommonParameters>]
 Get-AppxVolume
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxvolume?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxvolume?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/get-appxvolume?view=windowsserver2025-ps)
 
 ### Get-AuthenticodeSignature
 
@@ -3566,7 +3533,7 @@ Get-AuthenticodeSignature -FilePath "C:\Test\NewScript.ps1"
 
 ### Get-BcdEntry
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -3582,11 +3549,11 @@ Get-BcdEntry [[-Id] <string>] [[-Store] <BcdStoreInfo>] [-WhatIf] [-Confirm] [<C
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdentry?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdentry?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdentry?view=windowsserver2025-ps)
 
 ### Get-BcdEntryDebugSettings
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -3602,11 +3569,11 @@ Get-BcdEntryDebugSettings [[-Store] <BcdStoreInfo>] [-WhatIf] [-Confirm] [<Commo
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdentrydebugsettings?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdentrydebugsettings?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdentrydebugsettings?view=windowsserver2025-ps)
 
 ### Get-BcdEntryHypervisorSettings
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -3622,11 +3589,11 @@ Get-BcdEntryHypervisorSettings [[-Store] <BcdStoreInfo>] [-WhatIf] [-Confirm] [<
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdentryhypervisorsettings?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdentryhypervisorsettings?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdentryhypervisorsettings?view=windowsserver2025-ps)
 
 ### Get-BcdStore
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -3642,11 +3609,11 @@ Get-BcdStore [[-Path] <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdstore?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdstore?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/get-bcdstore?view=windowsserver2025-ps)
 
 ### Get-BitsTransfer
 
-版本：都有
+版本：仅5.1
 
 模块：BitsTransfer
 
@@ -3670,11 +3637,11 @@ c0dd3d8c-c3a2-4562-8... TestJob1 Download Transferred DOMAIN01\user01
 2c8302d5-3f44-4981-8... BitsJobTransfer Download Transferred DOMAIN01\user01
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/get-bitstransfer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/get-bitstransfer?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/get-bitstransfer?view=windowsserver2025-ps)
 
 ### Get-Certificate
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -3700,11 +3667,11 @@ $params = @{
 Get-Certificate @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificate?view=windowsserver2025-ps)
 
 ### Get-CertificateAutoEnrollmentPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -3720,11 +3687,11 @@ Get-CertificateAutoEnrollmentPolicy -Scope <AutoEnrollmentPolicyScope> -context 
 Get-CertificateAutoEnrollmentPolicy -Scope Local -Context User
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificateautoenrollmentpolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificateautoenrollmentpolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificateautoenrollmentpolicy?view=windowsserver2025-ps)
 
 ### Get-CertificateEnrollmentPolicyServer
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -3740,11 +3707,11 @@ Get-CertificateEnrollmentPolicyServer -Scope <EnrollmentPolicyServerScope> -cont
 Get-CertificateEnrollmentPolicyServer -Scope All -Context User
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificateenrollmentpolicyserver?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificateenrollmentpolicyserver?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificateenrollmentpolicyserver?view=windowsserver2025-ps)
 
 ### Get-CertificateNotificationTask
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -3760,7 +3727,7 @@ Get-CertificateNotificationTask [<CommonParameters>]
 Get-CertificateNotificationTask
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificatenotificationtask?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificatenotificationtask?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-certificatenotificationtask?view=windowsserver2025-ps)
 
 ### Get-CimAssociatedInstance
 
@@ -3894,7 +3861,7 @@ Get-CimSession
 
 ### Get-CIPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -3945,11 +3912,11 @@ FileException : False
 UserMode : False
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-cipolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-cipolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-cipolicy?view=windowsserver2025-ps)
 
 ### Get-CIPolicyIdInfo
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -3977,23 +3944,23 @@ ValueType : String
 Value : CIP077
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-cipolicyidinfo?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-cipolicyidinfo?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-cipolicyidinfo?view=windowsserver2025-ps)
 
 ### Get-CIPolicyInfo
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
 语法：
 
 ```powershell
-Get-CIPolicyInfo [<CommonParameters>]
+Get-CIPolicyInfo
 ```
 
 示例：暂无
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-cipolicyinfo?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-cipolicyinfo?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-cipolicyinfo?view=windowsserver2025-ps)
 
 ### Get-ComputerInfo
 
@@ -4027,7 +3994,7 @@ Get-ComputerInfo
 
 ### Get-ComputerRestorePoint
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -4044,11 +4011,11 @@ Get-ComputerRestorePoint -LastStatus [<CommonParameters>]
 Get-ComputerRestorePoint
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-computerrestorepoint?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-computerrestorepoint?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-computerrestorepoint?view=powershell-5.1)
 
 ### Get-ControlPanelItem
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -4065,7 +4032,7 @@ Get-ControlPanelItem -CanonicalName <string[]> [-Category <string[]>] [<CommonPa
 Get-ControlPanelItem
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-controlpanelitem?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-controlpanelitem?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-controlpanelitem?view=powershell-5.1)
 
 ### Get-Counter
 
@@ -4090,7 +4057,7 @@ Get-Counter -ListSet *
 
 ### Get-DAPolicyChange
 
-版本：都有
+版本：仅5.1
 
 模块：NetSecurity
 
@@ -4121,11 +4088,11 @@ server1.corp.contoso.com
 server3.corp.contoso.com
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/get-dapolicychange?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/get-dapolicychange?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/get-dapolicychange?view=windowsserver2025-ps)
 
 ### Get-DeliveryOptimizationLog
 
-版本：都有
+版本：仅5.1
 
 模块：DeliveryOptimization
 
@@ -4147,11 +4114,11 @@ Get-DeliveryOptimizationLog [[-Path] <string[]>] [-LevelFilter <uint>] [-Provide
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/deliveryoptimization/get-deliveryoptimizationlog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/deliveryoptimization/get-deliveryoptimizationlog?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/deliveryoptimization/get-deliveryoptimizationlog?view=powershell-5.1)
 
 ### Get-DeliveryOptimizationLogAnalysis
 
-版本：都有
+版本：仅5.1
 
 模块：DeliveryOptimization
 
@@ -4167,11 +4134,11 @@ Get-DeliveryOptimizationLogAnalysis [[-Path] <string[]>] [-ListConnections] [-Fl
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/deliveryoptimization/get-deliveryoptimizationloganalysis?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/deliveryoptimization/get-deliveryoptimizationloganalysis?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/deliveryoptimization/get-deliveryoptimizationloganalysis?view=powershell-5.1)
 
 ### Get-EventLog
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -4188,7 +4155,7 @@ Get-EventLog [-ComputerName <string[]>] [-List] [-AsString] [<CommonParameters>]
 Get-EventLog -List
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-eventlog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-eventlog?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-eventlog?view=powershell-5.1)
 
 ### Get-HotFix
 
@@ -4213,7 +4180,7 @@ Get-HotFix
 
 ### Get-InstalledLanguage
 
-版本：都有
+版本：仅5.1
 
 模块：LanguagePackManagement
 
@@ -4229,11 +4196,11 @@ Get-InstalledLanguage [[-Language] <string>] [<CommonParameters>]
 Get-InstalledLanguage
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/get-installedlanguage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/get-installedlanguage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/get-installedlanguage?view=powershell-5.1)
 
 ### Get-JobTrigger
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -4251,11 +4218,11 @@ Get-JobTrigger [-Name] <string> [[-TriggerId] <int[]>] [<CommonParameters>]
 Get-JobTrigger -Name "BackupJob"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/get-jobtrigger?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/get-jobtrigger?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/get-jobtrigger?view=powershell-5.1)
 
 ### Get-KdsConfiguration
 
-版本：都有
+版本：仅5.1
 
 模块：Kds
 
@@ -4271,11 +4238,11 @@ Get-KdsConfiguration [<CommonParameters>]
 PS C:\> Get-KdsConfiguration
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/kds/get-kdsconfiguration?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/kds/get-kdsconfiguration?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/kds/get-kdsconfiguration?view=windowsserver2025-ps)
 
 ### Get-KdsRootKey
 
-版本：都有
+版本：仅5.1
 
 模块：Kds
 
@@ -4291,11 +4258,11 @@ Get-KdsRootKey [<CommonParameters>]
 PS C:\> Get-KdsRootKey
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/kds/get-kdsrootkey?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/kds/get-kdsrootkey?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/kds/get-kdsrootkey?view=powershell-5.1)
 
 ### Get-LapsADPassword
 
-版本：都有
+版本：仅5.1
 
 模块：LAPS
 
@@ -4316,11 +4283,11 @@ Get-LapsADPassword [-Identity] <string[]> -RecoveryMode -Port <int> [-IncludeHis
 Get-LapsADPassword LAPSCLIENT
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/laps/get-lapsadpassword?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/laps/get-lapsadpassword?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/laps/get-lapsadpassword?view=windowsserver2025-ps)
 
 ### Get-LocalGroup
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -4337,11 +4304,11 @@ Get-LocalGroup [[-SID] <SecurityIdentifier[]>] [<CommonParameters>]
 Get-LocalGroup -Name "Administrators"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/get-localgroup?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/get-localgroup?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/get-localgroup?view=powershell-5.1)
 
 ### Get-LocalGroupMember
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -4359,11 +4326,11 @@ Get-LocalGroupMember [-SID] <SecurityIdentifier> [[-Member] <string>] [<CommonPa
 Get-LocalGroupMember -Group "Administrators"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/get-localgroupmember?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/get-localgroupmember?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/get-localgroupmember?view=powershell-5.1)
 
 ### Get-LocalUser
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -4380,11 +4347,11 @@ Get-LocalUser [[-SID] <SecurityIdentifier[]>] [<CommonParameters>]
 Get-LocalUser -Name "AdminContoso02"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/get-localuser?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/get-localuser?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/get-localuser?view=powershell-5.1)
 
 ### Get-NonRemovableAppsPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -4401,11 +4368,11 @@ Get-NonRemovableAppsPolicy -Online [-WindowsDirectory <string>] [-SystemDrive <s
 PS> Get-NonRemovableAppsPolicy -Online
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-nonremovableappspolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-nonremovableappspolicy?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-nonremovableappspolicy?view=powershell-5.1)
 
 ### Get-OSConfiguration
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -4421,11 +4388,11 @@ Get-OSConfiguration [[-SourceId] <string>] [[-FriendlyName] <string>] [<CommonPa
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfiguration?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfiguration?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfiguration?view=windowsserver2025-ps)
 
 ### Get-OsConfigurationDocument
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -4442,11 +4409,11 @@ Get-OsConfigurationDocument [[-Id] <string>] [[-SourceId] <string>] [[-FriendlyN
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationdocument?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationdocument?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationdocument?view=windowsserver2025-ps)
 
 ### Get-OsConfigurationDocumentContent
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -4462,11 +4429,11 @@ Get-OsConfigurationDocumentContent [-Id] <string> [[-SourceId] <string>] [[-Frie
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationdocumentcontent?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationdocumentcontent?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationdocumentcontent?view=powershell-5.1)
 
 ### Get-OsConfigurationDocumentResult
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -4482,18 +4449,18 @@ Get-OsConfigurationDocumentResult [-Id] <string> [[-SourceId] <string>] [[-Frien
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationdocumentresult?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationdocumentresult?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationdocumentresult?view=powershell-5.1)
 
 ### Get-OsConfigurationProperty
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
 语法：
 
 ```powershell
-Get-OsConfigurationProperty [-Name] <string> [[-SourceId] <string>] [[-FriendlyName] <string>] [[-Id] <string>] [<CommonParameters>]
+Get-OsConfigurationProperty [-Name] <string> [[-SourceId] <string>] [[-FriendlyName] <string>] [<CommonParameters>]
 ```
 
 示例：
@@ -4502,11 +4469,11 @@ Get-OsConfigurationProperty [-Name] <string> [[-SourceId] <string>] [[-FriendlyN
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationproperty?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationproperty?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/get-osconfigurationproperty?view=windowsserver2025-ps)
 
 ### Get-OSConfigurationScenarioDefinition
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -4522,7 +4489,7 @@ Get-OsConfigurationScenarioDefinition [-Name] <string> [-Version] <string> [-Sch
 
 ### Get-OSConfigurationScenarioDefinitionInfo
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -4538,7 +4505,7 @@ Get-OsConfigurationScenarioDefinitionInfo [[-Name] <string>] [[-Version] <string
 
 ### Get-PfxData
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -4556,11 +4523,11 @@ $mypwd = ConvertTo-SecureString -String '1234' -Force -AsPlainText
 $mypfx = Get-PfxData -FilePath C:\mypfx.pfx -Password $mypwd
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-pfxdata?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-pfxdata?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/get-pfxdata?view=powershell-5.1)
 
 ### Get-PmemDedicatedMemory
 
-版本：都有
+版本：仅5.1
 
 模块：PersistentMemory
 
@@ -4577,11 +4544,11 @@ Get-PmemDedicatedMemory [[-DeviceNumber] <uint32[]>] [<CommonParameters>]
 Get-PmemDedicatedMemory
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemdedicatedmemory?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemdedicatedmemory?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemdedicatedmemory?view=powershell-5.1)
 
 ### Get-PmemDisk
 
-版本：都有
+版本：仅5.1
 
 模块：PersistentMemory
 
@@ -4601,11 +4568,11 @@ Get-PmemDisk [-InputObject <ciminstance>] [<CommonParameters>]
 Get-PmemDisk
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemdisk?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemdisk?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemdisk?view=powershell-5.1)
 
 ### Get-PmemPhysicalDevice
 
-版本：都有
+版本：仅5.1
 
 模块：PersistentMemory
 
@@ -4625,11 +4592,11 @@ Get-PmemPhysicalDevice [-InputObject <ciminstance>] [<CommonParameters>]
 Get-PmemPhysicalDevice
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemphysicaldevice?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemphysicaldevice?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemphysicaldevice?view=powershell-5.1)
 
 ### Get-PmemUnusedRegion
 
-版本：都有
+版本：仅5.1
 
 模块：PersistentMemory
 
@@ -4645,11 +4612,11 @@ Get-PmemUnusedRegion [[-RegionId] <uint32[]>] [<CommonParameters>]
 Get-PmemUnusedRegion
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemunusedregion?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemunusedregion?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/get-pmemunusedregion?view=powershell-5.1)
 
 ### Get-ProcessMitigation
 
-版本：都有
+版本：仅5.1
 
 模块：ProcessMitigations
 
@@ -4669,11 +4636,11 @@ Get-ProcessMitigation [-System] [<CommonParameters>]
 PS C:\> Get-ProcessMitigation -Name notepad.exe -RunningProcess
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/processmitigations/get-processmitigation?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/processmitigations/get-processmitigation?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/processmitigations/get-processmitigation?view=powershell-5.1)
 
 ### Get-ProvisioningPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Provisioning
 
@@ -4691,7 +4658,7 @@ Get-ProvisioningPackage [-AllInstalledPackages] [-LogsDirectoryPath <string>] [-
 PS C:\> Get-ProvisioningPackage -PackagePath c:\test\testppkg.ppkg
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/get-provisioningpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/get-provisioningpackage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/get-provisioningpackage?view=powershell-5.1)
 
 ### Get-PSSessionCapability
 
@@ -4755,7 +4722,7 @@ PS C:\> Get-PSSnapin
 
 ### Get-RecoveryManagementPluginAltitude
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -4772,7 +4739,7 @@ Get-RecoveryManagementPluginAltitude -ClassID <string> -Online [-WindowsDirector
 
 ### Get-RecoveryManagementPluginInfo
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -4789,7 +4756,7 @@ Get-RecoveryManagementPluginInfo -ClassID <string> -Online [-WindowsDirectory <s
 
 ### Get-RecoveryManagementPlugins
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -4806,7 +4773,7 @@ Get-RecoveryManagementPlugins -Online [-WindowsDirectory <string>] [-SystemDrive
 
 ### Get-RecoveryRemoteManagementStatus
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -4823,7 +4790,7 @@ Get-RecoveryRemoteManagementStatus -Online [-WindowsDirectory <string>] [-System
 
 ### Get-ReFSDedupSchedule
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -4839,11 +4806,11 @@ Get-ReFSDedupSchedule [-Volume] <string> [<CommonParameters>]
 Get-ReFSDedupSchedule -Volume "D:"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/get-refsdedupschedule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/get-refsdedupschedule?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/get-refsdedupschedule?view=windowsserver2025-ps)
 
 ### Get-ReFSDedupScrubSchedule
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -4859,11 +4826,11 @@ Get-ReFSDedupScrubSchedule [-Volume] <string> [<CommonParameters>]
 Get-ReFSDedupScrubSchedule -Volume "D:"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/get-refsdedupscrubschedule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/get-refsdedupscrubschedule?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/get-refsdedupscrubschedule?view=powershell-5.1)
 
 ### Get-ReFSDedupStatus
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -4879,11 +4846,11 @@ Get-ReFSDedupStatus [-Volume] <string> [<CommonParameters>]
 Get-ReFSDedupStatus -Volume "D:"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/get-refsdedupstatus?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/get-refsdedupstatus?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/get-refsdedupstatus?view=powershell-5.1)
 
 ### Get-ScheduledJob
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -4900,11 +4867,11 @@ Get-ScheduledJob [-Name] <string[]> [<CommonParameters>]
 Get-ScheduledJob
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/get-scheduledjob?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/get-scheduledjob?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/get-scheduledjob?view=powershell-5.1)
 
 ### Get-ScheduledJobOption
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -4922,11 +4889,11 @@ Get-ScheduledJobOption [-Name] <string> [<CommonParameters>]
 Get-ScheduledJobOption -Name "*Backup*"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/get-scheduledjoboption?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/get-scheduledjoboption?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/get-scheduledjoboption?view=powershell-5.1)
 
 ### Get-SecureBootPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：SecureBoot
 
@@ -4944,11 +4911,11 @@ Publisher: 77fa9abd-0359-4d32-bd60-28f4e78f784b
 Version : 1
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/get-securebootpolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/get-securebootpolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/get-securebootpolicy?view=windowsserver2025-ps)
 
 ### Get-SecureBootSVN
 
-版本：都有
+版本：仅5.1
 
 模块：SecureBoot
 
@@ -4964,7 +4931,7 @@ Get-SecureBootSVN [-BootManagerPath <string>] [<CommonParameters>]
 
 ### Get-SecureBootUEFI
 
-版本：都有
+版本：仅5.1
 
 模块：SecureBoot
 
@@ -4986,7 +4953,7 @@ Attributes : NON VOLATILE
  TIME BASED AUTHENTICATED WRITE ACCESS
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/get-securebootuefi?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/get-securebootuefi?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/get-securebootuefi?view=powershell-5.1)
 
 ### Get-Service
 
@@ -5034,7 +5001,7 @@ Get-Service
 
 ### Get-SystemDriver
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -5076,11 +5043,11 @@ OpusInfos : {}
 Signers : {}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-systemdriver?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-systemdriver?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/get-systemdriver?view=powershell-5.1)
 
 ### Get-SystemPreferredUILanguage
 
-版本：都有
+版本：仅5.1
 
 模块：LanguagePackManagement
 
@@ -5096,11 +5063,11 @@ Get-SystemPreferredUILanguage [<CommonParameters>]
 Get-SystemPreferredUILanguage
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/get-systempreferreduilanguage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/get-systempreferreduilanguage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/get-systempreferreduilanguage?view=powershell-5.1)
 
 ### Get-TlsCipherSuite
 
-版本：都有
+版本：仅5.1
 
 模块：TLS
 
@@ -5116,11 +5083,11 @@ Get-TlsCipherSuite [[-Name] <string>] [<CommonParameters>]
 Get-TlsCipherSuite
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/get-tlsciphersuite?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/tls/get-tlsciphersuite?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/tls/get-tlsciphersuite?view=windowsserver2025-ps)
 
 ### Get-TlsEccCurve
 
-版本：都有
+版本：仅5.1
 
 模块：TLS
 
@@ -5136,11 +5103,11 @@ Get-TlsEccCurve [[-Name] <string>] [<CommonParameters>]
 Get-TlsEccCurve
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/get-tlsecccurve?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/tls/get-tlsecccurve?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/get-tlsecccurve?view=powershell-5.1)
 
 ### Get-Tpm
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
@@ -5156,11 +5123,11 @@ Get-Tpm [<CommonParameters>]
 PS C:\> Get-Tpm
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/get-tpm?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/get-tpm?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/get-tpm?view=windowsserver2025-ps)
 
 ### Get-TpmEndorsementKeyInfo
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
@@ -5201,11 +5168,11 @@ Certification Authority, O=Contoso, C=KR
 AdditionalCertificates : {}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/get-tpmendorsementkeyinfo?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/get-tpmendorsementkeyinfo?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/get-tpmendorsementkeyinfo?view=windowsserver2025-ps)
 
 ### Get-TpmSupportedFeature
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
@@ -5222,11 +5189,11 @@ PS C:\> Get-TpmSupportedFeature -FeatureList "Key Attestation"
 key attestation
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/get-tpmsupportedfeature?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/get-tpmsupportedfeature?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/get-tpmsupportedfeature?view=windowsserver2025-ps)
 
 ### Get-Transaction
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -5243,11 +5210,11 @@ Start-Transaction
 Get-Transaction
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-transaction?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-transaction?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-transaction?view=powershell-5.1)
 
 ### Get-TroubleshootingPack
 
-版本：都有
+版本：仅5.1
 
 模块：TroubleshootingPack
 
@@ -5263,11 +5230,11 @@ Get-TroubleshootingPack [-Path] <string> [-AnswerFile <string>] [<CommonParamete
 PS C:\> Get-TroubleshootingPack -Path "C:\Windows\Diagnostics\System\Audio"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/troubleshootingpack/get-troubleshootingpack?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/troubleshootingpack/get-troubleshootingpack?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/troubleshootingpack/get-troubleshootingpack?view=windowsserver2025-ps)
 
 ### Get-TrustedProvisioningCertificate
 
-版本：都有
+版本：仅5.1
 
 模块：Provisioning
 
@@ -5283,7 +5250,7 @@ Get-TrustedProvisioningCertificate [[-Thumbprint] <string>] [-LogsDirectoryPath 
 PS C:\> Get-TrustedProvisioningCertificate
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/get-trustedprovisioningcertificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/get-trustedprovisioningcertificate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/get-trustedprovisioningcertificate?view=windowsserver2025-ps)
 
 ### Get-UevAppxPackage
 
@@ -5437,7 +5404,7 @@ MicrosoftLync2010 communicator.exe 4.0-4.0 4.0-4.0
 
 ### Get-WheaMemoryPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：Whea
 
@@ -5459,11 +5426,11 @@ PFAErrorThreshold : 16
 PFATimeOut : 86400
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/whea/get-wheamemorypolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/whea/get-wheamemorypolicy?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/whea/get-wheamemorypolicy?view=powershell-5.1)
 
 ### Get-WIMBootEntry
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -5479,11 +5446,11 @@ Get-WIMBootEntry -Path <string> [-LogPath <string>] [-ScratchDirectory <string>]
 PS C:\> Get-WIMBootEntry -Path "C:\"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-wimbootentry?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-wimbootentry?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-wimbootentry?view=powershell-5.1)
 
 ### Get-WinAcceptLanguageFromLanguageListOptOut
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -5500,11 +5467,11 @@ PS C:\> Get-WinAcceptLanguageFromLanguageListOptOut
 TRUE
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winacceptlanguagefromlanguagelistoptout?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winacceptlanguagefromlanguagelistoptout?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winacceptlanguagefromlanguagelistoptout?view=powershell-5.1)
 
 ### Get-WinCultureFromLanguageListOptOut
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -5520,11 +5487,11 @@ Get-WinCultureFromLanguageListOptOut [<CommonParameters>]
 PS C:\> Get-WinCultureFromLanguageListOptOut
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winculturefromlanguagelistoptout?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winculturefromlanguagelistoptout?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winculturefromlanguagelistoptout?view=powershell-5.1)
 
 ### Get-WinDefaultInputMethodOverride
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -5543,11 +5510,11 @@ InputMethodTip Keyboard name
 0409:00000409 English (United States) - US
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-windefaultinputmethodoverride?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-windefaultinputmethodoverride?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-windefaultinputmethodoverride?view=powershell-5.1)
 
 ### Get-WindowsCapability
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -5564,11 +5531,11 @@ Get-WindowsCapability -Online [-Name <string>] [-LimitAccess] [-Source <string[]
 PS C:\> Get-WindowsCapability -Path "C:\offline" -Name "Language.TextToSpeech~~~fr-FR~0.0.1.0"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowscapability?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowscapability?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowscapability?view=powershell-5.1)
 
 ### Get-WindowsDeveloperLicense
 
-版本：都有
+版本：仅5.1
 
 模块：WindowsDeveloperLicense
 
@@ -5584,11 +5551,11 @@ Get-WindowsDeveloperLicense [<CommonParameters>]
 PS C:\> Get-WindowsDeveloperLicense
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowsdeveloperlicense/get-windowsdeveloperlicense?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/windowsdeveloperlicense/get-windowsdeveloperlicense?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowsdeveloperlicense/get-windowsdeveloperlicense?view=powershell-5.1)
 
 ### Get-WindowsDriver
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -5605,11 +5572,11 @@ Get-WindowsDriver -Online [-All] [-Driver <string>] [-WindowsDirectory <string>]
 PS C:\> Get-WindowsDriver -Online -All
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsdriver?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsdriver?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsdriver?view=powershell-5.1)
 
 ### Get-WindowsEdition
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -5626,11 +5593,11 @@ Get-WindowsEdition -Online [-Target] [-WindowsDirectory <string>] [-SystemDrive 
 PS C:\> Get-WindowsEdition -Online
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsedition?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsedition?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsedition?view=powershell-5.1)
 
 ### Get-WindowsErrorReporting
 
-版本：都有
+版本：仅5.1
 
 模块：WindowsErrorReporting
 
@@ -5646,11 +5613,11 @@ Get-WindowsErrorReporting [<CommonParameters>]
 PS C:\> Get-WindowsErrorReporting
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowserrorreporting/get-windowserrorreporting?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/windowserrorreporting/get-windowserrorreporting?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/windowserrorreporting/get-windowserrorreporting?view=windowsserver2025-ps)
 
 ### Get-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -5678,11 +5645,11 @@ Get-WindowsImage -Mounted [-LogPath <string>] [-ScratchDirectory <string>] [-Log
 PS C:\> Get-WindowsImage -Mounted
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsimage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsimage?view=powershell-5.1)
 
 ### Get-WindowsImageContent
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -5708,11 +5675,11 @@ Get-WindowsImageContent -ImagePath <string> [-LogPath <string>] [-ScratchDirecto
 PS C:\> Get-WindowsImageContent -ImagePath "c:\imagestore\install.wim" -Index 1
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsimagecontent?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsimagecontent?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsimagecontent?view=powershell-5.1)
 
 ### Get-WindowsOptionalFeature
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -5729,11 +5696,11 @@ Get-WindowsOptionalFeature -Online [-FeatureName <string>] [-PackageName <string
 PS C:\> Get-WindowsOptionalFeature -Online
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsoptionalfeature?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsoptionalfeature?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsoptionalfeature?view=powershell-5.1)
 
 ### Get-WindowsPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -5750,11 +5717,11 @@ Get-WindowsPackage -Online [-PackagePath <string>] [-PackageName <string>] [-Win
 PS C:\> Get-WindowsPackage -Path "c:\offline"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowspackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowspackage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowspackage?view=powershell-5.1)
 
 ### Get-WindowsReservedStorageState
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -5770,11 +5737,11 @@ Get-WindowsReservedStorageState [-LogPath <string>] [-ScratchDirectory <string>]
 PS C:\> Get-WindowsReservedStorageState
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsreservedstoragestate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsreservedstoragestate?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/get-windowsreservedstoragestate?view=powershell-5.1)
 
 ### Get-WindowsSearchSetting
 
-版本：都有
+版本：仅5.1
 
 模块：WindowsSearch
 
@@ -5790,7 +5757,7 @@ Get-WindowsSearchSetting [<CommonParameters>]
 PS C:\> Get-WindowsSearchSetting
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowssearch/get-windowssearchsetting?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/windowssearch/get-windowssearchsetting?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowssearch/get-windowssearchsetting?view=powershell-5.1)
 
 ### Get-WinEvent
 
@@ -5820,7 +5787,7 @@ Get-WinEvent -ListLog *
 
 ### Get-WinHomeLocation
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -5839,11 +5806,11 @@ HomeLocation Description
 244 United States
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winhomelocation?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winhomelocation?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winhomelocation?view=powershell-5.1)
 
 ### Get-WinLanguageBarOption
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -5862,11 +5829,11 @@ IsLegacyLanguageBar IsLegacySwitchingMode
 False False
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winlanguagebaroption?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winlanguagebaroption?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winlanguagebaroption?view=windowsserver2025-ps)
 
 ### Get-WinSystemLocale
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -5885,11 +5852,11 @@ LCID Name DisplayName
 1033 en-US English (United States)
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winsystemlocale?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winsystemlocale?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winsystemlocale?view=windowsserver2025-ps)
 
 ### Get-WinUILanguageOverride
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -5908,11 +5875,11 @@ LCID Name DisplayName
 1033 en-US English (United States)
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winuilanguageoverride?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winuilanguageoverride?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winuilanguageoverride?view=windowsserver2025-ps)
 
 ### Get-WinUserLanguageList
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -5942,11 +5909,11 @@ InputMethodTips : {040c:0000040c}
 Handwriting : False
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winuserlanguagelist?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winuserlanguagelist?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/international/get-winuserlanguagelist?view=windowsserver2025-ps)
 
 ### Get-WmiObject
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -5966,7 +5933,7 @@ Get-WmiObject [-Amended] [-AsJob] [-Impersonation <ImpersonationLevel>] [-Authen
 Get-WmiObject -Class Win32_Process
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-wmiobject?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-wmiobject?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-wmiobject?view=powershell-5.1)
 
 ### Get-WSManCredSSP
 
@@ -6011,7 +5978,7 @@ Get-WSManInstance -ResourceURI wmicimv2/Win32_Service -SelectorSet @{name="winrm
 
 ### Import-BcdStore
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -6027,11 +5994,11 @@ Import-BcdStore [-Path] <string> [-NoClean] [-Force] [-WhatIf] [-Confirm] [<Comm
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/import-bcdstore?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/import-bcdstore?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/import-bcdstore?view=windowsserver2025-ps)
 
 ### Import-BinaryMiLog
 
-版本：都有
+版本：仅5.1
 
 模块：CimCmdlets
 
@@ -6047,11 +6014,11 @@ Import-BinaryMiLog [-Path] <string> [<CommonParameters>]
 Import-BinaryMiLog -Path "Processes.bmil"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/cimcmdlets/import-binarymilog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/cimcmdlets/import-binarymilog?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/cimcmdlets/import-binarymilog?view=powershell-5.1)
 
 ### Import-Certificate
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -6071,11 +6038,11 @@ $params = @{
 Import-Certificate @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/import-certificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/import-certificate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/import-certificate?view=windowsserver2025-ps)
 
 ### Import-Counter
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Diagnostics
 
@@ -6093,11 +6060,11 @@ Import-Counter [-Path] <string[]> [-Summary] [<CommonParameters>]
 $data = Import-Counter -Path ProcessorData.csv
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.diagnostics/import-counter?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.diagnostics/import-counter?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.diagnostics/import-counter?view=powershell-5.1)
 
 ### Import-PfxCertificate
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -6120,11 +6087,11 @@ $params = @{
 Import-PfxCertificate @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/import-pfxcertificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/import-pfxcertificate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/import-pfxcertificate?view=windowsserver2025-ps)
 
 ### Import-StartLayout
 
-版本：都有
+版本：仅5.1
 
 模块：StartLayout
 
@@ -6141,11 +6108,11 @@ Import-StartLayout -LayoutLiteralPath <string> -MountLiteralPath <string> [-What
 PS C:\> Import-StartLayout -LayoutPath "Layout.xml" -MountPath "C:\"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/startlayout/import-startlayout?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/startlayout/import-startlayout?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/startlayout/import-startlayout?view=windowsserver2025-ps)
 
 ### Import-TpmOwnerAuth
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
@@ -6170,7 +6137,7 @@ LockedOut : False
 SelfTest : {191, 191, 245, 191...}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/import-tpmownerauth?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/import-tpmownerauth?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/import-tpmownerauth?view=windowsserver2025-ps)
 
 ### Import-UevConfiguration
 
@@ -6194,7 +6161,7 @@ PS C:\> Import-UevConfiguration -Path "ContosoUev.uev"
 
 ### Initialize-PmemPhysicalDevice
 
-版本：都有
+版本：仅5.1
 
 模块：PersistentMemory
 
@@ -6210,11 +6177,11 @@ Initialize-PmemPhysicalDevice -DeviceId <string> [-Force] [-WhatIf] [-Confirm] [
 Get-PmemPhysicalDevice | Initialize-PmemPhysicalDevice
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/initialize-pmemphysicaldevice?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/initialize-pmemphysicaldevice?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/initialize-pmemphysicaldevice?view=windowsserver2025-ps)
 
 ### Initialize-Tpm
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
@@ -6235,11 +6202,11 @@ ClearRequired : True
 PhysicalPresenceRequired : True
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/initialize-tpm?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/initialize-tpm?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/initialize-tpm?view=windowsserver2025-ps)
 
 ### Install-Language
 
-版本：都有
+版本：仅5.1
 
 模块：LanguagePackManagement
 
@@ -6255,11 +6222,11 @@ Install-Language [-Language] <string> [-CopyToSettings] [-ExcludeFeatures] [-AsJ
 Install-Language ja-JP
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/install-language?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/install-language?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/install-language?view=windowsserver2025-ps)
 
 ### Install-ProvisioningPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Provisioning
 
@@ -6275,11 +6242,11 @@ Install-ProvisioningPackage [-PackagePath] <string> [-ForceInstall] [-QuietInsta
 PS C:\> Install-ProvisioningPackage -PackagePath C:\mypackage.ppkg -QuietInstall
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/install-provisioningpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/install-provisioningpackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/install-provisioningpackage?view=windowsserver2025-ps)
 
 ### Install-TrustedProvisioningCertificate
 
-版本：都有
+版本：仅5.1
 
 模块：Provisioning
 
@@ -6295,7 +6262,7 @@ Install-TrustedProvisioningCertificate [-CertificatePath] <string> [-ForceInstal
 PS C:\> Install-TrustedProvisioningCertificate -CertificatePath trustedCert.cer
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/install-trustedprovisioningcertificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/install-trustedprovisioningcertificate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/install-trustedprovisioningcertificate?view=windowsserver2025-ps)
 
 ### Invoke-CimMethod
 
@@ -6327,8 +6294,8 @@ Invoke-CimMethod [-InputObject] <ciminstance> [[-Arguments] <IDictionary>] [-Met
 Invoke-CimMethod [-InputObject] <ciminstance> [[-Arguments] <IDictionary>] [-MethodName] <string> -CimSession <CimSession[]> [-ResourceUri <uri>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Invoke-CimMethod [[-Arguments] <IDictionary>] [-MethodName] <string> -ResourceUri <uri> [-ComputerName <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Invoke-CimMethod [[-Arguments] <IDictionary>] [-MethodName] <string> -ResourceUri <uri> -CimSession <CimSession[]> [-Namespace <string>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Invoke-CimMethod [-CimClass] <cimclass> [[-Arguments] <IDictionary>] [-MethodName] <string> [-ComputerName <string[]>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Invoke-CimMethod [-CimClass] <cimclass> [[-Arguments] <IDictionary>] [-MethodName] <string> -CimSession <CimSession[]> [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-CimMethod [-CimClass] <cimclass> [[-Arguments] <IDictionary>] [-MethodName] <string> [-ComputerName <string[]>] [-OperationTimeoutSec <UInt32>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Invoke-CimMethod [-CimClass] <cimclass> [[-Arguments] <IDictionary>] [-MethodName] <string> -CimSession <CimSession[]> [-OperationTimeoutSec <UInt32>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Invoke-CimMethod [[-Arguments] <IDictionary>] [-MethodName] <string> -Query <string> [-QueryDialect <string>] [-ComputerName <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Invoke-CimMethod [[-Arguments] <IDictionary>] [-MethodName] <string> -Query <string> -CimSession <CimSession[]> [-QueryDialect <string>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -6347,14 +6314,14 @@ Invoke-CimMethod @method
 
 ### Invoke-CommandInDesktopPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
 语法：
 
 ```powershell
-Invoke-CommandInDesktopPackage [-PackageFamilyName] <string> [[-AppId] <string>] [-Command] <string> [[-Args] <string>] [-PreventBreakaway] [<CommonParameters>]
+Invoke-CommandInDesktopPackage [-PackageFamilyName] <string> [-AppId] <string> [-Command] <string> [[-Args] <string>] [-PreventBreakaway] [<CommonParameters>]
 ```
 
 示例：调用记事本读取虚拟化文件
@@ -6368,18 +6335,18 @@ $params = @{
 Invoke-CommandInDesktopPackage @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/invoke-commandindesktoppackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/invoke-commandindesktoppackage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/invoke-commandindesktoppackage?view=powershell-5.1)
 
 ### Invoke-DscResource
 
-版本：都有
+版本：仅7
 
 模块：PSDesiredStateConfiguration
 
 语法：
 
 ```powershell
-Invoke-DscResource [-Name] <string> [-Method] <string> -ModuleName <ModuleSpecification> -Property <hashtable> [<CommonParameters>]
+Invoke-DscResource [-Name] <string> [[-ModuleName] <ModuleSpecification>] [-Method] <string> [-Property] <hashtable> [<CommonParameters>]
 ```
 
 示例：通过指定资源的必需属性调用 Set 方法
@@ -6391,18 +6358,18 @@ Invoke-DscResource -Name WindowsProcess -Method Set -ModuleName PSDesiredStateCo
 }
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/invoke-dscresource?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/invoke-dscresource?view=powershell-7.5)
+出处：[官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/invoke-dscresource?view=powershell-7.5)
 
 ### Invoke-LapsPolicyProcessing
 
-版本：都有
+版本：仅5.1
 
 模块：LAPS
 
 语法：
 
 ```powershell
-Invoke-LapsPolicyProcessing [<CommonParameters>]
+Invoke-LapsPolicyProcessing
 ```
 
 示例：
@@ -6411,11 +6378,11 @@ Invoke-LapsPolicyProcessing [<CommonParameters>]
 Invoke-LapsPolicyProcessing
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/laps/invoke-lapspolicyprocessing?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/laps/invoke-lapspolicyprocessing?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/laps/invoke-lapspolicyprocessing?view=windowsserver2025-ps)
 
 ### Invoke-TroubleshootingPack
 
-版本：都有
+版本：仅5.1
 
 模块：TroubleshootingPack
 
@@ -6431,11 +6398,11 @@ Invoke-TroubleshootingPack [-Pack] <DiagPack> [-AnswerFile <string>] [-Result <s
 PS C:\> Get-TroubleshootingPack -Path "C:\Windows\Diagnostics\System\Audio" | Invoke-TroubleshootingPack
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/troubleshootingpack/invoke-troubleshootingpack?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/troubleshootingpack/invoke-troubleshootingpack?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/troubleshootingpack/invoke-troubleshootingpack?view=powershell-5.1)
 
 ### Invoke-WmiMethod
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -6458,7 +6425,7 @@ Get-WmiObject Win32_Volume |
  Select-Object -ExpandProperty Definition
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/invoke-wmimethod?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/invoke-wmimethod?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/invoke-wmimethod?view=powershell-5.1)
 
 ### Invoke-WSManAction
 
@@ -6489,7 +6456,7 @@ Invoke-WSManAction @params
 
 ### Join-DtcDiagnosticResourceManager
 
-版本：都有
+版本：仅5.1
 
 模块：MsDtc
 
@@ -6506,11 +6473,11 @@ PS C:\> $Transaction = New-DtcDiagnosticTransaction
 PS C:\> Join-DtcDiagnosticResourceManager -Transaction $Transaction
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/join-dtcdiagnosticresourcemanager?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/join-dtcdiagnosticresourcemanager?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/join-dtcdiagnosticresourcemanager?view=powershell-5.1)
 
 ### Limit-EventLog
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -6526,11 +6493,11 @@ Limit-EventLog [-LogName] <string[]> [-ComputerName <string[]>] [-RetentionDays 
 Limit-EventLog -LogName "Windows PowerShell" -MaximumSize 20KB
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/limit-eventlog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/limit-eventlog?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/limit-eventlog?view=powershell-5.1)
 
 ### Merge-CIPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -6594,7 +6561,7 @@ FileException : False
 UserMode : False
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/merge-cipolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/merge-cipolicy?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/merge-cipolicy?view=powershell-5.1)
 
 ### Mount-AppvClientConnectionGroup
 
@@ -6642,7 +6609,7 @@ PS C:\> Mount-AppvClientPackage -Name "MyApp" -Version 2
 
 ### Mount-AppxVolume
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -6658,11 +6625,11 @@ Mount-AppxVolume [-Volume] <AppxVolume[]> [-WhatIf] [-Confirm] [<CommonParameter
 Mount-AppxVolume -Volume E:\
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/mount-appxvolume?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/mount-appxvolume?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/mount-appxvolume?view=powershell-5.1)
 
 ### Mount-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -6671,17 +6638,15 @@ Mount-AppxVolume -Volume E:\
 ```powershell
 Mount-WindowsImage -Path <string> -ImagePath <string> -Index <uint32> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Mount-WindowsImage -Path <string> -ImagePath <string> -Name <string> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Mount-WindowsImage -Path <string> -ImagePath <string> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Mount-WindowsImage -Path <string> -Remount [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Mount-WindowsImage -Path <string> [-Remount] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 语法（7）：
 
 ```powershell
-Mount-WindowsImage -Path <string> -ImagePath <string> -Index <uint> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Mount-WindowsImage -Path <string> -ImagePath <string> -Index <UInt32> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Mount-WindowsImage -Path <string> -ImagePath <string> -Name <string> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Mount-WindowsImage -Path <string> -ImagePath <string> [-ReadOnly] [-Optimize] [-CheckIntegrity] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Mount-WindowsImage -Path <string> -Remount [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Mount-WindowsImage -Path <string> [-Remount] [-SupportEa] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：将 install.vhd 文件中的映像装载到目录
@@ -6690,11 +6655,11 @@ Mount-WindowsImage -Path <string> -Remount [-SupportEa] [-LogPath <string>] [-Sc
 PS C:\> Mount-WindowsImage -ImagePath "c:\imagestore\install.vhd" -Index 1 -Path "c:\offline"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/mount-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/mount-windowsimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/mount-windowsimage?view=windowsserver2025-ps)
 
 ### Move-AppxPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -6710,11 +6675,11 @@ Move-AppxPackage [-Package] <string[]> [-Volume] <AppxVolume> [-WhatIf] [-Confir
 Move-AppxPackage -Package "package1_1.0.0.0_neutral__8wekyb3d8bbwe" -Volume F:\
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/move-appxpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/move-appxpackage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/move-appxpackage?view=powershell-5.1)
 
 ### New-AppLockerPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：AppLocker
 
@@ -6722,7 +6687,7 @@ Move-AppxPackage -Package "package1_1.0.0.0_neutral__8wekyb3d8bbwe" -Volume F:\
 
 ```powershell
 New-AppLockerPolicy [-FileInformation] <List[FileInformation]> [-AllowWindows] [-RuleType <List[RuleType]>] [-RuleNamePrefix <string>] [-User <string>] [-Optimize] [-IgnoreMissingFileInformation] [-Xml] [-ServiceEnforcement <ServiceEnforcementMode>] [<CommonParameters>]
-New-AppLockerPolicy -AllowWindows [-RuleType <List[RuleType]>] [-RuleNamePrefix <string>] [-User <string>] [-Optimize] [-IgnoreMissingFileInformation] [-Xml] [-ServiceEnforcement <ServiceEnforcementMode>] [<CommonParameters>]
+New-AppLockerPolicy [-AllowWindows] [-RuleType <List[RuleType]>] [-RuleNamePrefix <string>] [-User <string>] [-Optimize] [-IgnoreMissingFileInformation] [-Xml] [-ServiceEnforcement <ServiceEnforcementMode>] [<CommonParameters>]
 ```
 
 示例：创建带允许规则的 AppLocker 策略
@@ -6735,11 +6700,11 @@ C:\PS>Get-ChildItem C:\Windows\System32\*.exe | Get-AppLockerFileInformation | N
  1 {Microsoft.Security.ApplicationId.Po... {Exe}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/new-applockerpolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/new-applockerpolicy?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/new-applockerpolicy?view=powershell-5.1)
 
 ### New-BcdEntry
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -6747,7 +6712,7 @@ C:\PS>Get-ChildItem C:\Windows\System32\*.exe | Get-AppLockerFileInformation | N
 
 ```powershell
 New-BcdEntry [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Application <string> [-Description <string>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-BcdEntry [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Device [-Description <string>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-BcdEntry [[-Id] <string>] [[-Store] <BcdStoreInfo>] [-Description <string>] [-Device] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 New-BcdEntry [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Inherit <string> [-Description <string>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 New-BcdEntry [-Id] <string> [[-Store] <BcdStoreInfo>] [-Description <string>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -6758,11 +6723,11 @@ New-BcdEntry [-Id] <string> [[-Store] <BcdStoreInfo>] [-Description <string>] [-
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/new-bcdentry?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/new-bcdentry?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/new-bcdentry?view=windowsserver2025-ps)
 
 ### New-BcdStore
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -6778,11 +6743,11 @@ New-BcdStore [-Path] <string> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/new-bcdstore?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/new-bcdstore?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/new-bcdstore?view=windowsserver2025-ps)
 
 ### New-CertificateNotificationTask
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -6804,7 +6769,7 @@ $params = @{
 New-CertificateNotificationTask @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/new-certificatenotificationtask?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/new-certificatenotificationtask?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/new-certificatenotificationtask?view=windowsserver2025-ps)
 
 ### New-CimInstance
 
@@ -6826,12 +6791,12 @@ New-CimInstance [-CimClass] <cimclass> [[-Property] <IDictionary>] [-OperationTi
 语法（7）：
 
 ```powershell
-New-CimInstance [-ClassName] <string> [[-Property] <IDictionary>] [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-ComputerName <string[]>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-CimInstance [-ClassName] <string> [[-Property] <IDictionary>] -CimSession <CimSession[]> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-CimInstance [[-Property] <IDictionary>] -ResourceUri <uri> -CimSession <CimSession[]> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-CimInstance [[-Property] <IDictionary>] -ResourceUri <uri> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <uint>] [-ComputerName <string[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-CimInstance [-CimClass] <cimclass> [[-Property] <IDictionary>] -CimSession <CimSession[]> [-OperationTimeoutSec <uint>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
-New-CimInstance [-CimClass] <cimclass> [[-Property] <IDictionary>] [-OperationTimeoutSec <uint>] [-ComputerName <string[]>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [-ClassName] <string> [[-Property] <IDictionary>] [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <UInt32>] [-ComputerName <string[]>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [-ClassName] <string> [[-Property] <IDictionary>] -CimSession <CimSession[]> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <UInt32>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [[-Property] <IDictionary>] -ResourceUri <uri> -CimSession <CimSession[]> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <UInt32>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [[-Property] <IDictionary>] -ResourceUri <uri> [-Key <string[]>] [-Namespace <string>] [-OperationTimeoutSec <UInt32>] [-ComputerName <string[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [-CimClass] <cimclass> [[-Property] <IDictionary>] -CimSession <CimSession[]> [-OperationTimeoutSec <UInt32>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-CimInstance [-CimClass] <cimclass> [[-Property] <IDictionary>] [-OperationTimeoutSec <UInt32>] [-ComputerName <string[]>] [-ClientOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 示例：创建 CIM 类的实例
@@ -6908,7 +6873,7 @@ New-CimSession -ComputerName Server01 -SessionOption $so
 
 ### New-CIPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -7087,11 +7052,11 @@ Hash="DA737C142A51A73D82E6AD677474C8031486FDEF018A6FE9D178564F83AB284B" />
 </SiPolicy>
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/new-cipolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/new-cipolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/new-cipolicy?view=windowsserver2025-ps)
 
 ### New-CIPolicyRule
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -7148,11 +7113,11 @@ FileException : False
 UserMode : False
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/new-cipolicyrule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/new-cipolicyrule?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/new-cipolicyrule?view=windowsserver2025-ps)
 
 ### New-DtcDiagnosticTransaction
 
-版本：都有
+版本：仅5.1
 
 模块：MsDtc
 
@@ -7171,11 +7136,11 @@ Id
 4625a5a3-af35-465d-a331-f224d79e4c85
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/new-dtcdiagnostictransaction?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/new-dtcdiagnostictransaction?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/new-dtcdiagnostictransaction?view=windowsserver2025-ps)
 
 ### New-EventLog
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -7191,7 +7156,7 @@ New-EventLog [-LogName] <string> [-Source] <string[]> [[-ComputerName] <string[]
 New-EventLog -Source TestApp -LogName TestLog -MessageResourceFile C:\Test\TestApp.dll
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/new-eventlog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/new-eventlog?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/new-eventlog?view=powershell-5.1)
 
 ### New-FileCatalog
 
@@ -7220,7 +7185,7 @@ New-FileCatalog @newFileCatalogSplat
 
 ### New-JobTrigger
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -7240,11 +7205,11 @@ New-JobTrigger -AtLogOn [-RandomDelay <timespan>] [-User <string>] [<CommonParam
 New-JobTrigger -Once -At "1/20/2012 3:00 AM"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/new-jobtrigger?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/new-jobtrigger?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/new-jobtrigger?view=powershell-5.1)
 
 ### New-LocalGroup
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -7260,11 +7225,11 @@ New-LocalGroup [-Name] <string> [-Description <string>] [-WhatIf] [-Confirm] [<C
 New-LocalGroup -Name "SecurityGroup04"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/new-localgroup?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/new-localgroup?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/new-localgroup?view=powershell-5.1)
 
 ### New-LocalUser
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -7281,11 +7246,11 @@ New-LocalUser [-Name] <string> -NoPassword [-AccountExpires <datetime>] [-Accoun
 New-LocalUser -Name 'User02' -Description 'Description of this account.' -NoPassword
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/new-localuser?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/new-localuser?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/new-localuser?view=powershell-5.1)
 
 ### New-NetIPsecAuthProposal
 
-版本：都有
+版本：仅5.1
 
 模块：NetSecurity
 
@@ -7314,11 +7279,11 @@ PS C:\>$certAuthSet = New-NetIPsecPhase1AuthSet -DisplayName "Computer Certifica
 PS C:\>New-NetIPSecRule -DisplayName "Authenticate with Certificates Rule" -InboundSecurity Require -OutboundSecurity Request -Phase2AuthSet $certAuthSet.Name
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/new-netipsecauthproposal?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/new-netipsecauthproposal?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/new-netipsecauthproposal?view=powershell-5.1)
 
 ### New-NetIPsecMainModeCryptoProposal
 
-版本：都有
+版本：仅5.1
 
 模块：NetSecurity
 
@@ -7345,11 +7310,11 @@ PS C:\>$mMCryptoSet = New-NetIPsecMainModeCryptoSet -DisplayName "Main Mode Cryp
 PS C:\>New-NetIPsecMainModeRule -DisplayName "Main Mode Rule" -MainModeCryptoSet $mMCryptoSet.Name
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/new-netipsecmainmodecryptoproposal?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/new-netipsecmainmodecryptoproposal?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/new-netipsecmainmodecryptoproposal?view=windowsserver2025-ps)
 
 ### New-NetIPsecQuickModeCryptoProposal
 
-版本：都有
+版本：仅5.1
 
 模块：NetSecurity
 
@@ -7375,11 +7340,11 @@ PS C:\>$QMCryptoSet = New-NetIPsecQuickModeCryptoSet -DisplayName "esp:sha1-des3
 PS C:\>New-NetIPSecRule -DisplayName "Tunnel from HQ to Dallas Branch" -Mode Tunnel -LocalAddress 192.168.0.0/16 -RemoteAddress 192.157.0.0/16 -LocalTunnelEndpoint 1.1.1.1 -RemoteTunnelEndpoint 2.2.2.2 -InboundSecurity Require -OutboundSecurity Require -QuickModeCryptoSet $QMCryptoSet.Name
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/new-netipsecquickmodecryptoproposal?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/new-netipsecquickmodecryptoproposal?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/netsecurity/new-netipsecquickmodecryptoproposal?view=windowsserver2025-ps)
 
 ### New-PmemDedicatedMemory
 
-版本：都有
+版本：仅5.1
 
 模块：PersistentMemory
 
@@ -7395,11 +7360,11 @@ New-PmemDedicatedMemory -RegionId <uint32[]> [-FriendlyName <string[]>] [-SizeIn
 New-PmemDedicatedMemory -RegionId 1 -SizeInBytes 270582939648
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/new-pmemdedicatedmemory?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/new-pmemdedicatedmemory?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/new-pmemdedicatedmemory?view=windowsserver2025-ps)
 
 ### New-PmemDisk
 
-版本：都有
+版本：仅5.1
 
 模块：PersistentMemory
 
@@ -7416,11 +7381,11 @@ New-PmemDisk -DiskSizeInBytes <uint64[]> -Simulated [-AtomicityType <NAMESPACE_A
 New-PmemDisk -RegionId 1 -AtomicityType BlockTranslationTable
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/new-pmemdisk?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/new-pmemdisk?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/new-pmemdisk?view=windowsserver2025-ps)
 
 ### New-ProvisioningRepro
 
-版本：都有
+版本：仅5.1
 
 模块：Provisioning
 
@@ -7432,7 +7397,7 @@ New-PmemDisk -RegionId 1 -AtomicityType BlockTranslationTable
 
 ### New-PSWorkflowExecutionOption
 
-版本：都有
+版本：仅5.1
 
 模块：PSWorkflow
 
@@ -7448,11 +7413,11 @@ New-PSWorkflowExecutionOption [-PersistencePath <string>] [-MaxPersistenceStoreS
 New-PSWorkflowExecutionOption -MaxSessionsPerWorkflow 10 -MaxDisconnectedSessions 200
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psworkflow/new-psworkflowexecutionoption?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psworkflow/new-psworkflowexecutionoption?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psworkflow/new-psworkflowexecutionoption?view=powershell-5.1)
 
 ### New-ScheduledJobOption
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -7468,11 +7433,11 @@ New-ScheduledJobOption [-RunElevated] [-HideInTaskScheduler] [-RestartOnIdleResu
 New-ScheduledJobOption
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/new-scheduledjoboption?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/new-scheduledjoboption?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/new-scheduledjoboption?view=powershell-5.1)
 
 ### New-SelfSignedCertificate
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -7492,7 +7457,7 @@ $params = @{
 New-SelfSignedCertificate @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/new-selfsignedcertificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/new-selfsignedcertificate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/new-selfsignedcertificate?view=windowsserver2025-ps)
 
 ### New-Service
 
@@ -7522,7 +7487,7 @@ New-Service -Name "TestService" -BinaryPathName 'C:\WINDOWS\System32\svchost.exe
 
 ### New-TlsSessionTicketKey
 
-版本：都有
+版本：仅5.1
 
 模块：TLS
 
@@ -7539,11 +7504,11 @@ $Password = Read-Host -AsSecureString
 New-TlsSessionTicketKey -Password $Password -Path 'C:\KeyConfig\TlsSessionTicketKey.config'
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/tls/new-tlssessionticketkey?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/tls/new-tlssessionticketkey?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/tls/new-tlssessionticketkey?view=windowsserver2025-ps)
 
 ### New-WebServiceProxy
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -7561,11 +7526,11 @@ New-WebServiceProxy [-Uri] <uri> [[-Class] <string>] [[-Namespace] <string>] [-U
 $calc = New-WebServiceProxy -Uri "http://www.dneonline.com/calculator.asmx?wsdl"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/new-webserviceproxy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/new-webserviceproxy?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/new-webserviceproxy?view=powershell-5.1)
 
 ### New-WindowsCustomImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -7581,11 +7546,11 @@ New-WindowsCustomImage -CapturePath <string> [-ConfigFilePath <string>] [-CheckI
 PS C:\> New-WindowsCustomImage -CapturePath "c:\"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/new-windowscustomimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/new-windowscustomimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/new-windowscustomimage?view=windowsserver2025-ps)
 
 ### New-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -7601,7 +7566,7 @@ New-WindowsImage -ImagePath <string> -CapturePath <string> [-CompressionType <st
 PS C:\> New-WindowsImage -ImagePath "c:\imagestore\custom.wim" -CapturePath "d:\" -Name "Drive D"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/new-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/new-windowsimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/new-windowsimage?view=windowsserver2025-ps)
 
 ### New-WinEvent
 
@@ -7625,7 +7590,7 @@ New-WinEvent -ProviderName Microsoft-Windows-PowerShell -Id 45090 -Payload @("Wo
 
 ### New-WinUserLanguageList
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -7643,7 +7608,7 @@ PS C:\> $UserLanguageList.Add("fr-FR")
 PS C:\> Set-WinUserLanguageList -LanguageList $UserLanguageList
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/new-winuserlanguagelist?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/new-winuserlanguagelist?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/international/new-winuserlanguagelist?view=windowsserver2025-ps)
 
 ### New-WSManInstance
 
@@ -7691,14 +7656,15 @@ PS WSMan:\> dir
 
 ### Optimize-AppxProvisionedPackages
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
 语法：
 
 ```powershell
-Optimize-AppXProvisionedPackages -Path <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>] Optimize-AppXProvisionedPackages -Online [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Optimize-AppXProvisionedPackages -Path <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Optimize-AppXProvisionedPackages -Online [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：优化脱机 Windows 映像中的预配包
@@ -7707,11 +7673,11 @@ Optimize-AppXProvisionedPackages -Path <string> [-WindowsDirectory <string>] [-S
 PS> Optimize-AppXProvisionedPackages -Path ".\wim\image.wim"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/optimize-appxprovisionedpackages?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/optimize-appxprovisionedpackages?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/optimize-appxprovisionedpackages?view=windowsserver2025-ps)
 
 ### Optimize-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -7727,7 +7693,7 @@ Optimize-WindowsImage -OptimizationTarget <string> -Path <string> [-WindowsDirec
 PS C:\> Optimize-WindowsImage -Path "c:\" -OptimizationTarget "WIMBoot"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/optimize-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/optimize-windowsimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/optimize-windowsimage?view=windowsserver2025-ps)
 
 ### Out-GridView
 
@@ -7795,7 +7761,7 @@ PS C:\> Publish-AppvClientPackage -Name "MyApp" -Version 1 -Global -DynamicUserC
 
 ### Publish-DscConfiguration
 
-版本：都有
+版本：仅5.1
 
 模块：PSDesiredStateConfiguration
 
@@ -7812,11 +7778,11 @@ Publish-DscConfiguration [-Path] <string> -CimSession <CimSession[]> [-Force] [-
 Publish-DscConfiguration -Path '$home\WebServer' -ComputerName "ContosoWebServer" -Credential (get-credential Contoso\webadministrator)
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/publish-dscconfiguration?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/publish-dscconfiguration?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/publish-dscconfiguration?view=powershell-5.1)
 
 ### Receive-DtcDiagnosticTransaction
 
-版本：都有
+版本：仅5.1
 
 模块：MsDtc
 
@@ -7832,7 +7798,7 @@ Receive-DtcDiagnosticTransaction [[-ComputerName] <string>] [[-Port] <int>] [[-P
 PS C:\> Receive-DtcDiagnosticTransaction -ComputerName "Host1" -Port 17123 -PropagationMethod Pull
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/receive-dtcdiagnostictransaction?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/receive-dtcdiagnostictransaction?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/receive-dtcdiagnostictransaction?view=windowsserver2025-ps)
 
 ### Receive-PSSession
 
@@ -7949,22 +7915,15 @@ Register-PSSessionConfiguration @sessionConfiguration
 
 ### Register-RecoveryManagementPlugin
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
-语法（5.1）：
+语法：
 
 ```powershell
 Register-RecoveryManagementPlugin -BinaryLocation <string> -ClassID <string> -CapabilitiesRequired <uint32> -Path <string> [-CapabilitiesDesired <uint32>] [-ThreadingModel <string>] [-ExceptionHandling <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Register-RecoveryManagementPlugin -BinaryLocation <string> -ClassID <string> -CapabilitiesRequired <uint32> -Online [-CapabilitiesDesired <uint32>] [-ThreadingModel <string>] [-ExceptionHandling <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-```
-
-语法（7）：
-
-```powershell
-Register-RecoveryManagementPlugin -BinaryLocation <string> -ClassID <string> -CapabilitiesRequired <uint> -Path <string> [-CapabilitiesDesired <uint>] [-ThreadingModel <string>] [-ExceptionHandling <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Register-RecoveryManagementPlugin -BinaryLocation <string> -ClassID <string> -CapabilitiesRequired <uint> -Online [-CapabilitiesDesired <uint>] [-ThreadingModel <string>] [-ExceptionHandling <string>] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：暂无
@@ -7973,7 +7932,7 @@ Register-RecoveryManagementPlugin -BinaryLocation <string> -ClassID <string> -Ca
 
 ### Register-ScheduledJob
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -7993,7 +7952,7 @@ Register-ScheduledJob -Name "Archive-Scripts" -ScriptBlock {
 }
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/register-scheduledjob?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/register-scheduledjob?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/register-scheduledjob?view=powershell-5.1)
 
 ### Register-UevTemplate
 
@@ -8018,7 +7977,7 @@ PS C:\> Register-UevTemplate -Path "MicrosoftCalculator.xml"
 
 ### Register-WmiEvent
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -8035,11 +7994,11 @@ Register-WmiEvent [-Query] <string> [[-SourceIdentifier] <string>] [[-Action] <s
 Register-WmiEvent -Class 'Win32_ProcessStartTrace' -SourceIdentifier "ProcessStarted"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/register-wmievent?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/register-wmievent?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/register-wmievent?view=powershell-5.1)
 
 ### Remove-AppProvisionedSharedPackageContainer
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -8056,14 +8015,14 @@ Remove-AppProvisionedSharedPackageContainer -Name <string> -Online [-WindowsDire
 
 ### Remove-AppSharedPackageContainer
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
 语法：
 
 ```powershell
-Remove-AppSharedPackageContainer [-Name] <string> [-ForceApplicationShutdown] [<CommonParameters>]
+Remove-AppSharedPackageContainer [-Name] <string> [-ForceApplicationShutdown] [-AllUsers] [<CommonParameters>]
 ```
 
 示例：
@@ -8072,7 +8031,7 @@ Remove-AppSharedPackageContainer [-Name] <string> [-ForceApplicationShutdown] [<
 Remove-AppSharedPackageContainer -Name ContosoTestContainer
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appsharedpackagecontainer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appsharedpackagecontainer?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appsharedpackagecontainer?view=windowsserver2025-ps)
 
 ### Remove-AppvClientConnectionGroup
 
@@ -8142,7 +8101,7 @@ PS C:\> Remove-AppvPublishingServer -Name "Server01"
 
 ### Remove-AppxPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -8161,11 +8120,11 @@ Remove-AppxPackage [-Package] <string> -User <string> [-WhatIf] [-Confirm] [<Com
 Remove-AppxPackage -Package 'package1_1.0.0.0_neutral__8wekyb3d8bbwe'
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appxpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appxpackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appxpackage?view=windowsserver2025-ps)
 
 ### Remove-AppxPackageAutoUpdateSettings
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -8181,11 +8140,11 @@ Remove-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> [-UseSystemPo
 PS C:\> Remove-AppxPackageAutoUpdateSettings -PackageFullName publisher.package1_1.0.0.0_neutral__8wekyb3d8bbwe
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appxpackageautoupdatesettings?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appxpackageautoupdatesettings?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appxpackageautoupdatesettings?view=windowsserver2025-ps)
 
 ### Remove-AppxProvisionedPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -8202,11 +8161,11 @@ Remove-AppxProvisionedPackage -PackageName <string> -Path <string> [-WindowsDire
 PS C:\> Remove-AppxProvisionedPackage -Path c:\offline -PackageName MyAppxPkg
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-appxprovisionedpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-appxprovisionedpackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-appxprovisionedpackage?view=windowsserver2025-ps)
 
 ### Remove-AppxVolume
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -8222,11 +8181,11 @@ Remove-AppxVolume [-Volume] <AppxVolume[]> [-WhatIf] [-Confirm] [<CommonParamete
 Remove-AppxVolume -Volume {984786d3-0cae-49de-a68f-8bedb0ca260b}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appxvolume?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appxvolume?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/remove-appxvolume?view=windowsserver2025-ps)
 
 ### Remove-BcdElement
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -8243,11 +8202,11 @@ Remove-BcdElement [-Element] <string> [-Entry] <BcdEntryInfo> [-Force] [-WhatIf]
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/remove-bcdelement?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/remove-bcdelement?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/remove-bcdelement?view=windowsserver2025-ps)
 
 ### Remove-BcdEntry
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -8264,11 +8223,11 @@ Remove-BcdEntry [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confirm] [<CommonPa
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/remove-bcdentry?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/remove-bcdentry?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/remove-bcdentry?view=windowsserver2025-ps)
 
 ### Remove-BitsTransfer
 
-版本：都有
+版本：仅5.1
 
 模块：BitsTransfer
 
@@ -8284,11 +8243,11 @@ Remove-BitsTransfer [-BitsJob] <BitsJob[]> [-WhatIf] [-Confirm] [<CommonParamete
 PS C:\> Get-BitsTransfer | Remove-BitsTransfer
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/remove-bitstransfer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/remove-bitstransfer?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/remove-bitstransfer?view=windowsserver2025-ps)
 
 ### Remove-CertificateEnrollmentPolicyServer
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -8308,11 +8267,11 @@ $params = @{
 Remove-CertificateEnrollmentPolicyServer @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/remove-certificateenrollmentpolicyserver?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/remove-certificateenrollmentpolicyserver?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/remove-certificateenrollmentpolicyserver?view=windowsserver2025-ps)
 
 ### Remove-CertificateNotificationTask
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -8328,7 +8287,7 @@ Remove-CertificateNotificationTask [-Name] <string> [-WhatIf] [-Confirm] [<Commo
 Remove-CertificateNotificationTask -Name "My Task"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/remove-certificatenotificationtask?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/remove-certificatenotificationtask?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/remove-certificatenotificationtask?view=windowsserver2025-ps)
 
 ### Remove-CimInstance
 
@@ -8348,10 +8307,10 @@ Remove-CimInstance [-Query] <string> [[-Namespace] <string>] [-ComputerName <str
 语法（7）：
 
 ```powershell
-Remove-CimInstance [-InputObject] <ciminstance> [-ResourceUri <uri>] [-ComputerName <string[]>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Remove-CimInstance [-InputObject] <ciminstance> -CimSession <CimSession[]> [-ResourceUri <uri>] [-OperationTimeoutSec <uint>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Remove-CimInstance [-Query] <string> [[-Namespace] <string>] -CimSession <CimSession[]> [-OperationTimeoutSec <uint>] [-QueryDialect <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Remove-CimInstance [-Query] <string> [[-Namespace] <string>] [-ComputerName <string[]>] [-OperationTimeoutSec <uint>] [-QueryDialect <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-CimInstance [-InputObject] <ciminstance> [-ResourceUri <uri>] [-ComputerName <string[]>] [-OperationTimeoutSec <UInt32>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-CimInstance [-InputObject] <ciminstance> -CimSession <CimSession[]> [-ResourceUri <uri>] [-OperationTimeoutSec <UInt32>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-CimInstance [-Query] <string> [[-Namespace] <string>] -CimSession <CimSession[]> [-OperationTimeoutSec <UInt32>] [-QueryDialect <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-CimInstance [-Query] <string> [[-Namespace] <string>] [-ComputerName <string[]>] [-OperationTimeoutSec <UInt32>] [-QueryDialect <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 示例：删除 CIM 实例
@@ -8383,7 +8342,7 @@ Remove-CimSession -Name <string[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```powershell
 Remove-CimSession [-CimSession] <CimSession[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-CimSession [-ComputerName] <string[]> [-WhatIf] [-Confirm] [<CommonParameters>]
-Remove-CimSession [-Id] <uint[]> [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-CimSession [-Id] <UInt32[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-CimSession -InstanceId <guid[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-CimSession -Name <string[]> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -8398,7 +8357,7 @@ Get-CimSession | Remove-CimSession
 
 ### Remove-CIPolicyRule
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -8410,11 +8369,11 @@ Remove-CIPolicyRule [-Id] <string> -FilePath <string> [<CommonParameters>]
 
 示例：暂无
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/remove-cipolicyrule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/remove-cipolicyrule?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/remove-cipolicyrule?view=windowsserver2025-ps)
 
 ### Remove-Computer
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -8431,11 +8390,11 @@ Remove-Computer -UnjoinDomainCredential <pscredential> [-LocalCredential <pscred
 Remove-Computer -UnjoinDomaincredential Domain01\Admin01 -PassThru -Verbose -Restart
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/remove-computer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/remove-computer?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/remove-computer?view=powershell-5.1)
 
 ### Remove-EventLog
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -8452,11 +8411,11 @@ Remove-EventLog [[-ComputerName] <string[]>] [-Source <string[]>] [-WhatIf] [-Co
 Remove-EventLog -LogName "MyLog"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/remove-eventlog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/remove-eventlog?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/remove-eventlog?view=powershell-5.1)
 
 ### Remove-JobTrigger
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -8474,11 +8433,11 @@ Remove-JobTrigger [-Name] <string[]> [-TriggerId <int[]>] [<CommonParameters>]
 Remove-JobTrigger -Name "Test*"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/remove-jobtrigger?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/remove-jobtrigger?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/remove-jobtrigger?view=powershell-5.1)
 
 ### Remove-LocalGroup
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -8496,11 +8455,11 @@ Remove-LocalGroup [-SID] <SecurityIdentifier[]> [-WhatIf] [-Confirm] [<CommonPar
 Remove-LocalGroup -Name "SecurityGroup04"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/remove-localgroup?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/remove-localgroup?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/remove-localgroup?view=powershell-5.1)
 
 ### Remove-LocalGroupMember
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -8519,11 +8478,11 @@ $members = "Admin02", "MicrosoftAccount\username@Outlook.com", "AzureAD\DavidChe
 Remove-LocalGroupMember -Group "Administrators" -Member $members
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/remove-localgroupmember?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/remove-localgroupmember?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/remove-localgroupmember?view=powershell-5.1)
 
 ### Remove-LocalUser
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -8541,11 +8500,11 @@ Remove-LocalUser [-SID] <SecurityIdentifier[]> [-WhatIf] [-Confirm] [<CommonPara
 Remove-LocalUser -Name "AdminContoso02"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/remove-localuser?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/remove-localuser?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/remove-localuser?view=powershell-5.1)
 
 ### Remove-OsConfigurationDocument
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -8561,11 +8520,11 @@ Remove-OsConfigurationDocument [-Id] <string> [[-SourceId] <string>] [[-Friendly
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/remove-osconfigurationdocument?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/remove-osconfigurationdocument?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/remove-osconfigurationdocument?view=windowsserver2025-ps)
 
 ### Remove-OSConfigurationScenarioDefinition
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -8581,7 +8540,7 @@ Remove-OsConfigurationScenarioDefinition [-Name] <string> [-Version] <string> [-
 
 ### Remove-PmemDedicatedMemory
 
-版本：都有
+版本：仅5.1
 
 模块：PersistentMemory
 
@@ -8597,11 +8556,11 @@ Remove-PmemDedicatedMemory -DeviceNumber <uint32> [-Force] [-WhatIf] [-Confirm] 
 Remove-PmemDedicatedMemory -DeviceNumber 1
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/remove-pmemdedicatedmemory?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/remove-pmemdedicatedmemory?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/remove-pmemdedicatedmemory?view=windowsserver2025-ps)
 
 ### Remove-PmemDisk
 
-版本：都有
+版本：仅5.1
 
 模块：PersistentMemory
 
@@ -8618,7 +8577,7 @@ Remove-PmemDisk -Simulated [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-PmemDisk -DiskNumber 2
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/remove-pmemdisk?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/remove-pmemdisk?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/persistentmemory/remove-pmemdisk?view=windowsserver2025-ps)
 
 ### Remove-PSSnapin
 
@@ -8642,7 +8601,7 @@ Remove-PSSnapin -Name Microsoft.Exchange
 
 ### Remove-RecoveryManagementPluginAltitude
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -8680,15 +8639,15 @@ Remove-Service -Name "TestService"
 
 ### Remove-WindowsCapability
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
 语法：
 
 ```powershell
-Remove-WindowsCapability -Name <string> -Online [-DelayExecutionIfPending] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Remove-WindowsCapability -Name <string> -Path <string> [-DelayExecutionIfPending] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Remove-WindowsCapability [-Name] <string> [-Online] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Remove-WindowsCapability [-Name] <string> [-Path] <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：删除映像的 Windows 功能
@@ -8697,11 +8656,11 @@ Remove-WindowsCapability -Name <string> -Path <string> [-DelayExecutionIfPending
 PS C:\> Remove-WindowsCapability -Name "Language.TextToSpeech~~~fr-FR~0.0.1.0" -Path "C:\offline"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowscapability?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowscapability?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowscapability?view=windowsserver2025-ps)
 
 ### Remove-WindowsDriver
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -8717,11 +8676,11 @@ Remove-WindowsDriver -Driver <string> -Path <string> [-WindowsDirectory <string>
 PS C:\> Remove-WindowsDriver -Path "c:\offline" -Driver "OEM1.inf"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowsdriver?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowsdriver?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowsdriver?view=windowsserver2025-ps)
 
 ### Remove-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -8736,7 +8695,7 @@ Remove-WindowsImage -ImagePath <string> -Index <uint32> [-CheckIntegrity] [-LogP
 
 ```powershell
 Remove-WindowsImage -ImagePath <string> -Name <string> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Remove-WindowsImage -ImagePath <string> -Index <uint> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Remove-WindowsImage -ImagePath <string> -Index <UInt32> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：从 WIM 文件删除第一个映像
@@ -8745,11 +8704,11 @@ Remove-WindowsImage -ImagePath <string> -Index <uint> [-CheckIntegrity] [-LogPat
 PS C:\> Remove-WindowsImage -ImagePath "c:\imagestore\custom.wim" -Index 1 -CheckIntegrity
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowsimage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowsimage?view=powershell-5.1)
 
 ### Remove-WindowsPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -8766,11 +8725,11 @@ Remove-WindowsPackage -Online [-PackagePath <string>] [-PackageName <string>] [-
 PS C:\> Remove-WindowsPackage -Online -PackageName "Microsoft-Windows-Backup-Package~31bf3856ad364e35~x86~~6.1.7601.16525"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowspackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowspackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/remove-windowspackage?view=windowsserver2025-ps)
 
 ### Remove-WmiObject
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -8778,7 +8737,7 @@ PS C:\> Remove-WindowsPackage -Online -PackageName "Microsoft-Windows-Backup-Pac
 
 ```powershell
 Remove-WmiObject [-Class] <string> [-AsJob] [-Impersonation <ImpersonationLevel>] [-Authentication <AuthenticationLevel>] [-Locale <string>] [-EnableAllPrivileges] [-Authority <string>] [-Credential <pscredential>] [-ThrottleLimit <int>] [-ComputerName <string[]>] [-Namespace <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Remove-WmiObject -InputObject <wmi> [-AsJob] [-ThrottleLimit <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Remove-WmiObject -InputObject <ManagementObject> [-AsJob] [-ThrottleLimit <int>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-WmiObject -Path <string> [-AsJob] [-Impersonation <ImpersonationLevel>] [-Authentication <AuthenticationLevel>] [-Locale <string>] [-EnableAllPrivileges] [-Authority <string>] [-Credential <pscredential>] [-ThrottleLimit <int>] [-ComputerName <string[]>] [-Namespace <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-WmiObject [-AsJob] [-Impersonation <ImpersonationLevel>] [-Authentication <AuthenticationLevel>] [-Locale <string>] [-EnableAllPrivileges] [-Authority <string>] [-Credential <pscredential>] [-ThrottleLimit <int>] [-ComputerName <string[]>] [-Namespace <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 Remove-WmiObject [-AsJob] [-Impersonation <ImpersonationLevel>] [-Authentication <AuthenticationLevel>] [-Locale <string>] [-EnableAllPrivileges] [-Authority <string>] [-Credential <pscredential>] [-ThrottleLimit <int>] [-ComputerName <string[]>] [-Namespace <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
@@ -8793,7 +8752,7 @@ $np = Get-WmiObject -Query "select * from Win32_Process where name='notepad.exe'
 $np | Remove-WmiObject
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/remove-wmiobject?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/remove-wmiobject?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/remove-wmiobject?view=powershell-5.1)
 
 ### Remove-WSManInstance
 
@@ -8858,7 +8817,7 @@ Rename-Computer -NewName "Server044" -DomainCredential Domain01\Admin01 -Restart
 
 ### Rename-LocalGroup
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -8876,11 +8835,11 @@ Rename-LocalGroup [-SID] <SecurityIdentifier> [-NewName] <string> [-WhatIf] [-Co
 PS C:\> Rename-LocalGroup -Name "SecurityGroup" -NewName "SecurityGroup04"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/rename-localgroup?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/rename-localgroup?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/rename-localgroup?view=powershell-5.1)
 
 ### Rename-LocalUser
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -8898,7 +8857,7 @@ Rename-LocalUser [-SID] <SecurityIdentifier> [-NewName] <string> [-WhatIf] [-Con
 Rename-LocalUser -Name "Admin02" -NewName "AdminContoso02"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/rename-localuser?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/rename-localuser?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/rename-localuser?view=powershell-5.1)
 
 ### Repair-AppvClientConnectionGroup
 
@@ -8966,7 +8925,7 @@ PS C:\> Repair-UevTemplateIndex
 
 ### Repair-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -8983,11 +8942,11 @@ Repair-WindowsImage -Online [-CheckHealth] [-ScanHealth] [-RestoreHealth] [-Star
 PS C:\> Repair-WindowsImage -Path "C:\offline\Mount" -ScanHealth
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/repair-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/repair-windowsimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/repair-windowsimage?view=windowsserver2025-ps)
 
 ### Reset-AppSharedPackageContainer
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -9003,11 +8962,11 @@ Reset-AppSharedPackageContainer [-Name] <string> [-Force] [-WhatIf] [-Confirm] [
 Reset-AppSharedPackageContainer -Name ContosoTestContainer
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/reset-appsharedpackagecontainer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/reset-appsharedpackagecontainer?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/reset-appsharedpackagecontainer?view=windowsserver2025-ps)
 
 ### Reset-AppxPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -9023,11 +8982,11 @@ Reset-AppxPackage [-Package] <string> [-WhatIf] [-Confirm] [<CommonParameters>]
 Reset-AppxPackage -Package publisher.package1_1.0.0.0_neutral__8wekyb3d8bbwe
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/reset-appxpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/reset-appxpackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/reset-appxpackage?view=windowsserver2025-ps)
 
 ### Reset-ComputerMachinePassword
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -9043,11 +9002,11 @@ Reset-ComputerMachinePassword [-Server <string>] [-Credential <pscredential>] [-
 Reset-ComputerMachinePassword
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/reset-computermachinepassword?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/reset-computermachinepassword?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/reset-computermachinepassword?view=powershell-5.1)
 
 ### Reset-LapsPassword
 
-版本：都有
+版本：仅5.1
 
 模块：LAPS
 
@@ -9063,11 +9022,11 @@ Reset-LapsPassword [<CommonParameters>]
 Reset-LapsPassword
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/laps/reset-lapspassword?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/laps/reset-lapspassword?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/laps/reset-lapspassword?view=windowsserver2025-ps)
 
 ### Resolve-DnsName
 
-版本：都有
+版本：仅5.1
 
 模块：DnsClient
 
@@ -9083,7 +9042,7 @@ Resolve-DnsName [-Name] <string> [[-Type] <RecordType>] [-Server <string[]>] [-D
 PS C:\> Resolve-DnsName -Name www.bing.com
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dnsclient/resolve-dnsname?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dnsclient/resolve-dnsname?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dnsclient/resolve-dnsname?view=windowsserver2025-ps)
 
 ### Restart-Service
 
@@ -9111,7 +9070,7 @@ PS C:\> Restart-Service -Name winmgmt
 
 - 类型：映射 Linux 命令（`systemctl` + sudo）。
 - 发行版：systemd 系 + sudo。
-- 同组：Stop-Service、Restart-Service、Resume-Service。
+- 同组：Start-Service、Stop-Service、Restart-Service、Resume-Service。
 - 功能：启动/停止/重启服务。
 
 | 参数 | 类型 | 映射 / 说明 |
@@ -9123,7 +9082,7 @@ PS C:\> Restart-Service -Name winmgmt
 
 ### Restore-Computer
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -9139,7 +9098,7 @@ Restore-Computer [-RestorePoint] <int> [-WhatIf] [-Confirm] [<CommonParameters>]
 Restore-Computer -RestorePoint 253
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/restore-computer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/restore-computer?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/restore-computer?view=powershell-5.1)
 
 ### Restore-UevBackup
 
@@ -9184,7 +9143,7 @@ PS C:\> Restore-UevUserSetting -TemplateId "MicrosoftCalculator6"
 
 ### Resume-BitsTransfer
 
-版本：都有
+版本：仅5.1
 
 模块：BitsTransfer
 
@@ -9200,7 +9159,7 @@ Resume-BitsTransfer [-BitsJob] <BitsJob[]> [-Asynchronous] [-WhatIf] [-Confirm] 
 PS C:\> Get-BitsTransfer | Resume-BitsTransfer
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/resume-bitstransfer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/resume-bitstransfer?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/resume-bitstransfer?view=windowsserver2025-ps)
 
 ### Resume-Job
 
@@ -9234,7 +9193,7 @@ PS C:\> Resume-Job -Id 4
 
 ### Resume-ProvisioningSession
 
-版本：都有
+版本：仅5.1
 
 模块：Provisioning
 
@@ -9246,7 +9205,7 @@ PS C:\> Resume-Job -Id 4
 
 ### Resume-ReFSDedupSchedule
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -9262,7 +9221,7 @@ Resume-ReFSDedupSchedule [-Volume] <string> [<CommonParameters>]
 Resume-ReFSDedupSchedule -Volume "D:"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/resume-refsdedupschedule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/resume-refsdedupschedule?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/resume-refsdedupschedule?view=windowsserver2025-ps)
 
 ### Resume-Service
 
@@ -9290,7 +9249,7 @@ PS C:\> Resume-Service "sens"
 
 - 类型：映射 Linux 命令（`systemctl` + sudo）。
 - 发行版：systemd 系 + sudo。
-- 同组：Stop-Service、Restart-Service、Resume-Service。
+- 同组：Start-Service、Stop-Service、Restart-Service、Resume-Service。
 - 功能：启动/停止/重启服务。
 
 | 参数 | 类型 | 映射 / 说明 |
@@ -9302,7 +9261,7 @@ PS C:\> Resume-Service "sens"
 
 ### Save-OsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -9318,7 +9277,7 @@ Save-OsImage -ImagePath <string> -CapturePath <string> [-LogPath <string>] [-Scr
 
 ### Save-SoftwareInventory
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -9335,7 +9294,7 @@ Save-SoftwareInventory -PartitioningScript <string> -ResetConfigXml <string> -On
 
 ### Save-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -9351,7 +9310,7 @@ Save-WindowsImage -Path <string> [-CheckIntegrity] [-Append] [-SupportEa] [-LogP
 PS C:\> Save-WindowsImage -Path "c:\offline"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/save-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/save-windowsimage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/save-windowsimage?view=windowsserver2025-ps)
 
 ### Send-AppvClientReport
 
@@ -9376,7 +9335,7 @@ The Application Virtualization Client Report was sent successfully
 
 ### Send-DtcDiagnosticTransaction
 
-版本：都有
+版本：仅5.1
 
 模块：MsDtc
 
@@ -9393,7 +9352,7 @@ PS C:\> $Tx = New-DtcDiagnosticTransaction
 PS C:\> Send-DtcDiagnosticTransaction -Transaction $Tx -ComputerName "Host1" -PropagationMethod Push
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/send-dtcdiagnostictransaction?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/send-dtcdiagnostictransaction?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/send-dtcdiagnostictransaction?view=windowsserver2025-ps)
 
 ### Set-Acl
 
@@ -9428,7 +9387,7 @@ Set-Acl -Path "C:\Cat.txt" -AclObject $DogACL
 
 ### Set-AppBackgroundTaskResourcePolicy
 
-版本：都有
+版本：仅5.1
 
 模块：AppBackgroundTask
 
@@ -9444,11 +9403,11 @@ Set-AppBackgroundTaskResourcePolicy -Mode <string> [-WhatIf] [-Confirm] [<Common
 PS C:\> Set-AppBackgroundTaskResourcePolicy -Mode Conservative
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appbackgroundtask/set-appbackgroundtaskresourcepolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appbackgroundtask/set-appbackgroundtaskresourcepolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appbackgroundtask/set-appbackgroundtaskresourcepolicy?view=windowsserver2025-ps)
 
 ### Set-AppLockerPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：AppLocker
 
@@ -9465,7 +9424,7 @@ Set-AppLockerPolicy [-PolicyObject] <AppLockerPolicy> [-Ldap <string>] [-Merge] 
 PS C:\> Set-AppLockerPolicy -XMLPolicy C:\Policy.xml
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/set-applockerpolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/set-applockerpolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/set-applockerpolicy?view=windowsserver2025-ps)
 
 ### Set-AppvClientConfiguration
 
@@ -9496,8 +9455,8 @@ PS C:\> Set-AppvClientConfiguration -parameter1 "parameterVal1"
 语法：
 
 ```powershell
-Set-AppvClientMode -Normal [<CommonParameters>]
-Set-AppvClientMode -Uninstall [<CommonParameters>]
+Set-AppvClientMode [-Normal] [<CommonParameters>]
+Set-AppvClientMode [-Uninstall] [<CommonParameters>]
 ```
 
 示例：暂无
@@ -9535,8 +9494,8 @@ PS C:\> Set-AppvClientPackage -Name "MyApp" -Version 1 -DynamicDeploymentConfigu
 语法：
 
 ```powershell
-Set-AppvPublishingServer [-ServerId] <uint32> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [<CommonParameters>]
-Set-AppvPublishingServer [-Server] <AppvPublishingServer> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IPublishingServer+IntervalUnit>] [<CommonParameters>]
+Set-AppvPublishingServer [-ServerId] <uint32> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IntervalUnit>] [<CommonParameters>]
+Set-AppvPublishingServer [-Server] <AppvPublishingServer> [[-GlobalRefreshEnabled] <bool>] [[-GlobalRefreshOnLogon] <bool>] [[-GlobalRefreshInterval] <uint32>] [[-GlobalRefreshIntervalUnit] <IntervalUnit>] [[-UserRefreshEnabled] <bool>] [[-UserRefreshOnLogon] <bool>] [[-UserRefreshInterval] <uint32>] [[-UserRefreshIntervalUnit] <IntervalUnit>] [<CommonParameters>]
 ```
 
 示例：暂无
@@ -9545,7 +9504,7 @@ Set-AppvPublishingServer [-Server] <AppvPublishingServer> [[-GlobalRefreshEnable
 
 ### Set-AppxDefaultVolume
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
@@ -9561,28 +9520,19 @@ Set-AppxDefaultVolume [-Volume] <AppxVolume> [-WhatIf] [-Confirm] [<CommonParame
 Set-AppxDefaultVolume -Volume F:\
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/set-appxdefaultvolume?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/set-appxdefaultvolume?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/set-appxdefaultvolume?view=windowsserver2025-ps)
 
 ### Set-AppxPackageAutoUpdateSettings
 
-版本：都有
+版本：仅5.1
 
 模块：Appx
 
-语法（5.1）：
+语法：
 
 ```powershell
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> [-AppInstallerUri <string>] [-UpdateUris <string[]>] [-RepairUris <string[]>] [-OptionalPackages <string[]>] [-DependencyPackages <string[]>] [-EnableAutomaticBackgroundTask <bool>] [-ForceUpdateFromAnyVersion <bool>] [-DisableAutoRepairs <bool>] [-CheckOnLaunch <bool>] [-ShowPrompt <bool>] [-UpdateBlocksActivation <bool>] [-UseSystemPolicySource] [-AllUsers] [-HoursBetweenUpdateChecks <uint32>] [-Version <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -AppInstallerUri <string> -ClearPreviousSettings [-UpdateUris <string[]>] [-RepairUris <string[]>] [-OptionalPackages <string[]>] [-DependencyPackages <string[]>] [-EnableAutomaticBackgroundTask <bool>] [-ForceUpdateFromAnyVersion <bool>] [-DisableAutoRepairs <bool>] [-CheckOnLaunch <bool>] [-ShowPrompt <bool>] [-UpdateBlocksActivation <bool>] [-UseSystemPolicySource] [-AllUsers] [-HoursBetweenUpdateChecks <uint32>] [-Version <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -PauseUpdates -HoursToPause <uint32> [-UseSystemPolicySource] [-AllUsers] [-WhatIf] [-Confirm] [<CommonParameters>]
-```
-
-语法（7）：
-
-```powershell
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> [-AppInstallerUri <string>] [-UpdateUris <string[]>] [-RepairUris <string[]>] [-OptionalPackages <string[]>] [-DependencyPackages <string[]>] [-EnableAutomaticBackgroundTask <bool>] [-ForceUpdateFromAnyVersion <bool>] [-DisableAutoRepairs <bool>] [-CheckOnLaunch <bool>] [-ShowPrompt <bool>] [-UpdateBlocksActivation <bool>] [-UseSystemPolicySource] [-AllUsers] [-HoursBetweenUpdateChecks <uint>] [-Version <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -AppInstallerUri <string> -ClearPreviousSettings [-UpdateUris <string[]>] [-RepairUris <string[]>] [-OptionalPackages <string[]>] [-DependencyPackages <string[]>] [-EnableAutomaticBackgroundTask <bool>] [-ForceUpdateFromAnyVersion <bool>] [-DisableAutoRepairs <bool>] [-CheckOnLaunch <bool>] [-ShowPrompt <bool>] [-UpdateBlocksActivation <bool>] [-UseSystemPolicySource] [-AllUsers] [-HoursBetweenUpdateChecks <uint>] [-Version <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -PauseUpdates -HoursToPause <uint> [-UseSystemPolicySource] [-AllUsers] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -AppInstallerUri <string> [-UpdateUris <string[]>] [-RepairUris <string[]>] [-OptionalPackages <string[]>] [-DependencyPackages <string[]>] [-EnableAutomaticBackgroundTask] [-ForceUpdateFromAnyVersion] [-DisableAutoRepairs] [-CheckOnLaunch] [-ShowPrompt] [-UpdateBlocksActivation] [-UseSystemPolicySource] [-HoursBetweenUpdateChecks <uint32>] [-Version <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-AppxPackageAutoUpdateSettings [-PackageFamilyName] <string> -HoursToPause <uint32> [-PauseUpdates] [-UseSystemPolicySource] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 示例：更新应用的自动更新设置
@@ -9600,11 +9550,11 @@ $params = @{
 Set-AppxPackageAutoUpdateSettings @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/appx/set-appxpackageautoupdatesettings?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/appx/set-appxpackageautoupdatesettings?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/appx/set-appxpackageautoupdatesettings?view=windowsserver2025-ps)
 
 ### Set-AppXProvisionedDataFile
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -9612,7 +9562,7 @@ Set-AppxPackageAutoUpdateSettings @params
 
 ```powershell
 Set-AppXProvisionedDataFile -PackageName <string> -CustomDataPath <string> -Path <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Set-AppXProvisionedDataFile -PackageName <string> -CustomDataPath <string> -Online [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Set-AppXProvisionedDataFile -PackageName <string> -CustomDataPath <string> [-Online] [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：为正在运行的操作系统向应用包添加自定义数据文件
@@ -9621,7 +9571,7 @@ Set-AppXProvisionedDataFile -PackageName <string> -CustomDataPath <string> -Onli
 PS C:\> Set-AppXProvisionedDataFile -Online -PackageName "MyAppxPkg" -CustomDataPath "c:\Appx\myCustomData.dat"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-appxprovisioneddatafile?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-appxprovisioneddatafile?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-appxprovisioneddatafile?view=windowsserver2025-ps)
 
 ### Set-AuthenticodeSignature
 
@@ -9660,7 +9610,7 @@ Set-AuthenticodeSignature -FilePath PsTestInternet2.ps1 -Certificate $cert
 
 ### Set-BcdBootDefault
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
@@ -9677,23 +9627,23 @@ Set-BcdBootDefault [-Entry] <BcdEntryInfo> [-Force] [-WhatIf] [-Confirm] [<Commo
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdbootdefault?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdbootdefault?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdbootdefault?view=windowsserver2025-ps)
 
 ### Set-BcdBootDisplayOrder
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
 语法：
 
 ```powershell
-Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -9704,23 +9654,23 @@ Set-BcdBootDisplayOrder [-Entry] <BcdEntryInfo[]> [-Force] [-WhatIf] [-Confirm] 
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdbootdisplayorder?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdbootdisplayorder?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdbootdisplayorder?view=windowsserver2025-ps)
 
 ### Set-BcdBootSequence
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
 语法：
 
 ```powershell
-Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootSequence [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -9731,18 +9681,18 @@ Set-BcdBootSequence [-Entry] <BcdEntryInfo[]> [-Force] [-WhatIf] [-Confirm] [<Co
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdbootsequence?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdbootsequence?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdbootsequence?view=windowsserver2025-ps)
 
 ### Set-BcdBootTimeout
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
 语法：
 
 ```powershell
-Set-BcdBootTimeout [-Value] <long> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootTimeout [-Value] <Int64> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 示例：
@@ -9751,23 +9701,23 @@ Set-BcdBootTimeout [-Value] <long> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] 
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdboottimeout?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdboottimeout?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdboottimeout?view=windowsserver2025-ps)
 
 ### Set-BcdBootToolsDisplayOrder
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
 语法：
 
 ```powershell
-Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> -AddFirst [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> -AddLast [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> -Remove [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> [-AddFirst] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> [-AddLast] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> [-Remove] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootToolsDisplayOrder [-Id] <string[]> [[-Store] <BcdStoreInfo>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -9778,24 +9728,24 @@ Set-BcdBootToolsDisplayOrder [-Entry] <BcdEntryInfo[]> [-Force] [-WhatIf] [-Conf
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdboottoolsdisplayorder?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdboottoolsdisplayorder?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdboottoolsdisplayorder?view=windowsserver2025-ps)
 
 ### Set-BcdDebugSettings
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
 语法：
 
 ```powershell
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -DebugPort <long> -Serial [-Baudrate <long>] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Serial [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -DebugPort <long> [-Serial] [-Baudrate <long>] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] [-Serial] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
 Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Port <long> -HostIp <string> -Net -Key <string> [-NoDhcp] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Port <long> -HostIp <string> -Net [-NewKey] [-NoDhcp] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Channel <long> -Ieee1394 [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Usb [-TargetName <string>] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
-Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Local [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Port <long> -HostIp <string> [-Net] [-NewKey] [-NoDhcp] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Channel <long> [-Ieee1394] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] [-Usb] [-TargetName <string>] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
+Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] [-Local] [-StartPolicy <StartPolicy>] [-NoUserModeExceptions] [-Force] [<CommonParameters>]
 ```
 
 示例：
@@ -9804,21 +9754,21 @@ Set-BcdDebugSettings [[-Store] <BcdStoreInfo>] -Local [-StartPolicy <StartPolicy
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcddebugsettings?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcddebugsettings?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcddebugsettings?view=windowsserver2025-ps)
 
 ### Set-BcdElement
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
 语法：
 
 ```powershell
-Set-BcdElement [-Element] <string> [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Type <SetBcdElementCommand+ElementType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdElement [-Element] <string> [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Device <SetBcdElementCommand+DeviceType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdElement [-Element] <string> [-Entry] <BcdEntryInfo> -Type <SetBcdElementCommand+ElementType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdElement [-Element] <string> [-Entry] <BcdEntryInfo> -Device <SetBcdElementCommand+DeviceType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdElement [-Element] <string> [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Type <ElementType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdElement [-Element] <string> [[-Id] <string>] [[-Store] <BcdStoreInfo>] -Device <DeviceType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdElement [-Element] <string> [-Entry] <BcdEntryInfo> -Type <ElementType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdElement [-Element] <string> [-Entry] <BcdEntryInfo> -Device <DeviceType> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 示例：
@@ -9827,21 +9777,21 @@ Set-BcdElement [-Element] <string> [-Entry] <BcdEntryInfo> -Device <SetBcdElemen
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdelement?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdelement?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdelement?view=windowsserver2025-ps)
 
 ### Set-BcdHypervisorSettings
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.Windows.Bcd.Cmdlets
 
 语法：
 
 ```powershell
-Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -DebugPort <long> -Serial [-Baudrate <long>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -Ieee1394 [-Channel <long>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -HostIp <string> -Port <long> -Net [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -Serial [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -DebugPort <long> [-Serial] [-Baudrate <long>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] [-Ieee1394] [-Channel <long>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -HostIp <string> -Port <long> [-Net] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] [-Serial] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 示例：
@@ -9850,11 +9800,11 @@ Set-BcdHypervisorSettings [[-Store] <BcdStoreInfo>] -Serial [-Force] [-WhatIf] [
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdhypervisorsettings?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdhypervisorsettings?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.windows.bcd.cmdlets/set-bcdhypervisorsettings?view=windowsserver2025-ps)
 
 ### Set-BitsTransfer
 
-版本：都有
+版本：仅5.1
 
 模块：BitsTransfer
 
@@ -9871,11 +9821,11 @@ PS C:\> $Bits = Get-BitsTransfer -JobId 10778CFA-C1D7-4A82-8A9D-80B19224879C
 PS C:\> Set-BitsTransfer -BitsJob $Bits -Priority High
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/set-bitstransfer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/set-bitstransfer?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/set-bitstransfer?view=windowsserver2025-ps)
 
 ### Set-CertificateAutoEnrollmentPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -9883,7 +9833,7 @@ PS C:\> Set-BitsTransfer -BitsJob $Bits -Priority High
 
 ```powershell
 Set-CertificateAutoEnrollmentPolicy -PolicyState <PolicySetting> -context <Context> [-StoreName <string[]>] [-ExpirationPercentage <int>] [-EnableTemplateCheck] [-EnableMyStoreManagement] [-EnableBalloonNotifications] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-CertificateAutoEnrollmentPolicy -EnableAll -context <Context> [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-CertificateAutoEnrollmentPolicy [-EnableAll] -context <Context> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 示例：
@@ -9898,7 +9848,7 @@ $params = @{
 Set-CertificateAutoEnrollmentPolicy @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/set-certificateautoenrollmentpolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/set-certificateautoenrollmentpolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/set-certificateautoenrollmentpolicy?view=windowsserver2025-ps)
 
 ### Set-CimInstance
 
@@ -9938,14 +9888,14 @@ Set-CimInstance @instance
 
 ### Set-CIPolicyIdInfo
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
 语法：
 
 ```powershell
-Set-CIPolicyIdInfo [-FilePath] <string> [-PolicyName <string>] [-SupplementsBasePolicyID <guid>] [-BasePolicyToSupplementPath <string>] [-ResetPolicyID] [-PolicyId <string>] [-AppIdTaggingPolicy] [-AppIdTaggingKey <string[]>] [-AppIdTaggingValue <string[]>] [<CommonParameters>]
+Set-CIPolicyIdInfo [-FilePath] <string> [-PolicyName <string>] [-SupplementsBasePolicyID <guid>] [-BasePolicyToSupplementPath <string>] [-ResetPolicyID] [-PolicyId <string>] [<CommonParameters>]
 ```
 
 示例：修改策略的 ID 和名称
@@ -9954,11 +9904,11 @@ Set-CIPolicyIdInfo [-FilePath] <string> [-PolicyName <string>] [-SupplementsBase
 PS C:\> Set-CIPolicyIdInfo -FilePath ".\Policy03.xml" -PolicyId "CIP077" -PolicyName "CIPolicy03"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-cipolicyidinfo?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-cipolicyidinfo?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-cipolicyidinfo?view=windowsserver2025-ps)
 
 ### Set-CIPolicySetting
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -9975,11 +9925,11 @@ Set-CIPolicySetting [-FilePath] <string> -Provider <string> -Key <string> -Value
 Set-CIPolicySetting -FilePath C:\Policies\WDAC_policy.xml -Key "{12345678-9abc-def0-1234-56789abcdef0}" -Provider WSH -Value $True -ValueName EnterpriseDefinedClsId -ValueType Boolean
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-cipolicysetting?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-cipolicysetting?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-cipolicysetting?view=windowsserver2025-ps)
 
 ### Set-CIPolicyVersion
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -10000,11 +9950,11 @@ PS C:\> Get-Content -Path '.Policy.xml'
  <PolicyTypeID>{A244370E-44C9-4C06-B551-F6016E563076}</PolicyTypeID>
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-cipolicyversion?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-cipolicyversion?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-cipolicyversion?view=windowsserver2025-ps)
 
 ### Set-Culture
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -10020,11 +9970,11 @@ Set-Culture [-CultureInfo] <cultureinfo> [<CommonParameters>]
 PS C:\> Set-Culture -CultureInfo de-DE
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-culture?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-culture?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-culture?view=windowsserver2025-ps)
 
 ### Set-DscLocalConfigurationManager
 
-版本：都有
+版本：仅5.1
 
 模块：PSDesiredStateConfiguration
 
@@ -10041,11 +9991,11 @@ Set-DscLocalConfigurationManager [-Path] <string> -CimSession <CimSession[]> [-F
 Set-DscLocalConfigurationManager -Path "C:\DSC\Configurations\"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/set-dsclocalconfigurationmanager?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/set-dsclocalconfigurationmanager?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/set-dsclocalconfigurationmanager?view=powershell-5.1)
 
 ### Set-HVCIOptions
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -10067,11 +10017,11 @@ PS C:\> Get-Content -Path '.Policy.xml'
 </SiPolicy>
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-hvcioptions?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-hvcioptions?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-hvcioptions?view=windowsserver2025-ps)
 
 ### Set-JobTrigger
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -10085,13 +10035,14 @@ Set-JobTrigger [-InputObject] <ScheduledJobTrigger[]> [-DaysInterval <int>] [-We
 
 ```powershell
 Get-JobTrigger -Name "DeployPackage"
+Get-JobTrigger -Name "DeployPackage" | Set-JobTrigger -DaysOfWeek "Wednesday", "Sunday" -PassThru
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/set-jobtrigger?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/set-jobtrigger?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/set-jobtrigger?view=powershell-5.1)
 
 ### Set-KdsConfiguration
 
-版本：都有
+版本：仅5.1
 
 模块：Kds
 
@@ -10099,7 +10050,7 @@ Get-JobTrigger -Name "DeployPackage"
 
 ```powershell
 Set-KdsConfiguration [-LocalTestOnly] [-SecretAgreementPublicKeyLength <int>] [-SecretAgreementPrivateKeyLength <int>] [-SecretAgreementParameters <byte[]>] [-SecretAgreementAlgorithm <string>] [-KdfParameters <byte[]>] [-KdfAlgorithm <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
-Set-KdsConfiguration -RevertToDefault [-LocalTestOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-KdsConfiguration [-RevertToDefault] [-LocalTestOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
 Set-KdsConfiguration [-InputObject] <KdsServerConfiguration> [-LocalTestOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
@@ -10110,11 +10061,11 @@ PS C:\> $config = Get-KdsConfiguration
 PS C:\> Set-KdsConfiguration -InputObject $config
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/kds/set-kdsconfiguration?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/kds/set-kdsconfiguration?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/kds/set-kdsconfiguration?view=windowsserver2025-ps)
 
 ### Set-LapsADAuditing
 
-版本：都有
+版本：仅5.1
 
 模块：LAPS
 
@@ -10131,11 +10082,11 @@ Set-LapsADAuditing -Identity LapsTestOU -AuditedPrincipals "laps.com\LapsAdmin" 
 OU=LapsTestOU,DC=laps,DC=com
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadauditing?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadauditing?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadauditing?view=windowsserver2025-ps)
 
 ### Set-LapsADComputerSelfPermission
 
-版本：都有
+版本：仅5.1
 
 模块：LAPS
 
@@ -10151,11 +10102,11 @@ Set-LapsADComputerSelfPermission -Identity <string[]> [-Domain <string>] [-Domai
 Set-LapsADComputerSelfPermission -Identity LapsTestOU
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadcomputerselfpermission?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadcomputerselfpermission?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadcomputerselfpermission?view=windowsserver2025-ps)
 
 ### Set-LapsADPasswordExpirationTime
 
-版本：都有
+版本：仅5.1
 
 模块：LAPS
 
@@ -10171,11 +10122,11 @@ Set-LapsADPasswordExpirationTime -Identity <string[]> [-Credential <pscredential
 Set-LapsADPasswordExpirationTime -Identity lapsClient
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadpasswordexpirationtime?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadpasswordexpirationtime?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadpasswordexpirationtime?view=windowsserver2025-ps)
 
 ### Set-LapsADReadPasswordPermission
 
-版本：都有
+版本：仅5.1
 
 模块：LAPS
 
@@ -10191,11 +10142,11 @@ Set-LapsADReadPasswordPermission -Identity <string[]> -AllowedPrincipals <string
 Set-LapsADReadPasswordPermission -Identity LapsTestOU -AllowedPrincipals "Domain Admins"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadreadpasswordpermission?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadreadpasswordpermission?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadreadpasswordpermission?view=windowsserver2025-ps)
 
 ### Set-LapsADResetPasswordPermission
 
-版本：都有
+版本：仅5.1
 
 模块：LAPS
 
@@ -10211,11 +10162,11 @@ Set-LapsADResetPasswordPermission -Identity <string[]> -AllowedPrincipals <strin
 Set-LapsADResetPasswordPermission -Identity LapsTestOU -AllowedPrincipals "Domain Admins"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadresetpasswordpermission?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadresetpasswordpermission?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/laps/set-lapsadresetpasswordpermission?view=windowsserver2025-ps)
 
 ### Set-LocalGroup
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -10233,11 +10184,11 @@ Set-LocalGroup [-SID] <SecurityIdentifier> -Description <string> [-WhatIf] [-Con
 Set-LocalGroup -Name "SecurityGroup04" -Description "This is a sample description."
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/set-localgroup?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/set-localgroup?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/set-localgroup?view=powershell-5.1)
 
 ### Set-LocalUser
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.LocalAccounts
 
@@ -10255,11 +10206,11 @@ Set-LocalUser [-SID] <SecurityIdentifier> [-AccountExpires <datetime>] [-Account
 Set-LocalUser -Name "Admin07" -Description "Description of this account."
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/set-localuser?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/set-localuser?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.localaccounts/set-localuser?view=powershell-5.1)
 
 ### Set-NonRemovableAppsPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -10276,11 +10227,11 @@ Set-NonRemovableAppsPolicy -PackageFamilyName <string> -NonRemovable <int> -Onli
 PS> Set-NonRemovableAppsPolicy -Online -PackageFamilyName Application1_1.0.0.0+x64__ms7gsqeatfeb6 -NonRemovable 1
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-nonremovableappspolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-nonremovableappspolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-nonremovableappspolicy?view=windowsserver2025-ps)
 
 ### Set-OsConfigurationDocument
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -10296,11 +10247,11 @@ Set-OsConfigurationDocument [-Content] <string> [[-SourceId] <string>] [[-Friend
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/set-osconfigurationdocument?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/set-osconfigurationdocument?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/set-osconfigurationdocument?view=windowsserver2025-ps)
 
 ### Set-OsConfigurationProperty
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -10316,11 +10267,11 @@ Set-OsConfigurationProperty [-Name] <string> [-Value] <string> [[-SourceId] <str
 PS C:\> {{ Add example code here }}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/set-osconfigurationproperty?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/set-osconfigurationproperty?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/osconfiguration/set-osconfigurationproperty?view=powershell-5.1)
 
 ### Set-OSConfigurationScenarioDefinition
 
-版本：都有
+版本：仅5.1
 
 模块：OsConfiguration
 
@@ -10336,7 +10287,7 @@ Set-OsConfigurationScenarioDefinition [-Content] <string> [[-SourceId] <string>]
 
 ### Set-ProcessMitigation
 
-版本：都有
+版本：仅5.1
 
 模块：ProcessMitigations
 
@@ -10354,7 +10305,7 @@ Set-ProcessMitigation [-Disable <string[]>] [-Enable <string[]>] [-EAFModules <s
 PS C:\> Set-ProcessMitigation -Name Notepad.exe -Enable SEHOP -Disable ForceRelocateImages
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/processmitigations/set-processmitigation?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/processmitigations/set-processmitigation?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/processmitigations/set-processmitigation?view=windowsserver2025-ps)
 
 ### Set-PSSessionConfiguration
 
@@ -10388,22 +10339,15 @@ Set-PSSessionConfiguration -Name "AdminShell" -StartupScript $null
 
 ### Set-RecoveryManagementPluginAltitude
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
-语法（5.1）：
+语法：
 
 ```powershell
 Set-RecoveryManagementPluginAltitude -ClassID <string> -Altitude <uint32> -Path <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 Set-RecoveryManagementPluginAltitude -ClassID <string> -Altitude <uint32> -Online [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-```
-
-语法（7）：
-
-```powershell
-Set-RecoveryManagementPluginAltitude -ClassID <string> -Altitude <uint> -Path <string> [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-Set-RecoveryManagementPluginAltitude -ClassID <string> -Altitude <uint> -Online [-WindowsDirectory <string>] [-SystemDrive <string>] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：暂无
@@ -10412,7 +10356,7 @@ Set-RecoveryManagementPluginAltitude -ClassID <string> -Altitude <uint> -Online 
 
 ### Set-RecoveryRemoteManagementStatus
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -10429,7 +10373,7 @@ Set-RecoveryRemoteManagementStatus -Enabled <bool> -Online [-WindowsDirectory <s
 
 ### Set-ReFSDedupSchedule
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -10445,11 +10389,11 @@ Set-ReFSDedupSchedule [-Volume] <string> -Start <datetime> -Days <DaysOfWeek> [-
 Set-ReFSDedupSchedule -Volume "D:" -Start "10:00 PM" -Days Monday,Wednesday,Friday -Duration 4:00:00
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/set-refsdedupschedule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/set-refsdedupschedule?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/set-refsdedupschedule?view=powershell-5.1)
 
 ### Set-ReFSDedupScrubSchedule
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -10471,11 +10415,11 @@ $params = @{
 Set-ReFSDedupScrubSchedule @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/set-refsdedupscrubschedule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/set-refsdedupscrubschedule?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/set-refsdedupscrubschedule?view=powershell-5.1)
 
 ### Set-RuleOption
 
-版本：都有
+版本：仅5.1
 
 模块：ConfigCI
 
@@ -10532,11 +10476,11 @@ PS C:\> Get-Content -Path '.Policy.xml'
  </Rules>
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-ruleoption?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-ruleoption?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/configci/set-ruleoption?view=windowsserver2025-ps)
 
 ### Set-ScheduledJob
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -10552,13 +10496,15 @@ Set-ScheduledJob [-InputObject] <ScheduledJobDefinition> [-ClearExecutionHistory
 
 ```powershell
 Get-ScheduledJob -Name "Inventory"
+Get-ScheduledJob -Name "Inventory" |
+    Set-ScheduledJob -FilePath "C:\Scripts\Get-FullInventory.ps1" -PassThru
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/set-scheduledjob?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/set-scheduledjob?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/set-scheduledjob?view=powershell-5.1)
 
 ### Set-ScheduledJobOption
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -10571,14 +10517,15 @@ Set-ScheduledJobOption [-InputObject] <ScheduledJobOptions> [-PassThru] [-RunEle
 示例：更改作业选项
 
 ```powershell
-Get-ScheduledJobOption -Name "DeployPackage"
+Get-ScheduledJobOption -Name "DeployPackage" |
+    Set-ScheduledJobOption -WakeToRun -RequireNetwork:$false -PassThru
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/set-scheduledjoboption?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/set-scheduledjoboption?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/set-scheduledjoboption?view=powershell-5.1)
 
 ### Set-SecureBootUEFI
 
-版本：都有
+版本：仅5.1
 
 模块：SecureBoot
 
@@ -10603,7 +10550,7 @@ Attributes : NON VOLATILE
  TIME BASED AUTHENTICATED WRITE ACCESS
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/set-securebootuefi?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/set-securebootuefi?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/secureboot/set-securebootuefi?view=windowsserver2025-ps)
 
 ### Set-Service
 
@@ -10649,7 +10596,7 @@ Set-Service -Name LanmanWorkstation -DisplayName "LanMan Workstation"
 
 ### Set-SystemPreferredUILanguage
 
-版本：都有
+版本：仅5.1
 
 模块：LanguagePackManagement
 
@@ -10665,7 +10612,7 @@ Set-SystemPreferredUILanguage [-Language] <string> [-PassThru] [<CommonParameter
 Set-SystemPreferredUILanguage ja-JP
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/set-systempreferreduilanguage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/set-systempreferreduilanguage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/set-systempreferreduilanguage?view=powershell-5.1)
 
 ### Set-TimeZone
 
@@ -10702,15 +10649,15 @@ Set-TimeZone -Id "UTC"
 
 ### Set-TpmOwnerAuth
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
 语法（5.1）：
 
 ```powershell
-Set-TpmOwnerAuth -File <string> -NewFile <string> [<CommonParameters>]
 Set-TpmOwnerAuth -File <string> -NewOwnerAuthorization <string> [<CommonParameters>]
+Set-TpmOwnerAuth -File <string> -NewFile <string> [<CommonParameters>]
 Set-TpmOwnerAuth [[-OwnerAuthorization] <string>] -NewOwnerAuthorization <string> [<CommonParameters>]
 Set-TpmOwnerAuth [[-OwnerAuthorization] <string>] -NewFile <string> [<CommonParameters>]
 ```
@@ -10738,7 +10685,7 @@ LockedOut : False
 SelfTest : {191, 191, 245, 191...}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/set-tpmownerauth?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/set-tpmownerauth?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/set-tpmownerauth?view=windowsserver2025-ps)
 
 ### Set-UevConfiguration
 
@@ -10783,20 +10730,14 @@ PS C:\>Set-UevTemplateProfile -ID "MicrosoftCalculator6" -Profile "Backup"
 
 ### Set-WheaMemoryPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：Whea
 
-语法（5.1）：
+语法：
 
 ```powershell
 Set-WheaMemoryPolicy [-ComputerName <string>] [-DisableOffline <bool>] [-DisablePFA <bool>] [-PersistMemoryOffline <bool>] [-PFAPageCount <uint32>] [-PFAErrorThreshold <uint32>] [-PFATimeout <uint32>] [<CommonParameters>]
-```
-
-语法（7）：
-
-```powershell
-Set-WheaMemoryPolicy [-ComputerName <string>] [-DisableOffline <bool>] [-DisablePFA <bool>] [-PersistMemoryOffline <bool>] [-PFAPageCount <uint>] [-PFAErrorThreshold <uint>] [-PFATimeout <uint>] [<CommonParameters>]
 ```
 
 示例：启用 WHEA 预测性故障分析
@@ -10805,11 +10746,11 @@ Set-WheaMemoryPolicy [-ComputerName <string>] [-DisableOffline <bool>] [-Disable
 PS C:\> Set-WheaMemoryPolicy -DisablePFA $False
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/whea/set-wheamemorypolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/whea/set-wheamemorypolicy?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/whea/set-wheamemorypolicy?view=powershell-5.1)
 
 ### Set-WinAcceptLanguageFromLanguageListOptOut
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -10825,11 +10766,11 @@ Set-WinAcceptLanguageFromLanguageListOptOut [-OptOut] <bool> [<CommonParameters>
 PS C:\> Set-WinAcceptLanguageFromLanguageListOptOut -OptOut $True
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winacceptlanguagefromlanguagelistoptout?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winacceptlanguagefromlanguagelistoptout?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winacceptlanguagefromlanguagelistoptout?view=powershell-5.1)
 
 ### Set-WinCultureFromLanguageListOptOut
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -10845,11 +10786,11 @@ Set-WinCultureFromLanguageListOptOut [-OptOut] <bool> [<CommonParameters>]
 PS C:\> Set-WinCultureFromLanguageListOptOut -OptOut $True
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winculturefromlanguagelistoptout?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winculturefromlanguagelistoptout?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winculturefromlanguagelistoptout?view=powershell-5.1)
 
 ### Set-WinDefaultInputMethodOverride
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -10865,11 +10806,11 @@ Set-WinDefaultInputMethodOverride [[-InputTip] <string>] [<CommonParameters>]
 PS C:\> Set-WinDefaultInputMethodOverride -InputTip "0409:00000409"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-windefaultinputmethodoverride?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-windefaultinputmethodoverride?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-windefaultinputmethodoverride?view=powershell-5.1)
 
 ### Set-WindowsEdition
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -10885,11 +10826,11 @@ Set-WindowsEdition -Edition <string> -Path <string> [-WindowsDirectory <string>]
 PS C:\> Set-WindowsEdition -Path "c:\offline" -Edition "Ultimate"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-windowsedition?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-windowsedition?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-windowsedition?view=powershell-5.1)
 
 ### Set-WindowsProductKey
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -10905,11 +10846,11 @@ Set-WindowsProductKey -ProductKey <string> -Path <string> [-WindowsDirectory <st
 PS C:\> Set-WindowsProductKey -Path "c:\offline" -ProductKey "12345-12345-12345-12345-12345"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-windowsproductkey?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-windowsproductkey?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-windowsproductkey?view=powershell-5.1)
 
 ### Set-WindowsReservedStorageState
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -10925,11 +10866,11 @@ Set-WindowsReservedStorageState -State <ReservedStorageState> [-LogPath <string>
 PS C:\> Set-WindowsReservedStorageState -State Enabled -Online
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-windowsreservedstoragestate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-windowsreservedstoragestate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/set-windowsreservedstoragestate?view=windowsserver2025-ps)
 
 ### Set-WindowsSearchSetting
 
-版本：都有
+版本：仅5.1
 
 模块：WindowsSearch
 
@@ -10945,11 +10886,11 @@ Set-WindowsSearchSetting [-EnableWebResultsSetting <bool>] [-EnableMeteredWebRes
 PS C:\> Set-WindowsSearchSetting -SearchExperienceSetting "Personalized"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowssearch/set-windowssearchsetting?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/windowssearch/set-windowssearchsetting?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowssearch/set-windowssearchsetting?view=powershell-5.1)
 
 ### Set-WinHomeLocation
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -10965,11 +10906,11 @@ Set-WinHomeLocation [-GeoId] <int> [<CommonParameters>]
 PS C:\> Set-WinHomeLocation -GeoId 0xF4
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winhomelocation?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winhomelocation?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winhomelocation?view=powershell-5.1)
 
 ### Set-WinLanguageBarOption
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -10985,11 +10926,11 @@ Set-WinLanguageBarOption [-UseLegacySwitchMode] [-UseLegacyLanguageBar] [<Common
 PS C:\> Set-WinLanguageBarOption -UseLegacySwitchMode -UseLegacyLanguageBar
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winlanguagebaroption?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winlanguagebaroption?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winlanguagebaroption?view=powershell-5.1)
 
 ### Set-WinSystemLocale
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -11005,11 +10946,11 @@ Set-WinSystemLocale [-SystemLocale] <cultureinfo> [<CommonParameters>]
 PS C:\> Set-WinSystemLocale -SystemLocale ja-JP
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winsystemlocale?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winsystemlocale?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winsystemlocale?view=powershell-5.1)
 
 ### Set-WinUILanguageOverride
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -11025,11 +10966,11 @@ Set-WinUILanguageOverride [[-Language] <cultureinfo>] [<CommonParameters>]
 PS C:\> Set-WinUILanguageOverride -Language de-DE
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winuilanguageoverride?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winuilanguageoverride?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winuilanguageoverride?view=powershell-5.1)
 
 ### Set-WinUserLanguageList
 
-版本：都有
+版本：仅5.1
 
 模块：International
 
@@ -11047,11 +10988,11 @@ PS C:\> $OldList.Add("fr-FR")
 PS C:\> Set-WinUserLanguageList -LanguageList $OldList
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winuserlanguagelist?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winuserlanguagelist?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/international/set-winuserlanguagelist?view=powershell-5.1)
 
 ### Set-WmiInstance
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -11072,7 +11013,7 @@ Set-WmiInstance [-PutType <PutType>] [-AsJob] [-Impersonation <ImpersonationLeve
 Set-WmiInstance -Class Win32_WMISetting -Arguments @{LoggingLevel=2}
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/set-wmiinstance?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/set-wmiinstance?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/set-wmiinstance?view=powershell-5.1)
 
 ### Set-WSManInstance
 
@@ -11142,7 +11083,7 @@ Show-Command
 
 ### Show-ControlPanelItem
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -11160,11 +11101,11 @@ Show-ControlPanelItem [[-InputObject] <ControlPanelItem[]>] [<CommonParameters>]
 Show-ControlPanelItem -Name "AutoPlay"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/show-controlpanelitem?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/show-controlpanelitem?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/show-controlpanelitem?view=powershell-5.1)
 
 ### Show-EventLog
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -11180,11 +11121,11 @@ Show-EventLog [[-ComputerName] <string>] [<CommonParameters>]
 Show-EventLog
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/show-eventlog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/show-eventlog?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/show-eventlog?view=powershell-5.1)
 
 ### Show-WindowsDeveloperLicenseRegistration
 
-版本：都有
+版本：仅5.1
 
 模块：WindowsDeveloperLicense
 
@@ -11200,24 +11141,18 @@ Show-WindowsDeveloperLicenseRegistration [<CommonParameters>]
 PS C:\> Show-WindowsDeveloperLicenseRegistration
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowsdeveloperlicense/show-windowsdeveloperlicenseregistration?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/windowsdeveloperlicense/show-windowsdeveloperlicenseregistration?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowsdeveloperlicense/show-windowsdeveloperlicenseregistration?view=powershell-5.1)
 
 ### Split-WindowsImage
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
-语法（5.1）：
+语法：
 
 ```powershell
-Split-WindowsImage -ImagePath <string> -SplitImagePath <string> -FileSize <uint64> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
-```
-
-语法（7）：
-
-```powershell
-Split-WindowsImage -ImagePath <string> -SplitImagePath <string> -FileSize <ulong> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
+Split-WindowsImage -ImagePath <string> -SplitImagePath <string> -FileSize <UInt64> [-CheckIntegrity] [-LogPath <string>] [-ScratchDirectory <string>] [-LogLevel <LogLevel>] [<CommonParameters>]
 ```
 
 示例：拆分 .wim 文件
@@ -11226,11 +11161,11 @@ Split-WindowsImage -ImagePath <string> -SplitImagePath <string> -FileSize <ulong
 PS C:\> Split-WindowsImage -ImagePath "c:\imagestore\install.wim" -SplitImagePath "c:\imagestore\splitfiles\split.swm" -FileSize 1024 -CheckIntegrity
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/split-windowsimage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/split-windowsimage?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/split-windowsimage?view=powershell-5.1)
 
 ### Start-BitsTransfer
 
-版本：都有
+版本：仅5.1
 
 模块：BitsTransfer
 
@@ -11246,11 +11181,11 @@ Start-BitsTransfer [-Source] <string[]> [[-Destination] <string[]>] [-Asynchrono
 PS C:\> Start-BitsTransfer -Source "http://server01/servertestdir/testfile1.txt" -Destination "c:\clienttestdir\testfile1.txt"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/start-bitstransfer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/start-bitstransfer?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/start-bitstransfer?view=powershell-5.1)
 
 ### Start-DscConfiguration
 
-版本：都有
+版本：仅5.1
 
 模块：PSDesiredStateConfiguration
 
@@ -11269,11 +11204,11 @@ Start-DscConfiguration -CimSession <CimSession[]> -UseExisting [-Wait] [-Force] 
 Start-DscConfiguration -Path "C:\DSC\Configurations\"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/start-dscconfiguration?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/start-dscconfiguration?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/start-dscconfiguration?view=powershell-5.1)
 
 ### Start-DtcDiagnosticResourceManager
 
-版本：都有
+版本：仅5.1
 
 模块：MsDtc
 
@@ -11289,11 +11224,11 @@ Start-DtcDiagnosticResourceManager [[-Port] <int>] [[-Name] <string>] [<CommonPa
 PS C:\> Start-DtcDiagnosticResourceManager -Port 17124 -Name "testRM"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/start-dtcdiagnosticresourcemanager?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/start-dtcdiagnosticresourcemanager?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/start-dtcdiagnosticresourcemanager?view=powershell-5.1)
 
 ### Start-OSUninstall
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -11310,11 +11245,11 @@ Start-OSUninstall -Online [-NoRestart] [-WindowsDirectory <string>] [-SystemDriv
 Start-OSUninstall -Online
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/start-osuninstall?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/start-osuninstall?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/start-osuninstall?view=powershell-5.1)
 
 ### Start-ReFSDedupJob
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -11330,7 +11265,7 @@ Start-ReFSDedupJob [-Volume] <string> [-Duration <timespan>] [-FullRun] [-CpuPer
 Start-ReFSDedupJob -Volume "D:"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/start-refsdedupjob?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/start-refsdedupjob?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/start-refsdedupjob?view=powershell-5.1)
 
 ### Start-Service
 
@@ -11358,7 +11293,7 @@ Start-Service -Name "eventlog"
 
 - 类型：映射 Linux 命令（`systemctl` + sudo）。
 - 发行版：systemd 系 + sudo。
-- 同组：Stop-Service、Restart-Service、Resume-Service。
+- 同组：Start-Service、Stop-Service、Restart-Service、Resume-Service。
 - 功能：启动/停止/重启服务。
 
 | 参数 | 类型 | 映射 / 说明 |
@@ -11370,7 +11305,7 @@ Start-Service -Name "eventlog"
 
 ### Start-Transaction
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -11390,7 +11325,7 @@ New-ItemProperty "ContosoCompany" -Name "MyKey" -Value 123 -UseTransaction
 Undo-Transaction
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/start-transaction?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/start-transaction?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/start-transaction?view=powershell-5.1)
 
 ### Stop-AppvClientConnectionGroup
 
@@ -11438,7 +11373,7 @@ PS C:\> Stop-AppvClientPackage -Name "MyPackage" -Version 2
 
 ### Stop-DtcDiagnosticResourceManager
 
-版本：都有
+版本：仅5.1
 
 模块：MsDtc
 
@@ -11456,11 +11391,11 @@ Stop-DtcDiagnosticResourceManager [[-InstanceId] <guid>] [<CommonParameters>]
 PS C:\> Stop-DtcDiagnosticResourceManager -Name "testRM"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/stop-dtcdiagnosticresourcemanager?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/stop-dtcdiagnosticresourcemanager?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/stop-dtcdiagnosticresourcemanager?view=powershell-5.1)
 
 ### Stop-ReFSDedupJob
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -11476,7 +11411,7 @@ Stop-ReFSDedupJob [-Volume] <string> [<CommonParameters>]
 Stop-ReFSDedupJob -Volume "D:"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/stop-refsdedupjob?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/stop-refsdedupjob?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/stop-refsdedupjob?view=powershell-5.1)
 
 ### Stop-Service
 
@@ -11504,7 +11439,7 @@ Stop-Service -Name "sysmonlog"
 
 - 类型：映射 Linux 命令（`systemctl` + sudo）。
 - 发行版：systemd 系 + sudo。
-- 同组：Stop-Service、Restart-Service、Resume-Service。
+- 同组：Start-Service、Stop-Service、Restart-Service、Resume-Service。
 - 功能：启动/停止/重启服务。
 
 | 参数 | 类型 | 映射 / 说明 |
@@ -11516,7 +11451,7 @@ Stop-Service -Name "sysmonlog"
 
 ### Suspend-BitsTransfer
 
-版本：都有
+版本：仅5.1
 
 模块：BitsTransfer
 
@@ -11532,7 +11467,7 @@ Suspend-BitsTransfer [-BitsJob] <BitsJob[]> [-WhatIf] [-Confirm] [<CommonParamet
 PS C:\> Get-BitsTransfer | Suspend-BitsTransfer
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/suspend-bitstransfer?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/suspend-bitstransfer?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/bitstransfer/suspend-bitstransfer?view=powershell-5.1)
 
 ### Suspend-Job
 
@@ -11563,13 +11498,14 @@ workflow Get-SystemLog
 }
 Get-SystemLog -AsJob -JobName "LogflowJob"
 Get-Job -Name LogflowJob
+Suspend-Job -Name LogflowJob
 ```
 
 出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/suspend-job?view=powershell-5.1)
 
 ### Suspend-ReFSDedupSchedule
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.ReFsDedup.Commands
 
@@ -11585,7 +11521,7 @@ Suspend-ReFSDedupSchedule [-Volume] <string> [<CommonParameters>]
 Suspend-ReFSDedupSchedule -Volume "D:"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/suspend-refsdedupschedule?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/suspend-refsdedupschedule?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.refsdedup.commands/suspend-refsdedupschedule?view=powershell-5.1)
 
 ### Suspend-Service
 
@@ -11611,7 +11547,7 @@ Suspend-Service -DisplayName "Telnet"
 
 ### Switch-Certificate
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -11631,7 +11567,7 @@ $params = @{
 Switch-Certificate @params
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/switch-certificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/switch-certificate?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/switch-certificate?view=powershell-5.1)
 
 ### Sync-AppvPublishingServer
 
@@ -11658,7 +11594,7 @@ PS C:\> Sync-AppvPublishingServer -Name "MyServer"
 
 ### Test-AppLockerPolicy
 
-版本：都有
+版本：仅5.1
 
 模块：AppLocker
 
@@ -11676,11 +11612,11 @@ Test-AppLockerPolicy [-PolicyObject] <AppLockerPolicy> -Path <List[string]> [-Us
 PS C:\> Test-AppLockerPolicy -XMLPolicy C:\Policy.xml -Path c:\windows\system32\calc.exe, C:\windows\system32\notepad.exe -User Everyone
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/test-applockerpolicy?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/test-applockerpolicy?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/applocker/test-applockerpolicy?view=windowsserver2025-ps)
 
 ### Test-Certificate
 
-版本：都有
+版本：仅5.1
 
 模块：PKI
 
@@ -11697,11 +11633,11 @@ Get-ChildItem -Path Cert:\LocalMachine\My |
  Test-Certificate -Policy SSL -DNSName 'dns=contoso.com'
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/pki/test-certificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/pki/test-certificate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/pki/test-certificate?view=windowsserver2025-ps)
 
 ### Test-ComputerSecureChannel
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -11717,11 +11653,11 @@ Test-ComputerSecureChannel [-Repair] [-Server <string>] [-Credential <pscredenti
 Test-ComputerSecureChannel
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/test-computersecurechannel?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/test-computersecurechannel?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/test-computersecurechannel?view=powershell-5.1)
 
 ### Test-DscConfiguration
 
-版本：都有
+版本：仅5.1
 
 模块：PSDesiredStateConfiguration
 
@@ -11742,7 +11678,7 @@ Test-DscConfiguration -CimSession <CimSession[]> [-ThrottleLimit <int>] [-AsJob]
 Test-DscConfiguration
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/test-dscconfiguration?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/test-dscconfiguration?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psdesiredstateconfiguration/test-dscconfiguration?view=powershell-5.1)
 
 ### Test-FileCatalog
 
@@ -11777,7 +11713,7 @@ Test-FileCatalog @TestFileCatalogParams
 
 ### Test-KdsRootKey
 
-版本：都有
+版本：仅5.1
 
 模块：Kds
 
@@ -11793,7 +11729,7 @@ Test-KdsRootKey [-KeyId] <guid> [-WhatIf] [-Confirm] [<CommonParameters>]
 PS C:\> Test-KdsRootKey -KeyId 4A3615F1-5A90-22E4-0B1D-1416F93D4412
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/kds/test-kdsrootkey?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/kds/test-kdsrootkey?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/kds/test-kdsrootkey?view=windowsserver2025-ps)
 
 ### Test-PSSessionConfigurationFile
 
@@ -11861,7 +11797,7 @@ Test-WSMan
 
 ### Unblock-Tpm
 
-版本：都有
+版本：仅5.1
 
 模块：TrustedPlatformModule
 
@@ -11878,11 +11814,11 @@ Unblock-Tpm -File <string> [<CommonParameters>]
 PS C:\>Unblock-Tpm -OwnerAuthorization "vjnuW6rToM41os3xxEpjLdIW2gA="
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/unblock-tpm?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/unblock-tpm?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/trustedplatformmodule/unblock-tpm?view=windowsserver2025-ps)
 
 ### Undo-DtcDiagnosticTransaction
 
-版本：都有
+版本：仅5.1
 
 模块：MsDtc
 
@@ -11899,11 +11835,11 @@ PS C:\> $Tx = New-DtcDiagnosticTransaction
 PS C:\> Undo-DtcDiagnosticTransaction -Transaction $Tx
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/undo-dtcdiagnostictransaction?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/undo-dtcdiagnostictransaction?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/msdtc/undo-dtcdiagnostictransaction?view=windowsserver2025-ps)
 
 ### Undo-Transaction
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -11919,11 +11855,11 @@ Undo-Transaction [-WhatIf] [-Confirm] [<CommonParameters>]
 Undo-Transaction
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/undo-transaction?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/undo-transaction?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/undo-transaction?view=powershell-5.1)
 
 ### Uninstall-Language
 
-版本：都有
+版本：仅5.1
 
 模块：LanguagePackManagement
 
@@ -11939,11 +11875,11 @@ Uninstall-Language [-Language] <string> [-PassThru] [<CommonParameters>]
 Uninstall-Language ja-jp
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/uninstall-language?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/uninstall-language?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/languagepackmanagement/uninstall-language?view=windowsserver2025-ps)
 
 ### Uninstall-ProvisioningPackage
 
-版本：都有
+版本：仅5.1
 
 模块：Provisioning
 
@@ -11962,11 +11898,11 @@ Uninstall-ProvisioningPackage [-RuntimeMetadata] <RuntimeProvPackageMetadata> [-
 PS C:\> Uninstall-ProvisioningPackage -AllInstalledPackages
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/uninstall-provisioningpackage?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/uninstall-provisioningpackage?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/uninstall-provisioningpackage?view=windowsserver2025-ps)
 
 ### Uninstall-TrustedProvisioningCertificate
 
-版本：都有
+版本：仅5.1
 
 模块：Provisioning
 
@@ -11982,7 +11918,7 @@ Uninstall-TrustedProvisioningCertificate [-Thumbprint] <string> [-LogsDirectoryP
 PS C:\> Uninstall-TrustedProvisioningCertificate -Thumbprint fedd995b45e633d4ef30fcbc8f3a48b627e9a28b
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/uninstall-trustedprovisioningcertificate?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/uninstall-trustedprovisioningcertificate?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/provisioning/uninstall-trustedprovisioningcertificate?view=windowsserver2025-ps)
 
 ### Unpublish-AppvClientPackage
 
@@ -12028,7 +11964,7 @@ Unregister-PSSessionConfiguration -Name "MaintenanceShell"
 
 ### Unregister-RecoveryManagementPlugin
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -12045,7 +11981,7 @@ Unregister-RecoveryManagementPlugin -ClassID <string> -Online [-WindowsDirectory
 
 ### Unregister-ScheduledJob
 
-版本：都有
+版本：仅5.1
 
 模块：PSScheduledJob
 
@@ -12063,7 +11999,7 @@ Unregister-ScheduledJob [-Name] <string[]> [-Force] [-WhatIf] [-Confirm] [<Commo
 Unregister-ScheduledJob TestJob
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/unregister-scheduledjob?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/unregister-scheduledjob?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/psscheduledjob/unregister-scheduledjob?view=powershell-5.1)
 
 ### Unregister-UevTemplate
 
@@ -12088,7 +12024,7 @@ PS C:\> Unregister-UevTemplate -TemplateId "MicrosoftCalculator6"
 
 ### Unregister-WindowsDeveloperLicense
 
-版本：都有
+版本：仅5.1
 
 模块：WindowsDeveloperLicense
 
@@ -12104,11 +12040,11 @@ Unregister-WindowsDeveloperLicense [-Force] [-WhatIf] [-Confirm] [<CommonParamet
 PS C:\> Unregister-WindowsDeveloperLicense
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/windowsdeveloperlicense/unregister-windowsdeveloperlicense?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/windowsdeveloperlicense/unregister-windowsdeveloperlicense?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/windowsdeveloperlicense/unregister-windowsdeveloperlicense?view=windowsserver2025-ps)
 
 ### Update-LapsADSchema
 
-版本：都有
+版本：仅5.1
 
 模块：LAPS
 
@@ -12124,7 +12060,7 @@ Update-LapsADSchema [-Credential <pscredential>] [-WhatIf] [-Confirm] [<CommonPa
 Update-LapsADSchema
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/laps/update-lapsadschema?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/laps/update-lapsadschema?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/laps/update-lapsadschema?view=windowsserver2025-ps)
 
 ### Update-UevTemplate
 
@@ -12149,7 +12085,7 @@ PS C:\> Update-UevTemplate -Path "MicrosoftCalculator.xml"
 
 ### Update-WIMBootEntry
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -12165,11 +12101,11 @@ Update-WIMBootEntry -Path <string> -ImagePath <string> -DataSourceID <long> [-Lo
 PS C:\> Update-WIMBootEntry -Path "C:\" -DataSourceID 0 -ImagePath "D:\Windows Images\install.wim"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/update-wimbootentry?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/update-wimbootentry?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/update-wimbootentry?view=windowsserver2025-ps)
 
 ### Use-Transaction
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -12189,11 +12125,11 @@ Use-Transaction -TransactedScript { $transactedString.Append(", World") } -UseTr
 $transactedString.ToString()
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/use-transaction?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/use-transaction?view=powershell-7.5)
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/use-transaction?view=powershell-5.1)
 
 ### Use-WindowsUnattend
 
-版本：都有
+版本：仅5.1
 
 模块：Dism
 
@@ -12210,11 +12146,11 @@ Use-WindowsUnattend -UnattendPath <string> -Online [-NoRestart] [-WindowsDirecto
 PS C:\> Use-WindowsUnattend -Path "c:\offline" -UnattendPath "c:\test\answerfiles\myunattend.xml"
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/dism/use-windowsunattend?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/dism/use-windowsunattend?view=powershell-7.5)
+出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dism/use-windowsunattend?view=windowsserver2025-ps)
 
 ### Write-EventLog
 
-版本：都有
+版本：仅5.1
 
 模块：Microsoft.PowerShell.Management
 
@@ -12230,5 +12166,4 @@ Write-EventLog [-LogName] <string> [-Source] <string> [-EventId] <int> [[-EntryT
 PS C:\> Write-EventLog -LogName "Application" -Source "MyApp" -EventID 3001 -EntryType Information -Message "MyApp added a user-requested feature to the display." -Category 1 -RawData 10,20
 ```
 
-出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/write-eventlog?view=powershell-5.1) / [官方中文文档（7）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/write-eventlog?view=powershell-7.5)
-
+出处：[官方中文文档（5.1）](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/write-eventlog?view=powershell-5.1)

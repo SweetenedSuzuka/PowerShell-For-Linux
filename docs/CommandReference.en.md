@@ -245,7 +245,7 @@ Official original reference: [Add-Content](OriginalCrossPlatformDetails.en.md#ad
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.
 - Function: empties a file, bash's `: > file`.
-- Difference from Windows PowerShell: silently creates an empty file when the path doesn't exist (PowerShell raises a "path not found" error).
+- Same as Windows PowerShell.
 Examples:
 - `Clear-Content data.txt` — empties data.txt (bash's `: > data.txt`).
 - `Get-ChildItem *.log | Clear-Content` — empties every .log file in the current directory.
@@ -570,7 +570,7 @@ Examples:
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.
 - Function: emits leveled notices onto the error stream, bash's `echo ... 1>&2`.
-- Difference from Windows PowerShell: prefixes are fixed English strings "ERROR/WARNING/VERBOSE/DEBUG".
+- Difference from Windows PowerShell: prefixes follow the UI language.
 Examples:
 - `Write-Error "something went wrong"` — writes one line onto the error stream (like `echo something went wrong 1>&2`) and sets `$?` to False.
 - `if (Test-Path x) { Write-Information "present" } else { Write-Warning "missing" }` — an informational message or a warning depending on the case.
@@ -603,7 +603,7 @@ Official original reference: [Out-Null](OriginalCrossPlatformDetails.en.md#out-n
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.
 - Function: sends output to the screen (which is the default anyway), plain display in bash terms.
-- Same as Windows PowerShell.
+- Difference from Windows PowerShell: `-Paging` is not supported.
 Examples:
 - `Get-Date | Out-Host` — shows the date (like `date`).
 - `Get-ChildItem | Out-Host` — shows the directory contents (like `ls`).
@@ -614,7 +614,7 @@ Official original reference: [Out-Host](OriginalCrossPlatformDetails.en.md#out-h
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.
 - Function: formats objects into a single string.
-- Same as Windows PowerShell.
+- Difference from Windows PowerShell: `-Width` / `-NoNewline` are not supported.
 Examples:
 - `Get-Date | Out-String` — turns a date object into a string.
 - `Get-Process | Out-String | Set-Content proc.txt` — saves the process list as text (bash's `ps -ef > proc.txt`).
@@ -668,7 +668,7 @@ Official original reference: [Format-Hex](OriginalCrossPlatformDetails.en.md#for
 
 ## Pipeline processing
 
-### Where-Object (?)
+### Where-Object (?, where)
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.
 - Function: picks objects out of a pipeline, the filtering that `grep` / `awk` do in bash. Takes a script block `{ $_ -gt 5 }` or a bare `property comparison value` form such as `Length -gt 100`.
@@ -869,7 +869,7 @@ Official original reference: [Test-Json](OriginalCrossPlatformDetails.en.md#test
 ### Get-Random
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.
-- Function: rolls random numbers or samples from a range/list, bash's `shuf`.
+- Function: rolls random numbers or samples from a range/list, bash's `shuf` or `$RANDOM`.
 - Same as Windows PowerShell.
 Examples:
 - `Get-Random -Minimum 1 -Maximum 100` — a random number from 1 to 99 (bash's `shuf -i 1-100 -n 1`).
@@ -940,7 +940,7 @@ Official original reference: [Get-Variable](OriginalCrossPlatformDetails.en.md#g
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.
 - Function: sets, creates, removes, empties variables — assignment and `unset` in bash terms.
-- Difference from Windows PowerShell: assigning to read-only automatic variables (PID etc.) is refused.
+- Difference from Windows PowerShell: assigning to read-only automatic variables (PID etc.) is refused with Set/New, silently ignored with Clear.
 Examples:
 - `New-Variable data 42` — creates data=42 (like `data=42`).
 - `Set-Variable -Name total -Value (1..100 | Measure-Object -Sum).Sum; Remove-Variable total` — sums 1 through 100 into total, then removes it.

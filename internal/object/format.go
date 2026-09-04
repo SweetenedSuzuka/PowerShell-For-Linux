@@ -33,9 +33,9 @@ func shapeOf(o *PSObject) formatShape {
 	return shapeList
 }
 
-// FormatOutput 渲染对象流：按形状分组——标量每行一个、表格形状出表格、对象出列表。
+// FormatOutput 渲染对象流：$null 不占位（与 PowerShell 一致）；按形状分组——标量每行一个、表格形状出表格、对象出列表。
 func FormatOutput(w io.Writer, objs []*PSObject) error {
-	objs = flatten(objs)
+	objs = dropNulls(flatten(objs))
 	if len(objs) == 0 {
 		return nil
 	}
@@ -71,6 +71,18 @@ func FormatOutput(w io.Writer, objs []*PSObject) error {
 		i = j
 	}
 	return nil
+}
+
+// dropNulls 丢弃空对象（$null 渲染时不占位）；结果是新的一组，不动入参。
+func dropNulls(objs []*PSObject) []*PSObject {
+	var out []*PSObject
+	for _, o := range objs {
+		if o == nil || o.IsNull() {
+			continue
+		}
+		out = append(out, o)
+	}
+	return out
 }
 
 // flatten 把数组对象摊平为元素列表（数组内嵌数组时递归）。
@@ -229,6 +241,9 @@ func FormatTableTo(w io.Writer, objs []*PSObject, props []string) error {
 		return nil
 	}
 	for _, o := range objs {
+		if o == nil || o.IsNull() {
+			continue
+		}
 		if tableScalar(o) {
 			if err := flush(); err != nil {
 				return err
@@ -351,6 +366,9 @@ func FormatListTo(w io.Writer, objs []*PSObject, props []string) error {
 	}
 	first := true
 	for _, o := range objs {
+		if o == nil || o.IsNull() {
+			continue
+		}
 		if !first {
 			fmt.Fprintln(w)
 		}
@@ -406,6 +424,9 @@ func FormatWideTo(w io.Writer, objs []*PSObject, colWidth int, prop string) erro
 	}
 	var cells []string
 	for _, o := range objs {
+		if o == nil || o.IsNull() {
+			continue
+		}
 		if prop != "" {
 			if v, ok := o.PropValue(prop); ok {
 				cells = append(cells, v.String())

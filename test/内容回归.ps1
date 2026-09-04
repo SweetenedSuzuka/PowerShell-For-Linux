@@ -812,6 +812,19 @@ Stop-Process -Id $sp3.Id
 $Error.Clear()
 Start-Sleep -Seconds 1 -Milliseconds 100
 $results += T "睡眠双参互斥" ((($? -eq $false)) -and (($Error.Count -ge 1)))
+# 195. $null 进管道跑一次
+$nl1 = @($null | ForEach-Object { "x" })
+$results += T "管道空值" ((($nl1.Count -eq 1)) -and (($nl1[0] -eq "x")))
+# 196. $null 不参与计数选择
+$nlm = $null | Measure-Object
+$results += T "空值计数" (($nlm.Count -eq 0))
+$results += T "空值选择" (((@($null | Select-Object -First 1).Count) -eq 0))
+# 197. $null 不参与排序分组
+$results += T "空值排序" (((@($null | Sort-Object).Count) -eq 0))
+$results += T "空值分组" (((@($null | Group-Object).Count) -eq 0))
+# 198. $null 写文件零字节
+$null | Set-Content test/tmp/nullbyte.txt
+$results += T "空值写文件" ((((Get-Item test/tmp/nullbyte.txt).Length) -eq 0))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

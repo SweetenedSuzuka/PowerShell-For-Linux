@@ -304,7 +304,19 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 			if pl, ok := v.Items[0].(*ast.PipelineExpr); ok {
 				return object.Array(e.evalPipeline(pl.Pipeline))
 			}
-			return object.Array(unwrapOutput(e.evalValue(v.Items[0])))
+			if cmd, ok := v.Items[0].(*ast.Command); ok {
+				// 单个命令：按单元素管道执行，保留输出流原样（无输出即空流，$null 占一位）。
+				return object.Array(e.evalPipeline(&ast.Pipeline{Commands: []*ast.Command{cmd}}))
+			}
+			// 单个纯表达式：直接包装（$null 占一位，@($null) 计 1，与 PowerShell 一致）。
+			vv := e.evalValue(v.Items[0])
+			if vv == nil {
+				return object.Array(nil)
+			}
+			if vv.IsArray() {
+				return object.Array(vv.ArrayItems())
+			}
+			return object.Array([]*object.PSObject{vv})
 		}
 		items := make([]*object.PSObject, 0, len(v.Items))
 		for _, it := range v.Items {

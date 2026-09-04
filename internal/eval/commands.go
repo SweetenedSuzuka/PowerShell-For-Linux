@@ -54,6 +54,7 @@ func (e *Evaluator) EvalStatements(list *ast.StatementList) []*object.PSObject {
 }
 
 // EvalStatement 执行单条语句并返回输出对象（顶层逐语句输出用，保证与直写命令顺序一致）。
+// 顶层单个 $null 不占位（裸 $null/void/报错语句无输出）；嵌套位置与多值中的 $null 保留，它们在末端渲染时丢弃。
 func (e *Evaluator) EvalStatement(st ast.Node) []*object.PSObject {
 	out, sig := e.runStatements([]ast.Node{st})
 	if sig != nil {
@@ -67,6 +68,9 @@ func (e *Evaluator) EvalStatement(st ast.Node) []*object.PSObject {
 			// 无所属循环的 break/continue 只终止本条语句（与 PowerShell 一致）
 		}
 	}
+	if len(out) == 1 && (out[0] == nil || out[0].IsNull()) {
+		return nil
+	}
 	return out
 }
 
@@ -79,7 +83,7 @@ func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 			// $i++ 作为语句：仅副作用，不输出
 			e.evalValue(inc)
 		} else {
-			cur = flattenOutput(e.evalValue(pipe.Expr))
+			cur = flattenPipeInput(e.evalValue(pipe.Expr))
 		}
 	}
 	for i, cmd := range pipe.Commands {
@@ -110,8 +114,9 @@ func flattenPipelineList(in []*object.PSObject) []*object.PSObject {
 	return out
 }
 
-func flattenOutput(o *object.PSObject) []*object.PSObject {
-	if o == nil || o.IsNull() {
+// flattenPipeInput 把表达式值转为管道输入：数组摊平，$null 作为对象保留（下游按各自语义处理，顶层单个与末端渲染时丢弃）。
+func flattenPipeInput(o *object.PSObject) []*object.PSObject {
+	if o == nil {
 		return nil
 	}
 	if o.IsArray() {

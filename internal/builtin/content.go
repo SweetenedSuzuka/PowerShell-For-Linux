@@ -81,6 +81,9 @@ func cmdSetContent(c *Context) ([]*object.PSObject, error) {
 	}
 	var sb strings.Builder
 	for _, o := range content {
+		if o == nil || o.IsNull() {
+			continue // $null 不写任何字节（与 PowerShell 一致）
+		}
 		sb.WriteString(o.String())
 		sb.WriteByte('\n')
 	}
@@ -140,6 +143,9 @@ func cmdAddContent(c *Context) ([]*object.PSObject, error) {
 	// 已有内容的旧文件不再写 BOM，与新建文件行为一致。
 	var sb strings.Builder
 	for _, o := range content {
+		if o == nil || o.IsNull() {
+			continue // $null 不写任何字节（与 PowerShell 一致）
+		}
 		sb.WriteString(o.String())
 		sb.WriteByte('\n')
 	}

@@ -376,3 +376,21 @@ func TestFormatTableMixedOrder(t *testing.T) {
 		t.Errorf("文件行应留空，得到 %q", out)
 	}
 }
+
+// TestFormatOutputSkipsNull 验证空值渲染不占位：裸 $null 无输出，全空表格无输出，包括表头也不输出。
+func TestFormatOutputSkipsNull(t *testing.T) {
+	var sb strings.Builder
+	if err := FormatOutput(&sb, []*PSObject{Null(), Str("a")}); err != nil {
+		t.Fatal(err)
+	}
+	if sb.String() != "a\n" {
+		t.Errorf("空值不应占行，得到 %q", sb.String())
+	}
+	sb.Reset()
+	if err := FormatTableTo(&sb, []*PSObject{Null()}, []string{"Name"}); err != nil {
+		t.Fatal(err)
+	}
+	if sb.String() != "" {
+		t.Errorf("全空表格应无输出，得到 %q", sb.String())
+	}
+}

@@ -76,6 +76,15 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 		items = append(items, c.Args.Positional...)
 		props = nil
 	}
+	// $null 不参与选择（与 PowerShell 一致）
+	var shaped []*object.PSObject
+	for _, o := range items {
+		if o == nil || o.IsNull() {
+			continue
+		}
+		shaped = append(shaped, o)
+	}
+	items = shaped
 	// -First/-Last 显式 0 时返回空（原版 PowerShell 语义），未设置则不动
 	// -Skip 先扣除：-Last 在时从尾部扣除，否则从头部扣除（原版 PowerShell 语义）；负数报错
 	if skipSet {
@@ -191,6 +200,15 @@ func cmdSortObject(c *Context) ([]*object.PSObject, error) {
 		return compareOrderBuiltin(a, b)
 	}
 	items := c.Input
+	// $null 不参与排序（与 PowerShell 一致）
+	var shapedSort []*object.PSObject
+	for _, o := range items {
+		if o == nil || o.IsNull() {
+			continue
+		}
+		shapedSort = append(shapedSort, o)
+	}
+	items = shapedSort
 	sort.SliceStable(items, func(i, j int) bool {
 		ord := compare(items[i], items[j])
 		if desc {
@@ -282,6 +300,9 @@ func cmdGroupObject(c *Context) ([]*object.PSObject, error) {
 	firstName := map[string]string{}
 	var order []string
 	for _, o := range c.Input {
+		if o == nil || o.IsNull() {
+			continue // $null 不参与分组（与 PowerShell 一致）
+		}
 		k := ""
 		if prop != "" {
 			if v, ok := o.PropValue(prop); ok {
@@ -348,6 +369,9 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 	// Sum/Average 遇非数字输入作废（对齐原版 PowerShell：报错且字段置 $null）；Min/Max 仅统计数字
 	sumAvgValid := true
 	for _, o := range items {
+		if o == nil || o.IsNull() {
+			continue // $null 不参与任何统计（与 PowerShell 一致）
+		}
 		var v *object.PSObject
 		if prop != "" {
 			if pv, ok := o.PropValue(prop); ok {

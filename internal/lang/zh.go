@@ -48,6 +48,7 @@ var zh = map[Msg]string{
 	MsgParseIncDecVar:           "增量/减量运算符只能用于变量",
 	MsgParseOpMissingLeft:       "运算符 -%s 缺少左操作数",
 	MsgParseUnexpectedArg:       "意外的参数 -%s",
+	MsgParseMissingExpr:         "逗号后缺少表达式",
 	MsgParseInputRedirect:       "PowerShell 不支持 '<' 输入重定向",
 	MsgParseRedirectAfterCmd:    "重定向 '>' 只能用在命令之后",
 	MsgParseUnexpectedOp:        "意外的运算符 %s",

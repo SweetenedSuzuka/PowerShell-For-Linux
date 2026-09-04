@@ -48,6 +48,7 @@ Switch style at runtime:
 	MsgParseIncDecVar:           "Increment/decrement operators apply to variables only",
 	MsgParseOpMissingLeft:       "Operator -%s is missing its left operand",
 	MsgParseUnexpectedArg:       "Unexpected argument -%s",
+	MsgParseMissingExpr:         "Missing expression after ','",
 	MsgParseInputRedirect:       "PowerShell does not support '<' input redirection",
 	MsgParseRedirectAfterCmd:    "Redirect '>' can only follow a command",
 	MsgParseUnexpectedOp:        "Unexpected operator %s",

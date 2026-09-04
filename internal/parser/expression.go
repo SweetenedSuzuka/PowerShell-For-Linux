@@ -98,12 +98,17 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 		}
 		switch op {
 		case ",":
-			// 逗号：构建数组（比比较运算绑定更紧，使 1,2,3 -eq 2 过滤整个数组）
+			// 逗号：构建数组（比比较运算绑定更紧，使 1,2,3 -eq 2 过滤整个数组）。
+			// 值语义下逗号后不许另起命令（与原版 PowerShell 一致，报缺表达式错）；命令实参内裸字仍是字符串。
 			items := []ast.Node{lhs}
 			for p.cur().Type == TkPunct && p.cur().Text == "," {
 				p.advance()
 				if !argMode {
 					p.skipNewlines()
+				}
+				if !argMode && p.cur().Type == TkWord && isAtCommandWord(p.cur().Text) {
+					p.fail(lang.T(lang.MsgParseMissingExpr))
+					break
 				}
 				items = append(items, p.parseBinaryExpr(prec+1, argMode))
 			}
@@ -466,10 +471,15 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 					}
 					// 元素解析优先级低于逗号（28），使 "x","y" | cmd 先成数组再进管道
 					var item ast.Node
+					first := len(items) == 0
 					switch {
-					case p.cur().Type == TkWord && isAtCommandWord(p.cur().Text) && !p.atCommaAhead():
-						// @() 内裸字走命令位置（与原版 PowerShell 一致）：无顶层逗号的单命令元素按命令解析。
+					case p.cur().Type == TkWord && isAtCommandWord(p.cur().Text) && first:
+						// 首元素裸字走命令位置（与原版 PowerShell 一致）：命令吞掉后续逗号实参，后元素不再另起。
 						item = p.parsePipelineElement()
+					case !first && p.cur().Type == TkWord && isAtCommandWord(p.cur().Text):
+						// 非首元素裸字：原版 PowerShell 报逗号后缺少表达式（值元素后不许另起命令，裸 true 亦错）。
+						p.fail(lang.T(lang.MsgParseMissingExpr))
+						item = &ast.BareWord{Value: ""}
 					case p.atCommaAhead():
 						// 含顶层逗号的多元素沿用原解析路径，保持原有行为。
 						item = p.parseBinaryExpr(27, false)

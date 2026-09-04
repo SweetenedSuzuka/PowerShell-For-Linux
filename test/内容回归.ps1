@@ -833,6 +833,12 @@ $results += T "等待缺失进程" ((($? -eq $false)) -and (($Error.Count -ge 1)
 $Error.Clear()
 Wait-Process -Name "zzz-no-such-proc-abc"
 $results += T "等待缺失进程名" ((($? -eq $false)) -and (($Error.Count -ge 1)))
+# 201. @() 首命令吞逗号实参
+$at1 = @(Write-Output "a", "b")
+$results += T "数组首命令" ((($at1.Count -eq 2)) -and ((($at1 -join "|") -eq "a|b")))
+# 202. @() 命名首命令可解析
+$at2 = @(Write-Output -InputObject "a", "b")
+$results += T "数组命名首命令" ((($at2.Count -eq 2)) -and ((($at2 -join "|") -eq "a|b")))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

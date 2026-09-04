@@ -835,3 +835,26 @@ func TestExpressionLineContinuation(t *testing.T) {
 		t.Fatal("行尾悬挂运算符加 EOF 应标记不完整")
 	}
 }
+
+// TestAtArrayCommaRules 验证 @() 逗号规则（与 PowerShell 一致）：首元素命令吞逗号实参；值元素后裸命令词报缺表达式错；裸逗号后裸字同样报错。
+func TestAtArrayCommaRules(t *testing.T) {
+	for _, src := range []string{
+		`@(Write-Output "a", "b")`,
+		`@(Get-ChildItem -Path /tmp, "x")`,
+		`@(Get-Date)`,
+		`@(1, 2)`,
+	} {
+		if res := Parse(src); res.Error != nil {
+			t.Errorf("%q 应可解析，实际 err=%v", src, res.Error)
+		}
+	}
+	for _, src := range []string{
+		`@(1, abc)`,
+		`@("a", Write-Output "b")`,
+		`1, abc`,
+	} {
+		if res := Parse(src); res.Error == nil {
+			t.Errorf("%q 应报缺表达式错", src)
+		}
+	}
+}

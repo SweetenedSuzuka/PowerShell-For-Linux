@@ -857,6 +857,9 @@ $ver = [version]"1.2"
 $Error.Clear()
 $zz = [zzznope]"a"
 $results += T "版本转换" ((($ver.Major -eq 1)) -and (($ver.Minor -eq 2)) -and (($ver.Build -eq -1)) -and (("$ver" -eq "1.2")) -and (($? -eq $false)) -and (($Error.Count -ge 1)) -and (("$($Error[0])" -like "*无法找到类型*")))
+# 207. Get-Date 位置日期
+$gd = Get-Date 2020-1-1
+$results += T "位置日期" (($gd.Year -eq 2020))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

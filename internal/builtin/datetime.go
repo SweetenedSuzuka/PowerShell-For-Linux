@@ -34,6 +34,9 @@ func parseDateArg(s string) (time.Time, error) {
 		"2006-01-02 15:04:05",
 		"2006-01-02T15:04:05",
 		"2006-01-02",
+		"2006-1-2 15:04:05",
+		"2006-1-2T15:04:05",
+		"2006-1-2",
 		"2006/1/2",
 		time.RFC3339,
 	}
@@ -145,7 +148,7 @@ func cmdSetDate(c *Context) ([]*object.PSObject, error) {
 
 func init() {
 	Register("Get-Date", []ParamSpec{
-		{Name: "Date", Type: "string"},
+		{Name: "Date", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Format", Type: "string"},
 	}, cmdGetDate)
 	Register("Set-Date", []ParamSpec{

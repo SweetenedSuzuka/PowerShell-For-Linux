@@ -19,7 +19,7 @@ Status legend:
 | [`Clear-Content`](#clear-content) | Microsoft.PowerShell.Management | Both | Syntax differs | Deletes the contents of an item, but does not delete the item. | Go implementation | Nonexistent paths silently create an empty file (PowerShell errors with path-not-found). |
 | [`Clear-History`](#clear-history) | Microsoft.PowerShell.Core | Both | None | Deletes entries from the PowerShell session command history. | Go implementation |  |
 | [`Clear-Item`](#clear-item) | Microsoft.PowerShell.Management | Both | Syntax differs | Clears the contents of an item, but does not delete the item. | Go implementation |  |
-| [`Clear-ItemProperty`](#clear-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Clears the value of a property but does not delete the property. | Not implemented | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Clear-ItemProperty`](#clear-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Clears the value of a property but does not delete the property. | Not implemented | Contains Windows-only content (registry / services / recycle bin / hotfixes / event log) |
 | [`Clear-Variable`](#clear-variable) | Microsoft.PowerShell.Utility | Both | None | Deletes the value of a variable. | Go implementation |  |
 | [`Compare-Object`](#compare-object) | Microsoft.PowerShell.Utility | Both | None | Compares two sets of objects. | Go implementation | Behaves identically. |
 | [`Compress-PSResource`](#compress-psresource) | Microsoft.PowerShell.PSResourceGet | 7 only | 7 only | Compresses a specified folder containing module or script resources into a .nupkg file. | Not implemented |  |
@@ -37,7 +37,7 @@ Status legend:
 | [`ConvertTo-SecureString`](#convertto-securestring) | Microsoft.PowerShell.Security | Both | None | Converts plain text or encrypted strings to secure strings. | Not implemented |  |
 | [`ConvertTo-Xml`](#convertto-xml) | Microsoft.PowerShell.Utility | Both | None | Creates an XML-based representation of an object. | Not implemented | Serialization / markup / formatting (rarely used) |
 | [`Copy-Item`](#copy-item) | Microsoft.PowerShell.Management | Both | Syntax differs | Copies an item from one location to another. | Go implementation |  |
-| [`Copy-ItemProperty`](#copy-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Copies a property and value from a specified location to another location. | Not implemented | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Copy-ItemProperty`](#copy-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Copies a property and value from a specified location to another location. | Not implemented | Contains Windows-only content (registry / services / recycle bin / hotfixes / event log) |
 | [`Debug-Job`](#debug-job) | Microsoft.PowerShell.Core | Both | Description differs; Syntax differs | 5.1: Debugs a running background, remote, or Windows PowerShell Workflow job. / 7: Debugs a running background or remote job. | Not implemented | Jobs and runspaces (requires job facilities; out of scope) |
 | [`Debug-Process`](#debug-process) | Microsoft.PowerShell.Management | Both | None | Debugs one or more processes running on the local computer. | Not implemented |  |
 | [`Debug-Runspace`](#debug-runspace) | Microsoft.PowerShell.Utility | Both | Syntax differs | Starts an interactive debugging session with a runspace. | Not implemented | Jobs and runspaces (requires job facilities; out of scope) |
@@ -145,12 +145,12 @@ Status legend:
 | [`Measure-Command`](#measure-command) | Microsoft.PowerShell.Utility | Both | None | Measures the time it takes to run scriptblocks and cmdlets. | Go implementation |  |
 | [`Measure-Object`](#measure-object) | Microsoft.PowerShell.Utility | Both | Syntax differs | Calculates the numeric properties of objects, and the characters, words, and lines in string objects, such as files of text. | Go implementation | Min/Max over mixed numeric and non-numeric input only counts numbers (PowerShell compares non-numbers as strings); non-numeric input yields empty instead of erroring (PowerShell reports a non-terminating error). |
 | [`Move-Item`](#move-item) | Microsoft.PowerShell.Management | Both | Syntax differs | Moves an item from one location to another. | Go implementation | Moving directories requires `-Recurse`. |
-| [`Move-ItemProperty`](#move-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Moves a property from one location to another. | Not implemented | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Move-ItemProperty`](#move-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Moves a property from one location to another. | Not implemented | Contains Windows-only content (registry / services / recycle bin / hotfixes / event log) |
 | [`New-Alias`](#new-alias) | Microsoft.PowerShell.Utility | Both | None | Creates a new alias. | Go implementation |  |
 | [`New-Event`](#new-event) | Microsoft.PowerShell.Utility | Both | None | Creates a new event. | Not implemented | Events / breakpoints / tracing (debugger facilities) |
 | [`New-Guid`](#new-guid) | Microsoft.PowerShell.Utility | Both | Syntax differs | Creates a GUID. | Go implementation |  |
 | [`New-Item`](#new-item) | Microsoft.PowerShell.Management | Both | Syntax differs | Creates a new item. | Go implementation |  |
-| [`New-ItemProperty`](#new-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Creates a new property for an item and sets its value. | Not implemented | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`New-ItemProperty`](#new-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Creates a new property for an item and sets its value. | Not implemented | Contains Windows-only content (registry / services / recycle bin / hotfixes / event log) |
 | [`New-Module`](#new-module) | Microsoft.PowerShell.Core | Both | None | Creates a new dynamic module that exists only in memory. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
 | [`New-ModuleManifest`](#new-modulemanifest) | Microsoft.PowerShell.Core | Both | Syntax differs | Creates a new module manifest. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
 | [`New-Object`](#new-object) | Microsoft.PowerShell.Utility | Both | None | Creates an instance of a Microsoft .NET Framework or COM object. | Go implementation | Only `PSObject` / `PSCustomObject` are supported; other types (e.g. System.Collections.ArrayList) report "not supported". |
@@ -183,7 +183,7 @@ Status legend:
 | [`Remove-Alias`](#remove-alias) | Microsoft.PowerShell.Utility | 7 only | 7 only | Remove an alias from the current session. | Go implementation |  |
 | [`Remove-Event`](#remove-event) | Microsoft.PowerShell.Utility | Both | None | Deletes events from the event queue. | Not implemented | Events / breakpoints / tracing (debugger facilities) |
 | [`Remove-Item`](#remove-item) | Microsoft.PowerShell.Management | Both | Syntax differs | Deletes the specified items. | Go implementation | Nonexistent paths are silently ignored (PowerShell errors with path-not-found). |
-| [`Remove-ItemProperty`](#remove-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Deletes the property and its value from an item. | Not implemented | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Remove-ItemProperty`](#remove-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Deletes the property and its value from an item. | Not implemented | Contains Windows-only content (registry / services / recycle bin / hotfixes / event log) |
 | [`Remove-Job`](#remove-job) | Microsoft.PowerShell.Core | Both | Syntax differs | Deletes a PowerShell background job. | Not implemented | Jobs and runspaces (requires job facilities; out of scope) |
 | [`Remove-Module`](#remove-module) | Microsoft.PowerShell.Core | Both | None | Removes modules from the current session. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
 | [`Remove-PSBreakpoint`](#remove-psbreakpoint) | Microsoft.PowerShell.Utility | Both | Syntax differs | Deletes breakpoints from the current console. | Not implemented | Events / breakpoints / tracing (debugger facilities) |
@@ -193,7 +193,7 @@ Status legend:
 | [`Remove-TypeData`](#remove-typedata) | Microsoft.PowerShell.Utility | Both | None | Deletes extended types from the current session. | Not implemented | Serialization / markup / formatting (rarely used) |
 | [`Remove-Variable`](#remove-variable) | Microsoft.PowerShell.Utility | Both | None | Deletes a variable and its value. | Go implementation |  |
 | [`Rename-Item`](#rename-item) | Microsoft.PowerShell.Management | Both | Syntax differs | Renames an item in a PowerShell provider namespace. | Go implementation |  |
-| [`Rename-ItemProperty`](#rename-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Renames a property of an item. | Not implemented | Windows-only (registry / services / recycle bin / hotfixes / event log) |
+| [`Rename-ItemProperty`](#rename-itemproperty) | Microsoft.PowerShell.Management | Both | Syntax differs | Renames a property of an item. | Not implemented | Contains Windows-only content (registry / services / recycle bin / hotfixes / event log) |
 | [`Reset-PSResourceRepository`](#reset-psresourcerepository) | Microsoft.PowerShell.PSResourceGet | 7 only | 7 only | Creates a new default PSRepositories.xml file with preregistered repositories. | Not implemented |  |
 | [`Resolve-Path`](#resolve-path) | Microsoft.PowerShell.Management | Both | Syntax differs | Resolves the wildcard characters in a path, and displays the path contents. | Go implementation | Resolve-Path additionally resolves symbolic links. |
 | [`Restart-Computer`](#restart-computer) | Microsoft.PowerShell.Management | Both | Syntax differs | Restarts the operating system on local and remote computers. | Mapped Linux (sudo reboot / shutdown / hostnamectl) |  |
@@ -2472,7 +2472,7 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 
 | Parameter | Type | Meaning |
 | :--- | :--- | :--- |
-| `-Date` | string | Specified date-time (parsed against the local time zone when none is written), accepting `2006-01-02 15:04:05`, `2006-01-02T15:04:05`, `2006-01-02`, `2006/1/2`, RFC3339 |
+| `-Date` (position 0) | string | Specified date-time (parsed against the local time zone when none is written), accepting `2006-01-02 15:04:05`, `2006-01-02T15:04:05`, `2006-01-02`, `2006-1-2 15:04:05`, `2006-1-2T15:04:05`, `2006-1-2`, `2006/1/2`, RFC3339 |
 | `-Format` | string | .NET format string; conversion rules below |
 
 - `-Format` conversion rules: `yyyy`→`2006`, `yy`→`06`; `M`→`1`, `MM`→`01`, `MMM`→`Jan`, `MMMM`→`January`; `d`→`2`, `dd`→`02`, `ddd`→`Mon`, `dddd`→`Monday`; `H`→`15`, `hh`→`03`, `m`→`4`, `mm`→`04`, `s`→`5`, `ss`→`05`, `tt`→`PM`, `zzz`→`-07:00`.

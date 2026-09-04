@@ -127,6 +127,7 @@ var zh = map[Msg]string{
 	MsgPSVersionBad:        "Set-PSVersion : 不支持的版本 %q（请用 5.1 或 7.x）",
 	MsgPSVersionSet:        "已切换到 %s 风格。",
 	MsgHashAlgoUnsupported: "Get-FileHash : 不支持的算法 %s",
+	MsgParamSetUnresolvable: "无法使用指定的命名参数解析参数集，有一个或多个参数不能一起使用，或提供的参数不足。",
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported: "不支持",

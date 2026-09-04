@@ -127,6 +127,7 @@ Switch style at runtime:
 	MsgPSVersionBad:        "Set-PSVersion : Unsupported version %q (use 5.1 or 7.x)",
 	MsgPSVersionSet:        "Style switched to %s.",
 	MsgHashAlgoUnsupported: "Get-FileHash : Unsupported algorithm %s",
+	MsgParamSetUnresolvable: "Parameter set cannot be resolved using the specified named parameters. One or more parameters issued cannot be used together or an insufficient number of parameters were provided.",
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported: "not supported",

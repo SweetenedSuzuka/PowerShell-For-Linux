@@ -28,6 +28,10 @@ func cmdTestConnection(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdStartSleep(c *Context) ([]*object.PSObject, error) {
+	// -Seconds 与 -Milliseconds 分属不同参数集，不可同用（按出现与否判定，与取值无关）。
+	if c.Args.Get("Seconds") != nil && c.Args.Get("Milliseconds") != nil {
+		return errf(c, "%s", lang.T(lang.MsgParamSetUnresolvable))
+	}
 	var d time.Duration
 	if sec, ok := c.Args.Int("Seconds"); ok {
 		d = time.Duration(sec) * time.Second

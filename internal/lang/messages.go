@@ -111,6 +111,7 @@ const (
 	MsgPSVersionBad
 	MsgPSVersionSet
 	MsgHashAlgoUnsupported
+	MsgParamSetUnresolvable
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported

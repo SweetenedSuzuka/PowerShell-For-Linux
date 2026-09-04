@@ -808,6 +808,10 @@ Stop-Process -Id $sp1.Id, $sp2.Id
 $sp3 = Start-Process /bin/sleep -ArgumentList "30"
 $results += T "进程名通配" (((@(Get-Process -Name "slee*").Count) -ge 1) -and ((@(Get-Process -Name "zzz-no-such-*").Count) -eq 0))
 Stop-Process -Id $sp3.Id
+# 194. Start-Sleep 双参互斥报错
+$Error.Clear()
+Start-Sleep -Seconds 1 -Milliseconds 100
+$results += T "睡眠双参互斥" ((($? -eq $false)) -and (($Error.Count -ge 1)))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

@@ -25,6 +25,8 @@ type Evaluator struct {
 	stdin         io.Reader
 	hostOut       io.Writer
 	hostErr       io.Writer
+	// redirOut 是 stdout 重定向生效中的目标写者；直接写与返回值共用这一次打开，不另开文件。
+	redirOut      io.Writer
 	scopes        []map[string]*object.PSObject // 变量作用域栈，scopes[0] 为全局
 	inCapture     int                           // 进入捕获模式（函数/脚本块/子表达式）计数
 	inPipeline    int                           // 命令处于管道输入位的层数（>0 表示本次调用有管道输入，哪怕为零项）

@@ -121,6 +121,16 @@ func (p *Parser) parseCommand() *ast.Command {
 	return cmd
 }
 
+// atStderrRedirect 报告当前位置是否为紧贴的 2> / 2>>（与重定向分支同条件）。
+func (p *Parser) atStderrRedirect() bool {
+	t := p.cur()
+	if t.Type != TkNumber || t.Num != 2 {
+		return false
+	}
+	nt := p.peekAt(1)
+	return nt.Type == TkOp && (nt.Text == ">" || nt.Text == ">>") && nt.Adjacent
+}
+
 // collectCommandArgs 收集命令的实参、开关与重定向，直到语句终止符。
 func (p *Parser) collectCommandArgs(cmd *ast.Command) {
 	for {
@@ -212,7 +222,8 @@ func (p *Parser) collectCommandArgs(cmd *ast.Command) {
 				continue
 			}
 			// 开关或命名参数：看下一个 token
-			if p.isValueStart(p.cur()) {
+			// 例外：紧贴的 2> / 2>> 是错误重定向，不是开关的值（开关本身不取值）。
+			if p.isValueStart(p.cur()) && !p.atStderrRedirect() {
 				begin := p.pos
 				value := p.parseExpression(true)
 				raw := p.rawSpan(begin)

@@ -408,6 +408,14 @@ func TestRedirection(t *testing.T) {
 	if !strings.Contains(d, "[redir>word(err.txt)]") {
 		t.Fatalf("2> 重定向解析失败: %s", d)
 	}
+	// 开关后的 2> 是错误重定向，不是开关的值，也不是属性名。
+	d = dump(parseOK(t, "Format-Table -AutoSize 2> err.txt"))
+	if !strings.Contains(d, "-AutoSize") || !strings.Contains(d, "[redir>") {
+		t.Fatalf("开关后重定向解析失败: %s", d)
+	}
+	if strings.Contains(d, "2>") {
+		t.Fatalf("2> 被合并进实参: %s", d)
+	}
 }
 
 func TestBarewordMerging(t *testing.T) {

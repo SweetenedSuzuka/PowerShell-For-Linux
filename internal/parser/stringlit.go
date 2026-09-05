@@ -53,7 +53,8 @@ func (p *Parser) canMergeBareword() bool {
 	case TkWord, TkNumber:
 		return nt.Adjacent
 	case TkOp:
-		return nt.Adjacent && isBarewordOp(nt.Text) && !(nt.Text == "=" && p.isStrongValueStart(p.peekAt(2)))
+		// > 始终是重定向，不并入裸字（否则开关后的 2> 会被吃成属性名）。
+		return nt.Adjacent && nt.Text != ">" && isBarewordOp(nt.Text) && !(nt.Text == "=" && p.isStrongValueStart(p.peekAt(2)))
 	case TkDot, TkColon:
 		return nt.Adjacent
 	}
@@ -87,7 +88,7 @@ func (p *Parser) mergeBareword() ast.Node {
 			sb.WriteString(nt.Raw)
 			p.advance()
 		case TkOp:
-			if !isBarewordOp(nt.Text) {
+			if !isBarewordOp(nt.Text) || nt.Text == ">" {
 				return &ast.BareWord{Value: sb.String()}
 			}
 			if nt.Text == "=" && p.isStrongValueStart(p.peekAt(1)) {

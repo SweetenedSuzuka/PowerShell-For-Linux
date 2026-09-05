@@ -162,6 +162,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		}
 		// 参数绑定后才定 $?：绑定过程可能读取 $?，不能被新命令提前覆盖
 		e.Session.LastSuccess = true
+		realOut := e.hostOut
 		// 2> 重定向：执行期间把 stderr 指到目标（$null 则丢弃）
 		if w, closer := e.stderrRedirectTarget(cmd); w != nil {
 			oldErr := e.hostErr
@@ -171,21 +172,20 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 			if closer != nil {
 				defer closer.Close()
 			}
-			ctx := &builtin.Context{
-				Shell: e.Session, Engine: e,
-				Stdout: e.hostOut, Stderr: e.hostErr, Stdin: e.stdin,
-				Args: args, Input: input,
+		}
+		// > 重定向：执行期间把 stdout 指到目标（直接写屏的 Format-Table 等一并捕获；Write-Host 与确认提示走 Console，不受影响）
+		if w, closer := e.stdoutRedirectTarget(cmd); w != nil {
+			e.hostOut = w
+			oldRedir := e.redirOut
+			e.redirOut = w
+			defer func() { e.hostOut = realOut; e.redirOut = oldRedir }()
+			if closer != nil {
+				defer closer.Close()
 			}
-			out, err := fn(ctx)
-			if err != nil {
-				e.builtinError(args, err)
-				return nil
-			}
-			return e.applyRedirects(cmd, out)
 		}
 		ctx := &builtin.Context{
 			Shell: e.Session, Engine: e,
-			Stdout: e.hostOut, Stderr: e.hostErr, Stdin: e.stdin,
+			Stdout: e.hostOut, Stderr: e.hostErr, Stdin: e.stdin, Console: realOut,
 			Args: args, Input: input,
 		}
 		out, err := fn(ctx)
@@ -266,6 +266,33 @@ func (e *Evaluator) stderrRedirectTarget(cmd *ast.Command) (io.Writer, io.Closer
 	return nil, nil
 }
 
+// stdoutRedirectTarget 求 stdout 重定向目标（> / >>）；多个取最后一个；$null 或非法返回 Discard。
+func (e *Evaluator) stdoutRedirectTarget(cmd *ast.Command) (io.Writer, io.Closer) {
+	var pick *ast.Redirection
+	for i := range cmd.Redirs {
+		if r := &cmd.Redirs[i]; r.Kind == ast.RedirStdout || r.Kind == ast.RedirAppend {
+			pick = r
+		}
+	}
+	if pick == nil {
+		return nil, nil
+	}
+	target, ok := e.redirTargetPath(pick.Target)
+	if !ok {
+		return io.Discard, nil
+	}
+	flags := os.O_WRONLY | os.O_CREATE
+	if pick.Append {
+		flags |= os.O_APPEND
+	} else {
+		flags |= os.O_TRUNC
+	}
+	if f, err := os.OpenFile(target, flags, 0o644); err == nil {
+		return f, f
+	}
+	return io.Discard, nil
+}
+
 // applyRedirects 处理命令的 stdout 重定向（> / >>）。
 // stdout 被重定向时输出不进管道（返回 nil）；只有 stderr 重定向时输出照常返回。
 func (e *Evaluator) applyRedirects(cmd *ast.Command, out []*object.PSObject) []*object.PSObject {
@@ -275,6 +302,22 @@ func (e *Evaluator) applyRedirects(cmd *ast.Command, out []*object.PSObject) []*
 			continue
 		}
 		hasStdout = true
+	}
+	if !hasStdout {
+		return out
+	}
+	// 内置分支已把目标打开并指给 redirOut：返回值直接写进去，不另开文件（否则会截掉直接写的内容）。
+	if e.redirOut != nil {
+		var buf bytes.Buffer
+		_ = object.FormatOutput(&buf, out)
+		_, _ = io.WriteString(e.redirOut, buf.String())
+		return nil
+	}
+	// 函数/脚本/外部命令路径：返回值逐个目标落盘（沿用旧行为）。
+	for _, r := range cmd.Redirs {
+		if r.Kind != ast.RedirStdout && r.Kind != ast.RedirAppend {
+			continue
+		}
 		target, ok := e.redirTargetPath(r.Target)
 		if !ok {
 			continue // > $null 或非法盘符：丢弃
@@ -295,10 +338,7 @@ func (e *Evaluator) applyRedirects(cmd *ast.Command, out []*object.PSObject) []*
 		_, _ = f.WriteString(buf.String())
 		_ = f.Close()
 	}
-	if hasStdout {
-		return nil
-	}
-	return out
+	return nil
 }
 
 // ---- 函数调用 ----

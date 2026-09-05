@@ -200,7 +200,7 @@ func confirmSkip(c *Context, operation string, target string, yesAll, noAll *boo
 		return true
 	}
 	for {
-		fmt.Fprint(c.Stdout, lang.T(lang.MsgConfirmPrompt, operation, target))
+		fmt.Fprint(c.console(), lang.T(lang.MsgConfirmPrompt, operation, target))
 		answer, ok := readLineBytes(c.Stdin)
 		if !ok {
 			// 流结束没有等到回答：按拒绝处理

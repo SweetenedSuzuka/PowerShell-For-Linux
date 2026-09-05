@@ -23,9 +23,9 @@ func cmdWriteHost(c *Context) ([]*object.PSObject, error) {
 	noNewline := c.Args.Switch("NoNewline")
 	text := strings.Join(parts, " ")
 	if noNewline {
-		fmt.Fprint(c.Stdout, text)
+		fmt.Fprint(c.console(), text)
 	} else {
-		fmt.Fprintln(c.Stdout, text)
+		fmt.Fprintln(c.console(), text)
 	}
 	return nil, nil
 }

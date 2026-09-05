@@ -860,6 +860,11 @@ $results += T "版本转换" ((($ver.Major -eq 1)) -and (($ver.Minor -eq 2)) -an
 # 207. Get-Date 位置日期
 $gd = Get-Date 2020-1-1
 $results += T "位置日期" (($gd.Year -eq 2020))
+# 208. 开关后 2> 重定向生效
+Get-ChildItem | Format-Table -AutoSize 2>$null > redir22.out
+$rr = @(Get-Content redir22.out)
+Remove-Item redir22.out
+$results += T "开关重定向" ((($rr.Count -gt 1)) -and (($rr[0] -like "*Mode*")))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

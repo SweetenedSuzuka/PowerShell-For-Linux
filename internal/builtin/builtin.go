@@ -35,8 +35,18 @@ type Context struct {
 	Stdout io.Writer
 	Stderr io.Writer
 	Stdin  io.Reader
-	Args   *BoundArgs
-	Input  []*object.PSObject // 管道输入对象
+	// Console 是不受重定向影响的主机输出（提示、Write-Host、Out-Host、清屏用）；为空时回退 Stdout。
+	Console io.Writer
+	Args    *BoundArgs
+	Input   []*object.PSObject // 管道输入对象
+}
+
+// console 取主机输出；未设置时回退 Stdout。
+func (c *Context) console() io.Writer {
+	if c.Console != nil {
+		return c.Console
+	}
+	return c.Stdout
 }
 
 // BoundArgs 是绑定后的命令参数。

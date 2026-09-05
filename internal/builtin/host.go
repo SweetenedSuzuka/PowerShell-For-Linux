@@ -29,7 +29,7 @@ func cmdWriteWarning(c *Context) ([]*object.PSObject, error) {
 
 func cmdWriteInformation(c *Context) ([]*object.PSObject, error) {
 	msg := strings.Join(namedOrPosArgs(c, "MessageData"), " ")
-	fmt.Fprintln(c.Stdout, msg)
+	fmt.Fprintln(c.console(), msg)
 	return nil, nil
 }
 
@@ -42,12 +42,12 @@ func cmdWriteDebug(c *Context) ([]*object.PSObject, error) {
 func cmdOutHost(c *Context) ([]*object.PSObject, error) {
 	// 输出到主机（默认行为）：直接渲染，不进入管道
 	objs := inputItems(c)
-	_ = object.FormatOutput(c.Stdout, objs)
+	_ = object.FormatOutput(c.console(), objs)
 	return nil, nil
 }
 
 func cmdClearHost(c *Context) ([]*object.PSObject, error) {
-	fmt.Fprint(c.Stdout, "\x1b[2J\x1b[H")
+	fmt.Fprint(c.console(), "\x1b[2J\x1b[H")
 	return nil, nil
 }
 
@@ -58,7 +58,7 @@ func cmdReadHost(c *Context) ([]*object.PSObject, error) {
 	}
 	prompt, _ := c.Args.Str("Prompt")
 	if prompt != "" {
-		fmt.Fprint(c.Stdout, prompt)
+		fmt.Fprint(c.console(), prompt)
 	}
 	reader := bufio.NewReader(c.Stdin)
 	line, err := reader.ReadString('\n')

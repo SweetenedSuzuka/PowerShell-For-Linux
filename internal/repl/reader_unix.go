@@ -81,10 +81,9 @@ func (e *unixEditor) ReadLine(prompt string) (string, error) {
 		case r == '\n' || r == '\r':
 			fmt.Fprint(e.out, "\r\n")
 			return string(buf), nil
-		case r == 0x03: // Ctrl-C：清空当前行
-			buf = buf[:0]
-			pos = 0
-			fmt.Fprint(e.out, "\r\n"+prompt)
+		case r == 0x03: // Ctrl-C：中断本行读取，loop 据此丢弃续行累积
+			fmt.Fprint(e.out, "\r\n")
+			return "", errLineCancelled
 		case r == 0x04: // Ctrl-D：空行退出
 			if len(buf) == 0 {
 				return "", io.EOF

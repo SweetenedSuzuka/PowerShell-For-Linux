@@ -2,6 +2,7 @@
 package repl
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -19,6 +20,9 @@ import (
 type lineReader interface {
 	ReadLine(prompt string) (string, error)
 }
+
+// errLineCancelled 是行读取被 Ctrl-C 中断的标记（raw 编辑器返回，loop 据此丢弃续行累积回到主提示符）。
+var errLineCancelled = errors.New("line cancelled")
 
 // REPL 是一次交互式会话。
 type REPL struct {
@@ -70,6 +74,10 @@ func (r *REPL) loop() {
 		}
 		line, err := r.reader.ReadLine(prompt)
 		if err != nil {
+			if err == errLineCancelled {
+				r.pending = ""
+				continue
+			}
 			if err == io.EOF {
 				fmt.Fprintln(r.out)
 			}

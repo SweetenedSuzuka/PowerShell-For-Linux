@@ -294,6 +294,8 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 				return DateTime(midnight), true
 			case "timeofday":
 				return Str(formatTimeOfDay(t)), true
+			case "datetime":
+				return Str(formatDateTime(t)), true
 			}
 		}
 	case "System.Version":

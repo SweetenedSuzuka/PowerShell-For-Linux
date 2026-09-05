@@ -144,8 +144,11 @@ func cellOf(o *PSObject, label string) string {
 	return ""
 }
 
-// dateTimeColumns 是 DateTime 默认表格列（顺序与 PowerShell 一致）。
+// dateTimeColumns 是 DateTime 默认表格列（顺序与 PowerShell 一致，不含 DateTime 成员列）。
 var dateTimeColumns = []string{"DisplayHint", "Date", "Day", "DayOfWeek", "DayOfYear", "Hour", "Kind", "Millisecond", "Microsecond", "Nanosecond", "Minute", "Month", "Second", "Ticks", "TimeOfDay", "Year"}
+
+// DateTimeSelectColumns 是 DateTime 全属性列（Select * 与 Format-List * 用，顺序与 PowerShell 一致）。
+var DateTimeSelectColumns = []string{"DisplayHint", "DateTime", "Date", "Day", "DayOfWeek", "DayOfYear", "Hour", "Kind", "Millisecond", "Microsecond", "Nanosecond", "Minute", "Month", "Second", "Ticks", "TimeOfDay", "Year"}
 
 // tableColumns 决定表格的列定义（标签 + 对齐）。
 func tableColumns(objs []*PSObject) (labels []string, aligns []string) {
@@ -399,6 +402,21 @@ func FormatListTo(w io.Writer, objs []*PSObject, props []string) error {
 			for _, p := range o.Props {
 				names = append(names, p.Name)
 			}
+			// DateTime 虚拟属性补齐（顺序见 DateTimeSelectColumns；其它类型沿用实属性）。
+			if o.TypeName == "DateTime" {
+				for _, vn := range DateTimeSelectColumns {
+					dup := false
+					for _, n := range names {
+						if strings.EqualFold(n, vn) {
+							dup = true
+							break
+						}
+					}
+					if !dup {
+						names = append(names, vn)
+					}
+				}
+			}
 			if len(names) == 0 {
 				fmt.Fprintln(w, o.String())
 				continue
@@ -413,6 +431,11 @@ func FormatListTo(w io.Writer, objs []*PSObject, props []string) error {
 		for _, n := range names {
 			val := ""
 			if len(props) > 0 && !allProps {
+				if v, ok := o.PropValue(n); ok {
+					val = v.String()
+				}
+			} else if o.TypeName == "DateTime" {
+				// 虚拟属性经 PropValue 取值；实属性 PropValue 优先查 Props，结果一致。
 				if v, ok := o.PropValue(n); ok {
 					val = v.String()
 				}

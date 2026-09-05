@@ -130,6 +130,21 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 				for _, pr := range it.Props {
 					names = append(names, pr.Name)
 				}
+				// DateTime 虚拟属性补齐（顺序与 PowerShell 一致；其它类型沿用实属性）。
+				if it.TypeName == "DateTime" {
+					for _, vn := range object.DateTimeSelectColumns {
+						dup := false
+						for _, n := range names {
+							if strings.EqualFold(n, vn) {
+								dup = true
+								break
+							}
+						}
+						if !dup {
+							names = append(names, vn)
+						}
+					}
+				}
 				if len(names) == 0 {
 					out = append(out, it) // 无属性对象（标量等）原样保留
 					continue

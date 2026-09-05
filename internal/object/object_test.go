@@ -154,6 +154,21 @@ func TestFormatList(t *testing.T) {
 	}
 }
 
+// TestFormatListDateTimeAll 验证 Format-List * 列出虚拟属性。
+func TestFormatListDateTimeAll(t *testing.T) {
+	o := DateTime(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC))
+	o.AddProp("DisplayHint", "DateTime")
+	var sb strings.Builder
+	if err := FormatListTo(&sb, []*PSObject{o}, []string{"*"}); err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{"DisplayHint : DateTime", "637134336000000000", "2020"} {
+		if !strings.Contains(sb.String(), want) {
+			t.Errorf("列表缺 %q:\n%s", want, sb.String())
+		}
+	}
+}
+
 // TestFormatTableDateTimeDefault 验证 DateTime 默认表格列（顺序与 PowerShell 一致）与刻度锚点。
 func TestFormatTableDateTimeDefault(t *testing.T) {
 	o := DateTime(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC))

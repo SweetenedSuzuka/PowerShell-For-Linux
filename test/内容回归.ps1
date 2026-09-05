@@ -886,6 +886,9 @@ $results += T "管道错误粘滞" (($? -eq $false))
 # 214. 成员读取重置
 $qm = @(Get-Content zzz-no-such-xyz-123 2>$null).Count
 $results += T "成员读取重置" (($? -eq $true))
+# 215. Select * 含虚拟属性
+$sa = Get-Date | Select-Object *
+$results += T "星号选择" ((($sa.Year -gt 0)) -and (($sa.Ticks -gt 0)))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

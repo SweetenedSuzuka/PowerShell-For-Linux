@@ -371,7 +371,13 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		return object.Null()
 	case *ast.MemberAccess:
 		base := e.evalValue(v.Base)
-		return e.memberProp(base, v.Prop)
+		mark := e.Session.ErrorSeq
+		out := e.memberProp(base, v.Prop)
+		// 成员读取未产生新错误时记下错误序号（自己不置真）；赋值收尾据此判定。
+		if e.Session.ErrorSeq == mark {
+			e.Session.MemberReadSeq = mark
+		}
+		return out
 	case *ast.MethodCall:
 		return e.evalMethodCall(v)
 	case *ast.Index:

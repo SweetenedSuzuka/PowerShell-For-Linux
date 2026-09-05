@@ -679,10 +679,10 @@ $results += T "首选项空值恢复默认" ($ErrorActionPreference -eq "Continu
 Get-Item 不存在EA123
 $aqRead = $?
 $results += T "赋值读旧 $?" ($aqRead -eq $false)
-# 157. 干净赋值重置失败状态
+# 157. 右侧无新错误时赋值置真
 $aqTmp = 5
 if ($?) { $aqOk = "ok" } else { $aqOk = "fail" }
-$results += T "干净赋值置真" ($aqOk -eq "ok")
+$results += T "失败后赋值置真" ($aqOk -eq "ok")
 # 158. 赋值右侧出错保持失败
 $aqBad = 1/0
 if ($?) { $aqBadOk = "ok" } else { $aqBadOk = "fail" }
@@ -880,6 +880,12 @@ $results += T "非法日期报错" ((($? -eq $false)) -and (($Error.Count -ge 1)
 # 212. 日期对象链式成员
 $dd = Get-Date 2024-01-02
 $results += T "日期链式成员" ((($dd.Date.Year -eq 2024)) -and (($dd.Ticks -gt 0)))
+# 213. 管道内错误粘滞
+Get-Content zzz-no-such-xyz-123 2>$null | Out-Null
+$results += T "管道错误粘滞" (($? -eq $false))
+# 214. 成员读取重置
+$qm = @(Get-Content zzz-no-such-xyz-123 2>$null).Count
+$results += T "成员读取重置" (($? -eq $true))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

@@ -76,6 +76,7 @@ func (e *Evaluator) EvalStatement(st ast.Node) []*object.PSObject {
 
 func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 	var cur []*object.PSObject
+	mark := e.Session.ErrorSeq
 	if pipe.Expr != nil {
 		// 纯表达式语句求值前置位 $?（对齐命令路径：求值中出错由 writeError 覆盖为 false）
 		e.Session.LastSuccess = true
@@ -95,6 +96,10 @@ func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 			defer func() { e.inPipeline-- }()
 		}
 		cur = flattenPipelineList(e.execCommand(cmd, cur, isLast))
+	}
+	// 管道内出现过错误（即使后续命令成功）：整条管道置失败（与 PowerShell 一致）。
+	if e.Session.ErrorSeq != mark {
+		e.Session.LastSuccess = false
 	}
 	return cur
 }

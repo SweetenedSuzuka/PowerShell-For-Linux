@@ -745,7 +745,7 @@ func TestAssignSuccessFlag(t *testing.T) {
 	// 右侧读 $? 拿到上一条语句的状态
 	wantStr(t, `Get-Item 不存在QW1; $x = $?; if ($x) { "ok" } else { "fail" }`, "fail")
 	wantStr(t, `$y = 1; $x = $?; if ($x) { "ok" } else { "fail" }`, "ok")
-	// 干净赋值重置失败状态
+	// 右侧无新错误时赋值置真
 	wantStr(t, `Get-Item 不存在QW1; $x = 5; if ($?) { "ok" } else { "fail" }`, "ok")
 	// 右侧出错保持失败
 	wantStr(t, `$x = 1/0; if ($?) { "ok" } else { "fail" }`, "fail")

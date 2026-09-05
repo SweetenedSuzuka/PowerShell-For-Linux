@@ -60,6 +60,7 @@ type Session struct {
 	NonInteractive bool               // -NonInteractive：确认提示直接拒绝，读取输入报错
 	ErrorRecords   []*object.PSObject // $Error：本会话累积的错误记录，最新在前
 	ErrorSeq       uint64             // 错误记录序列号，每累积一条加一（求值器据此判断某段执行是否产生新错误）
+	MemberReadSeq  uint64             // 成员读取未产生新错误时记下的错误序号（供赋值收尾判定）
 	Matches        *object.PSObject   // $Matches：最近一次标量 -match 的捕获组，未匹配过为 nil
 	PSCommandPath  string
 	Args           []*object.PSObject // 脚本/函数实参（$args）

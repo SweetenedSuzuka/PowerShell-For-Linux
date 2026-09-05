@@ -213,7 +213,7 @@ func (e *Evaluator) execAssign(a *ast.Assign) {
 			e.reportError(err)
 		}
 	}
-	if e.Session.ErrorSeq == seq {
+	if e.Session.ErrorSeq == seq || e.Session.MemberReadSeq == e.Session.ErrorSeq {
 		e.Session.LastSuccess = true
 	}
 }

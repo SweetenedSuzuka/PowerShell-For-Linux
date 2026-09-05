@@ -30,7 +30,7 @@ func filterMatches(c *Context, obj *object.PSObject) bool {
 
 func evalFilterNode(c *Context, node ast.Node, obj *object.PSObject) bool {
 	if sb, ok := node.(*ast.ScriptBlock); ok {
-		outs, _ := c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, map[string]*object.PSObject{"_": obj, "PSItem": obj}, c.Stdout)
+		outs, _ := c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, map[string]*object.PSObject{"_": obj, "PSItem": obj})
 		if len(outs) == 0 {
 			return false
 		}
@@ -279,7 +279,7 @@ func cmdForEachObject(c *Context) ([]*object.PSObject, error) {
 	var out []*object.PSObject
 	run := func(n ast.Node, extra map[string]*object.PSObject) {
 		if sb, ok := n.(*ast.ScriptBlock); ok {
-			outs, _ := c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, extra, c.Stdout)
+			outs, _ := c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, extra)
 			out = append(out, outs...)
 		}
 	}
@@ -296,7 +296,7 @@ func cmdForEachObject(c *Context) ([]*object.PSObject, error) {
 		}
 	} else if sb, ok := node.(*ast.ScriptBlock); ok {
 		for _, obj := range c.Input {
-			outs, _ := c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, map[string]*object.PSObject{"_": obj, "PSItem": obj}, c.Stdout)
+			outs, _ := c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, map[string]*object.PSObject{"_": obj, "PSItem": obj})
 			out = append(out, outs...)
 		}
 	} else {
@@ -501,7 +501,7 @@ func cmdMeasureCommand(c *Context) ([]*object.PSObject, error) {
 	node := c.Args.GetNode("Expression")
 	if sb, ok := node.(*ast.ScriptBlock); ok {
 		start := time.Now()
-		_, _ = c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, nil, c.Stdout)
+		_, _ = c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, nil)
 		return []*object.PSObject{timeSpanObj(time.Since(start))}, nil
 	}
 	return nil, nil

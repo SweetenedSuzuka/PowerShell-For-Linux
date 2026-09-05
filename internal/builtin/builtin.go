@@ -19,7 +19,7 @@ type Engine interface {
 	// EvalExpr 在 extra 变量作用域下求值表达式。
 	EvalExpr(node ast.Node, extra map[string]*object.PSObject) (*object.PSObject, error)
 	// InvokeBlock 执行脚本块并返回其输出的对象（不打印）。
-	InvokeBlock(block *ast.Block, extra map[string]*object.PSObject, stdout io.Writer) ([]*object.PSObject, error)
+	InvokeBlock(block *ast.Block, extra map[string]*object.PSObject) ([]*object.PSObject, error)
 	// EvalFilterExpr 在 $_ = obj 上下文求值过滤表达式（裸字视为对象属性）。
 	EvalFilterExpr(node ast.Node, obj *object.PSObject) (bool, error)
 	// RunSource 解析并执行一段源码，返回输出对象（Invoke-Expression / Invoke-History 用）。

@@ -67,7 +67,7 @@ func (e *Evaluator) EvalExpr(node ast.Node, extra map[string]*object.PSObject) (
 }
 
 // InvokeBlock 执行脚本块并返回其输出对象（不打印）。
-func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObject, stdout io.Writer) ([]*object.PSObject, error) {
+func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObject) ([]*object.PSObject, error) {
 	if block == nil {
 		return nil, nil
 	}

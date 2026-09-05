@@ -50,6 +50,7 @@ var zh = map[Msg]string{
 	MsgParseUnexpectedArg:       "意外的参数 -%s",
 	MsgParseMissingExpr:         "逗号后缺少表达式",
 	MsgParseMissingArg:          "参数列表中缺少参数。",
+	MsgParseFormatValue:         "`-f` 后缺少值表达式。",
 	MsgParseInputRedirect:       "PowerShell 不支持 '<' 输入重定向",
 	MsgParseRedirectAfterCmd:    "重定向 '>' 只能用在命令之后",
 	MsgParseUnexpectedOp:        "意外的运算符 %s",

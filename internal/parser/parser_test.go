@@ -821,7 +821,8 @@ func TestExpressionLineContinuation(t *testing.T) {
 		"( 1 +\n2 )",
 		"\n(1 + 2)\n",
 		"$m = 1,\n2",
-		`"{0}" -f\n1`,
+		`"{0}" -f
+1`,
 		"$c = $true ?\n\"y\" :\n\"n\"",
 		"$s = \"ab\"; $s[\n0]",
 		"echo a &&\necho b",
@@ -865,6 +866,29 @@ func TestAtArrayCommaRules(t *testing.T) {
 	} {
 		if res := Parse(src); res.Error == nil {
 			t.Errorf("%q 应报缺表达式错", src)
+		}
+	}
+}
+
+// TestFormatOperatorValue 验证 -f 后首项与逗号后项须是值表达式，裸字报错（与 PowerShell 一致）。
+func TestFormatOperatorValue(t *testing.T) {
+	for _, src := range []string{
+		`"{0}{1}" -f 1, abc`,
+		`"{0}{1}" -f 1, true`,
+		`"{0}" -f abc`,
+	} {
+		if res := Parse(src); res.Error == nil {
+			t.Errorf("%q 应报错，实际通过", src)
+		}
+	}
+	for _, src := range []string{
+		`"{0}{1}" -f 1, 2`,
+		`"{0}" -f 5 * 2`,
+		`"{0}" -f
+1`,
+	} {
+		if res := Parse(src); res.Error != nil || res.Incomplete {
+			t.Errorf("%q 应可解析，实际 err=%v", src, res.Error)
 		}
 	}
 }

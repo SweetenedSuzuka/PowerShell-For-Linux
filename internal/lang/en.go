@@ -50,6 +50,7 @@ Switch style at runtime:
 	MsgParseUnexpectedArg:       "Unexpected argument -%s",
 	MsgParseMissingExpr:         "Missing expression after ','",
 	MsgParseMissingArg:          "Missing argument in parameter list.",
+	MsgParseFormatValue:         "You must provide a value expression following the '-f' operator.",
 	MsgParseInputRedirect:       "PowerShell does not support '<' input redirection",
 	MsgParseRedirectAfterCmd:    "Redirect '>' can only follow a command",
 	MsgParseUnexpectedOp:        "Unexpected operator %s",

@@ -138,11 +138,19 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 			if !argMode {
 				p.skipNewlines()
 			}
+			if !argMode && p.cur().Type == TkWord && isAtCommandWord(p.cur().Text) {
+				p.fail(lang.T(lang.MsgParseFormatValue))
+				break
+			}
 			items := []ast.Node{p.parseBinaryExpr(41, argMode)}
 			for p.cur().Type == TkPunct && p.cur().Text == "," {
 				p.advance()
 				if !argMode {
 					p.skipNewlines()
+				}
+				if !argMode && p.cur().Type == TkWord && isAtCommandWord(p.cur().Text) {
+					p.fail(lang.T(lang.MsgParseMissingExpr))
+					break
 				}
 				items = append(items, p.parseBinaryExpr(41, argMode))
 			}

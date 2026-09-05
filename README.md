@@ -163,10 +163,12 @@ powershellForLinux/
 │   ├── 指令参考.md                 # PowerShell For Linux 中每条指令的分类、行为、案例
 │   ├── 指令详解-原版跨平台指令.md   # 对原版 PowerShell 中跨平台指令的用途、版本差异、用法、官方示例的整理，以及和 PowerShell For Linux 实现的对比
 │   └── 指令详解-原版Windows指令.md  # 对原版 PowerShell 中 Windows 指令的用途、版本差异、用法、官方示例的整理，以及和 PowerShell For Linux 实现的对比
-└── test/
+├── test/
     ├── 核验.ps1          # 逐条核验参考文档里的示例
     ├── 内容回归.ps1      # 回归测试脚本
     ├── 功能演示.ps1      # 语言特性演示
     ├── 格式测试5.ps1     # 5.X 命令格式测试
     └── 格式测试7.ps1     # 7.X 命令格式测试
+└── tools/
+    └── docs-maint/       # 官方文档比对：获取官方条目、存参考快照、列出变化
 ```

@@ -163,10 +163,12 @@ powershellForLinux/
 │   ├── 指令参考.md                  # Categories, behavior, and examples for every command in PowerShell For Linux
 │   ├── 指令详解-原版跨平台指令.md   # Original PowerShell cross-platform commands: purposes, version differences, usage, official examples, compared against this program's implementations
 │   └── 指令详解-原版Windows指令.md  # Original PowerShell Windows-only commands: purposes, version differences, usage, official examples, compared against this program's implementations
-└── test/
+├── test/
     ├── 核验.ps1          # Verifies every example from the reference document
     ├── 内容回归.ps1      # Regression test script
     ├── 功能演示.ps1      # Language feature showcase
     ├── 格式测试5.ps1     # Tests for the 5.X command format
     └── 格式测试7.ps1     # Tests for the 7.X command format
+└── tools/
+    └── docs-maint/       # Official-docs comparison: fetches official entries, stores reference snapshots, lists changes
 ```

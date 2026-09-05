@@ -521,7 +521,15 @@ func formatDateTime(t time.Time) string {
 	return t.Format("2006年1月2日") + weekdayZh[t.Weekday()] + t.Format(" 15:04:05")
 }
 
-// dateTimeKind 按时区名报告时间的种类：本地为 Local，UTC 为 Utc，其余为 Unspecified。
+// UnspecifiedZone 是无时区信息时间的标记时区（时差为零，名字不在 Local/UTC 之列，dateTimeKind 据此返回 Unspecified）。
+var UnspecifiedZone = time.FixedZone("Unspecified", 0)
+
+// MarkUnspecified 保留解析到的年月日时分秒与亚秒，只把时区换成 UnspecifiedZone，使 dateTimeKind 返回 Unspecified。
+func MarkUnspecified(t time.Time) time.Time {
+	return time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), UnspecifiedZone)
+}
+
+// dateTimeKind 按时区名字返回时间的种类：Local 时区返回 Local，UTC 时区返回 Utc，其余（包括 UnspecifiedZone）返回 Unspecified。
 func dateTimeKind(t time.Time) string {
 	switch t.Location().String() {
 	case "Local":

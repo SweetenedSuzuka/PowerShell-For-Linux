@@ -144,7 +144,7 @@ go test ./...                                           # 单元测试
 ## 项目结构
 
 ```text
-powershellForLinux/
+PowerShell-For-Linux/
 ├── main.go              # 入口：参数解析，启动 REPL / -Command / -File
 ├── install.sh           # 安装脚本：编译并装进 PATH
 ├── go.mod

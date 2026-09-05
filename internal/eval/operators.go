@@ -758,15 +758,18 @@ func parseVersionValue(v *object.PSObject) (*object.PSObject, bool) {
 	return object.Version(nums[0], nums[1], nums[2], nums[3]), true
 }
 
-// parseDatetimeValue 从 DateTime 原值或常见格式的字符串构造时间对象。
+// parseDatetimeValue 从 DateTime 原值或常见格式的字符串构造时间对象：字符串包含时区参数时，数值转换为本地时区，不带时区参数时则直接取值并标记为未指定种类（使 .Kind 与 PowerShell 一致）。
 func parseDatetimeValue(v *object.PSObject) (*object.PSObject, bool) {
 	if v.TypeName == "DateTime" {
 		return v, true
 	}
 	s := v.String()
-	for _, layout := range []string{time.RFC3339, "2006-01-02 15:04:05", "2006-01-02", "15:04:05"} {
+	if t, err := time.Parse(time.RFC3339, s); err == nil {
+		return object.DateTime(t.In(time.Local)), true
+	}
+	for _, layout := range []string{"2006-01-02 15:04:05", "2006-01-02", "15:04:05"} {
 		if t, err := time.Parse(layout, s); err == nil {
-			return object.DateTime(t), true
+			return object.DateTime(object.MarkUnspecified(t)), true
 		}
 	}
 	return nil, false

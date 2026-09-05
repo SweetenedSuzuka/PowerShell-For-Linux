@@ -144,7 +144,7 @@ go test ./...                                           # unit tests
 ## Project layout
 
 ```text
-powershellForLinux/
+PowerShell-For-Linux/
 ├── main.go              # Entry point: argument parsing, starts the REPL / -Command / -File
 ├── install.sh           # Install script: builds and installs into PATH
 ├── go.mod

@@ -49,6 +49,7 @@ Switch style at runtime:
 	MsgParseOpMissingLeft:       "Operator -%s is missing its left operand",
 	MsgParseUnexpectedArg:       "Unexpected argument -%s",
 	MsgParseMissingExpr:         "Missing expression after ','",
+	MsgParseMissingArg:          "Missing argument in parameter list.",
 	MsgParseInputRedirect:       "PowerShell does not support '<' input redirection",
 	MsgParseRedirectAfterCmd:    "Redirect '>' can only follow a command",
 	MsgParseUnexpectedOp:        "Unexpected operator %s",

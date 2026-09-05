@@ -55,6 +55,7 @@ const (
 	MsgTokString
 	MsgTokOp
 	MsgParseMissingExpr
+	MsgParseMissingArg
 
 	// ---- eval：求值与脚本 ----
 	MsgDivideByZero

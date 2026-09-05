@@ -172,6 +172,11 @@ func (p *Parser) collectCommandArgs(cmd *ast.Command) {
 				continue
 			}
 		}
+		// 命令名后直接跟逗号（尚无任何实参）：缺少参数（与 PowerShell 一致）；已有实参则走位置数组。
+		if t.Type == TkPunct && t.Text == "," && len(cmd.Positional) == 0 && len(cmd.Named) == 0 && len(cmd.Switches) == 0 {
+			p.fail(lang.T(lang.MsgParseMissingArg))
+			break
+		}
 		// 命名参数 / 开关
 		if t.Type == TkDashWord {
 			// 二元运算符（比较、逻辑、成员测试等）会把最后一个位置实参并入运算表达式，后续 token 由 parseBinaryTail 消费。

@@ -868,3 +868,29 @@ func TestAtArrayCommaRules(t *testing.T) {
 		}
 	}
 }
+
+// TestCommandCommaMissingArg 验证命令名后直接跟逗号报缺少参数；已有实参则走位置数组。
+func TestCommandCommaMissingArg(t *testing.T) {
+	for _, src := range []string{
+		`Get-Date, Get-Date`,
+		`Get-Date, "x"`,
+		`Write-Output ,1`,
+		`@(Get-Date, 1)`,
+		`@(Get-Date, "x")`,
+	} {
+		res := Parse(src)
+		if res.Error == nil || !strings.Contains(res.Error.Error(), "缺少参数") {
+			t.Errorf("%q 应报缺少参数，实际 err=%v", src, res.Error)
+		}
+	}
+	for _, src := range []string{
+		`Write-Output "a", Write-Output "b"`,
+		`Get-ChildItem /tmp, "x"`,
+		`Write-Output 1,2`,
+		`Copy-Item a b, c`,
+	} {
+		if res := Parse(src); res.Error != nil || res.Incomplete {
+			t.Errorf("%q 应可解析，实际 err=%v", src, res.Error)
+		}
+	}
+}

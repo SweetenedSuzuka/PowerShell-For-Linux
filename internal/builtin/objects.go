@@ -283,24 +283,32 @@ func cmdForEachObject(c *Context) ([]*object.PSObject, error) {
 			out = append(out, outs...)
 		}
 	}
+	// -InputObject：直接指定的输入对象（整体作一个输入，不展开数组）；与管道输入并存时报错（与 PowerShell 一致）。
+	input := c.Input
+	if arg := c.Args.Get("InputObject"); arg != nil {
+		if len(c.Input) > 0 {
+			return errf(c, "%s", lang.T(lang.MsgInputObjectWithPipeline))
+		}
+		input = []*object.PSObject{arg}
+	}
 	// -Begin / -End：各执行一次（聚合写法）
 	if begin := c.Args.GetNode("Begin"); begin != nil {
 		run(begin, nil)
 	}
 	// -MemberName：对每个对象取该成员（如 ForEach-Object -MemberName Length）
 	if mn, ok := c.Args.Str("MemberName"); ok && mn != "" {
-		for _, obj := range c.Input {
+		for _, obj := range input {
 			if v, ok := obj.PropValue(mn); ok {
 				out = append(out, v)
 			}
 		}
 	} else if sb, ok := node.(*ast.ScriptBlock); ok {
-		for _, obj := range c.Input {
+		for _, obj := range input {
 			outs, _ := c.Engine.InvokeBlock(&ast.Block{Body: sb.Body}, map[string]*object.PSObject{"_": obj, "PSItem": obj})
 			out = append(out, outs...)
 		}
 	} else {
-		out = append(out, c.Input...)
+		out = append(out, input...)
 	}
 	if end := c.Args.GetNode("End"); end != nil {
 		run(end, nil)
@@ -535,6 +543,7 @@ func init() {
 		{Name: "Begin", Type: "scriptblock"},
 		{Name: "End", Type: "scriptblock"},
 		{Name: "MemberName", Type: "string"},
+		{Name: "InputObject", Type: "object"},
 	}, cmdForEachObject)
 	Register("Group-Object", []ParamSpec{
 		{Name: "Property", Position: 0, PositionSet: true, Type: "string"},

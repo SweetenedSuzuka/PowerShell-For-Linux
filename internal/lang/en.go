@@ -134,6 +134,7 @@ Switch style at runtime:
 	MsgHashAlgoUnsupported:          "Get-FileHash : Unsupported algorithm %s",
 	MsgParamSetUnresolvable:         "Parameter set cannot be resolved using the specified named parameters. One or more parameters issued cannot be used together or an insufficient number of parameters were provided.",
 	MsgPositionalParamNotFound:      "A positional parameter cannot be found that accepts argument '%s'.",
+	MsgInputObjectWithPipeline:      "The input object cannot be bound to any parameters for the command either because the command does not take pipeline input or the input and its properties do not match any of the parameters that take pipeline input.",
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported: "not supported",

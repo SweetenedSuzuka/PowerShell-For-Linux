@@ -118,6 +118,7 @@ const (
 	MsgHashAlgoUnsupported
 	MsgParamSetUnresolvable
 	MsgPositionalParamNotFound
+	MsgInputObjectWithPipeline
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported

@@ -134,6 +134,7 @@ var zh = map[Msg]string{
 	MsgHashAlgoUnsupported:          "Get-FileHash : 不支持的算法 %s",
 	MsgParamSetUnresolvable:         "无法使用指定的命名参数解析参数集，有一个或多个参数不能一起使用，或提供的参数不足。",
 	MsgPositionalParamNotFound:      "找不到接受实参 \"%s\" 的位置参数。",
+	MsgInputObjectWithPipeline:      "指定 -InputObject 时不能再接收管道输入。",
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported: "不支持",

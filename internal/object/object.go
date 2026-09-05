@@ -279,7 +279,11 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 			case "dayofyear":
 				return Int(int64(t.YearDay())), true
 			case "ticks":
-				return Int(t.UnixNano()/100 + 621355968000000000), true
+				// 按日历分量换算（UnixNano 在 1678 年前、2262 年后溢出）。
+				y, mo, d := t.Date()
+				hh, mm, ss := t.Clock()
+				days := time.Date(y, mo, d, 0, 0, 0, 0, time.UTC).Unix()/86400 + 719162
+				return Int((days*86400+int64(hh)*3600+int64(mm)*60+int64(ss))*10000000 + int64(t.Nanosecond())/100), true
 			// 亚秒字段按 100ns 刻度量化（与 Ticks 口径一致，真机最小刻度即 100ns）。
 			case "millisecond":
 				return Int(int64(t.Nanosecond() / 100 * 100 / 1e6)), true

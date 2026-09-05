@@ -3,6 +3,7 @@ package builtin
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"powershell/internal/lang"
 	"powershell/internal/object"
@@ -41,9 +42,20 @@ func cmdGetChildItem(c *Context) ([]*object.PSObject, error) {
 		if derr != nil {
 			return errf(c, "%v", derr)
 		}
+		isLiteral := !strings.ContainsAny(path, "*?[")
 		for _, p := range expanded {
 			info, err := os.Stat(p)
 			if err != nil {
+				// 字面缺失路径报错后继续其余路径（通配无匹配沿用静默；与 PowerShell 一致）。
+				if isLiteral {
+					full := p
+					if resolved, rerr := resolvePath(c, path); rerr == nil {
+						full = resolved
+					}
+					if _, stopErr := errf(c, "%s", lang.T(lang.MsgPathNotFoundForSet, full)); stopErr != nil {
+						return nil, stopErr
+					}
+				}
 				continue
 			}
 			out = append(out, listSinglePath(c, p, info, filter, nameOnly, recurse, dirOnly, fileOnly)...)

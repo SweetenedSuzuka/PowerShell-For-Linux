@@ -865,6 +865,14 @@ Get-ChildItem | Format-Table -AutoSize 2>$null > redir22.out
 $rr = @(Get-Content redir22.out)
 Remove-Item redir22.out
 $results += T "开关重定向" ((($rr.Count -gt 1)) -and (($rr[0] -like "*Mode*")))
+# 209. Get-ChildItem 字面缺失路径报错
+$Error.Clear()
+$gm = @(Get-ChildItem zzz-no-such-xyz-123 2>$null)
+$results += T "缺失路径报错" ((($gm.Count -eq 0)) -and (($Error.Count -ge 1)))
+# 210. 缺失路径继续其余路径
+$Error.Clear()
+$gn = @(Get-ChildItem ., zzz-no-such-xyz-123 2>$null)
+$results += T "缺失路径继续" ((($gn.Count -gt 0)) -and (($Error.Count -ge 1)))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

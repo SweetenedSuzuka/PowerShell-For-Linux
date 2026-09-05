@@ -139,6 +139,7 @@ func (e *Evaluator) builtinError(args *builtin.BoundArgs, err error) {
 // Name 为 "&" 的是调用命令：目标求值为脚本块时执行脚本块，否则按名字走常规分发。
 func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLast bool) []*object.PSObject {
 	if cmd.Name == "&" {
+		defer e.enterRedirects(cmd)()
 		return e.execInvoke(cmd, input, isLast)
 	}
 	name := cmd.Name
@@ -151,6 +152,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		name = resolved
 	}
 	if fn, ok := e.findFunction(name); ok {
+		defer e.enterRedirects(cmd)()
 		return e.applyRedirects(cmd, e.callFunction(fn, cmd, input))
 	}
 	if fn, ok := builtin.Lookup(name); ok {
@@ -162,30 +164,10 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		}
 		// 参数绑定后才定 $?：绑定过程可能读取 $?，不能被新命令提前覆盖
 		e.Session.LastSuccess = true
-		realOut := e.hostOut
-		// 2> 重定向：执行期间把 stderr 指到目标（$null 则丢弃）
-		if w, closer := e.stderrRedirectTarget(cmd); w != nil {
-			oldErr := e.hostErr
-			e.hostErr = w
-			// 先恢复后关闭：关闭先行、恢复后行。
-			defer func() { e.hostErr = oldErr }()
-			if closer != nil {
-				defer closer.Close()
-			}
-		}
-		// > 重定向：执行期间把 stdout 指到目标（直接写屏的 Format-Table 等一并捕获；Write-Host 与确认提示走 Console，不受影响）
-		if w, closer := e.stdoutRedirectTarget(cmd); w != nil {
-			e.hostOut = w
-			oldRedir := e.redirOut
-			e.redirOut = w
-			defer func() { e.hostOut = realOut; e.redirOut = oldRedir }()
-			if closer != nil {
-				defer closer.Close()
-			}
-		}
+		defer e.enterRedirects(cmd)()
 		ctx := &builtin.Context{
 			Shell: e.Session, Engine: e,
-			Stdout: e.hostOut, Stderr: e.hostErr, Stdin: e.stdin, Console: realOut,
+			Stdout: e.hostOut, Stderr: e.hostErr, Stdin: e.stdin, Console: e.consoleOut,
 			Args: args, Input: input,
 		}
 		out, err := fn(ctx)
@@ -207,6 +189,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		if len(args) == 0 && len(input) > 0 {
 			args = input
 		}
+		defer e.enterRedirects(cmd)()
 		return e.applyRedirects(cmd, e.runScriptFile(name, args))
 	}
 	return e.runExternal(cmd, input, isLast)
@@ -226,6 +209,36 @@ func (e *Evaluator) findFunction(name string) (*shell.Function, bool) {
 
 func isScriptPath(name string) bool {
 	return strings.HasSuffix(strings.ToLower(name), ".ps1")
+}
+
+// enterRedirects 在命令携带重定向时把执行期输出指到目标，返回恢复函数（调用方 defer）。
+// 直接写屏的命令一并捕获；Write-Host 类走 Console（恒为初始主机输出），不受影响；外部命令不经过这里。
+// redirOut 只归属本次命令（redirCmd 判定），内层自带重定向的不被外层劫持。
+func (e *Evaluator) enterRedirects(cmd *ast.Command) func() {
+	restores := []func(){}
+	if w, closer := e.stderrRedirectTarget(cmd); w != nil {
+		oldErr := e.hostErr
+		e.hostErr = w
+		restores = append(restores, func() { e.hostErr = oldErr })
+		if closer != nil {
+			c := closer
+			restores = append(restores, func() { _ = c.Close() })
+		}
+	}
+	if w, closer := e.stdoutRedirectTarget(cmd); w != nil {
+		oldOut, oldRedir, oldCmd := e.hostOut, e.redirOut, e.redirCmd
+		e.hostOut, e.redirOut, e.redirCmd = w, w, cmd
+		restores = append(restores, func() { e.hostOut, e.redirOut, e.redirCmd = oldOut, oldRedir, oldCmd })
+		if closer != nil {
+			c := closer
+			restores = append(restores, func() { _ = c.Close() })
+		}
+	}
+	return func() {
+		for i := len(restores) - 1; i >= 0; i-- {
+			restores[i]()
+		}
+	}
 }
 
 // redirTargetPath 求值重定向目标并解析为绝对路径（~ 展开、相对基于会话当前目录）。
@@ -307,7 +320,8 @@ func (e *Evaluator) applyRedirects(cmd *ast.Command, out []*object.PSObject) []*
 		return out
 	}
 	// 内置分支已把目标打开并指给 redirOut：返回值直接写进去，不另开文件（否则会截掉直接写的内容）。
-	if e.redirOut != nil {
+	// 只认本次命令归属的 redirOut（redirCmd 判定），内层自带重定向的不被外层劫持。
+	if e.redirOut != nil && e.redirCmd == cmd {
 		var buf bytes.Buffer
 		_ = object.FormatOutput(&buf, out)
 		_, _ = io.WriteString(e.redirOut, buf.String())

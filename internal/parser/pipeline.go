@@ -121,6 +121,19 @@ func (p *Parser) parseCommand() *ast.Command {
 	return cmd
 }
 
+// hasStreamRedir 报告命令是否已有同流重定向（输出流含 > 与 >>，错误流为 2> 与 2>>）。
+func (p *Parser) hasStreamRedir(cmd *ast.Command, isErr bool) bool {
+	for _, r := range cmd.Redirs {
+		if isErr && r.Kind == ast.RedirStderr {
+			return true
+		}
+		if !isErr && (r.Kind == ast.RedirStdout || r.Kind == ast.RedirAppend) {
+			return true
+		}
+	}
+	return false
+}
+
 // atStderrRedirect 报告当前位置是否为紧贴的 2> / 2>>（与重定向分支同条件）。
 func (p *Parser) atStderrRedirect() bool {
 	t := p.cur()
@@ -150,6 +163,11 @@ func (p *Parser) collectCommandArgs(cmd *ast.Command) {
 		}
 		// 重定向
 		if t.Type == TkOp && (t.Text == ">" || t.Text == ">>") {
+			// 同一命令的输出流只能重定向一次（与 PowerShell 一致）。
+			if p.hasStreamRedir(cmd, false) {
+				p.fail(lang.T(lang.MsgParseRedirDupOut))
+				break
+			}
 			kind := ast.RedirStdout
 			appendMode := t.Text == ">>"
 			if appendMode {
@@ -164,6 +182,11 @@ func (p *Parser) collectCommandArgs(cmd *ast.Command) {
 		if t.Type == TkNumber && t.Num == 2 {
 			nt := p.peekAt(1)
 			if nt.Type == TkOp && (nt.Text == ">" || nt.Text == ">>") && nt.Adjacent {
+				// 同一命令的错误流只能重定向一次（与 PowerShell 一致）。
+				if p.hasStreamRedir(cmd, true) {
+					p.fail(lang.T(lang.MsgParseRedirDupErr))
+					break
+				}
 				kind := ast.RedirStderr
 				p.advance() // 2
 				p.advance() // >

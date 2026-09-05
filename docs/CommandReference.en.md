@@ -1091,6 +1091,7 @@ Examples:
 
 ### Redirection
 - `>` writes output into a file (overwrite), `>>` appends, `2>` sends the error stream to a file, `2>$null` discards errors.
+- The same stream of one command can only be redirected once; writing it twice is an error (such as `> a.txt > b.txt`).
 Examples:
 - `Get-ChildItem -Name > list.txt` — writes output into list.txt (bash's `ls > list.txt`).
 - `Get-Content a.txt > out.txt 2> err.txt` — stdout into out.txt, stderr into err.txt (bash's `cat a.txt > out.txt 2> err.txt`).

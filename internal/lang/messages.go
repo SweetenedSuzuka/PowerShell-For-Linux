@@ -57,6 +57,8 @@ const (
 	MsgParseMissingExpr
 	MsgParseMissingArg
 	MsgParseFormatValue
+	MsgParseRedirDupOut
+	MsgParseRedirDupErr
 
 	// ---- eval：求值与脚本 ----
 	MsgDivideByZero

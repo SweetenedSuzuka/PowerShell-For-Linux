@@ -893,6 +893,28 @@ func TestFormatOperatorValue(t *testing.T) {
 	}
 }
 
+// TestDupRedirectError 验证同一命令同流重定向两次报错，混合流合法。
+func TestDupRedirectError(t *testing.T) {
+	for _, src := range []string{
+		`Write-Output ok > a.txt > b.txt`,
+		`Write-Output ok 2> a.txt 2> b.txt`,
+		`Write-Output ok > a.txt >> b.txt`,
+	} {
+		res := Parse(src)
+		if res.Error == nil {
+			t.Errorf("%q 应报错，实际通过", src)
+		}
+	}
+	for _, src := range []string{
+		`Write-Output ok 2> a.txt > b.txt`,
+		`Write-Output ok > a.txt`,
+	} {
+		if res := Parse(src); res.Error != nil || res.Incomplete {
+			t.Errorf("%q 应可解析，实际 err=%v", src, res.Error)
+		}
+	}
+}
+
 // TestCommandCommaMissingArg 验证命令名后直接跟逗号报缺少参数；已有实参则走位置数组。
 func TestCommandCommaMissingArg(t *testing.T) {
 	for _, src := range []string{

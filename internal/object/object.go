@@ -280,21 +280,20 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 				return Int(int64(t.YearDay())), true
 			case "ticks":
 				return Int(t.UnixNano()/100 + 621355968000000000), true
+			// 亚秒字段按 100ns 刻度量化（与 Ticks 口径一致，真机最小刻度即 100ns）。
 			case "millisecond":
-				return Int(int64(t.Nanosecond() / 1e6)), true
+				return Int(int64(t.Nanosecond() / 100 * 100 / 1e6)), true
 			case "microsecond":
-				return Int(int64(t.Nanosecond() / 1e3 % 1e3)), true
+				return Int(int64(t.Nanosecond() / 100 * 100 / 1e3 % 1e3)), true
 			case "nanosecond":
-				return Int(int64(t.Nanosecond() % 1e3)), true
+				return Int(int64(t.Nanosecond() / 100 * 100 % 1e3)), true
 			case "kind":
 				return Str(dateTimeKind(t)), true
 			case "date":
 				midnight := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
-				return Str(formatDateTime(midnight)), true
+				return DateTime(midnight), true
 			case "timeofday":
 				return Str(formatTimeOfDay(t)), true
-			case "datetime":
-				return Str(formatDateTime(t)), true
 			}
 		}
 	case "System.Version":

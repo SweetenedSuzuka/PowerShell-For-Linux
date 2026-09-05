@@ -13,11 +13,13 @@ import (
 
 func cmdGetDate(c *Context) ([]*object.PSObject, error) {
 	now := time.Now()
-	// -Date 指定日期时间（本地时区，无时区信息时按本地解析）
+	// -Date 指定日期时间（本地时区，无时区信息时按本地解析）；解析失败报错，不回退当前时间。
 	if d, ok := c.Args.Str("Date"); ok && d != "" {
-		if t, err := parseDateArg(d); err == nil {
-			now = t
+		t, err := parseDateArg(d)
+		if err != nil {
+			return errf(c, "%v", err)
 		}
+		now = t
 	}
 	if f, ok := c.Args.Str("Format"); ok && f != "" {
 		return []*object.PSObject{object.Str(now.Format(dotnetToGoLayout(f)))}, nil
@@ -37,6 +39,8 @@ func parseDateArg(s string) (time.Time, error) {
 		"2006-1-2 15:04:05",
 		"2006-1-2T15:04:05",
 		"2006-1-2",
+		"2006/1/2 15:04:05",
+		"2006/1/2T15:04:05",
 		"2006/1/2",
 		time.RFC3339,
 	}

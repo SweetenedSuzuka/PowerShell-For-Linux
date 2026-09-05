@@ -136,9 +136,9 @@ Write-Output "== 链与重定向 =="
 echo a && echo b 2>$null >$null; if ($?) { $pass++; "PASS  && 链" } else { $fail++; "FAIL  && 链" }
 Test-Path /nonexist || echo fallback 2>$null >$null; if ($?) { $pass++; "PASS  || 链" } else { $fail++; "FAIL  || 链" }
 Get-Content /nonexist 2>$null || echo ok 2>$null >$null; if ($?) { $pass++; "PASS  2>\$null" } else { $fail++; "FAIL  2>\$null" }
-Write-Output x > test/tmp/r1.txt 2>$null >$null; if ($?) { $pass++; "PASS  > 重定向" } else { $fail++; "FAIL  > 重定向" }
-Write-Output y >> test/tmp/r1.txt 2>$null >$null; if ($?) { $pass++; "PASS  >> 追加" } else { $fail++; "FAIL  >> 追加" }
-Write-Output x > $null 2>$null >$null; if ($?) { $pass++; "PASS  > \$null" } else { $fail++; "FAIL  > \$null" }
+Write-Output x > test/tmp/r1.txt 2>$null; if ($?) { $pass++; "PASS  > 重定向" } else { $fail++; "FAIL  > 重定向" }
+Write-Output y >> test/tmp/r1.txt 2>$null; if ($?) { $pass++; "PASS  >> 追加" } else { $fail++; "FAIL  >> 追加" }
+Write-Output x > $null 2>$null; if ($?) { $pass++; "PASS  > \$null" } else { $fail++; "FAIL  > \$null" }
 
 Write-Output ""
 Write-Output ("结果: 通过 " + $pass + "  失败 " + $fail)

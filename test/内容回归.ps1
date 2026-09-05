@@ -873,6 +873,13 @@ $results += T "缺失路径报错" ((($gm.Count -eq 0)) -and (($Error.Count -ge 
 $Error.Clear()
 $gn = @(Get-ChildItem ., zzz-no-such-xyz-123 2>$null)
 $results += T "缺失路径继续" ((($gn.Count -gt 0)) -and (($Error.Count -ge 1)))
+# 211. Get-Date 非法日期报错
+$Error.Clear()
+Get-Date "zzz-nope" 2>$null
+$results += T "非法日期报错" ((($? -eq $false)) -and (($Error.Count -ge 1)))
+# 212. 日期对象链式成员
+$dd = Get-Date 2024-01-02
+$results += T "日期链式成员" ((($dd.Date.Year -eq 2024)) -and (($dd.Ticks -gt 0)))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

@@ -6,3 +6,7 @@
 
 # 测试临时目录
 test/tmp/
+
+# 文档维护脚本的本地产物
+tools/docs-maint/official_changes.md
+tools/docs-maint/__pycache__/

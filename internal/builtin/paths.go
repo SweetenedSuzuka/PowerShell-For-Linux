@@ -274,12 +274,7 @@ func cmdGetItemProperty(c *Context) ([]*object.PSObject, error) {
 	if err != nil {
 		return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, path))
 	}
-	o := object.Object("System.Management.Automation.PSCustomObject", nil)
-	o.AddProp("Name", info.Name())
-	o.AddProp("FullName", full)
-	o.AddProp("Length", info.Size())
-	o.AddProp("LastWriteTime", info.ModTime())
-	o.AddProp("Mode", object.UnixMode(info))
+	o := statItemObject(full, info)
 	// -Name：只保留指定属性（Windows 语义，如 Get-ItemProperty x -Name Length）
 	nameFilter, _ := c.Args.Str("Name")
 	if nameFilter != "" {
@@ -295,6 +290,40 @@ func cmdGetItemProperty(c *Context) ([]*object.PSObject, error) {
 		o.Props = kept
 	}
 	return []*object.PSObject{o}, nil
+}
+
+// statItemObject 按 stat 信息构造路径属性对象（Name/FullName/Length/LastWriteTime/Mode 五个字段）。
+func statItemObject(full string, info os.FileInfo) *object.PSObject {
+	o := object.Object("System.Management.Automation.PSCustomObject", nil)
+	o.AddProp("Name", info.Name())
+	o.AddProp("FullName", full)
+	o.AddProp("Length", info.Size())
+	o.AddProp("LastWriteTime", info.ModTime())
+	o.AddProp("Mode", object.UnixMode(info))
+	return o
+}
+
+// cmdGetItemPropertyValue 按名取单个属性值（Get-ItemProperty 取单个字段的直接形式）。
+func cmdGetItemPropertyValue(c *Context) ([]*object.PSObject, error) {
+	path := firstPathArg(c)
+	nameFilter, _ := c.Args.Str("Name")
+	if path == "" || nameFilter == "" {
+		return nil, nil
+	}
+	full, derr := resolvePath(c, path)
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	info, err := os.Stat(full)
+	if err != nil {
+		return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, path))
+	}
+	for _, p := range statItemObject(full, info).Props {
+		if strings.EqualFold(p.Name, nameFilter) {
+			return []*object.PSObject{object.ToPS(p.Value)}, nil
+		}
+	}
+	return errf(c, "%s", lang.T(lang.MsgPropNotFound, path, nameFilter))
 }
 
 func cmdSetItemProperty(c *Context) ([]*object.PSObject, error) {
@@ -359,6 +388,10 @@ func init() {
 		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "Name", Position: 1, PositionSet: true, Type: "string"},
 	}, cmdGetItemProperty)
+	Register("Get-ItemPropertyValue", []ParamSpec{
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "Name", Position: 1, PositionSet: true, Type: "string"},
+	}, cmdGetItemPropertyValue)
 	Register("Set-ItemProperty", []ParamSpec{
 		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "Name", Position: 1, PositionSet: true, Type: "string"},

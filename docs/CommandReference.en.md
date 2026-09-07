@@ -115,6 +115,17 @@ Examples:
 
 Official original reference: [Get-ItemProperty](OriginalCrossPlatformDetails.en.md#get-itemproperty).
 
+### Get-ItemPropertyValue
+- Type: Go implementation.
+- Version: 5.1 and 7. Distro: any.
+- Function: takes a single property value by name, like taking one field with `stat -c` in bash.
+- Difference from Windows PowerShell: supports just one property name out of the five fields; a missing -Name returns empty without an error.
+Examples:
+- `Get-ItemPropertyValue /etc/hostname -Name Length` — takes hostname's byte count (bash equivalent: `stat -c %s /etc/hostname`).
+- `Get-ItemPropertyValue /etc/hostname -Name LastWriteTime` — takes hostname's modification time (bash equivalent: `stat -c %y /etc/hostname`).
+
+Official original reference: [Get-ItemPropertyValue](OriginalCrossPlatformDetails.en.md#get-itempropertyvalue).
+
 ### Set-ItemProperty (sp)
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

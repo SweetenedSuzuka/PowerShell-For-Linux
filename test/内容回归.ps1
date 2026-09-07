@@ -937,6 +937,17 @@ $results += T "经过finally时问号保持失败" ((($qf -join ",") -eq "f-fals
 try { throw "t5" } catch { }
 if ($?) { $qa = "true" } else { $qa = "false" }
 $results += T "空catch之后问号保持失败" (($qa -eq "false"))
+# 228. 按名取单个属性值
+Set-Content ipv.txt "hello!"
+$ivLen = Get-ItemPropertyValue ipv.txt -Name Length
+$ivPos = Get-ItemPropertyValue ipv.txt Length
+$ivDt = Get-ItemPropertyValue ipv.txt -Name LastWriteTime
+$results += T "按名取单个属性值" ((($ivLen -eq 7)) -and (($ivPos -eq 7)) -and (($ivDt -is [datetime])))
+# 229. 缺失路径与缺失属性记错误后继续
+$ie0 = $Error.Count
+Get-ItemPropertyValue zzz-no-such-ipv-123 -Name Length 2>$null | Out-Null
+Get-ItemPropertyValue ipv.txt -Name NoSuchPropXYZ 2>$null | Out-Null
+$results += T "取属性值报错继续" (($Error.Count -eq ($ie0 + 2)))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

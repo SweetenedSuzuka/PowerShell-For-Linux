@@ -21,6 +21,7 @@ Get-ChildItem -Directory -Name 2>$null >$null; if ($?) { $pass++; "PASS  Get-Chi
 Get-ChildItem -Recurse -Name 2>$null >$null; if ($?) { $pass++; "PASS  Get-ChildItem -Recurse" } else { $fail++; "FAIL  Get-ChildItem -Recurse" }
 Get-Item test/核验.ps1 2>$null >$null; if ($?) { $pass++; "PASS  Get-Item" } else { $fail++; "FAIL  Get-Item" }
 Get-ItemProperty test/核验.ps1 2>$null >$null; if ($?) { $pass++; "PASS  Get-ItemProperty" } else { $fail++; "FAIL  Get-ItemProperty" }
+Get-ItemPropertyValue test/核验.ps1 -Name Length 2>$null >$null; if ($?) { $pass++; "PASS  Get-ItemPropertyValue" } else { $fail++; "FAIL  Get-ItemPropertyValue" }
 New-Item -ItemType Directory test/tmp/n1 2>$null >$null; if ($?) { $pass++; "PASS  New-Item 目录" } else { $fail++; "FAIL  New-Item 目录" }
 New-Item test/tmp/n2.txt -Force 2>$null >$null; if ($?) { $pass++; "PASS  New-Item 文件" } else { $fail++; "FAIL  New-Item 文件" }
 Copy-Item test/tmp/n2.txt test/tmp/n3.txt 2>$null >$null; if ($?) { $pass++; "PASS  Copy-Item" } else { $fail++; "FAIL  Copy-Item" }

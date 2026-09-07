@@ -273,8 +273,8 @@ func TestBindSwitchValuePositional(t *testing.T) {
 
 // TestBindInlineSwitch 内联开关 -Recurse:$false / -Recurse:true 按布尔求值赋给开关。
 // $true/$false 与裸字 true/false 两种写法都覆盖：
-// 裸字整段被词法器吃进 dash word（-Recurse:true）；
-// $var 中 $ 不是 dash word 字符，词法器拆成独立 token，由解析器合并回内联值（-Recurse:$true）。
+// 裸字整段被词法分析器吃进 dash word（-Recurse:true）；
+// $var 中 $ 不是 dash word 字符，词法分析器拆成独立 token，由解析器合并回内联值（-Recurse:$true）。
 func TestBindInlineSwitch(t *testing.T) {
 	cases := []struct {
 		src  string

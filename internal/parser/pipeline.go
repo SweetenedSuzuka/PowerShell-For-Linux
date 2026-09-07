@@ -218,7 +218,7 @@ func (p *Parser) collectCommandArgs(cmd *ast.Command) {
 			name, val, hasVal := strings.Cut(t.Text, ":")
 			if hasVal {
 				p.advance() // 消费 -Name: 本体（含冒号）
-				// -Name:$var / -Name:5 / -Name:"str"：$、引号不是 dash word 字符，词法器会把冒号后的内联值拆成独立 token（紧贴冒号）。
+				// -Name:$var / -Name:5 / -Name:"str"：$、引号不是 dash word 字符，词法分析器会把冒号后的内联值拆成独立 token（紧贴冒号）。
 				// 用该 token 的原始文本作为内联值，保证 -Recurse:$true 等语义正确。
 				// 仅合并单个 token 能完整表示的值；表达式（括号等）跨多 token，不合并。
 				if val == "" && p.cur().Adjacent && p.isValueStart(p.cur()) {

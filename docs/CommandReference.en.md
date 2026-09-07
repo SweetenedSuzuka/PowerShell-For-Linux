@@ -855,6 +855,17 @@ Examples:
 
 Official original reference: [ConvertTo-Csv](OriginalCrossPlatformDetails.en.md#convertto-csv).
 
+### Export-Csv
+- Type: Go implementation.
+- Version: 5.1 and 7. Distro: any.
+- Function: saves objects as a CSV file, with the same content ConvertTo-Csv outputs, like redirecting command output to a `.csv` file in bash.
+- Difference from Windows PowerShell: -NoTypeInformation is accepted directly (version 7 omits the type line by default); -Property column filtering is this program's extension, the original has no such parameter; missing input creates no file and reports no error.
+Examples:
+- `Get-Process | Select-Object ProcessName,Id | Export-Csv proc.csv -NoTypeInformation` — saves process names and IDs as a CSV file (bash equivalent: `ps -eo comm,pid > proc.csv`, stored in CSV format).
+- `Get-ChildItem | Export-Csv list.csv -Append` — appends a file listing to a CSV file (bash equivalent: `ls >> list.csv`, data rows only, no repeated header).
+
+Official original reference: [Export-Csv](OriginalCrossPlatformDetails.en.md#export-csv).
+
 ### ConvertFrom-StringData
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

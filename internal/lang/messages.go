@@ -95,6 +95,7 @@ const (
 	MsgSkipNegative
 	MsgCannotRename
 	MsgRenameDestExists
+	MsgFileExists
 	MsgWhatIfPerform
 	MsgConfirmPrompt
 	MsgCannotClear

@@ -260,8 +260,8 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 				break
 			}
 			p.advance() // .
-			p.advance() // 属性名（可能含点，如 $h.a.b 被词法器并为 a.b）
-			// 词法器把 '.' 视为裸字字符，因此 a.b.c 会作为单个词进入这里。
+			p.advance() // 属性名（可能含点，如 $h.a.b 被词法分析器并为 a.b）
+			// 词法分析器把 '.' 视为裸字字符，因此 a.b.c 会作为单个词进入这里。
 			// 按 PowerShell 语义，未加引号的点号只会是链式成员访问，故拆开逐段解析。
 			segs := strings.Split(nt.Text, ".")
 			for _, seg := range segs[:len(segs)-1] {
@@ -570,7 +570,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 			if argMode {
 				return &ast.BareWord{Value: "[" + typeName + "]"}
 			}
-			// 词法器把 :: 与成员名并成一个裸词（[math]::Sqrt → "math"、"]"、"::Sqrt"），在此拆出静态成员名；带括号为方法调用，否则为静态属性。
+			// 词法分析器把 :: 与成员名并成一个裸词（[math]::Sqrt → "math"、"]"、"::Sqrt"），在此拆出静态成员名；带括号为方法调用，否则为静态属性。
 			if p.cur().Type == TkWord && strings.HasPrefix(p.cur().Text, "::") {
 				return p.finishStaticMember(typeName, strings.TrimPrefix(p.cur().Text, "::"))
 			}

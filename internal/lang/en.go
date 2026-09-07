@@ -111,6 +111,7 @@ Switch style at runtime:
 	MsgSkipNegative:                 "The '-Skip' parameter cannot be negative.",
 	MsgCannotRename:                 "Cannot rename %s: %v",
 	MsgRenameDestExists:             "Cannot rename to %s because it already exists.",
+	MsgFileExists:                   "File %s already exists.",
 	MsgWhatIfPerform:                "What if: On target '%s', run %s.",
 	MsgConfirmPrompt:                "Confirm\nOperation: %s\nTarget: %s\n[Y] Yes [A] Yes to All [N] No [L] No to All [?] Help (default is \"Y\"): ",
 	MsgCannotClear:                  "Cannot clear %s.",

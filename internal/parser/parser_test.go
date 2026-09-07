@@ -284,7 +284,7 @@ func TestSimplePipeline(t *testing.T) {
 }
 
 func TestChainedMemberAccess(t *testing.T) {
-	// 词法器把 a.b 并成一个词，解析器须拆成嵌套成员访问
+	// 词法分析器把 a.b 并成一个词，解析器须拆成嵌套成员访问
 	list := parseOK(t, "$h.a.b")
 	pipe, ok := list.Statements[0].(*ast.Pipeline)
 	if !ok || pipe.Expr == nil {

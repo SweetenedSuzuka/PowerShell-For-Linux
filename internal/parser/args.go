@@ -37,7 +37,7 @@ func (p *Parser) parseCallArgs() []ast.Node {
 
 // finishStaticMember 完成 [类型]::成员 的静态成员节点；进入时当前 token 是成员名。
 // 成员名为空或以冒号开头按解析错误处理。
-// 成员名可带点分尾链（如 ::Now.Year，词法器把点并入裸字），拆成逐段成员访问；尾链末段紧跟括号时按方法调用解析，实参挂到末段。
+// 成员名可带点分尾链（如 ::Now.Year，词法分析器把点并入裸字），拆成逐段成员访问；尾链末段紧跟括号时按方法调用解析，实参挂到末段。
 func (p *Parser) finishStaticMember(typeName, member string) ast.Node {
 	p.advance() // 消费成员名
 	if member == "" || strings.HasPrefix(member, ":") {

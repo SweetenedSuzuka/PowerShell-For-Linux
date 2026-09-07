@@ -948,6 +948,24 @@ $ie0 = $Error.Count
 Get-ItemPropertyValue zzz-no-such-ipv-123 -Name Length 2>$null | Out-Null
 Get-ItemPropertyValue ipv.txt -Name NoSuchPropXYZ 2>$null | Out-Null
 $results += T "取属性值报错继续" (($Error.Count -eq ($ie0 + 2)))
+# 230. 导出表格写文件
+$eo1 = [pscustomobject]@{ Name = "x"; N = 1 }
+$eo2 = [pscustomobject]@{ Name = "y"; N = 2 }
+$eo1, $eo2 | Export-Csv eo.csv
+$eoBack = Get-Content eo.csv
+$eoConv = $eo1, $eo2 | ConvertTo-Csv
+$results += T "导出表格写文件" ((($eoBack.Count -eq 3)) -and (($eoBack[0] -eq $eoConv[0])) -and (($eoBack[2] -eq $eoConv[2])))
+# 231. 追加不重复表头，防覆盖报错
+$eo1 | Export-Csv eoapp.csv
+$eo2 | Export-Csv eoapp.csv -Append
+$ea0 = $Error.Count
+$eo1 | Export-Csv eoapp.csv -NoClobber 2>$null | Out-Null
+$results += T "追加与防覆盖" (((((Get-Content eoapp.csv).Count) -eq 3)) -and (($Error.Count -eq ($ea0 + 1))))
+# 232. 分隔符与属性筛选列，缺输入不建文件
+$eo1, $eo2 | Export-Csv eosemi.csv -Delimiter ";"
+$eo1 | Export-Csv eoprop.csv -Property N
+Export-Csv eonoinput.csv
+$results += T "分隔符与筛选列" ((((Get-Content eosemi.csv)[0] -eq "Name;N")) -and (((Get-Content eoprop.csv)[0] -eq "N")) -and ((-not (Test-Path eonoinput.csv))))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

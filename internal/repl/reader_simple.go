@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// simpleReader 是朴素行读取器（Windows/非终端回退）。
+// simpleReader 负责朴素的行读取（Windows/非终端回退）。
 type simpleReader struct {
 	in  io.Reader
 	out io.Writer

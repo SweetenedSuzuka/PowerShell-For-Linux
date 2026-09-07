@@ -5,9 +5,11 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 
+	"powershell/internal/lang"
 	"powershell/internal/object"
 )
 
@@ -26,8 +28,20 @@ func cmdConvertToCsv(c *Context) ([]*object.PSObject, error) {
 	if len(items) == 0 {
 		return nil, nil
 	}
+	var out []*object.PSObject
+	for _, ln := range csvLines(items, c.Args.StringSlice("Property"), ',') {
+		out = append(out, object.Str(ln))
+	}
+	return out, nil
+}
+
+// csvLines 按给定分隔符把对象列表转为 CSV 文本行（首行为表头），ConvertTo-Csv 与 Export-Csv 共用。
+func csvLines(items []*object.PSObject, props []string, delim rune) []string {
+	if len(items) == 0 {
+		return nil
+	}
 	var header []string
-	if props := c.Args.StringSlice("Property"); len(props) > 0 {
+	if len(props) > 0 {
 		header = props
 	} else {
 		header = csvHeader(items[0])
@@ -37,6 +51,7 @@ func cmdConvertToCsv(c *Context) ([]*object.PSObject, error) {
 	}
 	var buf bytes.Buffer
 	w := csv.NewWriter(&buf)
+	w.Comma = delim
 	_ = w.Write(header)
 	for _, it := range items {
 		row := make([]string, len(header))
@@ -53,11 +68,87 @@ func cmdConvertToCsv(c *Context) ([]*object.PSObject, error) {
 	}
 	w.Flush()
 	text := strings.TrimRight(buf.String(), "\n")
-	var out []*object.PSObject
-	for _, ln := range strings.Split(text, "\n") {
-		out = append(out, object.Str(ln))
+	return strings.Split(text, "\n")
+}
+
+// cmdExportCsv 把对象写成 CSV 文件（ConvertTo-Csv 加落盘，文本格式与 ConvertTo-Csv 一致）。
+func cmdExportCsv(c *Context) ([]*object.PSObject, error) {
+	path := firstPathArg(c)
+	if path == "" {
+		return nil, nil
 	}
-	return out, nil
+	// 分隔符：默认逗号，只接受单个字符；回车与换行不能作分隔符。
+	delim := ','
+	if d, _ := c.Args.Str("Delimiter"); d != "" {
+		r := []rune(d)
+		if len(r) != 1 || r[0] == '\r' || r[0] == '\n' {
+			return errf(c, "%s", lang.T(lang.MsgConvertFail, d, "char"))
+		}
+		delim = r[0]
+	}
+	items := inputItems(c)
+	if len(items) == 0 {
+		return nil, nil
+	}
+	var rows []*object.PSObject
+	for _, it := range items {
+		if it == nil || it.IsNull() {
+			continue
+		}
+		rows = append(rows, it)
+	}
+	lines := csvLines(rows, c.Args.StringSlice("Property"), delim)
+	full, derr := resolvePath(c, path)
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	appendMode := c.Args.Switch("Append")
+	exists := false
+	nonEmpty := false
+	if fi, serr := os.Stat(full); serr == nil {
+		exists = true
+		nonEmpty = fi.Size() > 0
+		if c.Args.Switch("NoClobber") {
+			return errf(c, "%s", lang.T(lang.MsgFileExists, path))
+		}
+	}
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "Export-Csv"
+	dryRun.c = c
+	var yesAll, noAll bool
+	if dryRun.reportWhatIf(full) {
+		out, _ := dryRun.result()
+		return out, nil
+	}
+	if confirmSkip(c, "Export-Csv", full, &yesAll, &noAll) {
+		return nil, nil
+	}
+	// 追加到已有非空文件时只写数据行，不重复表头；其余情况写完整文本。
+	payload := lines
+	if appendMode && nonEmpty && len(lines) > 0 {
+		payload = lines[1:]
+	}
+	text := ""
+	if len(payload) > 0 {
+		text = strings.Join(payload, "\n") + "\n"
+	}
+	enc, _ := c.Args.Str("Encoding")
+	data := encodeText(enc, text, !nonEmpty)
+	if appendMode && exists {
+		f, err := os.OpenFile(full, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0o644)
+		if err != nil {
+			return errf(c, "%s", lang.T(lang.MsgCannotOpen, path))
+		}
+		defer f.Close()
+		if _, err := f.Write(data); err != nil {
+			return errf(c, "%s", lang.T(lang.MsgCannotWrite, path))
+		}
+		return nil, nil
+	}
+	if err := os.WriteFile(full, data, 0o644); err != nil {
+		return errf(c, "%s", lang.T(lang.MsgCannotWrite, path))
+	}
+	return nil, nil
 }
 
 func cmdConvertFromCsv(c *Context) ([]*object.PSObject, error) {
@@ -332,6 +423,16 @@ func init() {
 	Register("ConvertFrom-Csv", []ParamSpec{
 		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdConvertFromCsv)
+	Register("Export-Csv", []ParamSpec{
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "InputObject", Type: "object"},
+		{Name: "Property", Type: "string[]"},
+		{Name: "Delimiter", Type: "string"},
+		{Name: "Append", Switch: true},
+		{Name: "NoClobber", Switch: true},
+		{Name: "NoTypeInformation", Switch: true},
+		{Name: "Encoding", Type: "string"},
+	}, cmdExportCsv)
 	Register("ConvertTo-Json", []ParamSpec{
 		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 		{Name: "Depth", Type: "int"},

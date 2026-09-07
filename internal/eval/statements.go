@@ -190,6 +190,16 @@ func catchMatches(typeName string, errObj *object.PSObject) bool {
 // 右侧若是语句节点（$x = switch ... 等），执行语句并把输出包成单个值。
 // 右侧先求值再定 $?：求值中读 $? 拿到上一条语句的状态，无新错误才置 true。
 func (e *Evaluator) execAssign(a *ast.Assign) {
+	// 右值求值中上抛的终止错误不再携带已产生的输出。
+	// 输出本应记入赋值目标，赋值失败即作废（与 PowerShell 一致）。
+	defer func() {
+		if r := recover(); r != nil {
+			if fs, ok := r.(*flowSignal); ok && fs.kind == flowError {
+				fs.out = nil
+			}
+			panic(r)
+		}
+	}()
 	seq := e.Session.ErrorSeq
 	var val *object.PSObject
 	switch a.Value.(type) {

@@ -388,7 +388,7 @@ func TestStderrRedirectRestoredAfterExecutePanic(t *testing.T) {
 	var errBuf bytes.Buffer
 	sess := shell.New(shell.StyleCore, io.Discard, &errBuf, strings.NewReader(""))
 	ev := New(sess, strings.NewReader(""), io.Discard, &errBuf)
-	// 脚本块内的越界调用在命令执行期上抛终止错误，穿过命令帧后由顶层落定
+	// 脚本块内的越界调用在命令执行期上抛终止错误，穿过命令帧后由顶层语句打印
 	res := parser.Parse(`"a" | ForEach-Object { $_.Substring(99, 5) } 2> e.txt`)
 	if res.Error != nil {
 		t.Fatalf("解析错误：%v", res.Error)
@@ -398,7 +398,7 @@ func TestStderrRedirectRestoredAfterExecutePanic(t *testing.T) {
 	}
 	// 恢复已执行，报错回到原缓冲，不滞留文件
 	if !strings.Contains(errBuf.String(), "子字符串") {
-		t.Fatalf("抛错后 stderr 应归位，实际 %q", errBuf.String())
+		t.Fatalf("抛出错误后 stderr 应归位，实际 %q", errBuf.String())
 	}
 	// 后续命令的错误继续写原缓冲，不再进文件
 	res = parser.Parse(`Get-Item 不存在XYZ123`)
@@ -835,7 +835,7 @@ func TestTryCatchFinally(t *testing.T) {
 func TestTryScriptPropagation(t *testing.T) {
 	dir := t.TempDir()
 	srcPath := filepath.Join(dir, "src.ps1")
-	if err := os.WriteFile(srcPath, []byte("param($who)\n\"脚本运行中\"\nthrow \"脚本抛错 $who\"\n\"脚本尾部\"\n"), 0644); err != nil {
+	if err := os.WriteFile(srcPath, []byte("param($who)\n\"脚本运行中\"\nthrow \"脚本抛出错误 $who\"\n\"脚本尾部\"\n"), 0644); err != nil {
 		t.Fatal(err)
 	}
 	callPath := filepath.Join(dir, "call.ps1")
@@ -844,7 +844,7 @@ func TestTryScriptPropagation(t *testing.T) {
 		t.Fatal(err)
 	}
 	// 跨脚本：被调脚本 throw 前输出保留，调用方捕获后继续
-	wantStr(t, callSrc, "脚本运行中", "调用方捕获: 脚本抛错 X", "调用方继续")
+	wantStr(t, callSrc, "脚本运行中", "调用方捕获: 脚本抛出错误 X", "调用方继续")
 	// 顶层逐语句（REPL 语义）：未捕获错误打印到 stderr（io.Discard），会话继续执行后续语句
 	wantStr(t, "\"前\"; throw \"停\"; \"后\"", "前", "后")
 }
@@ -1343,4 +1343,12 @@ func TestEvalStatementHalted(t *testing.T) {
 	assertHalted(`"a"; throw "boom"; "b"`, false, true, false)
 	assertHalted(`5/0`, false)
 	assertHalted(`try { throw "boom" } catch { "caught" }`, false)
+}
+
+// TestThrowKeepsPriorOutput 块内抛出错误前已产生的输出保留（与 PowerShell 一致）：脚本块、函数、子表达式。
+func TestThrowKeepsPriorOutput(t *testing.T) {
+	wantStr(t, `& { "a"; throw "x" }`, "a")
+	wantStr(t, `function KP { "a"; throw "x" }; KP`, "a")
+	wantStr(t, `$( "a"; throw "x" )`, "a")
+	wantStr(t, `try { & { "a"; throw "x" } } catch { "caught" }`, "a", "caught")
 }

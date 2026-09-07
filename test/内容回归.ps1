@@ -763,18 +763,18 @@ $results += T "哈希键自增" ($ih["k"] -eq 6)
 $results += T "多字节字符" ((("你好"[1] -eq "好") -and (("你好".Length) -eq 2) -and (("a好b".IndexOf("好")) -eq 1)))
 # 181. 多字节截取与查找
 $results += T "多字节截取" ((("你好世界".Substring(2,2) -eq "世界") -and (("你好世界".Remove(2) -eq "你好")) -and (("好好".LastIndexOf("好")) -eq 1)))
-# 182. 无效算术抛错可捕获
+# 182. 无效算术抛出错误可捕获
 $ec1 = try { "a" - "b" } catch { "caught" }
-$results += T "无效算术抛错" ($ec1 -eq "caught")
-# 183. 非数字取负抛错可捕获
+$results += T "无效算术抛出错误" ($ec1 -eq "caught")
+# 183. 非数字取负抛出错误可捕获
 $ec2 = try { -"abc" } catch { "caught" }
-$results += T "取负抛错" ($ec2 -eq "caught")
-# 184. 越界截取抛错可捕获
+$results += T "取负抛出错误" ($ec2 -eq "caught")
+# 184. 越界截取抛出错误可捕获
 $ec3 = try { "abc".Substring(1,10) } catch { "caught" }
-$results += T "截取越界抛错" ($ec3 -eq "caught")
-# 185. 过滤器内抛错向外传播
+$results += T "截取越界抛出错误" ($ec3 -eq "caught")
+# 185. 过滤器内抛出错误向外传播
 $ec4 = try { 1,2 | ForEach-Object { throw "x" } } catch { "caught" }
-$results += T "ForEach 抛错传播" ($ec4 -eq "caught")
+$results += T "ForEach 抛出错误传播" ($ec4 -eq "caught")
 # 186. while 条件每轮求值一次
 $wl = 0
 while ($wl++ -lt 2) { }
@@ -920,6 +920,13 @@ $results += T "数组乘零得到空数组" (((($null -eq $az) -eq $false)) -and
 $an1 = try { @(1,2,3) * -1; "no" } catch { "caught" }
 $an2 = try { 2 * @(1,2,3); "no" } catch { "caught" }
 $results += T "数组非法乘数抛出错误" ((($an1 -eq "caught")) -and (($an2 -eq "caught")))
+# 223. 脚本块内抛出错误前已产生的输出保留
+$so1 = try { & { "s1a"; throw "s1x" } } catch { "s1caught" }
+$results += T "脚本块抛出前输出保留" ((($so1 -join ",") -eq "s1a,s1caught"))
+# 224. 函数内抛出错误前已产生的输出保留
+function OFunc { "f2a"; throw "f2x" }
+$so2 = try { OFunc } catch { "f2caught" }
+$results += T "函数抛出前输出保留" ((($so2 -join ",") -eq "f2a,f2caught"))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

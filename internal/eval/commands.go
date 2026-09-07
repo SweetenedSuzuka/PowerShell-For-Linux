@@ -405,7 +405,11 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 			// 函数体内没有所属循环，break/continue 沿调用栈上抛（与 PowerShell 一致）
 			sig.out = out
 			panic(sig)
-		case flowExit, flowError:
+		case flowExit:
+			panic(sig)
+		case flowError:
+			// 函数内终止错误向调用方传播，panic 前已产生的输出一并携带（外层 try 可捕获）。
+			sig.out = out
 			panic(sig)
 		}
 	}
@@ -433,7 +437,11 @@ func (e *Evaluator) callFunctionNamedBlocks(fn *shell.Function, input []*object.
 		case flowBreak, flowContinue:
 			sig.out = out
 			panic(sig)
-		case flowExit, flowError:
+		case flowExit:
+			panic(sig)
+		case flowError:
+			// 命名块内终止错误向调用方传播，panic 前已产生的输出一并携带（外层 try 可捕获）。
+			sig.out = out
 			panic(sig)
 		}
 		return false
@@ -633,7 +641,11 @@ func (e *Evaluator) invokeScriptBlock(node *ast.ScriptBlock, ca callArgs, input 
 			// 脚本块体内没有所属循环，break/continue 沿调用栈上抛（与 PowerShell 一致）
 			sig.out = out
 			panic(sig)
-		case flowExit, flowError:
+		case flowExit:
+			panic(sig)
+		case flowError:
+			// 调用运算符执行块内终止错误向调用方传播，panic 前已产生的输出一并携带（外层 try 可捕获）。
+			sig.out = out
 			panic(sig)
 		}
 	}

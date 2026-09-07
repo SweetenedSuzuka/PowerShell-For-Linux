@@ -87,7 +87,9 @@ func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObj
 			// return 前的输出一并保留（与函数调用一致：& { "a"; return "b" } 输出 a、b）
 			return append(out, unwrapOutput(sig.value)...), nil
 		case flowError:
-			panic(sig) // 脚本块内终止错误向调用方传播（外层 try 可捕获，不在此落定）
+			// 脚本块内终止错误向调用方传播，panic 前已产生的输出一并携带（外层 try 可捕获，本层不打印）。
+			sig.out = out
+			panic(sig)
 		}
 	}
 	return out, nil
@@ -394,7 +396,9 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 				// 子表达式整体作为输出流：return 前的输出保留（$( "a"; return "b" ) → a、b）
 				return wrapSingle(append(out, unwrapOutput(sig.value)...))
 			case flowError:
-				panic(sig) // 子表达式里的终止错误向上传播（外层 try 可捕获）
+				// 子表达式里的终止错误向上传播，panic 前已产生的输出一并携带（外层 try 可捕获）。
+				sig.out = out
+				panic(sig)
 			}
 		}
 		return wrapSingle(out)

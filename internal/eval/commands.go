@@ -56,6 +56,13 @@ func (e *Evaluator) EvalStatements(list *ast.StatementList) []*object.PSObject {
 // EvalStatement 执行单条语句并返回输出对象（顶层逐语句输出用，保证与直写命令顺序一致）。
 // 顶层单个 $null 不占位（裸 $null/void/报错语句无输出）；嵌套位置与多值中的 $null 保留，它们在末端渲染时丢弃。
 func (e *Evaluator) EvalStatement(st ast.Node) []*object.PSObject {
+	out, _ := e.EvalStatementHalted(st)
+	return out
+}
+
+// EvalStatementHalted 执行单条语句并返回输出对象，同时报告是否遇到未捕获的终止错误。
+// 遇到未捕获的终止错误时打印并返回 true，调用处需要在此中止后续语句
+func (e *Evaluator) EvalStatementHalted(st ast.Node) ([]*object.PSObject, bool) {
 	out, sig := e.runStatements([]ast.Node{st})
 	if sig != nil {
 		switch sig.kind {
@@ -64,10 +71,16 @@ func (e *Evaluator) EvalStatement(st ast.Node) []*object.PSObject {
 			e.ExitCode = sig.code
 		case flowError:
 			e.printError(fmt.Errorf("%s", sig.value.String()))
+			return singleNullDropped(out), true
 		case flowBreak, flowContinue:
 			// 无所属循环的 break/continue 只终止本条语句（与 PowerShell 一致）
 		}
 	}
+	return singleNullDropped(out), false
+}
+
+// singleNullDropped 顶层单个 $null 不占位，其余原样返回。
+func singleNullDropped(out []*object.PSObject) []*object.PSObject {
 	if len(out) == 1 && (out[0] == nil || out[0].IsNull()) {
 		return nil
 	}

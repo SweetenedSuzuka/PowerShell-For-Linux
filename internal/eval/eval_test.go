@@ -1308,3 +1308,39 @@ func TestReportPanic(t *testing.T) {
 		t.Fatal("空值不应处理")
 	}
 }
+
+// TestEvalStatementHalted 未捕获的终止错误返回 true（调用方中止后续语句），普通语句与非终止错误返回 false。
+func TestEvalStatementHalted(t *testing.T) {
+	runHalted := func(src string) []bool {
+		t.Helper()
+		sess := shell.New(shell.StyleCore, io.Discard, io.Discard, strings.NewReader(""))
+		ev := New(sess, strings.NewReader(""), io.Discard, io.Discard)
+		res := parser.Parse(src)
+		if res.Error != nil {
+			t.Fatalf("解析错误 %q: %v", src, res.Error)
+		}
+		var halted []bool
+		for _, st := range res.List.Statements {
+			_, h := ev.EvalStatementHalted(st)
+			halted = append(halted, h)
+		}
+		return halted
+	}
+	assertHalted := func(src string, expected ...bool) {
+		t.Helper()
+		actual := runHalted(src)
+		if len(actual) != len(expected) {
+			t.Fatalf("%q → %v，想要 %v", src, actual, expected)
+		}
+		for i := range expected {
+			if actual[i] != expected[i] {
+				t.Fatalf("%q → %v，想要 %v", src, actual, expected)
+			}
+		}
+	}
+	assertHalted(`"a"; "b"`, false, false)
+	assertHalted(`throw "boom"`, true)
+	assertHalted(`"a"; throw "boom"; "b"`, false, true, false)
+	assertHalted(`5/0`, false)
+	assertHalted(`try { throw "boom" } catch { "caught" }`, false)
+}

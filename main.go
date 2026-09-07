@@ -195,11 +195,15 @@ func executeOnce(sess *shell.Session, ev *eval.Evaluator, src string) (code int)
 		return 1
 	}
 	// 逐语句执行并格式化，保证与 Write-Host/Format-* 等直写命令的顺序一致
+	// 遇到未捕获的终止错误时中止后续语句
 	for _, st := range res.List.Statements {
-		objs := ev.EvalStatement(st)
+		objs, halted := ev.EvalStatementHalted(st)
 		_ = object.FormatOutput(os.Stdout, objs)
 		if ev.ExitRequested {
 			return exitCode(ev, sess)
+		}
+		if halted {
+			break
 		}
 	}
 	return exitCode(ev, sess)

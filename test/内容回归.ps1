@@ -687,7 +687,7 @@ $results += T "失败后赋值置真" ($aqOk -eq "ok")
 $aqBad = 1/0
 if ($?) { $aqBadOk = "ok" } else { $aqBadOk = "fail" }
 $results += T "赋值右侧出错保持失败" (($aqBad -eq $null) -and ($aqBadOk -eq "fail"))
-# 159. 被接住的错误不影响赋值成功
+# 159. 被捕获的错误不影响赋值成功
 Get-Item 不存在EA123
 $aqCatch = try { throw "aq-x" } catch { "got" }
 if ($?) { $aqCatchOk = "ok" } else { $aqCatchOk = "fail" }
@@ -927,6 +927,16 @@ $results += T "脚本块抛出前输出保留" ((($so1 -join ",") -eq "s1a,s1cau
 function OFunc { "f2a"; throw "f2x" }
 $so2 = try { OFunc } catch { "f2caught" }
 $results += T "函数抛出前输出保留" ((($so2 -join ",") -eq "f2a,f2caught"))
+# 225. 进入 catch 时问号变量保持失败
+$qc = try { throw "t1" } catch { if ($?) { "true" } else { "false" } }
+$results += T "进入catch时问号保持失败" (($qc -eq "false"))
+# 226. 错误上抛经过 finally 时问号变量保持失败
+$qf = try { try { throw "t2" } finally { if ($?) { "f-true" } else { "f-false" } } } catch { "outer" }
+$results += T "经过finally时问号保持失败" ((($qf -join ",") -eq "f-false,outer"))
+# 227. 空 catch 块之后问号变量保持失败
+try { throw "t5" } catch { }
+if ($?) { $qa = "true" } else { $qa = "false" }
+$results += T "空catch之后问号保持失败" (($qa -eq "false"))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

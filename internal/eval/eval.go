@@ -230,9 +230,10 @@ func (e *Evaluator) reportError(err error) {
 	e.dispatchError("", err)
 }
 
-// throwError 抛出一个求值期终止错误：累积进 $Error 后以 flowError 上抛，外层 try 可捕获。
+// throwError 抛出一个求值期终止错误：累积进 $Error、置 $? 为失败后以 flowError 上抛，外层 try 可捕获。
 // 调用方已判定必须报错的场景用，不经首选项分发。
 func (e *Evaluator) throwError(msg string) {
+	e.Session.LastSuccess = false
 	rec := e.Session.RecordError(msg)
 	exc := object.Object("System.RuntimeException", msg)
 	exc.AddProp("Message", object.Str(msg))

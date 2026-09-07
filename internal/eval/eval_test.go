@@ -749,10 +749,10 @@ func TestAssignSuccessFlag(t *testing.T) {
 	wantStr(t, `Get-Item 不存在QW1; $x = 5; if ($?) { "ok" } else { "fail" }`, "ok")
 	// 右侧出错保持失败
 	wantStr(t, `$x = 1/0; if ($?) { "ok" } else { "fail" }`, "fail")
-	// 被接住的错误不影响：赋值成功置 true
+	// 被捕获的错误不影响：赋值成功置 true
 	wantStr(t, `Get-Item 不存在QW1; $x = try { throw "a" } catch { "b" }; $x`, "b")
 	wantStr(t, `Get-Item 不存在QW1; $x = try { throw "a" } catch { "b" }; if ($?) { "ok" } else { "fail" }`, "ok")
-	// 裸 try/catch 接住后同样置 true
+	// 裸 try/catch 捕获后同样置 true
 	wantStr(t, `Get-Item 不存在QW1; try { throw "a" } catch { "b" }; if ($?) { "ok" } else { "fail" }`, "b", "ok")
 }
 
@@ -1351,4 +1351,13 @@ func TestThrowKeepsPriorOutput(t *testing.T) {
 	wantStr(t, `function KP { "a"; throw "x" }; KP`, "a")
 	wantStr(t, `$( "a"; throw "x" )`, "a")
 	wantStr(t, `try { & { "a"; throw "x" } } catch { "caught" }`, "a", "caught")
+}
+
+// TestTryCatchQuestionMark 捕获错误后不改问号变量：进入 catch 块时保持失败，空 catch 块之后仍为失败，无错误时照常成功。
+func TestTryCatchQuestionMark(t *testing.T) {
+	wantStr(t, `try { throw "x" } catch { if ($?) { "t" } else { "f" } }`, "f")
+	wantStr(t, `try { throw "x" } catch { }; if ($?) { "t" } else { "f" }`, "f")
+	wantStr(t, `try { try { throw "x" } finally { if ($?) { "t" } else { "f" } } } catch { "c" }`, "f", "c")
+	wantStr(t, `try { "ok" } catch { "c" }; if ($?) { "t" } else { "f" }`, "ok", "t")
+	wantStr(t, `try { throw "x" } catch { "ok" }; if ($?) { "t" } else { "f" }`, "ok", "t")
 }

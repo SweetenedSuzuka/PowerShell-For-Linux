@@ -96,7 +96,7 @@ func (e *Evaluator) execStatement(n ast.Node) []*object.PSObject {
 	return nil
 }
 
-// execThrow 抛出一个终止错误：构造错误记录（Message + Exception）、累积进 $Error 后以 flowError 信号上抛。
+// execThrow 抛出一个终止错误：构造错误记录（Message + Exception）、累积进 $Error、置 $? 为失败后以 flowError 信号上抛。
 // 无表达式时消息为 ScriptHalted（对应 PowerShell throw 的默认消息）。
 func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 	msg := "ScriptHalted"
@@ -106,6 +106,7 @@ func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 			msg = val.String()
 		}
 	}
+	e.Session.LastSuccess = false
 	rec := e.Session.RecordError(msg)
 	exc := object.Object("System.RuntimeException", msg)
 	exc.AddProp("Message", object.Str(msg))
@@ -115,7 +116,7 @@ func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 
 // execTry 执行 try/catch/finally：
 // body 出错（flowError）→ 找第一个匹配的 catch（无类型全捕，[Exception]/[System.Exception] 基类全捕，其余按异常类型名精确匹配）→ 把错误记录临时绑到 $_（块结束恢复，普通赋值穿透外层）执行 catch 体；
-// 错误被接住置 $? 为 true（catch 体内再出错仍置 false）；
+// 捕获错误后不改 $?（进入 catch 块时保持失败，catch 体内语句按各自成败照常更新）；
 // finally 无论是否出错、是否被捕获都恒执行；catch/finally 自身的信号优先，未捕获的错误在 finally 之后原样上抛（外层 try 可继续捕获）。
 func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 	var out []*object.PSObject
@@ -128,8 +129,6 @@ func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 			if !catchMatches(cc.TypeName, sig.value) {
 				continue
 			}
-			// 错误已被接住：先置成功，catch 体内再出错仍会置失败。
-			e.Session.LastSuccess = true
 			// catch 块不推独立作用域：普通变量赋值穿透，只有 $_ 是临时绑定，块结束恢复原值。
 			sc := e.scopes[len(e.scopes)-1]
 			oldUS, hadUS := sc["_"]

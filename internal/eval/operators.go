@@ -360,6 +360,17 @@ func (e *Evaluator) numOp(l, r *object.PSObject, fn func(a, b float64) float64) 
 }
 
 func (e *Evaluator) mulOp(l, r *object.PSObject) *object.PSObject {
+	// 左操作数为数组、右操作数为非负整数时，数组整体重复该次数（乘数为 0 或者数组为空时得到空数组）。
+	if l.IsArray() {
+		if n, ok := r.AsInt(); ok && n >= 0 {
+			items := l.ArrayItems()
+			out := make([]*object.PSObject, 0, len(items)*int(n))
+			for i := int64(0); i < n; i++ {
+				out = append(out, items...)
+			}
+			return object.Array(out)
+		}
+	}
 	if l.TypeName == "String" {
 		if n, ok := r.AsInt(); ok && n >= 0 {
 			return object.Str(strings.Repeat(l.String(), int(n)))

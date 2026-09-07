@@ -907,6 +907,19 @@ $results += T "InputObject 直接输入" (((($fi -join ",") -eq "hi!")) -and (((
 $fe0 = $Error.Count
 "pipe" | ForEach-Object -InputObject "arg" -Process { $_ } 2>$null | Out-Null
 $results += T "InputObject 管道并存报错" (($Error.Count -eq ($fe0 + 1)))
+# 220. 数组乘以整数时整体重复该次数
+$am1 = @(1,2,3) * 2
+$am2 = @("a","b") * 3
+$am3 = @(1,2,3) * 1
+$results += T "数组乘以整数整体重复" (((($am1 -join ",") -eq "1,2,3,1,2,3")) -and ((($am2 -join ",") -eq "a,b,a,b,a,b")) -and ((($am3 -join ",") -eq "1,2,3")))
+# 221. 数组乘以零与空数组相乘得到空数组
+$az = @(1,2,3) * 0
+$ae = @() * 2
+$results += T "数组乘零得到空数组" (((($null -eq $az) -eq $false)) -and (($az.Count -eq 0)) -and ((($null -eq $ae) -eq $false)) -and (($ae.Count -eq 0)))
+# 222. 非法乘数抛出的错误可捕获
+$an1 = try { @(1,2,3) * -1; "no" } catch { "caught" }
+$an2 = try { 2 * @(1,2,3); "no" } catch { "caught" }
+$results += T "数组非法乘数抛出错误" ((($an1 -eq "caught")) -and (($an2 -eq "caught")))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

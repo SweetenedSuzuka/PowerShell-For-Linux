@@ -195,7 +195,7 @@ func executeOnce(sess *shell.Session, ev *eval.Evaluator, src string) (code int)
 		return 1
 	}
 	// 逐语句执行并格式化，保证与 Write-Host/Format-* 等直写命令的顺序一致
-	// 遇到未捕获的终止错误时中止后续语句
+	// 遇到未捕获的终止错误时中止后续语句并返回失败码（与 PowerShell 一致）
 	for _, st := range res.List.Statements {
 		objs, halted := ev.EvalStatementHalted(st)
 		_ = object.FormatOutput(os.Stdout, objs)
@@ -203,7 +203,7 @@ func executeOnce(sess *shell.Session, ev *eval.Evaluator, src string) (code int)
 			return exitCode(ev, sess)
 		}
 		if halted {
-			break
+			return 1
 		}
 	}
 	return exitCode(ev, sess)

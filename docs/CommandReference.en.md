@@ -866,6 +866,17 @@ Examples:
 
 Official original reference: [Export-Csv](OriginalCrossPlatformDetails.en.md#export-csv).
 
+### Import-Csv
+- Type: Go implementation.
+- Version: 5.1 and 7. Distro: any.
+- Function: reads a CSV file into table objects, using the first row as column names, like splitting text by a delimiter line by line in bash.
+- Same as Windows PowerShell.
+Examples:
+- `Import-Csv proc.csv` — reads a CSV file into table objects (bash equivalent: `awk -F,` splitting columns line by line).
+- `Import-Csv data.csv -Delimiter ";"` — reads with semicolon as the delimiter (bash equivalent: `awk -F';'`).
+
+Official original reference: [Import-Csv](OriginalCrossPlatformDetails.en.md#import-csv).
+
 ### ConvertFrom-StringData
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

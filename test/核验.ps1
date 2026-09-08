@@ -108,6 +108,7 @@ ConvertFrom-Json '{"a":1}' 2>$null >$null; if ($?) { $pass++; "PASS  ConvertFrom
 Get-ChildItem | ConvertTo-Csv 2>$null >$null; if ($?) { $pass++; "PASS  ConvertTo-Csv" } else { $fail++; "FAIL  ConvertTo-Csv" }
 "a,b`n1,2" | ConvertFrom-Csv 2>$null >$null; if ($?) { $pass++; "PASS  ConvertFrom-Csv" } else { $fail++; "FAIL  ConvertFrom-Csv" }
 Get-ChildItem | Export-Csv test/tmp/vcsv.csv 2>$null >$null; if ($?) { $pass++; "PASS  Export-Csv" } else { $fail++; "FAIL  Export-Csv" }
+Import-Csv test/tmp/vcsv.csv 2>$null >$null; if ($?) { $pass++; "PASS  Import-Csv" } else { $fail++; "FAIL  Import-Csv" }
 ConvertFrom-StringData "a=1" 2>$null >$null; if ($?) { $pass++; "PASS  ConvertFrom-StringData" } else { $fail++; "FAIL  ConvertFrom-StringData" }
 Test-Json '{"a":1}' 2>$null >$null; if ($?) { $pass++; "PASS  Test-Json" } else { $fail++; "FAIL  Test-Json" }
 Get-Random -Minimum 1 -Maximum 10 2>$null >$null; if ($?) { $pass++; "PASS  Get-Random" } else { $fail++; "FAIL  Get-Random" }

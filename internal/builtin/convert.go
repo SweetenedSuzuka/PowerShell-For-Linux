@@ -171,9 +171,13 @@ func cmdConvertFromCsv(c *Context) ([]*object.PSObject, error) {
 	if len(records) < 2 {
 		return nil, nil
 	}
-	header := records[0]
+	return csvRowsToObjects(records[1:], records[0]), nil
+}
+
+// csvRowsToObjects 按表头把 CSV 记录转成表格对象（列缺失不建属性，多余列忽略）。
+func csvRowsToObjects(records [][]string, header []string) []*object.PSObject {
 	var out []*object.PSObject
-	for _, rec := range records[1:] {
+	for _, rec := range records {
 		o := object.Object("System.Management.Automation.PSCustomObject", nil)
 		for i, h := range header {
 			if i < len(rec) {
@@ -181,6 +185,67 @@ func cmdConvertFromCsv(c *Context) ([]*object.PSObject, error) {
 			}
 		}
 		out = append(out, o)
+	}
+	return out
+}
+
+// cmdImportCsv 从 CSV 文件读出表格对象（读盘版 ConvertFrom-Csv，首行类型行跳过）。
+func cmdImportCsv(c *Context) ([]*object.PSObject, error) {
+	// 超量位置实参无槽位可接（Path 占位置 0，Delimiter 占位置 1），报错而非静默忽略。
+	if len(c.Args.Positional) > 0 {
+		return errf(c, "%s", lang.T(lang.MsgPositionalParamNotFound, c.Args.Positional[0].String()))
+	}
+	var paths []string
+	if v := c.Args.Get("Path"); v != nil {
+		for _, it := range v.ArrayItems() {
+			paths = append(paths, it.String())
+		}
+	}
+	if len(paths) == 0 {
+		return nil, nil
+	}
+	// 分隔符：默认逗号，只接受单个字符；回车与换行不能作分隔符。
+	delim := ','
+	if d, _ := c.Args.Str("Delimiter"); d != "" {
+		r := []rune(d)
+		if len(r) != 1 || r[0] == '\r' || r[0] == '\n' {
+			return errf(c, "%s", lang.T(lang.MsgConvertFail, d, "char"))
+		}
+		delim = r[0]
+	}
+	header := c.Args.StringSlice("Header")
+	var out []*object.PSObject
+	for _, path := range paths {
+		full, derr := resolvePath(c, path)
+		if derr != nil {
+			return errf(c, "%v", derr)
+		}
+		data, err := os.ReadFile(full)
+		if err != nil {
+			return errf(c, "%s", lang.T(lang.MsgPathNotFoundFmt, path))
+		}
+		r := csv.NewReader(strings.NewReader(StripUTF8BOM(string(data))))
+		r.Comma = delim
+		r.FieldsPerRecord = -1
+		rows, err := r.ReadAll()
+		if err != nil {
+			return errf(c, "Import-Csv : %v", err)
+		}
+		// 首行类型行不是数据，去掉后下一行才是表头（-Header 给出时剩下全是数据）。
+		if len(rows) > 0 && len(rows[0]) > 0 && strings.HasPrefix(rows[0][0], "#TYPE") {
+			rows = rows[1:]
+		}
+		if len(header) > 0 {
+			out = append(out, csvRowsToObjects(rows, header)...)
+			continue
+		}
+		if len(rows) < 2 {
+			continue
+		}
+		out = append(out, csvRowsToObjects(rows[1:], rows[0])...)
+	}
+	if len(out) == 0 {
+		return nil, nil
 	}
 	return out, nil
 }
@@ -423,6 +488,11 @@ func init() {
 	Register("ConvertFrom-Csv", []ParamSpec{
 		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdConvertFromCsv)
+	Register("Import-Csv", []ParamSpec{
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "Delimiter", Position: 1, PositionSet: true, Type: "string"},
+		{Name: "Header", Type: "string[]"},
+	}, cmdImportCsv)
 	Register("Export-Csv", []ParamSpec{
 		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
 		{Name: "InputObject", Type: "object"},

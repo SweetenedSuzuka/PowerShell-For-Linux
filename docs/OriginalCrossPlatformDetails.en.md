@@ -125,7 +125,7 @@ Status legend:
 | [`Group-Object`](#group-object) | Microsoft.PowerShell.Utility | Both | None | Groups objects that contain the same value for specified properties. | Go implementation | Behaves identically. |
 | [`Import-Alias`](#import-alias) | Microsoft.PowerShell.Utility | Both | None | Imports an alias list from a file. | Go implementation |  |
 | [`Import-Clixml`](#import-clixml) | Microsoft.PowerShell.Utility | Both | Syntax differs | Imports a CLIXML file and creates corresponding objects in PowerShell. | Not implemented | Serialization / markup / formatting (rarely used) |
-| [`Import-Csv`](#import-csv) | Microsoft.PowerShell.Utility | Both | Syntax differs | Creates table-like custom objects from the items in a character-separated value (CSV) file. | Not implemented |  |
+| [`Import-Csv`](#import-csv) | Microsoft.PowerShell.Utility | Both | Syntax differs | Creates table-like custom objects from the items in a character-separated value (CSV) file. | Go implementation | Skips a leading #TYPE line; missing path returns empty. |
 | [`Import-LocalizedData`](#import-localizeddata) | Microsoft.PowerShell.Utility | Both | None | Imports language-specific data into scripts and functions based on the UI culture that's selected for the operating system. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
 | [`Import-Module`](#import-module) | Microsoft.PowerShell.Core | Both | Syntax differs | Adds modules to the current session. | Not implemented | Modules and assemblies (not applicable to a single-file interpreter) |
 | [`Import-PackageProvider`](#import-packageprovider) | PackageManagement | Both | None | Adds Package Management package providers to the current session. | Not implemented |  |

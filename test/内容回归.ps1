@@ -966,6 +966,27 @@ $eo1, $eo2 | Export-Csv eosemi.csv -Delimiter ";"
 $eo1 | Export-Csv eoprop.csv -Property N
 Export-Csv eonoinput.csv
 $results += T "分隔符与筛选列" ((((Get-Content eosemi.csv)[0] -eq "Name;N")) -and (((Get-Content eoprop.csv)[0] -eq "N")) -and ((-not (Test-Path eonoinput.csv))))
+# 233. 读表格文件
+"Name,N`nx,1`ny,2" | Set-Content ic.csv
+$icBack = Import-Csv ic.csv
+$results += T "读表格文件" ((($icBack.Count -eq 2)) -and (($icBack[0].Name -eq "x")) -and (($icBack[1].N -eq "2")))
+# 234. 分隔符与自定义表头，类型行跳过
+"Name;N`nx;1" | Set-Content icsemi.csv
+$icSemi = Import-Csv icsemi.csv -Delimiter ";"
+"1,2" | Set-Content ichead.csv
+$icHead = Import-Csv ichead.csv -Header H1,H2
+"#TYPE System.Management.Automation.PSCustomObject" | Set-Content ictype.csv
+'"Name","N"' | Add-Content ictype.csv
+'"x","1"' | Add-Content ictype.csv
+$icType = Import-Csv ictype.csv
+$results += T "分隔符表头类型行" ((($icSemi[0].Name -eq "x")) -and (($icHead.Count -eq 1)) -and (($icHead[0].H1 -eq "1")) -and (($icHead[0].H2 -eq "2")) -and (($icType[0].Name -eq "x")) -and (($icType[0].N -eq "1")))
+# 235. 缺失路径报错继续，空文件与只有表头无输出
+$ie1 = $Error.Count
+Import-Csv ic-no-such-999.csv 2>$null
+$icMissOk = $?
+"" | Set-Content icempty.csv
+"a,b" | Set-Content ichonly.csv
+$results += T "缺失路径与空文件" ((($Error.Count -eq ($ie1 + 1))) -and ((-not $icMissOk)) -and (($null -eq (Import-Csv icempty.csv))) -and (($null -eq (Import-Csv ichonly.csv))))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

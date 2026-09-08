@@ -75,7 +75,7 @@ Status legend:
 | [`Get-Credential`](#get-credential) | Microsoft.PowerShell.Security | Both | Syntax differs | Gets a credential object based on a user name and password. | Not implemented |  |
 | [`Get-Culture`](#get-culture) | Microsoft.PowerShell.Utility | Both | Syntax differs | Gets the current culture set in the operating system. | Go implementation | Culture follows the UI language, falling back to zh-CN when the UI language has no registered culture. |
 | [`Get-Date`](#get-date) | Microsoft.PowerShell.Utility | Both | Syntax differs | Gets the current date and time. | Go implementation |  |
-| [`Get-Error`](#get-error) | Microsoft.PowerShell.Utility | 7 only | 7 only | Gets and displays the most recent error messages from the current session. | Not implemented | Events / breakpoints / tracing (debugger facilities) |
+| [`Get-Error`](#get-error) | Microsoft.PowerShell.Utility | 7 only | 7 only | Gets and displays the most recent error messages from the current session. | Go implementation | Records carry message text only; count cannot be less than 1. |
 | [`Get-Event`](#get-event) | Microsoft.PowerShell.Utility | Both | None | Gets the events in the event queue. | Not implemented | Events / breakpoints / tracing (debugger facilities) |
 | [`Get-EventSubscriber`](#get-eventsubscriber) | Microsoft.PowerShell.Utility | Both | None | Gets the event subscribers in the current session. | Not implemented | Events / breakpoints / tracing (debugger facilities) |
 | [`Get-ExecutionPolicy`](#get-executionpolicy) | Microsoft.PowerShell.Security | Both | None | Gets the execution policies for the current session. | Not implemented |  |
@@ -2520,6 +2520,21 @@ Get-Error
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/Get-Error.md)
 
+#### Implementation in PowerShell For Linux:
+
+- Differs from the original: records carry only the message text, no exception stack and other details; the count cannot be less than 1 (zero and negative both error).
+
+- Type: Go implementation.
+- Function: shows the newest error records.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-Newest` (position 0) | int | How many newest records to take, 1 by default |
+| `-InputObject` | object | Error to show, single object only |
+
+- Output: error record objects; no output when there are no records, no input, or the input is an array.
+- Behavior: -Newest combined with input objects, and pipeline combined with named input, each error and continue.
+
 
 ### Get-Event
 
@@ -3761,11 +3776,11 @@ Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-
 | `-Maximum` (position 0) | object | Exclusive upper bound, an integer; an array means sampling, e.g. `Get-SecureRandom (1,2,3)` |
 | `-Minimum` | int | Inclusive lower bound, 0 by default |
 | `-InputObject` | object | Collection to sample (usually via pipeline) |
-| `-Count` | int | How many to take, 1 by default, no output when 0 |
+| `-Count` | int | How many to take, 1 by default, cannot be less than 1 |
 | `-Shuffle` | switch | Shuffles the whole collection, not usable with -Count |
 
 - Output: random integers or sampled objects.
-- Behavior: minimum at or above maximum, negative count, non-integer-convertible types, and parameter-set conflicts each error and continue.
+- Behavior: minimum at or above maximum, count below 1, non-integer-convertible types, and parameter-set conflicts each error and continue.
 
 
 ### Get-TimeZone

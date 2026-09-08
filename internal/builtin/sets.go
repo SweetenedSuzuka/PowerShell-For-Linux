@@ -210,11 +210,8 @@ func cmdGetSecureRandom(c *Context) ([]*object.PSObject, error) {
 		if !ok {
 			return errf(c, "%s", lang.T(lang.MsgBindConvertFail, cntArg.String(), "Count", "int"))
 		}
-		if count < 0 {
-			return errf(c, "%s", lang.T(lang.MsgCountNegative))
-		}
-		if count == 0 {
-			return nil, nil
+		if count < 1 {
+			return errf(c, "%s", lang.T(lang.MsgCountRange))
 		}
 	}
 	if items != nil {

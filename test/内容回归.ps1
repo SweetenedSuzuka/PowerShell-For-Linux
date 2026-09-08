@@ -1035,7 +1035,22 @@ $se0 = $Error.Count
 Get-SecureRandom -InputObject (1,2) -Maximum 5 2>$null | Out-Null
 Get-SecureRandom -Minimum 10 -Maximum 5 2>$null | Out-Null
 Get-SecureRandom -InputObject (1,2,3) -Count -1 2>$null | Out-Null
-$results += T "取样洗牌参数集" ((($ss1.Count -eq 3)) -and ((($ss1 | Sort-Object -Unique).Count -eq 3)) -and (($ss2.Count -eq 5)) -and ((($ss2 | Sort-Object) -join ",") -eq "1,2,3,4,5") -and (($Error.Count -eq ($se0 + 3))))
+Get-SecureRandom -Maximum 10 -Count 0 2>$null | Out-Null
+$results += T "取样洗牌参数集" ((($ss1.Count -eq 3)) -and ((($ss1 | Sort-Object -Unique).Count -eq 3)) -and (($ss2.Count -eq 5)) -and ((($ss2 | Sort-Object) -join ",") -eq "1,2,3,4,5") -and (($Error.Count -eq ($se0 + 4))))
+# 243. 读最新错误记录
+Get-Content ge-no-such-aaa.txt 2>$null | Out-Null
+Get-Content ge-no-such-bbb.txt 2>$null | Out-Null
+$ge1 = Get-Error
+$ge2 = Get-Error -Newest 2
+$results += T "读最新错误记录" ((($ge1.Count -eq 1)) -and (($ge2.Count -eq 2)) -and (($ge1[0].Message -eq $ge2[0].Message)) -and (($ge2[0].Message -ne $ge2[1].Message)))
+# 244. 条数边界与输入对象
+$ge3 = Get-Error -Newest 99
+$ge4 = Get-Error -InputObject $Error[0]
+$ge5 = $Error[0..1] | Get-Error
+$ge0 = $Error.Count
+Get-Error -Newest 0 2>$null | Out-Null
+Get-Error -Newest 1 -InputObject $Error[0] 2>$null | Out-Null
+$results += T "条数边界输入对象" ((($ge3.Count -eq $ge0)) -and (($ge4.Count -eq 1)) -and (($ge5.Count -eq 2)) -and (($null -eq (Get-Error -InputObject ($Error[0],$Error[1])))) -and (($Error.Count -eq ($ge0 + 2))))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

@@ -115,6 +115,7 @@ ConvertFrom-StringData "a=1" 2>$null >$null; if ($?) { $pass++; "PASS  ConvertFr
 Test-Json '{"a":1}' 2>$null >$null; if ($?) { $pass++; "PASS  Test-Json" } else { $fail++; "FAIL  Test-Json" }
 Get-Random -Minimum 1 -Maximum 10 2>$null >$null; if ($?) { $pass++; "PASS  Get-Random" } else { $fail++; "FAIL  Get-Random" }
 Get-SecureRandom -Minimum 1 -Maximum 10 2>$null >$null; if ($?) { $pass++; "PASS  Get-SecureRandom" } else { $fail++; "FAIL  Get-SecureRandom" }
+Get-Content test/tmp/ge-missing.txt 2>$null >$null; Get-Error 2>$null >$null; if ($?) { $pass++; "PASS  Get-Error" } else { $fail++; "FAIL  Get-Error" }
 New-Guid 2>$null >$null; if ($?) { $pass++; "PASS  New-Guid" } else { $fail++; "FAIL  New-Guid" }
 New-TimeSpan -Minutes 5 2>$null >$null; if ($?) { $pass++; "PASS  New-TimeSpan" } else { $fail++; "FAIL  New-TimeSpan" }
 $f = New-TemporaryFile; Remove-Item $f.FullName 2>$null >$null; if ($?) { $pass++; "PASS  New-TemporaryFile" } else { $fail++; "FAIL  New-TemporaryFile" }

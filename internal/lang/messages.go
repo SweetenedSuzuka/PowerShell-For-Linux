@@ -92,7 +92,8 @@ const (
 	MsgCopyDestNotDir
 	MsgCopyNeedsRecurse
 	MsgSkipNegative
-	MsgCountNegative
+	MsgCountRange
+	MsgNewestRange
 	MsgMinMaxInvalid
 	MsgCannotRename
 	MsgRenameDestExists

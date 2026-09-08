@@ -1117,6 +1117,17 @@ Examples:
 
 Official original reference: [Get-Help](OriginalCrossPlatformDetails.en.md#get-help).
 
+### Get-Error
+- Type: Go implementation.
+- Version: 7. Distro: any.
+- Function: shows the newest error records, like looking back at the last command's error in bash.
+- Difference from Windows PowerShell: records carry only the message text, no exception stack and other details.
+Examples:
+- `Get-Content x.txt; Get-Error` — shows the missing-file error (bash equivalent: the error line from a failed `cat x.txt`).
+- `Get-Error -Newest 3` — shows the newest three errors (bash keeps no error record table; errors are only visible when they happen).
+
+Official original reference: [Get-Error](OriginalCrossPlatformDetails.en.md#get-error).
+
 ### Invoke-Expression (iex)
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

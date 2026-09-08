@@ -899,6 +899,17 @@ Examples:
 
 Official original reference: [Test-Json](OriginalCrossPlatformDetails.en.md#test-json).
 
+### Update-List
+- Type: Go implementation.
+- Version: 5.1 and 7. Distro: any.
+- Function: adds items to and removes items from an object's collection property, outputs the updated object.
+- Difference from Windows PowerShell: this program's arrays are always updatable, the original errors on fixed-size arrays; missing -Property returns empty without error.
+Examples:
+- `$o = [pscustomobject]@{ L = @(1,2) }; $o | Update-List -Property L -Add 3` — appends 3 to L (bash equivalent: array append `a+=(3)`).
+- `$o | Update-List -Property L -Replace @(7,8)` — replaces L with 7 and 8 (bash equivalent: reassignment `a=(7 8)`).
+
+Official original reference: [Update-List](OriginalCrossPlatformDetails.en.md#update-list).
+
 ### Get-Random
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

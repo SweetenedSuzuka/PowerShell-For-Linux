@@ -96,6 +96,10 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 		if prec < 0 || prec < minPrec {
 			break
 		}
+		// 实参模式下破折号词可能是后一个命名参数（如 Update-List 的 -Replace），停在这里交回命令参数收集处理，符号运算符与永不作参数名的 -f 不受影响。
+		if argMode && op != "-f" && p.cur().Type == lexer.TkDashWord {
+			break
+		}
 		switch op {
 		case ",":
 			// 逗号：构建数组（比比较运算绑定更紧，使 1,2,3 -eq 2 过滤整个数组）。

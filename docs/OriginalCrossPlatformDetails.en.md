@@ -252,7 +252,7 @@ shells. | Not implemented | Platform / miscellaneous |
 | [`Unregister-PSResourceRepository`](#unregister-psresourcerepository) | Microsoft.PowerShell.PSResourceGet | 7 only | 7 only | Removes a registered repository from the local machine. | Not implemented |  |
 | [`Update-FormatData`](#update-formatdata) | Microsoft.PowerShell.Utility | Both | None | Updates the formatting data in the current session. | Not implemented | Serialization / markup / formatting (rarely used) |
 | [`Update-Help`](#update-help) | Microsoft.PowerShell.Core | Both | Syntax differs | Downloads and installs the newest help files on your computer. | Not implemented | Platform / miscellaneous |
-| [`Update-List`](#update-list) | Microsoft.PowerShell.Utility | Both | None | Adds items to and removes items from a property value that contains a collection of objects. | Not implemented | Serialization / markup / formatting (rarely used) |
+| [`Update-List`](#update-list) | Microsoft.PowerShell.Utility | Both | None | Adds items to and removes items from a property value that contains a collection of objects. | Go implementation | Arrays are always updatable; missing -Property returns empty. |
 | [`Update-PSModuleManifest`](#update-psmodulemanifest) | Microsoft.PowerShell.PSResourceGet | 7 only | 7 only | Updates a module manifest file. | Not implemented |  |
 | [`Update-PSResource`](#update-psresource) | Microsoft.PowerShell.PSResourceGet | 7 only | 7 only | Downloads and installs the newest version of a package already installed on the local machine. | Not implemented |  |
 | [`Update-PSScriptFileInfo`](#update-psscriptfileinfo) | Microsoft.PowerShell.PSResourceGet | 7 only | 7 only | This cmdlet updates the comment-based metadata in an existing script .ps1 file. | Not implemented |  |
@@ -1758,6 +1758,26 @@ Import-Csv -Path .\WmiData.csv
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/Export-Csv.md)
 
+#### Implementation in PowerShell For Linux:
+
+- Differs from the original: text format matches ConvertTo-Csv; -Property column filtering is this program's extension, the original has no such parameter; missing input creates no file and reports no error; -Path takes a single path only.
+
+- Type: Go implementation.
+- Function: saves objects as a CSV file.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-Path` (position 0) | path | Target file path |
+| `-InputObject` | object | Data to write (usually via pipeline) |
+| `-Property` | string[] | Write only these columns (this program's extension) |
+| `-Delimiter` | string | Column delimiter, a single character, comma by default |
+| `-Append` | switch | Appends to an existing non-empty file without repeating the header |
+| `-NoClobber` | switch | Errors when the file exists, no overwrite |
+| `-NoTypeInformation` | switch | Accepted directly, writes no type line (default behavior) |
+| `-Encoding` | string | File encoding for writing, no BOM by default |
+
+- Output: no output; writes the file with a trailing newline.
+
 
 ### Export-FormatData
 
@@ -2916,6 +2936,20 @@ Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Management/Get-ItemPropertyValue.md)
+
+#### Implementation in PowerShell For Linux:
+
+- Differs from the original: only a single property name from the file path's 5 fields is supported; a missing -Name returns empty without error; -Path takes a single path only.
+
+- Type: Go implementation.
+- Function: takes a single property value by name. Like taking one `stat` field in bash, e.g. `stat -c %s`.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-Path` (position 0) | path | Target path |
+| `-Name` (position 1) | string | Property name to take, e.g. `Get-ItemPropertyValue x -Name Length` |
+
+- Output: the property value itself (e.g. an integer, a time).
 
 
 ### Get-Job
@@ -4084,6 +4118,22 @@ $P | Get-Member
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/Import-Csv.md)
+
+#### Implementation in PowerShell For Linux:
+
+- Consistent with the original 5.1/7.
+
+- Type: Go implementation.
+- Function: reads a CSV file into table objects.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-Path` (position 0) | path | CSV file path; multiple allowed (`Import-Csv a.csv,b.csv` reads each and merges) |
+| `-Delimiter` (position 1) | string | Column delimiter, a single character, comma by default |
+| `-Header` | string[] | Custom column names; when given, the file's first row counts as data too |
+
+- Output: one table object per row, all field values are strings; empty files and header-only files produce no output.
+- Behavior: a leading #TYPE line is skipped; a missing path returns empty; a nonexistent path → error with $?=false; excess positional arguments error out.
 
 
 ### Import-LocalizedData
@@ -8388,6 +8438,24 @@ class Cards {
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/Update-List.md)
+
+#### Implementation in PowerShell For Linux:
+
+- Differs from the original: this program's arrays are always updatable, the original errors on fixed-size arrays; a missing -Property returns empty without error.
+
+- Type: Go implementation.
+- Function: adds items to and removes items from an object's collection property.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-Property` (position 0) | string | Collection property name to update, e.g. `Update-List -Property L -Add 4` |
+| `-Add` | object | Append these items |
+| `-Remove` | object | Remove the first equal item, no error when not found |
+| `-Replace` | object | Replace the whole column with these items, not usable with -Add/-Remove |
+| `-InputObject` | object | Object to update (usually via pipeline) |
+
+- Output: the updated input object; no output when input is missing or -Property is missing.
+- Behavior: -Add and -Remove used together remove first, then add; missing properties, non-collections, and null input items error per item and continue; equality folds case on string form.
 
 
 ### Update-PSModuleManifest

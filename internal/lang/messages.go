@@ -27,7 +27,6 @@ const (
 	MsgParseFuncName
 	MsgParseParamList
 	MsgParsePipeRightCmd
-	MsgParseCmpOp
 	MsgParseTernaryColon
 	MsgParseIncDecVar
 	MsgParseOpMissingLeft
@@ -100,6 +99,8 @@ const (
 	MsgConfirmPrompt
 	MsgCannotClear
 	MsgPropNotFound
+	MsgObjectPropNotFound
+	MsgPropNotCollection
 	MsgVarExists
 	MsgAliasExists
 	MsgServiceNeedSystemd

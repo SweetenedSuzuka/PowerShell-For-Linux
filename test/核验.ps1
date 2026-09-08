@@ -93,6 +93,7 @@ Get-Date | Get-Member 2>$null >$null; if ($?) { $pass++; "PASS  Get-Member" } el
 Compare-Object (1,2,3) (2,3,4) 2>$null >$null; if ($?) { $pass++; "PASS  Compare-Object" } else { $fail++; "FAIL  Compare-Object" }
 Get-ChildItem -Name | Tee-Object test/tmp/tee.txt 2>$null >$null; if ($?) { $pass++; "PASS  Tee-Object" } else { $fail++; "FAIL  Tee-Object" }
 Get-Date | Add-Member -Name 标签 -Value 测试 2>$null >$null; if ($?) { $pass++; "PASS  Add-Member" } else { $fail++; "FAIL  Add-Member" }
+$ulv = [pscustomobject]@{ L = @(1,2) }; $ulv | Update-List -Property L -Add 3 2>$null >$null; if ($?) { $pass++; "PASS  Update-List" } else { $fail++; "FAIL  Update-List" }
 
 Write-Output "== 运算符（7.X） =="
 $r = 5 -in 1..10; if ($?) { $pass++; "PASS  范围 -in" } else { $fail++; "FAIL  范围 -in" }

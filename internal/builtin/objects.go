@@ -505,6 +505,84 @@ func cmdNewObject(c *Context) ([]*object.PSObject, error) {
 	}
 }
 
+// removeFirstListItem 删掉首个与给定值字符串形式（大小写折叠）相等的项，找不到原样返回。
+func removeFirstListItem(items []*object.PSObject, target *object.PSObject) []*object.PSObject {
+	want := strings.ToLower(target.String())
+	for i, it := range items {
+		if strings.ToLower(it.String()) == want {
+			kept := make([]*object.PSObject, 0, len(items)-1)
+			kept = append(kept, items[:i]...)
+			return append(kept, items[i+1:]...)
+		}
+	}
+	return items
+}
+
+// cmdUpdateList 集合属性增删项（Add 与 Remove 同用时先删后加，Replace 整列替换，输出改写后的输入对象）。
+func cmdUpdateList(c *Context) ([]*object.PSObject, error) {
+	// 超量位置实参无槽位可接（Property 只占位置 0），报错而非静默忽略。
+	if len(c.Args.Positional) > 0 {
+		return errf(c, "%s", lang.T(lang.MsgPositionalParamNotFound, c.Args.Positional[0].String()))
+	}
+	// -Replace 独占参数集，不与 -Add/-Remove 同用。
+	replace := c.Args.Get("Replace")
+	if replace != nil && (c.Args.Get("Add") != nil || c.Args.Get("Remove") != nil) {
+		return errf(c, "%s", lang.T(lang.MsgParamSetUnresolvable))
+	}
+	// -InputObject 整体作一个输入，不展开数组；与管道输入并存时报错。
+	input := c.Input
+	if arg := c.Args.Get("InputObject"); arg != nil {
+		if len(c.Input) > 0 {
+			return errf(c, "%s", lang.T(lang.MsgInputObjectWithPipeline))
+		}
+		input = []*object.PSObject{arg}
+	}
+	// 缺 -Property 时返回空（与 PowerShell 有差异，见文档）。
+	prop, _ := c.Args.Str("Property")
+	if prop == "" || len(input) == 0 {
+		return nil, nil
+	}
+	var out []*object.PSObject
+	for _, o := range input {
+		var cur *object.PSObject
+		ok := false
+		if o != nil && !o.IsNull() {
+			cur, ok = o.PropValue(prop)
+		}
+		if !ok {
+			if _, terr := errf(c, "%s", lang.T(lang.MsgObjectPropNotFound, prop)); terr != nil {
+				return nil, terr
+			}
+			continue
+		}
+		if !cur.IsArray() {
+			if _, terr := errf(c, "%s", lang.T(lang.MsgPropNotCollection, prop)); terr != nil {
+				return nil, terr
+			}
+			continue
+		}
+		items := cur.ArrayItems()
+		if replace != nil {
+			items = replace.ArrayItems()
+		} else {
+			if remove := c.Args.Get("Remove"); remove != nil {
+				for _, rv := range remove.ArrayItems() {
+					items = removeFirstListItem(items, rv)
+				}
+			}
+			if add := c.Args.Get("Add"); add != nil {
+				items = append(items, add.ArrayItems()...)
+			}
+		}
+		o.SetProp(prop, object.Array(items))
+		out = append(out, o)
+	}
+	if len(out) == 0 {
+		return nil, nil
+	}
+	return out, nil
+}
+
 func cmdMeasureCommand(c *Context) ([]*object.PSObject, error) {
 	node := c.Args.GetNode("Expression")
 	if sb, ok := node.(*ast.ScriptBlock); ok {
@@ -568,4 +646,11 @@ func init() {
 		{Name: "TypeName", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Property", Type: "hashtable"},
 	}, cmdNewObject)
+	Register("Update-List", []ParamSpec{
+		{Name: "Property", Position: 0, PositionSet: true, Type: "string"},
+		{Name: "Add", Type: "object"},
+		{Name: "Remove", Type: "object"},
+		{Name: "Replace", Type: "object"},
+		{Name: "InputObject", Type: "object"},
+	}, cmdUpdateList)
 }

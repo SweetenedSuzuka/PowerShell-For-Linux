@@ -138,6 +138,21 @@ func TestBindExcessPositional(t *testing.T) {
 	}
 }
 
+// TestBindOperatorNamedParam 运算符同名参数：无左操作数时按命名参数绑定（Update-List 的 -Replace），有左操作数时仍按比较运算求值。
+func TestBindOperatorNamedParam(t *testing.T) {
+	args, err := bindViaEval(t, "Update-List -Property L -Replace 7")
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertNamedArg(t, args, "Property", "L")
+	assertNamedArg(t, args, "Replace", "7")
+	cmp, err := bindViaEval(t, "Write-Output 5 -eq 5")
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertNamedArg(t, cmp, "InputObject", "True")
+}
+
 // TestBindSwitchNoSlot 开关参数不占位置槽位。
 func TestBindSwitchNoSlot(t *testing.T) {
 	args, err := bindViaEval(t, "Get-ChildItem -Recurse x")

@@ -202,16 +202,22 @@ func (p *Parser) collectCommandArgs(cmd *ast.Command) {
 		}
 		// 命名参数 / 开关
 		if t.Type == TkDashWord {
-			// 二元运算符（比较、逻辑、成员测试等）会把最后一个位置实参并入运算表达式，后续 token 由 parseBinaryTail 消费。
-			// 判定依据与 parseBinaryTail 一致，都是 binaryOpInfo；不在表里的词（如只有一元用法的 -not）按普通命名参数处理。
-			if _, prec := p.binaryOpInfo(t); prec >= 0 {
-				if len(cmd.Positional) == 0 {
-					p.fail(lang.T(lang.MsgParseCmpOp, t.Text))
-					break
-				}
+			// 二元运算符（比较、逻辑、成员测试等）会把最后一个位置实参并入运算表达式，后续 token 由后缀逻辑消费。
+			// 判定依据与后缀逻辑一致，都是 binaryOpInfo；不在表里的词（如只有一元用法的 -not）按普通命名参数处理。
+			// 位置实参为空时不可能是运算符（如 Update-List 的 -Replace 参数），回落到命名参数由绑定阶段判定。
+			// 运算符本身在这里消费，右操作数与后续串联交后缀逻辑；后缀在实参模式遇到破折号词会停下，外层循环重新进入本分支，每次迭代至少消费一个 token。
+			if opName, prec := p.binaryOpInfo(t); prec >= 0 && len(cmd.Positional) > 0 {
 				lhs := cmd.Positional[len(cmd.Positional)-1]
 				cmd.Positional = cmd.Positional[:len(cmd.Positional)-1]
-				expr := p.parseBinaryExprFrom(lhs, 0, true)
+				var expr ast.Node
+				if opName == "-f" {
+					// 格式运算符右侧是参数列表且优先级特殊，沿用原有后缀路径（-f 永不作参数名，不会误留）。
+					expr = p.parseBinaryExprFrom(lhs, 0, true)
+				} else {
+					p.advance()
+					rhs := p.parseBinaryExpr(prec+1, true)
+					expr = p.parseBinaryTail(&ast.Binary{Op: opName, L: lhs, R: rhs}, 0, true)
+				}
 				cmd.Positional = append(cmd.Positional, expr)
 				continue
 			}

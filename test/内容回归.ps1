@@ -987,6 +987,28 @@ $icMissOk = $?
 "" | Set-Content icempty.csv
 "a,b" | Set-Content ichonly.csv
 $results += T "缺失路径与空文件" ((($Error.Count -eq ($ie1 + 1))) -and ((-not $icMissOk)) -and (($null -eq (Import-Csv icempty.csv))) -and (($null -eq (Import-Csv ichonly.csv))))
+# 236. 集合属性增删项
+$ul1 = [pscustomobject]@{ L = @(1,2,3) }
+$ul1r = $ul1 | Update-List -Property L -Add 4
+$ul2 = [pscustomobject]@{ L = @(1,2,3,2) }
+$ul2 | Update-List -Property L -Remove 2 | Out-Null
+$results += T "集合属性增删项" ((($ul1.L -join ",") -eq "1,2,3,4") -and ((($ul1r.L -join ",")) -eq "1,2,3,4") -and (($ul2.L -join ",") -eq "1,3,2"))
+# 237. 整列替换与加删同用，参数集冲突报错
+$ul3 = [pscustomobject]@{ L = @(1,2,3) }
+$ul3 | Update-List -Property L -Replace @(7,8) | Out-Null
+$ul4 = [pscustomobject]@{ L = @(1,2,3) }
+$ul4 | Update-List -Property L -Add 4 -Remove 2 | Out-Null
+$ue0 = $Error.Count
+$ul4 | Update-List -Property L -Add 4 -Replace @(9) 2>$null | Out-Null
+$results += T "整列替换与参数集" (((($ul3.L -join ",")) -eq "7,8") -and ((($ul4.L -join ",")) -eq "1,3,4") -and (($Error.Count -eq ($ue0 + 1))))
+# 238. 非集合与缺属性报错继续，无输入缺参数返回空
+$ul5 = [pscustomobject]@{ L = 5 }
+$ue1 = $Error.Count
+$ul5 | Update-List -Property L -Add 4 2>$null
+if ($?) { $ul5ok = $true } else { $ul5ok = $false }
+$ul6 = [pscustomobject]@{ A = 1 }
+$ul6 | Update-List -Property L -Add 4 2>$null
+$results += T "非集合缺属性与空输入" ((($Error.Count -eq ($ue1 + 2))) -and ((-not $ul5ok)) -and (($null -eq (Update-List -Property L -Add 4))) -and (($null -eq ($ul6 | Update-List))))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

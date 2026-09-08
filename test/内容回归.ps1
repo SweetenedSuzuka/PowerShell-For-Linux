@@ -1009,6 +1009,19 @@ if ($?) { $ul5ok = $true } else { $ul5ok = $false }
 $ul6 = [pscustomobject]@{ A = 1 }
 $ul6 | Update-List -Property L -Add 4 2>$null
 $results += T "非集合缺属性与空输入" ((($Error.Count -eq ($ue1 + 2))) -and ((-not $ul5ok)) -and (($null -eq (Update-List -Property L -Add 4))) -and (($null -eq ($ul6 | Update-List))))
+# 239. 默认出口直通显示并截断管道
+$odc = 9 | Out-Default | Measure-Object | Select-Object -ExpandProperty Count
+$odr2 = Out-Default -InputObject @()
+$results += T "默认出口截断" ((($odc -eq 0)) -and (($null -eq $odr2)))
+# 240. 输入冲突与超量位置报错继续，记录开关接受忽略
+$oe0 = $Error.Count
+1 | Out-Default -InputObject 2 2>$null
+if ($?) { $odcok = $true } else { $odcok = $false }
+Out-Default foo 2>$null
+if ($?) { $odpok = $true } else { $odpok = $false }
+8 | Out-Default -Transcript 2>$null
+if ($?) { $odotok = $true } else { $odotok = $false }
+$results += T "输入冲突位置报错" ((($Error.Count -eq ($oe0 + 2))) -and ((-not $odcok)) -and ((-not $odpok)) -and ($odotok))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

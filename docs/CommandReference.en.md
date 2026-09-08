@@ -588,6 +588,17 @@ Examples:
 
 Official original reference: [Write-Error](OriginalCrossPlatformDetails.en.md#write-error).
 
+### Out-Default
+- Type: Go implementation.
+- Version: 5.1 and 7. Distro: any.
+- Function: renders input with default formatting straight to the screen, nothing continues down the pipeline, like a bash command writing to the screen.
+- Difference from Windows PowerShell: -Transcript is accepted and ignored (no session transcription facility).
+Examples:
+- `1,2,3 | Out-Default` — shows 1, 2, 3 (bash equivalent: `printf '%s\n' 1 2 3`).
+- `Get-Process | Select-Object -First 5 | Out-Default` — shows the first 5 processes (bash equivalent: `ps | head -5`, table in default format).
+
+Official original reference: [Out-Default](OriginalCrossPlatformDetails.en.md#out-default).
+
 ### Out-File
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

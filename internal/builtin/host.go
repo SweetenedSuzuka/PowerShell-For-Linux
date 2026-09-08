@@ -46,6 +46,27 @@ func cmdOutHost(c *Context) ([]*object.PSObject, error) {
 	return nil, nil
 }
 
+// cmdOutDefault 默认格式化出口直通：输入按默认格式直接渲染，不进入管道（-Transcript 接受忽略，无会话记录设施）。
+func cmdOutDefault(c *Context) ([]*object.PSObject, error) {
+	// 超量位置实参无槽位可接（InputObject 只接受命名），报错而非静默忽略。
+	if len(c.Args.Positional) > 0 {
+		return errf(c, "%s", lang.T(lang.MsgPositionalParamNotFound, c.Args.Positional[0].String()))
+	}
+	// -InputObject 整体作一个输入，不展开数组；与管道输入并存时报错。
+	input := c.Input
+	if arg := c.Args.Get("InputObject"); arg != nil {
+		if len(c.Input) > 0 {
+			return errf(c, "%s", lang.T(lang.MsgInputObjectWithPipeline))
+		}
+		input = []*object.PSObject{arg}
+	}
+	if len(input) == 0 {
+		return nil, nil
+	}
+	_ = object.FormatOutput(c.console(), input)
+	return nil, nil
+}
+
 func cmdClearHost(c *Context) ([]*object.PSObject, error) {
 	fmt.Fprint(c.console(), "\x1b[2J\x1b[H")
 	return nil, nil
@@ -106,6 +127,10 @@ func init() {
 	Register("Out-Host", []ParamSpec{
 		{Name: "InputObject", Position: 0, PositionSet: true, Type: "object"},
 	}, cmdOutHost)
+	Register("Out-Default", []ParamSpec{
+		{Name: "Transcript", Switch: true},
+		{Name: "InputObject", Type: "object"},
+	}, cmdOutDefault)
 	Register("Clear-Host", nil, cmdClearHost)
 	Register("Read-Host", []ParamSpec{
 		{Name: "Prompt", Position: 0, PositionSet: true, Type: "string"},

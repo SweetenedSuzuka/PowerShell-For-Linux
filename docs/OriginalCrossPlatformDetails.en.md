@@ -164,7 +164,7 @@ Status legend:
 | [`New-TemporaryFile`](#new-temporaryfile) | Microsoft.PowerShell.Utility | Both | None | Creates a temporary file. | Go implementation |  |
 | [`New-TimeSpan`](#new-timespan) | Microsoft.PowerShell.Utility | Both | Syntax differs | Creates a TimeSpan object. | Go implementation |  |
 | [`New-Variable`](#new-variable) | Microsoft.PowerShell.Utility | Both | None | Creates a new variable. | Go implementation |  |
-| [`Out-Default`](#out-default) | Microsoft.PowerShell.Core | Both | None | Sends the output to the default formatter and to the default output cmdlet. | Not implemented |  |
+| [`Out-Default`](#out-default) | Microsoft.PowerShell.Core | Both | None | Sends the output to the default formatter and to the default output cmdlet. | Go implementation | -Transcript accepted and ignored. |
 | [`Out-File`](#out-file) | Microsoft.PowerShell.Utility | Both | Syntax differs | Sends output to a file. | Go implementation |  |
 | [`Out-Host`](#out-host) | Microsoft.PowerShell.Core | Both | None | Sends output to the command line. | Go implementation |  |
 | [`Out-Null`](#out-null) | Microsoft.PowerShell.Core | Both | None | Hides the output instead of sending it down the pipeline or displaying it. | Go implementation |  |
@@ -5449,6 +5449,21 @@ Get-Process | Select-Object -First 5 | Out-Default
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Core/Out-Default.md)
+
+#### Implementation in PowerShell For Linux:
+
+- Differs from the original: -Transcript is accepted and ignored (no session transcription facility).
+
+- Type: Go implementation.
+- Function: renders input with default formatting straight to the screen.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-Transcript` | switch | Accepted and ignored |
+| `-InputObject` | object | Data to show (usually via pipeline) |
+
+- Output: no output objects; renders straight to the screen, downstream receives nothing.
+- Behavior: pipeline combined with -InputObject errors; excess positional arguments error out; no output when input is missing.
 
 
 ### Out-File

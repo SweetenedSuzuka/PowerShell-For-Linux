@@ -72,6 +72,7 @@ Write-Debug d 2>$null >$null; if ($?) { $pass++; "PASS  Write-Debug" } else { $f
 Get-ChildItem -Name | Out-File test/tmp/o1.txt 2>$null >$null; if ($?) { $pass++; "PASS  Out-File" } else { $fail++; "FAIL  Out-File" }
 1..100 | Out-Null 2>$null >$null; if ($?) { $pass++; "PASS  Out-Null" } else { $fail++; "FAIL  Out-Null" }
 Get-Date | Out-String 2>$null >$null; if ($?) { $pass++; "PASS  Out-String" } else { $fail++; "FAIL  Out-String" }
+1,2,3 | Out-Default 2>$null >$null; if ($?) { $pass++; "PASS  Out-Default" } else { $fail++; "FAIL  Out-Default" }
 Get-ChildItem | Format-Table -AutoSize 2>$null >$null; if ($?) { $pass++; "PASS  Format-Table" } else { $fail++; "FAIL  Format-Table" }
 Get-Item test/核验.ps1 | Format-List 2>$null >$null; if ($?) { $pass++; "PASS  Format-List" } else { $fail++; "FAIL  Format-List" }
 Get-ChildItem -Name | Format-Wide 2>$null >$null; if ($?) { $pass++; "PASS  Format-Wide" } else { $fail++; "FAIL  Format-Wide" }

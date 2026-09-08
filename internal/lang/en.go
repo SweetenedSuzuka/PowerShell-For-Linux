@@ -108,6 +108,8 @@ Switch style at runtime:
 	MsgCopyDestNotDir:               "Destination %s must be an existing directory when copying multiple sources.",
 	MsgCopyNeedsRecurse:             "Directory %s requires -Recurse.",
 	MsgSkipNegative:                 "The '-Skip' parameter cannot be negative.",
+	MsgCountNegative:                "The '-Count' parameter cannot be negative.",
+	MsgMinMaxInvalid:                "The Minimum value (%d) cannot be greater than or equal to the Maximum value (%d).",
 	MsgCannotRename:                 "Cannot rename %s: %v",
 	MsgRenameDestExists:             "Cannot rename to %s because it already exists.",
 	MsgFileExists:                   "File %s already exists.",

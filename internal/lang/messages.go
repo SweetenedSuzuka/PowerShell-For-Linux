@@ -92,6 +92,8 @@ const (
 	MsgCopyDestNotDir
 	MsgCopyNeedsRecurse
 	MsgSkipNegative
+	MsgCountNegative
+	MsgMinMaxInvalid
 	MsgCannotRename
 	MsgRenameDestExists
 	MsgFileExists

@@ -1022,6 +1022,20 @@ if ($?) { $odpok = $true } else { $odpok = $false }
 8 | Out-Default -Transcript 2>$null
 if ($?) { $odotok = $true } else { $odotok = $false }
 $results += T "输入冲突位置报错" ((($Error.Count -eq ($oe0 + 2))) -and ((-not $odcok)) -and ((-not $odpok)) -and ($odotok))
+# 241. 安全随机范围与个数
+$sr1 = Get-SecureRandom -Maximum 100
+$sr2 = Get-SecureRandom -Minimum 10 -Maximum 20
+$sr3 = Get-SecureRandom 50
+$sr4 = Get-SecureRandom -Maximum 10 -Count 3
+$results += T "安全随机范围个数" ((($sr1 -ge 0) -and ($sr1 -lt 100)) -and (($sr2 -ge 10) -and ($sr2 -lt 20)) -and (($sr3 -ge 0) -and ($sr3 -lt 50)) -and (($sr4.Count -eq 3)))
+# 242. 取样洗牌与参数集报错
+$ss1 = Get-SecureRandom -InputObject (1,2,3,4,5) -Count 3
+$ss2 = Get-SecureRandom -InputObject (1,2,3,4,5) -Shuffle
+$se0 = $Error.Count
+Get-SecureRandom -InputObject (1,2) -Maximum 5 2>$null | Out-Null
+Get-SecureRandom -Minimum 10 -Maximum 5 2>$null | Out-Null
+Get-SecureRandom -InputObject (1,2,3) -Count -1 2>$null | Out-Null
+$results += T "取样洗牌参数集" ((($ss1.Count -eq 3)) -and ((($ss1 | Sort-Object -Unique).Count -eq 3)) -and (($ss2.Count -eq 5)) -and ((($ss2 | Sort-Object) -join ",") -eq "1,2,3,4,5") -and (($Error.Count -eq ($se0 + 3))))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

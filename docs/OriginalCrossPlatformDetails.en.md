@@ -113,7 +113,7 @@ Status legend:
 | [`Get-Random`](#get-random) | Microsoft.PowerShell.Utility | Both | Syntax differs | Gets a random number, or selects objects randomly from a collection. | Go implementation |  |
 | [`Get-Runspace`](#get-runspace) | Microsoft.PowerShell.Utility | Both | None | Gets active runspaces within a PowerShell host process. | Not implemented | Jobs and runspaces (requires job facilities; out of scope) |
 | [`Get-RunspaceDebug`](#get-runspacedebug) | Microsoft.PowerShell.Utility | Both | None | Shows runspace debugging options. | Not implemented | Jobs and runspaces (requires job facilities; out of scope) |
-| [`Get-SecureRandom`](#get-securerandom) | Microsoft.PowerShell.Utility | 7 only | 7 only | Gets a random number, or selects objects randomly from a collection. | Not implemented | Platform / miscellaneous |
+| [`Get-SecureRandom`](#get-securerandom) | Microsoft.PowerShell.Utility | 7 only | 7 only | Gets a random number, or selects objects randomly from a collection. | Go implementation | Integer endpoints only; no seed parameter. |
 | [`Get-TimeZone`](#get-timezone) | Microsoft.PowerShell.Management | Both | None | Gets the current time zone or a list of available time zones. | Go implementation | Reads /etc/timezone. |
 | [`Get-TraceSource`](#get-tracesource) | Microsoft.PowerShell.Utility | Both | None | Gets PowerShell components that are instrumented for tracing. | Not implemented | Events / breakpoints / tracing (debugger facilities) |
 | [`Get-TypeData`](#get-typedata) | Microsoft.PowerShell.Utility | Both | None | Gets the extended type data in the current session. | Not implemented | Serialization / markup / formatting (rarely used) |
@@ -3748,6 +3748,24 @@ Get-SecureRandom
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Utility/Get-SecureRandom.md)
+
+#### Implementation in PowerShell For Linux:
+
+- Differs from the original: endpoints accept integers only; no seed parameter (the random source is non-seedable).
+
+- Type: Go implementation.
+- Function: rolls secure random numbers or samples from a range/list.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-Maximum` (position 0) | object | Exclusive upper bound, an integer; an array means sampling, e.g. `Get-SecureRandom (1,2,3)` |
+| `-Minimum` | int | Inclusive lower bound, 0 by default |
+| `-InputObject` | object | Collection to sample (usually via pipeline) |
+| `-Count` | int | How many to take, 1 by default, no output when 0 |
+| `-Shuffle` | switch | Shuffles the whole collection, not usable with -Count |
+
+- Output: random integers or sampled objects.
+- Behavior: minimum at or above maximum, negative count, non-integer-convertible types, and parameter-set conflicts each error and continue.
 
 
 ### Get-TimeZone

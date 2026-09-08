@@ -932,6 +932,17 @@ Examples:
 
 Official original reference: [Get-Random](OriginalCrossPlatformDetails.en.md#get-random).
 
+### Get-SecureRandom
+- Type: Go implementation.
+- Version: 7. Distro: any.
+- Function: rolls secure random numbers or samples from a range/list, bash's `shuf` or `$RANDOM`, with a non-seedable random source.
+- Difference from Windows PowerShell: endpoints accept integers only.
+Examples:
+- `Get-SecureRandom -Maximum 100` — a random number from 0 to 99 (bash's `shuf -i 0-99 -n 1`).
+- `Get-ChildItem -Name | Get-SecureRandom -Count 2` — two random file names (bash's `ls | shuf -n 2`).
+
+Official original reference: [Get-SecureRandom](OriginalCrossPlatformDetails.en.md#get-securerandom).
+
 ### New-Guid
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

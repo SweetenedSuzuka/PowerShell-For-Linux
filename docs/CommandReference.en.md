@@ -312,6 +312,17 @@ Examples:
 
 Official original reference: [Test-Path](OriginalCrossPlatformDetails.en.md#test-path).
 
+### Resolve-DnsName
+- Type: Go implementation.
+- Version: 7. Distro: any.
+- Function: looks up DNS records for a name, bash's `dig +short` / `getent hosts`.
+- Difference from Windows PowerShell: the original ships only on 5.1 (DnsClient module), this is redone with Go's built-in resolver; output uses uniform Name/Type/Data columns; only A, AAAA, CNAME, MX, TXT, NS, PTR are supported.
+Examples:
+- `Resolve-DnsName example.com` — looks up A and AAAA records (bash's `dig +short example.com`).
+- `Resolve-DnsName example.com -Type MX` — looks up mail exchange records (bash's `dig +short MX example.com`).
+
+Official original reference: [Resolve-DnsName](OriginalWindowsDetails.en.md#resolve-dnsname).
+
 ### Resolve-Path / Convert-Path
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

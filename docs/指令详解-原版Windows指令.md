@@ -381,7 +381,7 @@ PowerShell For Linux默认不实现它们，但有时候会因为特殊原因实
 | [`Reset-AppxPackage`](#reset-appxpackage) | Appx | 仅5.1 | 仅5.1提供 | 将 Windows 应用恢复到初始配置。 | 不实现 |  |
 | [`Reset-ComputerMachinePassword`](#reset-computermachinepassword) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 重置计算机的计算机帐户密码。 | 不实现 |  |
 | [`Reset-LapsPassword`](#reset-lapspassword) | LAPS | 仅5.1 | 仅5.1提供 | 使 LAPS 立即轮换当前受管本地帐户的密码。 | 不实现 |  |
-| [`Resolve-DnsName`](#resolve-dnsname) | DnsClient | 仅5.1 | 仅5.1提供 | 对指定名称执行 DNS 解析。 | 不实现 |  |
+| [`Resolve-DnsName`](#resolve-dnsname) | DnsClient | 仅5.1 | 仅5.1提供 | 对指定名称执行 DNS 解析。 | Go实现 | Go 内置解析重做；输出 Name/Type/Data 三列。 |
 | [`Restart-Service`](#restart-service) | Microsoft.PowerShell.Management | 都有 | 无 | 停止并接着启动一个或更多服务。 | 映射 Linux（systemctl start/stop/restart） |  |
 | [`Restore-Computer`](#restore-computer) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 在本地计算机上启动系统还原。 | 不实现 |  |
 | [`Restore-UevBackup`](#restore-uevbackup) | UEV | 仅5.1 | 仅5.1提供 | 将另一台计算机备份的设置应用到本机。 | 不实现 |  |
@@ -9043,6 +9043,21 @@ PS C:\> Resolve-DnsName -Name www.bing.com
 ```
 
 出处：[官方文档（Windows Server 2025）](https://learn.microsoft.com/zh-cn/powershell/module/dnsclient/resolve-dnsname?view=windowsserver2025-ps)
+
+#### PowerShell For Linux中的实现：
+
+- 与原版差异：原版仅 5.1 提供，这里用 Go 内置解析重做；输出统一 Name/Type/Data 三列；只支持 A、AAAA、CNAME、MX、TXT、NS、PTR。
+
+- 类型：Go实现。
+- 功能：查域名的 DNS 记录。对应 bash `dig +short` / `getent hosts`。
+- 实现：Go 内置解析；默认用系统解析器，-Server 指定上游（UDP 53）。
+- 输出：DnsRecord 对象，字段 Name、Type、Data。
+
+| 参数 | 类型 | 含义 |
+| :--- | :--- | :--- |
+| `-Name`（位置 0） | string | 要查的名称，可多个 |
+| `-Type`（位置 1） | string | 记录类型，默认查 A 与 AAAA |
+| `-Server` | string | 上游 DNS 服务器，如 `Resolve-DnsName example.com -Server 8.8.8.8` |
 
 ### Restart-Service
 

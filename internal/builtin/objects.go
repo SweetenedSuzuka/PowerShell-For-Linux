@@ -454,7 +454,7 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdGetMember(c *Context) ([]*object.PSObject, error) {
-	// -MemberType 过滤成员类型（Property/TypeName 等，大小写不敏感，缺省返回全部）
+	// -MemberType 过滤成员类型（Property/TypeName 等，大小写不敏感，默认返回全部）
 	mt, _ := c.Args.Str("MemberType")
 	memberTypeMatch := func(t string) bool {
 		return mt == "" || strings.EqualFold(t, mt)

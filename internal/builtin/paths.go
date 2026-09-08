@@ -28,7 +28,7 @@ func cmdTestPath(c *Context) ([]*object.PSObject, error) {
 	if len(paths) == 0 {
 		return []*object.PSObject{object.Bool(false)}, nil
 	}
-	// -PathType 过滤：Leaf 只认文件、Container 只认目录、Any/缺省不限制
+	// -PathType 过滤：Leaf 只认文件、Container 只认目录、Any/默认不限制
 	pt, _ := c.Args.Str("PathType")
 	pathTypeMatch := func(p string) bool {
 		if pt == "" || strings.EqualFold(pt, "Any") {

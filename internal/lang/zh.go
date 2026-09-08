@@ -125,6 +125,8 @@ var zh = map[Msg]string{
 	MsgServiceNeedSystemd:           "Get-Service : 需要 systemd（systemctl）。",
 	MsgServiceListFail:              "Get-Service : 无法读取服务列表。",
 	MsgPingNotFound:                 "Test-Connection : 找不到 ping 命令。",
+	MsgDnsResolveFail:               "Resolve-DnsName : 无法解析名称 %s。",
+	MsgDnsTypeUnsupported:           "Resolve-DnsName : 不支持的记录类型 %s。",
 	MsgFormatHexNotFound:            "Format-Hex : 找不到路径 %s。",
 	MsgNewObjectBadType:             "New-Object : 不支持的类型 %s。",
 	MsgHelpAliasTo:                  "别名 %s → %s",

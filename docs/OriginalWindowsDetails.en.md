@@ -381,7 +381,7 @@ Status legend:
 | [`Reset-AppxPackage`](#reset-appxpackage) | Appx | 5.1 only | 5.1 only | Restores the Windows app to its initial configuration. | Out of scope |  |
 | [`Reset-ComputerMachinePassword`](#reset-computermachinepassword) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Resets the machine account password for the computer. | Out of scope |  |
 | [`Reset-LapsPassword`](#reset-lapspassword) | LAPS | 5.1 only | 5.1 only | Causes Windows Local Administrator Password Solution (LAPS) to immediately rotate the password for the currently managed local account. | Out of scope |  |
-| [`Resolve-DnsName`](#resolve-dnsname) | DnsClient | 5.1 only | 5.1 only | Performs a DNS name query resolution for the specified name. | Out of scope |  |
+| [`Resolve-DnsName`](#resolve-dnsname) | DnsClient | 5.1 only | 5.1 only | Performs a DNS name query resolution for the specified name. | Go implementation | Redone with Go's built-in resolver; Name/Type/Data columns. |
 | [`Restart-Service`](#restart-service) | Microsoft.PowerShell.Management | Both | None | Stops and then starts one or more services. | Mapped Linux (systemctl start/stop/restart) |  |
 | [`Restore-Computer`](#restore-computer) | Microsoft.PowerShell.Management | 5.1 only | 5.1 only | Starts a system restore on the local computer. | Out of scope |  |
 | [`Restore-UevBackup`](#restore-uevbackup) | UEV | 5.1 only | 5.1 only | Applies backed up settings from another computer to this computer. | Out of scope |  |
@@ -9429,6 +9429,21 @@ PS C:\> Resolve-DnsName -Name www.bing.com
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/windows-powershell-docs/blob/main/docset/winserver2025-ps/DnsClient/Resolve-DnsName.md)
+
+#### Implementation in PowerShell For Linux:
+
+- Differs from the original: the original ships only on 5.1, this is redone with Go's built-in resolver; output uses uniform Name/Type/Data columns; only A, AAAA, CNAME, MX, TXT, NS, PTR are supported.
+
+- Type: Go implementation.
+- Function: looks up DNS records for a name. Bash's `dig +short` / `getent hosts`.
+- Implementation: Go's built-in resolver; the system resolver by default, -Server points at an upstream (UDP 53).
+- Output: a DnsRecord object with fields Name, Type, Data.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-Name` (position 0) | string | Name to look up, multiple allowed |
+| `-Type` (position 1) | string | Record type, A and AAAA by default |
+| `-Server` | string | Upstream DNS server, e.g. `Resolve-DnsName example.com -Server 8.8.8.8` |
 
 
 ### Restart-Service

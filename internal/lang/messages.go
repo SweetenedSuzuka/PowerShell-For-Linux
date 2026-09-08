@@ -109,6 +109,8 @@ const (
 	MsgServiceNeedSystemd
 	MsgServiceListFail
 	MsgPingNotFound
+	MsgDnsResolveFail
+	MsgDnsTypeUnsupported
 	MsgFormatHexNotFound
 	MsgNewObjectBadType
 	MsgHelpAliasTo

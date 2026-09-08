@@ -125,6 +125,8 @@ Switch style at runtime:
 	MsgServiceNeedSystemd:           "Get-Service : systemd (systemctl) is required.",
 	MsgServiceListFail:              "Get-Service : Cannot read the service list.",
 	MsgPingNotFound:                 "Test-Connection : The ping command cannot be found.",
+	MsgDnsResolveFail:               "Resolve-DnsName : Cannot resolve name %s.",
+	MsgDnsTypeUnsupported:           "Resolve-DnsName : Unsupported record type %s.",
 	MsgFormatHexNotFound:            "Format-Hex : Cannot find path '%s'.",
 	MsgNewObjectBadType:             "New-Object : Unsupported type %s.",
 	MsgHelpAliasTo:                  "Alias %s → %s",

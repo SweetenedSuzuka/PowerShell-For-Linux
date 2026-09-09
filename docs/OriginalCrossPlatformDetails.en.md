@@ -72,7 +72,7 @@ Status legend:
 | [`Get-CmsMessage`](#get-cmsmessage) | Microsoft.PowerShell.Security | Both | None | Gets content that has been encrypted by using the Cryptographic Message Syntax format. | Not implemented |  |
 | [`Get-Command`](#get-command) | Microsoft.PowerShell.Core | Both | Syntax differs | Gets all commands. | Go implementation | External commands are not listed, only built-ins and aliases. |
 | [`Get-Content`](#get-content) | Microsoft.PowerShell.Management | Both | Syntax differs | Gets the content of the item at the specified location. | Go implementation |  |
-| [`Get-Credential`](#get-credential) | Microsoft.PowerShell.Security | Both | Syntax differs | Gets a credential object based on a user name and password. | Not implemented |  |
+| [`Get-Credential`](#get-credential) | Microsoft.PowerShell.Security | Both | Syntax differs | Gets a credential object based on a user name and password. | Go implementation | Password echoes; table shows username only; no credential methods. |
 | [`Get-Culture`](#get-culture) | Microsoft.PowerShell.Utility | Both | Syntax differs | Gets the current culture set in the operating system. | Go implementation | Culture follows the UI language, falling back to zh-CN when the UI language has no registered culture. |
 | [`Get-Date`](#get-date) | Microsoft.PowerShell.Utility | Both | Syntax differs | Gets the current date and time. | Go implementation |  |
 | [`Get-Error`](#get-error) | Microsoft.PowerShell.Utility | 7 only | 7 only | Gets and displays the most recent error messages from the current session. | Go implementation | Records carry message text only; count cannot be less than 1. |
@@ -2414,6 +2414,23 @@ $c = Get-Credential
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Security/Get-Credential.md)
+
+#### Implementation in PowerShell For Linux:
+
+- Differs from the original: password input echoes (the original masks it); the output table shows only the username; no credential methods (e.g. GetNetworkCredential); non-interactive runs return empty (Read-Host errors there).
+
+- Type: Go implementation.
+- Function: prompts for a username and password on the terminal and returns a credential object.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-UserName` (position 0) | string | Username; prompts for the password only when given; a positional credential object counts as -Credential |
+| `-Credential` | object | Existing credential, returned directly when given alone |
+| `-Message` | string | Prompt message |
+| `-Title` | string | Prompt title |
+
+- Output: a PSCredential object with fields UserName, Password; no output on end of input or non-interactive runs.
+- Behavior: a custom title/message replaces the default two lines; pipeline input is ignored and prompting proceeds; excess positional arguments error out; -Credential combined with username/message/title errors.
 
 
 ### Get-Culture

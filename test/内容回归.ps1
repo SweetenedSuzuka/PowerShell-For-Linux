@@ -1063,6 +1063,26 @@ Resolve-DnsName localhost -Type SOA 2>$null | Out-Null
 Resolve-DnsName invalid.invalid -Server notahost.invalid 2>$null | Out-Null
 Resolve-DnsName localhost A extra 2>$null | Out-Null
 $results += T "解析失败参数报错" ((($Error.Count -eq ($de0 + 4))) -and (($null -eq (Resolve-DnsName))))
+# 247. 凭据直接返回与组合报错
+$gc0 = [pscustomobject]@{ UserName = "u"; Password = "p" }
+$gc1 = Get-Credential -Credential $gc0
+$ge0 = $Error.Count
+Get-Credential -Credential $gc0 -UserName x 2>$null | Out-Null
+Get-Credential a b 2>$null | Out-Null
+$results += T "凭据直接返回组合报错" ((($gc1.UserName -eq "u")) -and (($gc1.Password -eq "p")) -and (($Error.Count -eq ($ge0 + 2))))
+# 248. 提示输入凭据识别与非交互
+$gcInner = "$root/test/tmp/reg/gcpinner.ps1"
+'$c = Get-Credential' | Set-Content $gcInner
+'"^u=" + $c.UserName' | Add-Content $gcInner
+'$c' | Add-Content $gcInner
+'$d = Get-Credential $c' | Add-Content $gcInner
+'"^s=" + $d.UserName' | Add-Content $gcInner
+'$e0 = $Error.Count' | Add-Content $gcInner
+'Get-Credential -UserName $c 2>$null | Out-Null' | Add-Content $gcInner
+'"^de=" + ($Error.Count - $e0)' | Add-Content $gcInner
+$gcPipe = sh -c "printf 'testu1\ns3cr3tzz\n' | $root/powershell -NoLogo -NoProfile -File $gcInner" 2>$null
+$gcNi = sh -c "$root/powershell -NoLogo -NoProfile -NonInteractive -Command 'Get-Credential'" 2>$null
+$results += T "提示输入凭据识别非交互" ((($gcPipe -join "") -like "*^u=testu1*") -and ((($gcPipe -join "") -notlike "*s3cr3tzz*")) -and (($gcPipe -contains "^s=testu1")) -and (($gcPipe -contains "^de=1")) -and ((($gcNi -join "") -eq "")))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

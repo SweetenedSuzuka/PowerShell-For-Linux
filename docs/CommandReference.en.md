@@ -1161,6 +1161,17 @@ Examples:
 
 Official original reference: [Read-Host](OriginalCrossPlatformDetails.en.md#read-host).
 
+### Get-Credential
+- Type: Go implementation.
+- Version: 5.1 and 7. Distro: any.
+- Function: prompts for a username and password on the terminal and returns a credential object, like two `read -p` calls in bash.
+- Difference from Windows PowerShell: password input echoes (the original masks it); the output table shows only the username; no credential methods (e.g. GetNetworkCredential); non-interactive runs return empty (Read-Host errors there).
+Examples:
+- `$c = Get-Credential` — types a username and password to get a credential (like two `read -p` reads in bash).
+- `Get-Credential -UserName root` — username fixed, prompts for the password only (like a single `read -p` in bash).
+
+Official original reference: [Get-Credential](OriginalCrossPlatformDetails.en.md#get-credential).
+
 ---
 
 ## Special usage

@@ -111,6 +111,9 @@ const (
 	MsgPingNotFound
 	MsgDnsResolveFail
 	MsgDnsTypeUnsupported
+	MsgCredentialHeader
+	MsgCredentialPrompt
+	MsgCredentialPassword
 	MsgFormatHexNotFound
 	MsgNewObjectBadType
 	MsgHelpAliasTo

@@ -3989,7 +3989,7 @@ Get-ComputerInfo
 - 类型：Go实现。
 - 功能：汇总系统信息。对应 bash `uname -a` + 发行版信息。
 - 参数：无。
-- 实现：读 /etc/os-release（NAME、VERSION_ID）与 /proc/meminfo（MemTotal）、runtime 的 GOOS/GOARCH、`os.Hostname()`、`runtime.NumCPU()`。
+- 实现：读取 /etc/os-release（NAME、VERSION_ID）与 /proc/meminfo（MemTotal）、runtime 的 GOOS/GOARCH、`os.Hostname()`、`runtime.NumCPU()`。
 - 输出：ComputerInfo 对象，字段 CsName、OsName、OsVersion、OsArchitecture、OsPlatform、CsTotalPhysicalMemory、CsProcessors。
 
 ### Get-ComputerRestorePoint
@@ -8809,7 +8809,7 @@ Rename-Computer -NewName "Server044" -DomainCredential Domain01\Admin01 -Restart
 - 类型：映射 Linux 命令（`sudo hostnamectl set-hostname`）。
 - 发行版：需要 sudo。
 - 同组：Restart-Computer、Stop-Computer。
-- 功能：改主机名。
+- 功能：修改主机名。
 
 | 参数 | 类型 | 映射 / 说明 |
 | :--- | :--- | :--- |
@@ -9049,14 +9049,14 @@ PS C:\> Resolve-DnsName -Name www.bing.com
 - 与原版差异：原版仅 5.1 提供，这里用 Go 内置解析重做；输出统一 Name/Type/Data 三列；只支持 A、AAAA、CNAME、MX、TXT、NS、PTR。
 
 - 类型：Go实现。
-- 功能：查域名的 DNS 记录。对应 bash `dig +short` / `getent hosts`。
+- 功能：查询域名的 DNS 记录。对应 bash `dig +short` / `getent hosts`。
 - 实现：Go 内置解析；默认用系统解析器，-Server 指定上游（UDP 53）。
 - 输出：DnsRecord 对象，字段 Name、Type、Data。
 
 | 参数 | 类型 | 含义 |
 | :--- | :--- | :--- |
-| `-Name`（位置 0） | string | 要查的名称，可多个 |
-| `-Type`（位置 1） | string | 记录类型，默认查 A 与 AAAA |
+| `-Name`（位置 0） | string | 要查询的名称，可多个 |
+| `-Type`（位置 1） | string | 记录类型，默认查询 A 与 AAAA |
 | `-Server` | string | 上游 DNS 服务器，如 `Resolve-DnsName example.com -Server 8.8.8.8` |
 
 ### Restart-Service
@@ -10599,7 +10599,7 @@ Set-Service -Name LanmanWorkstation -DisplayName "LanMan Workstation"
 
 - 类型：映射 Linux 命令（`systemctl` + sudo）。
 - 发行版：systemd 系 + sudo。
-- 功能：改服务状态与自启。
+- 功能：修改服务状态与自启。
 
 | 参数 | 类型 | 映射 / 说明 |
 | :--- | :--- | :--- |
@@ -10656,7 +10656,7 @@ Set-TimeZone -Id "UTC"
 - 类型：映射 Linux 命令（`sudo timedatectl`）。
 - 发行版：需要 systemd 的 timedatectl + sudo。
 - 同组：Get-TimeZone。
-- 功能：改时区。
+- 功能：修改时区。
 
 | 参数 | 类型 | 映射 / 说明 |
 | :--- | :--- | :--- |

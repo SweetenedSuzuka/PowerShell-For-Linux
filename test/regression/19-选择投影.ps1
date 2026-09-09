@@ -2,7 +2,7 @@
 # 163. Select-Object -Skip 跳过前 N 条
 $sk1 = 1..10 | Select-Object -Skip 3
 $results += T "Skip 跳过" ((($sk1 -join ",") -eq "4,5,6,7,8,9,10"))
-# 164. -Skip 先扣除再取 -First
+# 164. -Skip 先扣除再获取 -First
 $sk2 = 1..10 | Select-Object -Skip 2 -First 3
 $results += T "Skip 加 First" ((($sk2 -join ",") -eq "3,4,5"))
 # 165. -Last 在时 -Skip 从尾部扣除

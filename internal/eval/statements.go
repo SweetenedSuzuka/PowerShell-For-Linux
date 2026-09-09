@@ -108,7 +108,7 @@ func (e *Evaluator) execStatement(n ast.Node) []*object.PSObject {
 	return nil
 }
 
-// execThrow 抛出一个终止错误：构造错误记录（Message + Exception）、累积进 $Error、置 $? 为失败后以 flowError 信号上抛。
+// execThrow 抛出一个终止错误：构造错误记录（Message + Exception）、累积进 $Error、把 $? 置为失败后以 flowError 信号上抛。
 // 无表达式时消息为 ScriptHalted（对应 PowerShell throw 的默认消息）。
 func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 	msg := "ScriptHalted"
@@ -127,8 +127,8 @@ func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 }
 
 // execTry 执行 try/catch/finally：
-// body 出错（flowError）→ 找第一个匹配的 catch（无类型全捕，[Exception]/[System.Exception] 基类全捕，其余按异常类型名精确匹配）→ 把错误记录临时绑到 $_（块结束恢复，普通赋值穿透外层）执行 catch 体；
-// 捕获错误后不改 $?（进入 catch 块时保持失败，catch 体内语句按各自成败照常更新）；
+// body 出错（flowError）→ 找第一个匹配的 catch（无类型全部捕获，[Exception]/[System.Exception] 基类全部捕获，其余按异常类型名精确匹配）→ 把错误记录临时绑定到 $_（块结束恢复，普通赋值对外可见）执行 catch 体；
+// 捕获错误后不修改 $?（进入 catch 块时保持失败，catch 体内语句按各自成败照常更新）；
 // finally 无论是否出错、是否被捕获都恒执行；catch/finally 自身的信号优先，未捕获的错误在 finally 之后原样上抛（外层 try 可继续捕获）。
 func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 	var out []*object.PSObject
@@ -143,7 +143,7 @@ func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 			if !catchMatches(cc.TypeName, sig.value) {
 				continue
 			}
-			// catch 块不推独立作用域：普通变量赋值对外可见，只有 $_ 是临时绑定，块结束恢复原值。
+			// catch 块不新建独立作用域：普通变量赋值对外可见，只有 $_ 是临时绑定，块结束恢复原值。
 			sc := e.scopes[len(e.scopes)-1]
 			oldUS, hadUS := sc["_"]
 			sc["_"] = sig.value
@@ -163,7 +163,7 @@ func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 		}
 	}
 
-	// finally 恒执行；其输出并入，其信号覆盖一切（含未捕获的错误）
+	// finally 恒执行；其输出合并入，其信号覆盖一切（含未捕获的错误）
 	if v.Finally != nil {
 		fo, fsig := e.runStatements(v.Finally.Body.Statements)
 		out = append(out, fo...)
@@ -180,7 +180,7 @@ func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 }
 
 // catchMatches 判断 catch 的类型过滤是否匹配错误记录。
-// 空类型全捕；"Exception"/"System.Exception" 是全部异常的基类，视为全捕；
+// 空类型全部捕获；"Exception"/"System.Exception" 是全部异常的基类，视为全部捕获；
 // 其余按错误异常的类型名做不区分大小写精确匹配。
 func catchMatches(typeName string, errObj *object.PSObject) bool {
 	if typeName == "" {
@@ -200,8 +200,8 @@ func catchMatches(typeName string, errObj *object.PSObject) bool {
 }
 
 // execAssign 处理赋值（含 $env: 与复合赋值）。
-// 右侧若是语句节点（$x = switch ... 等），执行语句并把输出包成单个值。
-// 右侧先求值再定 $?：求值中读 $? 拿到上一条语句的状态，无新错误才置 true。
+// 右侧若是语句节点（$x = switch ... 等），执行语句并把输出包装成单个值。
+// 右侧先求值再设定 $?：求值中读取 $? 拿到上一条语句的状态，无新错误才置为 true。
 func (e *Evaluator) execAssign(a *ast.Assign) {
 	// 右值求值中上抛的终止错误不再携带已产生的输出。
 	// 输出本应记入赋值目标，赋值失败即作废（与 PowerShell 一致）。
@@ -241,7 +241,7 @@ func (e *Evaluator) execAssign(a *ast.Assign) {
 	}
 }
 
-// execStatementValue 执行语句并把输出包成单个值（$x = switch ... 等场景）。
+// execStatementValue 执行语句并把输出包装成单个值（$x = switch ... 等场景）。
 func (e *Evaluator) execStatementValue(n ast.Node) *object.PSObject {
 	out := e.execStatement(n)
 	return wrapSingle(out)
@@ -383,7 +383,7 @@ func (e *Evaluator) execFor(v *ast.For) []*object.PSObject {
 // execSwitch 执行 switch 语句。
 // 值为数组时逐元素匹配：每个元素跑全部 case（可命中多个），default 按元素判断；
 // break 退出整个 switch，continue 进入下一个元素（标量时二者等效，都退出）。
-// 与 foreach 同机制：不推独立作用域（体内普通赋值对外可见），只临时绑定 $_/PSItem，结束恢复。
+// 与 foreach 同机制：不新建独立作用域（体内普通赋值对外可见），只临时绑定 $_/PSItem，结束恢复。
 func (e *Evaluator) execSwitch(v *ast.Switch) []*object.PSObject {
 	val := e.evalValue(v.Value)
 	sc := e.scopes[len(e.scopes)-1]
@@ -473,7 +473,7 @@ nextItem:
 	return out
 }
 
-// evalBlockValue 执行语句块并取其"返回值"（输出包装为单个值）。
+// evalBlockValue 执行语句块并获取其"返回值"（输出包装为单个值）。
 func (e *Evaluator) evalBlockValue(body *ast.StatementList) *object.PSObject {
 	e.inCapture++
 	defer func() { e.inCapture-- }()

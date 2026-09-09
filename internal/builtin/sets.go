@@ -20,7 +20,7 @@ func cmdCompareObject(c *Context) ([]*object.PSObject, error) {
 	if diff != nil {
 		diffItems = diff.ArrayItems()
 	}
-	// key 函数：默认小写折叠（大小写不敏感），-CaseSensitive 时原样
+	// key 函数：默认转换为小写（大小写不敏感），-CaseSensitive 时原样
 	caseSensitive := c.Args.Switch("CaseSensitive")
 	keyOf := func(s string) string {
 		if caseSensitive {
@@ -55,7 +55,7 @@ func cmdCompareObject(c *Context) ([]*object.PSObject, error) {
 		diffUnique = append(diffUnique, item{d, k, "=>"})
 	}
 	// 输出顺序：IncludeEqual 时相等项最先，然后右侧独有（=>），再左侧独有（<=）
-	// 相等项显示参考集（ref）的值，对齐原版 PowerShell
+	// 相等项显示参考集（ref）的值，与原版 PowerShell 一致
 	var equalOut, rightOut, leftOut []*object.PSObject
 	seen := map[string]bool{}
 	for _, d := range diffUnique {
@@ -112,7 +112,7 @@ func cmdGetUnique(c *Context) ([]*object.PSObject, error) {
 
 func cmdGetRandom(c *Context) ([]*object.PSObject, error) {
 	if items := inputItems(c); len(items) > 0 {
-		// 从输入随机取（默认 1 个，-Count 可指定）
+		// 从输入随机获取（默认 1 个，-Count 可指定）
 		n := 1
 		if cnt, ok := c.Args.Int("Count"); ok && cnt > 0 {
 			n = int(cnt)
@@ -127,7 +127,7 @@ func cmdGetRandom(c *Context) ([]*object.PSObject, error) {
 	mn, mnOK := c.Args.Int("Minimum")
 	mx, mxOK := c.Args.Int("Maximum")
 	if mnOK || mxOK {
-		// 只给一个端点时另一端取默认（PowerShell：Minimum 默认 0，Maximum 默认 int 上限）
+		// 只给一个端点时另一端获取默认值（PowerShell：Minimum 默认 0，Maximum 默认 int 上限）
 		if !mnOK {
 			mn = 0
 		}

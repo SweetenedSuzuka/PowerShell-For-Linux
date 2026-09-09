@@ -66,7 +66,7 @@ func dnsRecord(name, typ, data string) *object.PSObject {
 	return o
 }
 
-// cmdResolveDnsName 域名解析（Go 内置解析，默认系统解析器，-Server 指定上游；默认查 A 与 AAAA）。
+// cmdResolveDnsName 域名解析（Go 内置解析，默认系统解析器，-Server 指定上游；默认查询 A 与 AAAA）。
 func cmdResolveDnsName(c *Context) ([]*object.PSObject, error) {
 	// 超量位置实参无槽位可接（Name 占位置 0，Type 占位置 1），报错而非静默忽略。
 	if len(c.Args.Positional) > 0 {
@@ -128,7 +128,7 @@ func cmdResolveDnsName(c *Context) ([]*object.PSObject, error) {
 	return out, nil
 }
 
-// lookupDnsRecord 按记录类型查一个名称（空类型查 A 与 AAAA；无答案返回空，不报错）。
+// lookupDnsRecord 按记录类型查询一个名称（空类型查询 A 与 AAAA；无答案返回空，不报错）。
 func lookupDnsRecord(r *net.Resolver, ctx context.Context, name, typ string) ([]*object.PSObject, error) {
 	trimDot := func(h string) string { return strings.TrimSuffix(h, ".") }
 	addrs := func(want string) ([]*object.PSObject, error) {

@@ -13,7 +13,7 @@ $results += T "param() 块" (($pv -eq 42))
 # 64. switch 对数组迭代
 $swr = switch (1,2,3) { default { $_ } }
 $results += T "switch 数组迭代" (($swr -join ",") -eq "1,2,3")
-# 65. $script: 作用域写回（函数内改脚本作用域变量）
+# 65. $script: 作用域写回（函数内修改脚本作用域变量）
 $sf = 0
 function SetSF { $script:sf = 5 }
 SetSF

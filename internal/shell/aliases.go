@@ -12,7 +12,7 @@ func (s *Session) ResolveAlias(name string) (string, bool) {
 	if target, ok := s.Aliases[name]; ok {
 		return target, true
 	}
-	// 别名表按小写存储，用户输入可能混大小写
+	// 别名表按小写储存，用户输入可能混大小写
 	for k, v := range s.Aliases {
 		if strings.EqualFold(k, name) {
 			return v, true

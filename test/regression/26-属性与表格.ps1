@@ -1,10 +1,10 @@
 # 属性取值与表格读写。
-# 228. 按名取单个属性值
+# 228. 按名获取单个属性值
 Set-Content ipv.txt "hello!"
 $ivLen = Get-ItemPropertyValue ipv.txt -Name Length
 $ivPos = Get-ItemPropertyValue ipv.txt Length
 $ivDt = Get-ItemPropertyValue ipv.txt -Name LastWriteTime
-$results += T "按名取单个属性值" ((($ivLen -eq 7)) -and (($ivPos -eq 7)) -and (($ivDt -is [datetime])))
+$results += T "按名获取单个属性值" ((($ivLen -eq 7)) -and (($ivPos -eq 7)) -and (($ivDt -is [datetime])))
 # 229. 缺失路径与缺失属性记错误后继续
 $ie0 = $Error.Count
 Get-ItemPropertyValue zzz-no-such-ipv-123 -Name Length 2>$null | Out-Null
@@ -28,10 +28,10 @@ $eo1, $eo2 | Export-Csv eosemi.csv -Delimiter ";"
 $eo1 | Export-Csv eoprop.csv -Property N
 Export-Csv eonoinput.csv
 $results += T "分隔符与筛选列" ((((Get-Content eosemi.csv)[0] -eq "Name;N")) -and (((Get-Content eoprop.csv)[0] -eq "N")) -and ((-not (Test-Path eonoinput.csv))))
-# 233. 读表格文件
+# 233. 读取表格文件
 "Name,N`nx,1`ny,2" | Set-Content ic.csv
 $icBack = Import-Csv ic.csv
-$results += T "读表格文件" ((($icBack.Count -eq 2)) -and (($icBack[0].Name -eq "x")) -and (($icBack[1].N -eq "2")))
+$results += T "读取表格文件" ((($icBack.Count -eq 2)) -and (($icBack[0].Name -eq "x")) -and (($icBack[1].N -eq "2")))
 # 234. 分隔符与自定义表头，类型行跳过
 "Name;N`nx;1" | Set-Content icsemi.csv
 $icSemi = Import-Csv icsemi.csv -Delimiter ";"
@@ -49,13 +49,13 @@ $icMissOk = $?
 "" | Set-Content icempty.csv
 "a,b" | Set-Content ichonly.csv
 $results += T "缺失路径与空文件" ((($Error.Count -eq ($ie1 + 1))) -and ((-not $icMissOk)) -and (($null -eq (Import-Csv icempty.csv))) -and (($null -eq (Import-Csv ichonly.csv))))
-# 236. 集合属性增删项
+# 236. 集合属性的增加与删除
 $ul1 = [pscustomobject]@{ L = @(1,2,3) }
 $ul1r = $ul1 | Update-List -Property L -Add 4
 $ul2 = [pscustomobject]@{ L = @(1,2,3,2) }
 $ul2 | Update-List -Property L -Remove 2 | Out-Null
-$results += T "集合属性增删项" ((($ul1.L -join ",") -eq "1,2,3,4") -and ((($ul1r.L -join ",")) -eq "1,2,3,4") -and (($ul2.L -join ",") -eq "1,3,2"))
-# 237. 整列替换与加删同用，参数集冲突报错
+$results += T "集合属性增加与删除" ((($ul1.L -join ",") -eq "1,2,3,4") -and ((($ul1r.L -join ",")) -eq "1,2,3,4") -and (($ul2.L -join ",") -eq "1,3,2"))
+# 237. 整列替换与增加、删除同用，参数集冲突报错
 $ul3 = [pscustomobject]@{ L = @(1,2,3) }
 $ul3 | Update-List -Property L -Replace @(7,8) | Out-Null
 $ul4 = [pscustomobject]@{ L = @(1,2,3) }

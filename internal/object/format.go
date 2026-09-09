@@ -116,7 +116,7 @@ func tableScalar(o *PSObject) bool {
 	return false
 }
 
-// cellOf 取对象某列的显示值；哈希表特殊处理为 Name/Value 两列。
+// cellOf 获取对象某列的显示值；哈希表特殊处理为 Name/Value 两列。
 func cellOf(o *PSObject, label string) string {
 	if o.TypeName == "Hashtable" {
 		entries, _ := o.Value.([]HashEntry)
@@ -166,7 +166,7 @@ func tableColumns(objs []*PSObject) (labels []string, aligns []string) {
 			return labels, aligns
 		}
 	}
-	// DateTime 用默认列（虚拟属性经 PropValue 取值，顺序见 dateTimeColumns）。
+	// DateTime 用默认列（虚拟属性通过 PropValue 获取值，顺序见 dateTimeColumns）。
 	if len(objs) > 0 && objs[0].TypeName == "DateTime" {
 		labels := make([]string, len(dateTimeColumns))
 		copy(labels, dateTimeColumns)
@@ -435,7 +435,7 @@ func FormatListTo(w io.Writer, objs []*PSObject, props []string) error {
 					val = v.String()
 				}
 			} else if o.TypeName == "DateTime" {
-				// 虚拟属性经 PropValue 取值；实属性 PropValue 优先查 Props，结果一致。
+				// 虚拟属性通过 PropValue 获取值；实属性 PropValue 优先查询 Props，结果一致。
 				if v, ok := o.PropValue(n); ok {
 					val = v.String()
 				}
@@ -453,7 +453,7 @@ func FormatListTo(w io.Writer, objs []*PSObject, props []string) error {
 	return nil
 }
 
-// FormatWideTo 以宽幅（多列）形式渲染字符串；prop 非空时取对象该属性显示。
+// FormatWideTo 以宽幅（多列）形式渲染字符串；prop 非空时获取对象该属性的显示。
 func FormatWideTo(w io.Writer, objs []*PSObject, colWidth int, prop string) error {
 	if colWidth <= 0 {
 		colWidth = 40

@@ -4,7 +4,7 @@ Write-Output "== 参数绑定（位置绑定中心化回归） =="
 # 1. Set-Content 全位置
 Set-Content a.txt "val-a"
 $results += T "Set-Content 全位置" (((Get-Content a.txt) -eq "val-a"))
-# 2. Set-Content 命名 Path + 位置值（命名 Path 占位后，位置值落到 Value）
+# 2. Set-Content 命名 Path + 位置值（命名 Path 占位后，位置值映射到 Value）
 Set-Content -Path b.txt bval
 $results += T "命名Path+位置值" (((Get-Content b.txt) -eq "bval"))
 # 3. Set-Content 全命名
@@ -94,8 +94,8 @@ $results += T "文件过滤管道" (($combo.Count -gt 0))
 # 30. Get-ItemProperty 双位置
 $gip = Get-ItemProperty pat.txt Length
 $results += T "Get-ItemProperty" (($gip.Length -gt 0))
-# 31. 命名优先落位
-$results += T "命名优先落位" (((Join-Path -ChildPath child /tmp) -eq "/tmp/child"))
+# 31. 命名优先占位
+$results += T "命名优先占位" (((Join-Path -ChildPath child /tmp) -eq "/tmp/child"))
 # 32. Get-Content -Path + -Tail 混合
 $gc2 = Get-Content g.txt -Tail 1
 $results += T "命名+位置混合" (($gc2 -join ",") -eq "line2")
@@ -106,7 +106,7 @@ Set-PSVersion 7
 # 34. Get-ChildItem -Filter 命名不受位置干扰
 $gf = Get-ChildItem *.txt -Filter "*.txt"
 $results += T "Get-ChildItem -Filter" (($gf.Count -gt 0))
-# 35. Set-Item 位置双参（只改写已存在的项）
+# 35. Set-Item 两个位置参数（只改写已存在的项）
 "si-old" | Set-Content si.txt
 Set-Item si.txt "si-val"
 $results += T "Set-Item" (((Get-Content si.txt) -eq "si-val"))

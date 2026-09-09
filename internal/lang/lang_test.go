@@ -21,9 +21,9 @@ func TestDetect(t *testing.T) {
 		{"C.UTF-8 视为无值", map[string]string{"LANG": "C.UTF-8"}, LangZh},
 		{"POSIX 视为无值", map[string]string{"LANG": "POSIX"}, LangZh},
 		{"LANGUAGE 列表命中 en", map[string]string{"LANGUAGE": "fr:en:zh", "LANG": "zh_CN.UTF-8"}, LangEn},
-		{"LANGUAGE 全未注册落到 LANG 的 en", map[string]string{"LANGUAGE": "fr:de", "LANG": "en_US.UTF-8"}, LangEn},
+		{"LANGUAGE 全未注册回退到 LANG 的 en", map[string]string{"LANGUAGE": "fr:de", "LANG": "en_US.UTF-8"}, LangEn},
 		{"LANGUAGE 优先于 LANG", map[string]string{"LANGUAGE": "zh_CN:en", "LANG": "en_US.UTF-8"}, LangZh},
-		{"空 LANGUAGE 落到 LANG", map[string]string{"LANGUAGE": "", "LANG": "en_US.UTF-8"}, LangEn},
+		{"空 LANGUAGE 回退到 LANG", map[string]string{"LANGUAGE": "", "LANG": "en_US.UTF-8"}, LangEn},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -57,7 +57,7 @@ func TestLanguageCode(t *testing.T) {
 	}
 }
 
-// TestT 取文本：按当前语言查表填参，缺条目回退默认语言表。
+// TestT 获取文本：按当前语言查询表格并填入参数，缺条目回退默认语言表。
 func TestT(t *testing.T) {
 	SetCurrent(LangZh)
 	if got := T(MsgDivideByZero); got != "尝试除以零" {

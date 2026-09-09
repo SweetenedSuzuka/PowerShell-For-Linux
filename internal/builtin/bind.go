@@ -103,7 +103,7 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 					// -Force:value 内联形式：按布尔求值赋给开关（-Recurse:$false / -Recurse:false 关闭递归）
 					ba.Switches[sp.Name] = inlineSwitchBool(val)
 				} else {
-					// 开关被赋予了值：开关置真，值退回位置参数（如 Get-ChildItem -Force foo）
+					// 开关被赋予了值：开关置为真，值退回位置参数（如 Get-ChildItem -Force foo）
 					ba.Switches[sp.Name] = true
 					ba.Positional = append(ba.Positional, val)
 					ba.PositionalNode = append(ba.PositionalNode, node)
@@ -141,7 +141,7 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 // 规则：
 //   - 只有显式声明了位置槽位（PositionSet）的参数参与，未声明的仅命名参数（如 -Encoding、-Filter）不占槽位；
 //   - 第 k 个位置实参（0 起）映射到 Position 序号第 k 大的参数；
-//   - 已被显式命名赋值的槽位跳过（如 Set-Content -Path foo bar 中 bar 落到 Value）；
+//   - 已被显式命名赋值的槽位跳过（如 Set-Content -Path foo bar 中 bar 映射到 Value）；
 //   - 脚本块参数只映射 AST 节点（NamedNode），保持惰性求值；
 //   - 超出规格声明范围的实参保留在 Positional，由 cmdlet 自行读取处理。
 func bindPositional(ba *BoundArgs, spec []ParamSpec) {
@@ -159,7 +159,7 @@ func bindPositional(ba *BoundArgs, spec []ParamSpec) {
 	var restNode []ast.Node
 	next := 0
 	for i := 0; i < len(ba.Positional); i++ {
-		// 跳过已被显式命名赋值的槽位（脚本块只填 NamedNode，两者都要查）
+		// 跳过已被显式命名赋值的槽位（脚本块只填 NamedNode，两者都要查询）
 		for next < len(slots) && (ba.Named[slots[next].Name] != nil || ba.NamedNode[slots[next].Name] != nil) {
 			next++
 		}

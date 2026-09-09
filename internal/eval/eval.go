@@ -26,13 +26,13 @@ type Evaluator struct {
 	hostOut       io.Writer
 	hostErr       io.Writer
 	scopes        []map[string]*object.PSObject // 变量作用域栈，scopes[0] 为全局
-	strict        []bool                        // 严格模式栈，随作用域推弹，栈顶为当前生效
+	strict        []bool                        // 严格模式栈，随作用域入栈出栈，栈顶为当前生效
 	inCapture     int                           // 进入捕获模式（函数/脚本块/子表达式）计数
 	inPipeline    int                           // 命令处于管道输入位的层数（>0 表示本次调用有管道输入，哪怕为零项）
 	inTry         int                           // 进入 try 体计数；计数为零时语句级错误打印并继续执行，非零时上抛给 try
 	ExitRequested bool                          // 是否遇到 exit 语句
 	ExitCode      int                           // exit 码
-	// consoleOut 是不受重定向影响的主机输出（Write-Host 类输出到它，不随重定向指位）。
+	// consoleOut 是不受重定向影响的主机输出（Write-Host 类输出到它，不随重定向改变指向）。
 	consoleOut io.Writer
 	// redirOut 是 stdout 重定向生效中的目标写者；直接写与返回值共用这一次打开，不另开文件。
 	redirOut io.Writer
@@ -98,7 +98,7 @@ func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObj
 	return out, nil
 }
 
-// LookupVar 按名字查变量，供内置 cmdlet 读取首选项这类作用域敏感变量。
+// LookupVar 按名字查询变量，供内置 cmdlet 读取首选项这类作用域敏感变量。
 func (e *Evaluator) LookupVar(name string) *object.PSObject {
 	v, _ := e.lookupVar(name, "")
 	return v
@@ -148,8 +148,8 @@ func (e *Evaluator) checkedVar(name, scope string) *object.PSObject {
 	return v
 }
 
-// lookupVar 按名字与作用域修饰符查变量，不区分大小写；found 报告是否找到。
-// scope 为空：自顶向下查（PowerShell 默认读语义）；"script"/"global"：只检查全局（scopes[0]，即脚本作用域，本解释器脚本不推独立作用域）；"local"：只检查当前（栈顶）作用域。
+// lookupVar 按名字与作用域修饰符查询变量，不区分大小写；found 报告是否找到。
+// scope 为空：自顶向下查询（PowerShell 默认读语义）；"script"/"global"：只检查全局（scopes[0]，即脚本作用域，本解释器脚本不新建独立作用域）；"local"：只检查当前（栈顶）作用域。
 func (e *Evaluator) lookupVar(name, scope string) (*object.PSObject, bool) {
 	switch scope {
 	case "script", "global":
@@ -174,7 +174,7 @@ func (e *Evaluator) lookupVar(name, scope string) (*object.PSObject, bool) {
 	return object.Null(), false
 }
 
-// scopeVarKey 取某层作用域的存储键：已存在（不区分大小写）沿用原大小写，否则用传入名。
+// scopeVarKey 获取某层作用域的存储键：已存在（不区分大小写）沿用原大小写，否则用传入名。
 // 写入沿用旧键，避免同名不同大小写并存。
 func scopeVarKey(sc map[string]*object.PSObject, name string) string {
 	if _, ok := sc[name]; ok {
@@ -194,7 +194,7 @@ func (e *Evaluator) setVar(name, scope string, val *object.PSObject) error {
 		return fmt.Errorf("%s", lang.T(lang.MsgReadonlyVar, name))
 	}
 	if strings.EqualFold(name, "ErrorActionPreference") {
-		// 首选项名按规范大小写存储。
+		// 首选项名按规范大小写储存。
 		// 空值视为恢复默认。
 		name = "ErrorActionPreference"
 		if val.IsNull() {
@@ -277,7 +277,7 @@ func (e *Evaluator) throwError(msg string) {
 	panic(&flowSignal{kind: flowError, value: rec})
 }
 
-// stmtError 抛出一个语句级错误：累积进 $Error、置 $? 为失败后以 flowStmtError 上抛，外层 try 可捕获。
+// stmtError 抛出一个语句级错误：累积进 $Error、把 $? 置为失败后以 flowStmtError 上抛，外层 try 可捕获。
 // 无 try 承接时打印并继续执行，不经首选项分发。
 func (e *Evaluator) stmtError(msg string) {
 	e.Session.LastSuccess = false
@@ -423,7 +423,7 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		base := e.evalValue(v.Base)
 		mark := e.Session.ErrorSeq
 		out := e.memberProp(base, v.Prop)
-		// 成员读取未产生新错误时记下错误序号（自己不置真）；赋值收尾据此判定。
+		// 成员读取未产生新错误时记下错误序号（自己不置为真）；赋值收尾据此判定。
 		if e.Session.ErrorSeq == mark {
 			e.Session.MemberReadSeq = mark
 		}
@@ -571,7 +571,7 @@ func (e *Evaluator) incrMember(t *ast.MemberAccess, delta int64) *object.PSObjec
 	return old
 }
 
-// wrapSingle 把输出列表包成单个值：0 → $null，1 → 该项，多 → 数组。
+// wrapSingle 把输出列表包装成单个值：0 → $null，1 → 该项，多 → 数组。
 func wrapSingle(out []*object.PSObject) *object.PSObject {
 	if len(out) == 0 {
 		return object.Null()
@@ -595,7 +595,7 @@ func unwrapOutput(v *object.PSObject) []*object.PSObject {
 
 // ---- 属性与方法 ----
 
-// memberProp 取对象的属性。
+// memberProp 获取对象的属性。
 func (e *Evaluator) memberProp(base *object.PSObject, prop string) *object.PSObject {
 	if base == nil {
 		return object.Null()
@@ -614,7 +614,7 @@ func (e *Evaluator) memberProp(base *object.PSObject, prop string) *object.PSObj
 	return object.Null()
 }
 
-// propertyOf 在对象上取属性（用于 Where-Object Length 等裸属性）。
+// propertyOf 在对象上获取属性（用于 Where-Object Length 等裸属性）。
 func (e *Evaluator) propertyOf(obj *object.PSObject, name string) *object.PSObject {
 	if obj == nil {
 		return object.Null()
@@ -646,13 +646,13 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 		case "trim":
 			return object.Str(strings.TrimSpace(s))
 		case "trimstart":
-			// 无参清前导空白（PowerShell 语义）；有参按字符集裁剪
+			// 无参数清前导空白（PowerShell 语义）；有参数按字符集裁剪
 			if len(args) == 0 {
 				return object.Str(strings.TrimLeftFunc(s, unicode.IsSpace))
 			}
 			return object.Str(strings.TrimLeft(s, arg(0).String()))
 		case "trimend":
-			// 无参清尾随空白；有参按字符集裁剪
+			// 无参数清尾随空白；有参数按字符集裁剪
 			if len(args) == 0 {
 				return object.Str(strings.TrimRightFunc(s, unicode.IsSpace))
 			}
@@ -666,7 +666,7 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 		case "indexof":
 			return object.Int(runeIndex(s, arg(0).String()))
 		case "lastindexof":
-			// 一参为子串；两参为 子串,起始下标（.NET 搜索范围含起始下标，向左找）
+			// 一个参数为子串；两个参数为 子串,起始下标（.NET 搜索范围含起始下标，向左找）
 			if len(args) == 0 {
 				return object.Null()
 			}
@@ -708,7 +708,7 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 		case "replace":
 			return object.Str(strings.ReplaceAll(s, arg(0).String(), arg(1).String()))
 		case "remove":
-			// 一参从下标删到末尾；两参为 起始下标,删除长度（对齐 .NET Remove）
+			// 一个参数从下标删到末尾；两个参数为 起始下标,删除长度（与 .NET Remove 一致）
 			start, ok := arg(0).AsInt()
 			if !ok {
 				return object.Null()
@@ -736,7 +736,7 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			}
 			return object.Str(string(r[:start]))
 		case "padleft":
-			// 一参为总宽（空格补齐）；两参为 总宽,填充字符（只取首个字符，对齐 .NET char 参数）
+			// 一个参数为总宽（空格补齐）；两个参数为 总宽,填充字符（只取出首个字符，与 .NET char 参数一致）
 			total, ok := arg(0).AsInt()
 			if !ok || total < 0 {
 				return object.Null()
@@ -770,7 +770,7 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			}
 			return object.Str(s + strings.Repeat(pad, int(total)-len([]rune(s))))
 		case "insert":
-			// 在指定下标插入子串（对齐 .NET Insert）
+			// 在指定下标插入子串（与 .NET Insert 一致）
 			pos, ok := arg(0).AsInt()
 			if !ok || pos < 0 {
 				return object.Null()
@@ -781,7 +781,7 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			r := []rune(s)
 			return object.Str(string(r[:pos]) + arg(1).String() + string(r[pos:]))
 		case "split":
-			// 无参按任意空白分割且合并连续空白（.NET Split() 无参语义，与 strings.Fields 一致）
+			// 无参数按任意空白分割且合并连续空白（.NET Split() 无参数语义，与 strings.Fields 一致）
 			if len(args) == 0 {
 				parts := strings.Fields(s)
 				items := make([]*object.PSObject, len(parts))
@@ -866,13 +866,13 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			}
 			return object.Bool(false)
 		case "clear":
-			// $Error.Clear()：带动态视图标记的数组把清空落到会话的错误记录本体
+			// $Error.Clear()：带动态视图标记的数组把清空作用到会话的错误记录本体
 			if _, ok := base.PropValue(shell.ErrorViewMarker); ok {
 				e.Session.ClearErrorRecords()
 			}
 			return object.Null()
 		case "removeat":
-			// $Error.RemoveAt(n)：同样落到会话的错误记录本体；越界报错
+			// $Error.RemoveAt(n)：同样作用到会话的错误记录本体；越界报错
 			if _, ok := base.PropValue(shell.ErrorViewMarker); ok {
 				if idx, ok := arg(0).AsInt(); ok {
 					if !e.Session.RemoveErrorRecord(idx) {
@@ -995,7 +995,7 @@ func flattenIndices(idx *object.PSObject) []int64 {
 	return out
 }
 
-// arrayItemAt 取数组元素：负数从末尾数，越界返回 $null。
+// arrayItemAt 获取数组元素：负数从末尾数，越界返回 $null。
 func arrayItemAt(items []*object.PSObject, n int64) *object.PSObject {
 	if n < 0 {
 		n = int64(len(items)) + n
@@ -1006,7 +1006,7 @@ func arrayItemAt(items []*object.PSObject, n int64) *object.PSObject {
 	return object.Null()
 }
 
-// stringItemAt 取字符串字符：负数从末尾数，越界返回空串；下标按字符计。
+// stringItemAt 获取字符串字符：负数从末尾数，越界返回空串；下标按字符计。
 func stringItemAt(s string, n int64) *object.PSObject {
 	r := []rune(s)
 	if n < 0 {
@@ -1018,7 +1018,7 @@ func stringItemAt(s string, n int64) *object.PSObject {
 	return object.Str("")
 }
 
-// runeIndex 返回子串首现的字符下标，未找到返回 -1；字节下标转字符计数。
+// runeIndex 返回子串首次出现的字符下标，未找到返回 -1；字节下标转字符计数。
 func runeIndex(s, sub string) int64 {
 	b := strings.Index(s, sub)
 	if b < 0 {
@@ -1027,7 +1027,7 @@ func runeIndex(s, sub string) int64 {
 	return int64(utf8.RuneCountInString(s[:b]))
 }
 
-// runeLastIndex 返回子串末现的字符下标，未找到返回 -1；字节下标转字符计数。
+// runeLastIndex 返回子串最后一次出现的字符下标，未找到返回 -1；字节下标转字符计数。
 func runeLastIndex(s, sub string) int64 {
 	b := strings.LastIndex(s, sub)
 	if b < 0 {

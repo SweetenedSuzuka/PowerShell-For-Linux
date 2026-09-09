@@ -207,7 +207,7 @@ func TestOperators(t *testing.T) {
 func TestCommentAndNewline(t *testing.T) {
 	src := "# 注释\nGet-Content a # 行尾注释\n1"
 	toks := New(src).Tokens()
-	// 注释不产出 token，出现两个换行和一个 Word、一个数字
+	// 注释不返回 token，出现两个换行和一个 Word、一个数字
 	var newlines int
 	for _, tk := range toks {
 		if tk.Type == TkNewline {

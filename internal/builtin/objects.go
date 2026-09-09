@@ -195,7 +195,7 @@ func cmdSortObject(c *Context) ([]*object.PSObject, error) {
 	unique := c.Args.Switch("Unique")
 	caseSensitive := c.Args.Switch("CaseSensitive")
 
-	// 取对象某属性值；缺失视为 $null（排序时排最前）。
+	// 获取对象某属性值；缺失视为 $null（排序时排最前）。
 	keyOf := func(o *object.PSObject, p string) *object.PSObject {
 		if v, ok := o.PropValue(p); ok {
 			return v
@@ -245,7 +245,7 @@ func cmdSortObject(c *Context) ([]*object.PSObject, error) {
 				}
 			}
 			k := sb.String()
-			// -Unique 默认按小写折叠去重，-CaseSensitive 时原样
+			// -Unique 默认转换为小写去重，-CaseSensitive 时原样
 			if !caseSensitive {
 				k = strings.ToLower(k)
 			}
@@ -334,7 +334,7 @@ func cmdGroupObject(c *Context) ([]*object.PSObject, error) {
 		} else {
 			k = o.String()
 		}
-		// map key：默认按小写折叠（大小写不敏感），-CaseSensitive 时原样
+		// map key：默认转换为小写（大小写不敏感），-CaseSensitive 时原样
 		mk := k
 		if !caseSensitive {
 			mk = strings.ToLower(k)
@@ -389,7 +389,7 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 	var nums []float64
 	// Count 按 -Property 过滤：只数能取到该属性的对象（无 -Property 时数全部）
 	matchedCount := int64(0)
-	// Sum/Average 遇非数字输入作废（对齐原版 PowerShell：报错且字段置 $null）；Min/Max 仅统计数字
+	// Sum/Average 遇非数字输入作废（与原版 PowerShell 一致：报错且字段置为 $null）；Min/Max 仅统计数字
 	sumAvgValid := true
 	for _, o := range items {
 		if o == nil || o.IsNull() {
@@ -429,7 +429,7 @@ func cmdMeasureObject(c *Context) ([]*object.PSObject, error) {
 		avg = sum / float64(len(nums))
 	}
 	m := object.Object("MeasureInfo", nil)
-	// 字段按原版 PowerShell 顺序补全：Count 总有，统计字段未开或无数据或遇非数字时为 $null
+	// 字段按原版 PowerShell 顺序补全：Count 总有，统计字段未启用或无数据或遇非数字时为 $null
 	var sumVal, avgVal, minVal, maxVal any
 	if sumFlag && sumAvgValid && len(nums) > 0 {
 		sumVal = sum
@@ -505,7 +505,7 @@ func cmdNewObject(c *Context) ([]*object.PSObject, error) {
 	}
 }
 
-// removeFirstListItem 删掉首个与给定值字符串形式（大小写折叠）相等的项，找不到原样返回。
+// removeFirstListItem 删掉首个与给定值字符串形式（大小写不敏感）相等的项，找不到原样返回。
 func removeFirstListItem(items []*object.PSObject, target *object.PSObject) []*object.PSObject {
 	want := strings.ToLower(target.String())
 	for i, it := range items {
@@ -518,7 +518,7 @@ func removeFirstListItem(items []*object.PSObject, target *object.PSObject) []*o
 	return items
 }
 
-// cmdUpdateList 集合属性增删项（Add 与 Remove 同用时先删后加，Replace 整列替换，输出改写后的输入对象）。
+// cmdUpdateList 集合属性的增加、删除与替换（Add 与 Remove 同用时先删除后增加，Replace 整列替换，输出改写后的输入对象）。
 func cmdUpdateList(c *Context) ([]*object.PSObject, error) {
 	// 超量位置实参无槽位可接（Property 只占位置 0），报错而非静默忽略。
 	if len(c.Args.Positional) > 0 {

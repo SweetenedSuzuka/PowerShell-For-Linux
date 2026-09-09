@@ -91,10 +91,10 @@ func cmdReadHost(c *Context) ([]*object.PSObject, error) {
 	return []*object.PSObject{object.Str(line)}, nil
 }
 
-// promptLine 按 Read-Host 链路读一行：非交互运行报错；输出提示后读行；流结束时 ok 为 false。
+// promptLine 按 Read-Host 链路读取一行：非交互运行报错；输出提示后读取行；流结束时 ok 为 false。
 // 同一次输入源的多次读取共用一个读取器，逐次新建时前一个读取器的预读会占用后续行。
 func promptLine(c *Context, prompt string, reader *bufio.Reader) (string, bool, error) {
-	// 非交互运行不能读输入，直接报错。
+	// 非交互运行不能读取输入，直接报错。
 	if c.Shell.NonInteractive {
 		return "", false, fmt.Errorf("%s", lang.T(lang.MsgReadHostNonInteractive))
 	}
@@ -226,7 +226,7 @@ func writeTranscriptHeader(f *os.File, c *Context) {
 	fmt.Fprintln(f, transcriptStars)
 }
 
-// transcriptAppName 取宿主程序的文件名。
+// transcriptAppName 获取宿主程序的文件名。
 func transcriptAppName() string {
 	name := filepath.Base(os.Args[0])
 	if rest := strings.Join(os.Args[1:], " "); rest != "" {

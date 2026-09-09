@@ -3,7 +3,7 @@
 // 解析策略要点：
 //   - 语句（; 或换行分隔）→ 管道（| 分隔）→ 命令。
 //   - 命令参数采用"实参模式"：裸字默认是字符串，且相邻 token 可合并为一个裸字（如 a=b、2+3）。
-//     比较运算符（-eq 等）会把参数转为比较表达式，以便 Where-Object Length -gt 100 这类写法可用。
+//     比较运算符（-eq 等）会把参数转换为比较表达式，以便 Where-Object Length -gt 100 这类写法可用。
 //   - 命名参数（-Name value / -Name:value）与开关（-Force）在 AST 中保留。
 //     参数绑定阶段由求值器依据各 cmdlet 的参数定义裁决。
 package parser
@@ -62,4 +62,3 @@ type Parser struct {
 	err        error
 	incomplete bool
 }
-

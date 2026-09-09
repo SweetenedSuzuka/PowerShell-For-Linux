@@ -107,7 +107,7 @@ func cmdFormatWide(c *Context) ([]*object.PSObject, error) {
 	if w, ok := c.Args.Int("Column"); ok {
 		width = int(w)
 	}
-	// -Property（命名或位置）：取对象的该属性显示
+	// -Property（命名或位置）：获取对象的该属性显示
 	prop, _ := c.Args.Str("Property")
 	_ = object.FormatWideTo(c.Stdout, objs, width, prop)
 	return nil, nil
@@ -318,7 +318,7 @@ func cmdJoinString(c *Context) ([]*object.PSObject, error) {
 	var parts []string
 	for _, o := range inputItems(c) {
 		v := o
-		// -Property 取该属性的值转文本
+		// -Property 获取该属性的值并转换为文本
 		if prop != "" {
 			if pv, ok := o.PropValue(prop); ok {
 				v = pv

@@ -24,7 +24,7 @@ func TestTablesComplete(t *testing.T) {
 	}
 }
 
-// TestPlaceholderParity 同一条目两种语言的格式占位符序列必须一致（实参顺序对齐约定的机器检查）。
+// TestPlaceholderParity 同一条目两种语言的格式占位符序列必须一致（机器检查实参顺序与约定是否一致）。
 func TestPlaceholderParity(t *testing.T) {
 	maxMsg := int(MsgReadHostNonInteractive)
 	for i := 0; i <= maxMsg; i++ {

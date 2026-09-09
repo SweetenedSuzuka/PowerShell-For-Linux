@@ -163,7 +163,7 @@ func (l *Lexer) nextIsLetter() bool {
 	return isLetter(c)
 }
 
-// Tokens 一次性产出全部 Token。
+// Tokens 一次性返回全部 Token。
 func (l *Lexer) Tokens() []Token {
 	var out []Token
 	for {
@@ -175,7 +175,7 @@ func (l *Lexer) Tokens() []Token {
 	}
 }
 
-// nextTok 产出下一个 Token，记录原始文本、起始偏移与前 token 类型。
+// nextTok 返回下一个 Token，记录原始文本、起始偏移与前 token 类型。
 func (l *Lexer) nextTok() Token {
 	t := l.nextTok0()
 	t.Raw = l.src[l.tokStart:l.pos]
@@ -227,7 +227,7 @@ func (l *Lexer) nextTok0() Token {
 		for l.peek() != 0 && l.peek() != '\n' {
 			l.next()
 		}
-		return l.nextTok() // 递归跳过注释（不产出 token）
+		return l.nextTok() // 递归跳过注释（不返回 token）
 	}
 
 	// 反引号：行内续行或转义（裸上下文下忽略）
@@ -629,7 +629,7 @@ func (l *Lexer) lexDoubleQuoted() []StringPart {
 			}
 			var sb strings.Builder
 			if l.peek() == '?' {
-				// 问号变量只占一个字符（如 $?），后面字母不并入名字。
+				// 问号变量只占一个字符（如 $?），后面字母不合并入名字。
 				sb.WriteByte(l.next())
 			} else {
 				for {
@@ -820,7 +820,7 @@ func (l *Lexer) lexOperator(adj bool) Token {
 
 func (l *Lexer) lexWord(adj bool) Token {
 	startLine, startCol := l.line, l.col
-	// ".." 后紧跟数字（如 1..5）或负号数字（如 1..-1）→ 只取 ".." 作为范围运算符
+	// ".." 后紧跟数字（如 1..5）或负号数字（如 1..-1）→ 只取出 ".." 作为范围运算符
 	if l.peek() == '.' && l.peekAt(1) == '.' &&
 		(isDigit(l.peekAt(2)) || (l.peekAt(2) == '-' && isDigit(l.peekAt(3)))) {
 		l.next()

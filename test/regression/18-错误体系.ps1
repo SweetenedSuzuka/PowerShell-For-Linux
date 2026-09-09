@@ -80,14 +80,14 @@ $ErrorActionPreference = 'Continue'
 $ErrorActionPreference = 'Stop'
 $ErrorActionPreference = $null
 $results += T "首选项空值恢复默认" ($ErrorActionPreference -eq "Continue")
-# 156. 赋值右侧读 $? 拿到旧状态
+# 156. 赋值右侧读取 $? 拿到旧状态
 Get-Item 不存在EA123
 $aqRead = $?
-$results += T "赋值读旧 $?" ($aqRead -eq $false)
+$results += T "赋值右侧读取旧状态" ($aqRead -eq $false)
 # 157. 右侧无新错误时赋值后 $? 为真
 $aqTmp = 5
 if ($?) { $aqOk = "ok" } else { $aqOk = "fail" }
-$results += T "失败后赋值置真" ($aqOk -eq "ok")
+$results += T "失败后赋值 $? 为真" ($aqOk -eq "ok")
 # 158. 赋值右侧出错保持失败
 $aqBad = 1/0
 if ($?) { $aqBadOk = "ok" } else { $aqBadOk = "fail" }

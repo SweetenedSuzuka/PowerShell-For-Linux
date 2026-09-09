@@ -103,7 +103,7 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 		switch op {
 		case ",":
 			// 逗号：构建数组（比比较运算绑定更紧，使 1,2,3 -eq 2 过滤整个数组）。
-			// 值语义下逗号后不许另起命令（与原版 PowerShell 一致，报缺表达式错）；命令实参内裸字仍是字符串。
+			// 值语义下逗号后不许另起命令（与原版 PowerShell 一致，会报错缺表达式）；命令实参内裸字仍是字符串。
 			items := []ast.Node{lhs}
 			for p.cur().Type == TkPunct && p.cur().Text == "," {
 				p.advance()
@@ -404,7 +404,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 		return &ast.BareWord{Value: "."}
 	case TkDashWord:
 		// 判定机制与 parseBinaryTail 一致：
-		// 能作二元运算符的才报缺左操作数，其余（如只有一元用法的 -not）按意外参数处理。
+		// 能作二元运算符的才报错缺左操作数，其余（如只有一元用法的 -not）按意外参数处理。
 		if _, prec := p.binaryOpInfo(t); prec >= 0 {
 			p.fail(lang.T(lang.MsgParseOpMissingLeft, t.Text))
 		} else {
@@ -490,7 +490,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 						// 首元素裸字按命令解析（与原版 PowerShell 一致）：后续逗号实参加入该命令，后元素不再另起。
 						item = p.parsePipelineElement()
 					case afterComma && p.cur().Type == TkWord && isAtCommandWord(p.cur().Text):
-						// 逗号后裸字：原版 PowerShell 报逗号后缺少表达式；分号/换行分隔的新语句不适用。
+						// 逗号后裸字：原版 PowerShell 报告逗号后缺少表达式；分号/换行分隔的新语句不适用。
 						p.fail(lang.T(lang.MsgParseMissingExpr))
 						item = &ast.BareWord{Value: ""}
 					case p.atCommaAhead():
@@ -574,7 +574,7 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 			if argMode {
 				return &ast.BareWord{Value: "[" + typeName + "]"}
 			}
-			// 词法分析器把 :: 与成员名并成一个裸词（[math]::Sqrt → "math"、"]"、"::Sqrt"），在此拆出静态成员名；带括号为方法调用，否则为静态属性。
+			// 词法分析器把 :: 与成员名合并成一个裸词（[math]::Sqrt → "math"、"]"、"::Sqrt"），在此拆出静态成员名；带括号为方法调用，否则为静态属性。
 			if p.cur().Type == TkWord && strings.HasPrefix(p.cur().Text, "::") {
 				return p.finishStaticMember(typeName, strings.TrimPrefix(p.cur().Text, "::"))
 			}

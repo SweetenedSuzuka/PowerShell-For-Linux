@@ -3,7 +3,7 @@ Write-Output "== 类型字面量 =="
 
 # 118. 强制转换基础形态
 $results += T "类型转换 int/string/double" (([int]"42" -eq 42) -and ([string]42 -eq "42") -and ([double]"1.5" -eq 1.5))
-# 119. datetime 转换取字段
+# 119. datetime 转换获取字段
 $d = [datetime]"2020-01-02"
 $results += T "datetime 转换取 Year" (($d.Year -eq 2020))
 # 120. -is/-as 直接接类型字面量

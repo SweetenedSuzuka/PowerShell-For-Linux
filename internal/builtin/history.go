@@ -60,7 +60,7 @@ func cmdInvokeHistory(c *Context) ([]*object.PSObject, error) {
 	return c.Engine.RunSource(cmdText)
 }
 
-// cmdGetError 读最新错误记录展示（默认最新 1 条，-Newest 取多条，-InputObject 只接受单个）。
+// cmdGetError 读取最新错误记录展示（默认最新 1 条，-Newest 获取多条，-InputObject 只接受单个）。
 func cmdGetError(c *Context) ([]*object.PSObject, error) {
 	// 超量位置实参无槽位可接（Newest 只占位置 0），报错而非静默忽略。
 	if len(c.Args.Positional) > 0 {
@@ -86,7 +86,7 @@ func cmdGetError(c *Context) ([]*object.PSObject, error) {
 	if hasPipe {
 		return c.Input, nil
 	}
-	// 会话记录路径：条数默认 1，为 0 返回空，为负报错，超量取全集。
+	// 会话记录路径：条数默认 1，为 0 返回空，为负报错，超量获取全集。
 	n := int64(1)
 	if newestArg != nil && !newestArg.IsNull() {
 		var ok bool

@@ -30,7 +30,7 @@ func (p *Parser) stringFromParts(parts []lexer.StringPart) ast.Node {
 				nodes = append(nodes, &ast.VarRef{Name: name, Scope: scope})
 			}
 		case lexer.PartSubexpr:
-			// 子表达式是独立解析过程，其错误与未完状态必须并入外层。
+			// 子表达式是独立解析过程，其错误与未完状态必须合并入外层。
 			// 否则插值会静默丢弃解析失败的语句或执行截断的残缺语句。
 			sub := Parse(part.Text)
 			if sub.Error != nil {
@@ -53,7 +53,7 @@ func (p *Parser) canMergeBareword() bool {
 	case TkWord, TkNumber:
 		return nt.Adjacent
 	case TkOp:
-		// > 始终是重定向，不并入裸字（否则开关后的 2> 会并入属性名）。
+		// > 始终是重定向，不合并入裸字（否则开关后的 2> 会合并入属性名）。
 		return nt.Adjacent && nt.Text != ">" && isBarewordOp(nt.Text) && !(nt.Text == "=" && p.isStrongValueStart(p.peekAt(2)))
 	case TkDot, TkColon:
 		return nt.Adjacent

@@ -12,7 +12,7 @@ import (
 
 // psVersion* 是 $PSVersionTable 里宣称的版本号，只标到 -Version 标志的粒度：
 // 5.X 对应 Windows PowerShell 5.1，7.X 对应 PowerShell 7（Minor 为 0，渲染时省略）。
-// 不宣称具体小版本；要改版本号，只改这里的常量，渲染与 $PSVersionTable 都会跟着变。
+// 不宣称具体小版本；要修改版本号，只修改这里的常量，渲染与 $PSVersionTable 都会跟着变。
 const (
 	psVersionMajorDesktop = 5
 	psVersionMinorDesktop = 1

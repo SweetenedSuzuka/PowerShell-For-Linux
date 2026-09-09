@@ -25,7 +25,7 @@ func confirmCtx(answer string, withConfirm bool) (*Context, *bool, *bool) {
 	return ctx, new(bool), new(bool)
 }
 
-// TestConfirmSkipWithoutSwitch 未指定 -Confirm 时直接执行，不读输入。
+// TestConfirmSkipWithoutSwitch 未指定 -Confirm 时直接执行，不读取输入。
 func TestConfirmSkipWithoutSwitch(t *testing.T) {
 	ctx, yesAll, noAll := confirmCtx("", false)
 	if confirmSkip(ctx, "Remove-Item", "a", yesAll, noAll) {

@@ -71,7 +71,7 @@ func run(args []string) int {
 		}
 	}
 
-	// 启动目录：不存在报错后继续（对齐 PowerShell）
+	// 启动目录：不存在报错后继续（与 PowerShell 一致）
 	if *workingDirectory != "" {
 		if err := os.Chdir(*workingDirectory); err != nil {
 			fmt.Fprintf(sess.HostErr, "%s : %s\n", sess.StyleName(), lang.T(lang.MsgPathNotFoundFmt, *workingDirectory))
@@ -91,7 +91,7 @@ func run(args []string) int {
 		for _, a := range fs.Args() {
 			scriptArgs = append(scriptArgs, object.Str(a))
 		}
-		// 脚本失败标记：defer 内只标记不退出，展开走完再返回退出码。
+		// 脚本失败标记：defer 内只标记不退出，展开完毕再返回退出码。
 		failed := false
 		func() {
 			// 脚本顶层未捕获的终止错误（throw）：打印后标记失败
@@ -148,7 +148,7 @@ func run(args []string) int {
 }
 
 // loadProfile 加载用户启动脚本 $HOME/.config/powershell/profile.ps1（PowerShell 7 Linux 的 $PROFILE 路径）。
-// 文件不存在跳过；脚本出错打印提示后继续启动（对齐 PowerShell 的宽容行为）。
+// 文件不存在跳过；脚本出错打印提示后继续启动（与 PowerShell 的宽容行为一致）。
 func loadProfile(ev *eval.Evaluator, sess *shell.Session, out io.Writer) {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -194,7 +194,7 @@ func executeOnce(sess *shell.Session, ev *eval.Evaluator, src string) (code int)
 		fmt.Fprintf(sess.HostErr, "%s : %s\n", sess.StyleName(), lang.T(lang.MsgIncompleteInput))
 		return 1
 	}
-	// 逐语句执行并格式化，保证与 Write-Host/Format-* 等直写命令的顺序一致
+	// 逐语句执行并格式化，保证与 Write-Host/Format-* 等直接写命令的顺序一致
 	// 遇到未捕获的终止错误时中止后续语句并返回失败码（与 PowerShell 一致）
 	for _, st := range res.List.Statements {
 		objs, halted := ev.EvalStatementHalted(st)

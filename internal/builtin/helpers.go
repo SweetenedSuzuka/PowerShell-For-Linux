@@ -32,12 +32,12 @@ func resolvePath(c *Context, p string) (string, error) {
 	return shell.ResolvePath(c.Shell.Cwd, p)
 }
 
-// firstPathArg 取 -Path 或首个位置参数。
+// firstPathArg 获取 -Path 或首个位置参数。
 func firstPathArg(c *Context) string {
 	return firstArg(c, "Path")
 }
 
-// firstArg 取命名参数（位置实参已由 Bind 按规格中心化映射到同名命名参数）。
+// firstArg 获取命名参数（位置实参已由 Bind 按规格中心化映射到同名命名参数）。
 func firstArg(c *Context, name string) string {
 	if p, ok := c.Args.Str(name); ok && p != "" {
 		return p
@@ -45,7 +45,7 @@ func firstArg(c *Context, name string) string {
 	return ""
 }
 
-// namedOrPosArgs 取命名参数（可能是数组）的值；未给出则取全部位置参数。
+// namedOrPosArgs 获取命名参数（可能是数组）的值；未给出则获取全部位置参数。
 // 用于 -Object/-Message/-MessageData 这类既接受命名也接受位置的参数。
 func namedOrPosArgs(c *Context, name string) []string {
 	if v := c.Args.Get(name); v != nil {
@@ -124,7 +124,7 @@ type TerminatingError struct {
 // Error 返回错误文本。
 func (e *TerminatingError) Error() string { return e.Record.String() }
 
-// ResolveErrorAction 取本次调用生效的错误动作。
+// ResolveErrorAction 获取本次调用生效的错误动作。
 // 显式 -ErrorAction 优先，其次作用域可见的 $ErrorActionPreference，未设置时按 Continue 处理。
 func ResolveErrorAction(explicit string, lookup func(string) *object.PSObject) string {
 	if a, ok := shell.ParseErrorAction(explicit); ok {
@@ -261,7 +261,7 @@ func pathList(c *Context) []string {
 	return paths
 }
 
-// inputItems 取输入对象：优先管道输入，其次 -InputObject（含位置映射），再补齐剩余位置实参（未声明位置槽位的实参，数组展开）。
+// inputItems 获取输入对象：优先管道输入，其次 -InputObject（含位置映射），再补齐剩余位置实参（未声明位置槽位的实参，数组展开）。
 func inputItems(c *Context) []*object.PSObject {
 	if len(c.Input) > 0 {
 		return c.Input

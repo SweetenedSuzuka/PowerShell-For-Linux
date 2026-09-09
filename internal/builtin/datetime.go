@@ -30,7 +30,7 @@ func cmdGetDate(c *Context) ([]*object.PSObject, error) {
 	return []*object.PSObject{o}, nil
 }
 
-// parseDateArg 按常见日期时间格式解析 -Date 参数：字符串包含时区参数时，数值转换为本地时区，不带时区参数时则直接取值并标记为未指定种类（使 .Kind 与 PowerShell 一致）。
+// parseDateArg 按常见日期时间格式解析 -Date 参数：字符串包含时区信息时，换算为本地时区，不带时区信息时，保留原时间并标记为未指定 Kind（使 .Kind 与 PowerShell 一致）。
 func parseDateArg(s string) (time.Time, error) {
 	layouts := []string{
 		"2006-01-02 15:04:05",

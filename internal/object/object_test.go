@@ -169,7 +169,7 @@ func TestFormatListDateTimeAll(t *testing.T) {
 	}
 }
 
-// TestFormatTableDateTimeDefault 验证 DateTime 默认表格列（顺序与 PowerShell 一致）与刻度锚点。
+// TestFormatTableDateTimeDefault 验证 DateTime 默认表格列（顺序与 PowerShell 一致）与刻度期望值。
 func TestFormatTableDateTimeDefault(t *testing.T) {
 	o := DateTime(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC))
 	o.AddProp("DisplayHint", "DateTime")
@@ -223,7 +223,7 @@ func TestFormatOutputStrings(t *testing.T) {
 	}
 }
 
-// TestFormatOutputCustomObjectMerge 验证自定义对象流合成一张表：首对象属性作列，后出属性不另起表，缺失置空。
+// TestFormatOutputCustomObjectMerge 验证自定义对象流合成一张表：首对象属性作列，后出属性不另起表，缺失置为空。
 func TestFormatOutputCustomObjectMerge(t *testing.T) {
 	o1 := PSCustomObject([]HashEntry{{Key: "n", Value: Str("x")}, {Key: "m", Value: Int(1)}})
 	o2 := PSCustomObject([]HashEntry{{Key: "n", Value: Str("y")}, {Key: "z", Value: Int(2)}})
@@ -388,7 +388,7 @@ func TestFormatTableScalarPassthrough(t *testing.T) {
 	}
 }
 
-// TestFormatTableMixedOrder 验证混排顺序：先刷出缓冲的表，再输出标量行（任一顺序标量都不进表）。
+// TestFormatTableMixedOrder 验证混排顺序：先把缓冲写成表，再输出标量行（任一顺序标量都不进表）。
 func TestFormatTableMixedOrder(t *testing.T) {
 	f := Object("System.IO.FileInfo", "/a/b")
 	var sb strings.Builder

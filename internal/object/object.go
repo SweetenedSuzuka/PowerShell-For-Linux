@@ -1,6 +1,6 @@
 // Package object 定义 PowerShell 对象模型（PSObject）与格式化输出。
 //
-// 内置 cmdlet 产出的是带类型与属性的对象，而非纯文本。
+// 内置 cmdlet 生成的是带类型与属性的对象，而非纯文本。
 // 管道终点再按对象的形状（表格/列表/纯文本）渲染。
 package object
 
@@ -131,7 +131,7 @@ func Error(msg string) *PSObject {
 	return o
 }
 
-// ScriptBlock 创建脚本块对象，Value 存脚本块节点供 & 调用与 .Invoke 执行。
+// ScriptBlock 创建脚本块对象，Value 存储脚本块节点供 & 调用与 .Invoke 执行。
 func ScriptBlock(sb *ast.ScriptBlock) *PSObject {
 	return &PSObject{TypeName: "ScriptBlock", Value: sb}
 }
@@ -190,7 +190,7 @@ func (o *PSObject) Unwrap() any {
 	return o.Value
 }
 
-// PropValue 按名字取属性；不存在返回 nil, false。
+// PropValue 按名字获取属性；不存在返回 nil, false。
 // 先检查 Props，再检查虚拟属性（DateTime 字段、字符串 Length、数组 Count、哈希表键）。
 func (o *PSObject) PropValue(name string) (*PSObject, bool) {
 	for _, p := range o.Props {
@@ -202,7 +202,7 @@ func (o *PSObject) PropValue(name string) (*PSObject, bool) {
 }
 
 // virtualProp 解析不在 Props 里的虚拟属性（与 eval 的成员访问一致）。
-// Select-Object/Sort-Object/Group-Object/Measure-Object 等按名取属性都要经过它。
+// Select-Object/Sort-Object/Group-Object/Measure-Object 等按名获取属性都要经过它。
 func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 	switch o.TypeName {
 	case "String":
@@ -241,7 +241,7 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 		}
 	case "System.IO.FileInfo", "System.IO.DirectoryInfo":
 		// 虚拟属性从路径计算：Extension（目录恒空）、BaseName（文件去扩展名）、DirectoryName（父目录）。
-		// 与 FullName 一致按传入路径原样计算，不解析为绝对路径（对齐现有简化）。
+		// 与 FullName 一致按传入路径原样计算，不解析为绝对路径（与现有简化一致）。
 		if path, ok := o.Value.(string); ok {
 			switch strings.ToLower(name) {
 			case "extension":
@@ -424,7 +424,7 @@ func (o *PSObject) Truthy() bool {
 	}
 }
 
-// AsInt 尝试转为整数。
+// AsInt 尝试转换为整数。
 func (o *PSObject) AsInt() (int64, bool) {
 	switch v := o.Value.(type) {
 	case int64:
@@ -444,7 +444,7 @@ func (o *PSObject) AsInt() (int64, bool) {
 	return 0, false
 }
 
-// AsFloat 尝试转为浮点。
+// AsFloat 尝试转换为浮点。
 func (o *PSObject) AsFloat() (float64, bool) {
 	switch v := o.Value.(type) {
 	case int64:

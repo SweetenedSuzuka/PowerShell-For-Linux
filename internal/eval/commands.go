@@ -53,7 +53,7 @@ func (e *Evaluator) EvalStatements(list *ast.StatementList) []*object.PSObject {
 	return out
 }
 
-// EvalStatement 执行单条语句并返回输出对象（顶层逐语句输出用，保证与直写命令顺序一致）。
+// EvalStatement 执行单条语句并返回输出对象（顶层逐语句输出用，保证与直接写命令顺序一致）。
 // 顶层单个 $null 不占位（裸 $null/void/报错语句无输出）；嵌套位置与多值中的 $null 保留，它们在末端渲染时丢弃。
 func (e *Evaluator) EvalStatement(st ast.Node) []*object.PSObject {
 	out, _ := e.EvalStatementHalted(st)
@@ -91,7 +91,7 @@ func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 	var cur []*object.PSObject
 	mark := e.Session.ErrorSeq
 	if pipe.Expr != nil {
-		// 纯表达式语句求值前置位 $?（对齐命令路径：求值中出错由 writeError 覆盖为 false）
+		// 纯表达式语句求值前置位 $?（与命令路径一致：求值中出错由 writeError 覆盖为 false）
 		e.Session.LastSuccess = true
 		// 无命令时重定向记录在管道层（如 $x 2>$null），在这里启用（打开目标、切换输出），语义与命令重定向一致。
 		if len(pipe.Commands) == 0 && len(pipe.Redirs) > 0 {
@@ -114,11 +114,11 @@ func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 		}
 		cur = flattenPipelineList(e.execCommand(cmd, cur, isLast))
 	}
-	// 管道内出现过错误（即使后续命令成功）：整条管道置失败（与 PowerShell 一致）。
+	// 管道内出现过错误（即使后续命令成功）：整条管道置为失败（与 PowerShell 一致）。
 	if e.Session.ErrorSeq != mark {
 		e.Session.LastSuccess = false
 	}
-	// 无命令时在这里把表达式输出写进目标文件（只返回 nil，不进管道）。
+	// 无命令时在这里把表达式输出写入目标文件（只返回 nil，不进管道）。
 	if len(pipe.Commands) == 0 && len(pipe.Redirs) > 0 {
 		return e.applyRedirects(pipe.Redirs, pipe, cur)
 	}
@@ -140,7 +140,7 @@ func flattenPipelineList(in []*object.PSObject) []*object.PSObject {
 	return out
 }
 
-// flattenPipeInput 把表达式值转为管道输入：数组展开，$null 作为对象保留（下游按各自语义处理，顶层单个与末端渲染时丢弃）。
+// flattenPipeInput 把表达式值转换为管道输入：数组展开，$null 作为对象保留（后续命令按各自语义处理，顶层单个与末端渲染时丢弃）。
 func flattenPipeInput(o *object.PSObject) []*object.PSObject {
 	if o == nil {
 		return nil
@@ -169,7 +169,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		return e.execInvoke(cmd, input, isLast)
 	}
 	name := cmd.Name
-	// 递归解析别名链（New-Alias foo ls; foo 也生效）；带深度上限防环
+	// 递归解析别名链（New-Alias foo ls; foo 也生效）；带深度上限防止循环
 	for i := 0; i < 8; i++ {
 		resolved, ok := e.Session.ResolveAlias(name)
 		if !ok || resolved == name {
@@ -188,7 +188,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 			e.reportError(err)
 			return nil
 		}
-		// 参数绑定后才定 $?：绑定过程可能读取 $?，不能被新命令提前覆盖
+		// 参数绑定后才设定 $?：绑定过程可能读取 $?，不能被新命令提前覆盖
 		e.Session.LastSuccess = true
 		defer e.enterRedirects(cmd.Redirs, cmd)()
 		ctx := &builtin.Context{
@@ -205,7 +205,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 	}
 	if isScriptPath(name) {
 		// 显式位置实参（如 .\s.ps1 1 2 3）优先作为脚本实参；
-		// 无显式实参时管道输入转为脚本实参。
+		// 无显式实参时管道输入转换为脚本实参。
 		var args []*object.PSObject
 		for _, slot := range cmd.ArgOrder {
 			if slot.Kind == ast.ArgPositional {
@@ -238,8 +238,8 @@ func isScriptPath(name string) bool {
 }
 
 // enterRedirects 在重定向表非空时把执行期输出指到目标，返回恢复函数（调用方 defer）。
-// 直接写屏的命令一并捕获；Write-Host 类输出到 Console（恒为初始主机输出），不受影响；外部命令不经过这里。
-// redirOut 只归属本次持有者（owner 判定，命令或管道），内层自带重定向的不被外层接管。
+// 直接输出到 Console 的命令一并捕获；Write-Host 类输出到 Console（恒为初始主机输出），不受影响；外部命令不经过这里。
+// redirOut 只归属本次持有者（owner 判定，命令或管道），内层自带重定向的外层不接管。
 func (e *Evaluator) enterRedirects(redirs []ast.Redirection, owner any) func() {
 	restores := []func(){}
 	if w, closer := e.stderrRedirectTarget(redirs); w != nil {
@@ -305,7 +305,7 @@ func (e *Evaluator) stderrRedirectTarget(redirs []ast.Redirection) (io.Writer, i
 	return nil, nil
 }
 
-// stdoutRedirectTarget 求重定向表的 stdout 重定向目标（> / >>）；多个取最后一个；$null 或非法返回 Discard。
+// stdoutRedirectTarget 计算重定向表的 stdout 重定向目标（> / >>）；多个获取最后一个；$null 或非法返回 Discard。
 func (e *Evaluator) stdoutRedirectTarget(redirs []ast.Redirection) (io.Writer, io.Closer) {
 	var pick *ast.Redirection
 	for i := range redirs {
@@ -333,7 +333,7 @@ func (e *Evaluator) stdoutRedirectTarget(redirs []ast.Redirection) (io.Writer, i
 }
 
 // applyRedirects 处理重定向表的 stdout 重定向（> / >>）。
-// stdout 被重定向时输出不进管道（返回 nil）；只有 stderr 重定向时输出照常返回。
+// stdout 有重定向时输出不进管道（返回 nil）；只有 stderr 重定向时输出照常返回。
 func (e *Evaluator) applyRedirects(redirs []ast.Redirection, owner any, out []*object.PSObject) []*object.PSObject {
 	hasStdout := false
 	for _, r := range redirs {
@@ -345,8 +345,8 @@ func (e *Evaluator) applyRedirects(redirs []ast.Redirection, owner any, out []*o
 	if !hasStdout {
 		return out
 	}
-	// 内置分支已把目标打开并指给 redirOut：返回值直接写进去，不另开文件（否则会截掉直接写的内容）。
-	// 只认本次持有者归属的 redirOut（owner 判定），内层自带重定向的不被外层接管。
+	// 内置分支已把目标打开并赋值给 redirOut：返回值直接写入其中，不另开文件（否则会截掉直接写入的内容）。
+	// 只认本次持有者归属的 redirOut（owner 判定），内层自带重定向的外层不接管。
 	if e.redirOut != nil && e.redirCmd == owner {
 		var buf bytes.Buffer
 		_ = object.FormatOutput(&buf, out)
@@ -425,7 +425,7 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 }
 
 // callFunctionNamedBlocks 按 begin/process/end 语义执行带命名块（或 filter）的函数：
-// begin 先跑一次；有管道输入时 process 对每项执行并把 $_ 绑到该项，无输入时以 $null 跑一次；
+// begin 先跑一次；有管道输入时 process 对每项执行并把 $_ 绑定到该项，无输入时以 $null 跑一次；
 // filter 无 Process 块时 Body 即 process。end 最后跑一次。
 // process 里的 return 只结束当前项的处理，继续下一项；begin/end 里的 return 结束整个函数。
 // break/continue 在命名块里没有所属循环，沿调用栈上抛（与 PowerShell 一致），由外层循环捕获。
@@ -466,7 +466,7 @@ func (e *Evaluator) callFunctionNamedBlocks(fn *shell.Function, input []*object.
 	if process != nil {
 		items := input
 		if e.inPipeline == 0 {
-			// 直调（无管道）：process 以 $null 跑一次
+			// 直接调用（无管道）：process 以 $null 跑一次
 			e.scopes[len(e.scopes)-1]["_"] = object.Null()
 			runBlock(process, true)
 		} else {
@@ -507,7 +507,7 @@ func (e *Evaluator) evalCallArgs(cmd *ast.Command, slots []ast.ArgItem) callArgs
 	return ca
 }
 
-// bindParams 按形参声明把调用实参落位到当前作用域：命名与开关优先，其余使用位置实参，缺的用默认值或 $null。
+// bindParams 按形参声明把调用实参映射到当前作用域：命名与开关优先，其余使用位置实参，缺的用默认值或 $null。
 // 返回剩余位置实参与绑定是否成功；失败时错误已写出，调用方不再执行被调方。
 func (e *Evaluator) bindParams(params []ast.FunctionParam, ca callArgs) ([]*object.PSObject, bool) {
 	sc := e.scopes[len(e.scopes)-1]
@@ -555,7 +555,7 @@ func (e *Evaluator) bindParams(params []ast.FunctionParam, ca callArgs) ([]*obje
 }
 
 // execInvoke 执行 & 调用命令：首个位置实参是调用目标。
-// 目标为脚本块时按函数语义执行（param 形参、$args、$input、动态作用域）；其余目标转成名字，按常规命令分发。
+// 目标为脚本块时按函数语义执行（param 形参、$args、$input、动态作用域）；其余目标转换成名字，按常规命令分发。
 func (e *Evaluator) execInvoke(cmd *ast.Command, input []*object.PSObject, isLast bool) []*object.PSObject {
 	targetIdx := -1
 	var rest []ast.ArgItem
@@ -610,7 +610,7 @@ func rewriteWithoutPositional(cmd *ast.Command, drop int) *ast.Command {
 }
 
 // invokeScriptBlock 以函数语义执行脚本块：实参绑定、$args、$input 与函数调用同一套规则；
-// 带命名块时按 begin/process/end 语义执行（直调 process 以 $null 跑一次），与函数一致。
+// 带命名块时按 begin/process/end 语义执行（直接调用 process 以 $null 跑一次），与函数一致。
 func (e *Evaluator) invokeScriptBlock(node *ast.ScriptBlock, ca callArgs, input []*object.PSObject) []*object.PSObject {
 	e.pushScope()
 	defer e.popScope()
@@ -750,7 +750,7 @@ func (e *Evaluator) runExternal(cmd *ast.Command, input []*object.PSObject, isLa
 		e.Session.LastSuccess = code == 0
 		return nil
 	}
-	// 捕获输出：有显式重定向目标（文件/丢弃）就直写目标，否则按行转字符串对象
+	// 捕获输出：有显式重定向目标（文件/丢弃）就直接写目标，否则按行转字符串对象
 	var outBuf, errBuf bytes.Buffer
 	outW := io.Writer(&outBuf)
 	errW := io.Writer(&errBuf)
@@ -790,7 +790,7 @@ func (e *Evaluator) RunScriptFile(path string, args []*object.PSObject) []*objec
 	return e.runScript(path, args, nil)
 }
 
-// RunScriptFileStreaming 读取并逐语句执行脚本，每语句的输出交给 emit（保证直写命令顺序）。
+// RunScriptFileStreaming 读取并逐语句执行脚本，每语句的输出交给 emit（保证直接写命令顺序）。
 func (e *Evaluator) RunScriptFileStreaming(path string, args []*object.PSObject, emit func(objs []*object.PSObject)) {
 	e.runScript(path, args, emit)
 }
@@ -805,7 +805,7 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 	// 去掉 UTF-8 BOM，带 BOM 的脚本照常解析。
 	res := parser.Parse(builtin.StripUTF8BOM(string(data)))
 	if res.Error != nil {
-		// 脚本没有执行任何语句视作失败：置失败退出码，让 -File 与脚本调用方凭退出码感知
+		// 脚本没有执行任何语句视作失败：设置失败退出码，让 -File 与脚本调用方凭退出码感知
 		e.Session.LastExit = 1
 		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgScriptParseFail, path, res.Error)))
 		return nil
@@ -832,7 +832,7 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 	if len(stmts) > 0 {
 		if pb, ok := stmts[0].(*ast.ParamBlock); ok {
 			if !e.bindScriptParams(pb.Params, args) {
-				// 实参与形参声明不符视作脚本没有执行任何语句，置失败退出码供调用方感知
+				// 实参与形参声明不符视作脚本没有执行任何语句，设置失败退出码供调用方感知
 				e.Session.LastExit = 1
 				return nil
 			}
@@ -870,7 +870,7 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 }
 
 // bindParamValue 把实参转换成形参 [类型] 标注声明的类型；未标注原样返回。
-// 数组类型把单值包成单元素数组后逐元素转换。
+// 数组类型把单值包装成单元素数组后逐元素转换。
 // ok 为 false 表示无法转换，错误已写出，调用方不再执行被调方。
 func (e *Evaluator) bindParamValue(p ast.FunctionParam, v *object.PSObject) (*object.PSObject, bool) {
 	if p.TypeName == "" {
@@ -898,7 +898,7 @@ func (e *Evaluator) bindParamValue(p ast.FunctionParam, v *object.PSObject) (*ob
 	return out, true
 }
 
-// writeBindError 写参数绑定错误：类型未注册报"无法找到类型"，否则报实参转换失败。
+// writeBindError 报告参数绑定错误：类型未注册则报告"无法找到类型"，否则报告实参转换失败。
 func (e *Evaluator) writeBindError(err error, v *object.PSObject, param, target string) {
 	if errors.Is(err, errTypeUnknown) {
 		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgTypeUnknown, target)))
@@ -907,8 +907,8 @@ func (e *Evaluator) writeBindError(err error, v *object.PSObject, param, target 
 	e.reportError(fmt.Errorf("%s", lang.T(lang.MsgBindConvertFail, v.String(), param, target)))
 }
 
-// bindScriptParams 按 param() 声明把脚本实参绑到当前作用域（脚本不推独立作用域，变量可见性等价调用点：控制台调用留在会话，函数内调用随函数销毁）。
-// 位置实参依次落位，缺的用默认值或 $null，剩余实参保留在 $args。
+// bindScriptParams 按 param() 声明把脚本实参绑定到当前作用域（脚本不新建独立作用域，变量可见性等价调用点：控制台调用留在会话，函数内调用随函数销毁）。
+// 位置实参依次映射到槽位，缺的用默认值或 $null，剩余实参保留在 $args。
 // 返回 false 表示有实参无法转换成形参声明的类型（错误已写出），调用方不再执行脚本。
 func (e *Evaluator) bindScriptParams(params []ast.FunctionParam, args []*object.PSObject) bool {
 	sc := e.scopes[len(e.scopes)-1]

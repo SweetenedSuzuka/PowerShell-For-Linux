@@ -24,7 +24,7 @@ type Engine interface {
 	EvalFilterExpr(node ast.Node, obj *object.PSObject) (bool, error)
 	// RunSource 解析并执行一段源码，返回输出对象（Invoke-Expression / Invoke-History 用）。
 	RunSource(src string) ([]*object.PSObject, error)
-	// LookupVar 按 PowerShell 默认读语义查变量（自顶向下查作用域，再检查自动变量）。
+	// LookupVar 按 PowerShell 默认读取语义查询变量（自顶向下查询作用域，再检查自动变量）。
 	LookupVar(name string) *object.PSObject
 	// SetStrictMode 设置当前作用域的严格模式（Set-StrictMode 用）。
 	SetStrictMode(on bool)
@@ -43,7 +43,7 @@ type Context struct {
 	Input   []*object.PSObject // 管道输入对象
 }
 
-// console 取主机输出；未设置时回退 Stdout。
+// console 获取主机输出；未设置时回退 Stdout。
 func (c *Context) console() io.Writer {
 	if c.Console != nil {
 		return c.Console
@@ -62,7 +62,7 @@ type BoundArgs struct {
 	ErrorAction    string          // -ErrorAction 的归一化取值（小写），空为未指定，按 Continue 处理
 }
 
-// Pos 取第 i 个位置参数（越界返回 nil）。
+// Pos 获取第 i 个位置参数（越界返回 nil）。
 func (a *BoundArgs) Pos(i int) *object.PSObject {
 	if i >= 0 && i < len(a.Positional) {
 		return a.Positional[i]
@@ -70,7 +70,7 @@ func (a *BoundArgs) Pos(i int) *object.PSObject {
 	return nil
 }
 
-// PosNode 取第 i 个位置参数的原始 AST 节点。
+// PosNode 获取第 i 个位置参数的原始 AST 节点。
 func (a *BoundArgs) PosNode(i int) ast.Node {
 	if i >= 0 && i < len(a.PositionalNode) {
 		return a.PositionalNode[i]
@@ -78,17 +78,17 @@ func (a *BoundArgs) PosNode(i int) ast.Node {
 	return nil
 }
 
-// Get 取命名参数（不存在返回 nil）。
+// Get 获取命名参数（不存在返回 nil）。
 func (a *BoundArgs) Get(name string) *object.PSObject {
 	return a.Named[name]
 }
 
-// GetNode 取命名参数的原始 AST 节点。
+// GetNode 获取命名参数的原始 AST 节点。
 func (a *BoundArgs) GetNode(name string) ast.Node {
 	return a.NamedNode[name]
 }
 
-// Str 取命名参数并转字符串。
+// Str 获取命名参数并转字符串。
 func (a *BoundArgs) Str(name string) (string, bool) {
 	if v := a.Named[name]; v != nil && !v.IsNull() {
 		return v.String(), true
@@ -96,7 +96,7 @@ func (a *BoundArgs) Str(name string) (string, bool) {
 	return "", false
 }
 
-// Int 取命名参数并转整数。
+// Int 获取命名参数并转整数。
 func (a *BoundArgs) Int(name string) (int64, bool) {
 	if v := a.Named[name]; v != nil {
 		return v.AsInt()

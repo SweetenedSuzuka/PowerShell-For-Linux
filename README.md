@@ -77,7 +77,7 @@ powershell [-Version 5.1|7] [-NoLogo] [-NoProfile] [-Command <命令>] [-File <�
 | 选项 | 说明 |
 | :--- | :--- |
 | `-Version <5.1\|7>` | 用 5.X 还是 7.X 的命令格式启动（默认 7.X） |
-| `-Command <命令>` | 执行命令后退出（`-` 表示从标准输入读） |
+| `-Command <命令>` | 执行命令后退出（`-` 表示从标准输入读取） |
 | `-File <脚本>` | 执行 `.ps1` 脚本后退出 |
 | `-NoLogo` | 不显示启动横幅 |
 | `-NoProfile` | 不加载启动脚本 |

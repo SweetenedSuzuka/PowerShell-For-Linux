@@ -133,7 +133,7 @@ func (r *REPL) loop() {
 	}
 }
 
-// promptText 返回主提示符：定义了 prompt 函数时调函数取值，失败回默认。
+// promptText 返回主提示符：定义了 prompt 函数时调用函数取值，失败回退默认。
 func (r *REPL) promptText() (text string) {
 	text = r.Session.Prompt()
 	if !hasPromptFunc(r.Session) {

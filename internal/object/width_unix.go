@@ -12,7 +12,7 @@ type winsize struct {
 	Row, Col, X, Y uint16
 }
 
-// terminalColumns 直读标准输出的终端宽度，失败返回 0。
+// terminalColumns 直接读取标准输出的终端宽度，失败返回 0。
 func terminalColumns() int {
 	var ws winsize
 	if _, _, errno := syscall.Syscall(syscall.SYS_IOCTL, 1, syscall.TIOCGWINSZ, uintptr(unsafe.Pointer(&ws))); errno != 0 {

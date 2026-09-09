@@ -19,7 +19,7 @@ $results += T "while 每轮求值" ($wl -eq 3)
 $po = 0
 $pv = $po++
 $results += T "后缀取旧值" ((($pv -eq 0) -and ($po -eq 1)))
-# 188. 变量读写不区分大小写
+# 188. 变量读取与写入不区分大小写
 $vcFoo = 1
 $VCFOO = 2
 $results += T "变量大小写" ((($VCFOO -eq 2) -and ($VcFoo -eq 2)))

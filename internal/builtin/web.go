@@ -50,7 +50,7 @@ func cmdInvokeRestMethod(c *Context) ([]*object.PSObject, error) {
 	return []*object.PSObject{object.Str(strings.TrimSuffix(resp, "\n"))}, nil
 }
 
-// httpRequestArgs 取请求的 HTTP 方法与请求体（默认 GET）。
+// httpRequestArgs 获取请求的 HTTP 方法与请求体（默认 GET）。
 func httpRequestArgs(c *Context) (string, string) {
 	method := "GET"
 	if m, ok := c.Args.Str("Method"); ok && m != "" {

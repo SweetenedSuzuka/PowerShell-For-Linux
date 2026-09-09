@@ -142,8 +142,8 @@ func copyOrMove(c *Context, move bool) ([]*object.PSObject, error) {
 	// 目标：-Destination（命名或位置）
 	dest, _ := c.Args.Str("Destination")
 	// 多源写法 Copy-Item a b c 复制 a、b 到 c，超出槽位的实参在此处处理：
-	// 目标由位置映射时末位实参提升为目标，Path 与映射到 Destination 的值都并入源；
-	// 目标显式命名时剩余实参全部并入源（如 Copy-Item a b -Destination d）。
+	// 目标由位置映射时末位实参提升为目标，Path 与映射到 Destination 的值都合并入源；
+	// 目标显式命名时剩余实参全部合并入源（如 Copy-Item a b -Destination d）。
 	if len(c.Args.Positional) > 0 {
 		rest := c.Args.Positional
 		if c.Args.PosMapped["Destination"] {
@@ -257,7 +257,7 @@ func cmdMoveItem(c *Context) ([]*object.PSObject, error) { return copyOrMove(c, 
 func cmdRenameItem(c *Context) ([]*object.PSObject, error) {
 	path := firstPathArg(c)
 	newName := ""
-	// -NewName（命名或位置）：只取叶子名，支持传完整路径；先过盘符校验（D:\ 报错，C:\ 归一到根再取叶子）
+	// -NewName（命名或位置）：只获取叶子名，支持传完整路径；先过盘符校验（D:\ 报错，C:\ 归一到根再获取叶子）
 	if n, ok := c.Args.Str("NewName"); ok {
 		np, derr := shell.DrivePath(n)
 		if derr != nil {

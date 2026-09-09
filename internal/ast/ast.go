@@ -13,7 +13,7 @@ type StatementList struct {
 
 // Pipeline 是管道：由 '|' 分隔的命令序列。
 // Expr 非空表示管道以纯表达式开头（如 1,2,3 | ForEach-Object {...}）。
-// 无命令时，把 Expr 尾随的重定向（如 $x 2>$null）存在这个字段。
+// 无命令时，把 Expr 尾随的重定向（如 $x 2>$null）储存在这个字段。
 type Pipeline struct {
 	Commands []*Command
 	Expr     Node
@@ -155,7 +155,7 @@ type Exit struct {
 
 // FunctionParam 是函数参数（含可选类型标注与默认值）。
 type FunctionParam struct {
-	TypeName string // 方括号里的类型名，空为未标注；数组后缀 [] 并入名字
+	TypeName string // 方括号里的类型名，空为未标注；数组后缀 [] 合并入名字
 	Name     string
 	Default  Node
 }
@@ -244,7 +244,7 @@ type HashPair struct {
 // HashtableLit 是哈希表字面量 @{ k = v; ... }。
 type HashtableLit struct{ Pairs []HashPair }
 
-// TypeCast 是类型转换：[int]"42" 转整数，[pscustomobject]@{...} 构造自定义对象。
+// TypeCast 是类型转换：[int]"42" 转换为整数，[pscustomobject]@{...} 构造自定义对象。
 type TypeCast struct {
 	TypeName string
 	Expr     Node

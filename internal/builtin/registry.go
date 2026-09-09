@@ -4,13 +4,13 @@ import (
 	"strings"
 )
 
-// registry.go 存 cmdlet 注册表（名字到实现与参数规格的映射）。
+// registry.go 储存 cmdlet 注册表（名字到实现与参数规格的映射）。
 
 var registry = map[string]CmdFunc{}
 var specMap = map[string][]ParamSpec{}
 var displayMap = map[string]string{} // 小写名 → 原始大小写名（Get-Help/Get-Command 显示用）
 
-// Register 注册 cmdlet（名字转小写存储）。
+// Register 注册 cmdlet（名字转小写储存）。
 func Register(name string, spec []ParamSpec, fn CmdFunc) {
 	lower := strings.ToLower(name)
 	registry[lower] = fn

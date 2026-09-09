@@ -35,7 +35,7 @@ func cmdConvertToCsv(c *Context) ([]*object.PSObject, error) {
 	return out, nil
 }
 
-// csvLines 按给定分隔符把对象列表转为 CSV 文本行（首行为表头），ConvertTo-Csv 与 Export-Csv 共用。
+// csvLines 按给定分隔符把对象列表转换为 CSV 文本行（首行为表头），ConvertTo-Csv 与 Export-Csv 共用。
 func csvLines(items []*object.PSObject, props []string, delim rune) []string {
 	if len(items) == 0 {
 		return nil

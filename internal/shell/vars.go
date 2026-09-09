@@ -12,7 +12,7 @@ import (
 	"powershell/internal/object"
 )
 
-// vars.go 实现会话变量读写（显式变量与自动变量）。
+// vars.go 实现会话变量的读取与写入（显式变量与自动变量）。
 
 // IsReadOnlyVar 报告变量是否为只读自动变量，不区分大小写。
 func IsReadOnlyVar(name string) bool {
@@ -24,7 +24,7 @@ func IsReadOnlyVar(name string) bool {
 	return false
 }
 
-// varKey 取显式变量的存储键：已存在（不区分大小写）沿用原大小写，否则用传入名。
+// varKey 获取显式变量的存储键：已存在（不区分大小写）沿用原大小写，否则用传入名。
 func (s *Session) varKey(name string) string {
 	if _, ok := s.Vars[name]; ok {
 		return name
@@ -56,7 +56,7 @@ func (s *Session) DeleteVar(name string) bool {
 // maxErrorRecords 是 $Error 的容量上限（对应 PowerShell 的 $MaximumErrorCount 默认值）。
 const maxErrorRecords = 256
 
-// ErrorViewMarker 标记一个数组对象是 $Error 的动态视图（eval 层的 Clear/RemoveAt 据此落到记录本体）。
+// ErrorViewMarker 标记一个数组对象是 $Error 的动态视图（eval 层的 Clear/RemoveAt 据此作用到记录本体）。
 const ErrorViewMarker = "__ErrorView"
 
 // ParseErrorAction 把错误动作取值归一化为小写，未知取值返回 false。
@@ -99,7 +99,7 @@ func (s *Session) SetVar(name string, val *object.PSObject) error {
 		return fmt.Errorf("%s", lang.T(lang.MsgReadonlyVar, name))
 	}
 	if strings.EqualFold(name, "ErrorActionPreference") {
-		// 首选项名按规范大小写存储。
+		// 首选项名按规范大小写储存。
 		// 空值视为恢复默认。
 		name = "ErrorActionPreference"
 		if val.IsNull() {
@@ -114,7 +114,7 @@ func (s *Session) SetVar(name string, val *object.PSObject) error {
 	return nil
 }
 
-// GetVar 读取变量：先查显式变量，再检查自动变量；两处都不区分大小写。
+// GetVar 读取变量：先查询显式变量，再检查自动变量；两处都不区分大小写。
 func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 	if v, ok := s.Vars[s.varKey(name)]; ok {
 		return v, true

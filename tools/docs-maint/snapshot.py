@@ -1,5 +1,5 @@
 """
-逐页获取 sources.json 中的出处页，提取官方字段存快照。
+逐页获取 sources.json 中的出处页，提取官方字段保存快照。
 默认获取全部，一般需要很长时间。
 在脚本目录生成 snapshots.json 和 meta.json。
 用法示例：

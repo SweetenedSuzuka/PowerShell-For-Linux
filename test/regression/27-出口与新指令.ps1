@@ -27,7 +27,7 @@ Get-SecureRandom -Minimum 10 -Maximum 5 2>$null | Out-Null
 Get-SecureRandom -InputObject (1,2,3) -Count -1 2>$null | Out-Null
 Get-SecureRandom -Maximum 10 -Count 0 2>$null | Out-Null
 $results += T "取样洗牌参数集" ((($ss1.Count -eq 3)) -and ((($ss1 | Sort-Object -Unique).Count -eq 3)) -and (($ss2.Count -eq 5)) -and ((($ss2 | Sort-Object) -join ",") -eq "1,2,3,4,5") -and (($Error.Count -eq ($se0 + 4))))
-# 243. 读最新错误记录
+# 243. 读取最新错误记录
 Get-Content ge-no-such-aaa.txt 2>$null | Out-Null
 Get-Content ge-no-such-bbb.txt 2>$null | Out-Null
 $ge1 = Get-Error

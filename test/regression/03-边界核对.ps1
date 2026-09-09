@@ -1,5 +1,5 @@
-# 边界核对：多源与槽位落位。
-Write-Output "== 边界核对（Copy-Item 多源 / 槽位落位） =="
+# 边界核对：多源与槽位映射。
+Write-Output "== 边界核对（Copy-Item 多源 / 槽位映射） =="
 
 # 48. Copy-Item 四位置实参
 "c1" | Set-Content a1.txt; "c2" | Set-Content a2.txt; "c3" | Set-Content a3.txt
@@ -41,13 +41,13 @@ $results += T "Select-Object -First 组合" (($sf -join ",") -eq "a,b")
 # 57. Get-Unique 数组 + 位置
 $gu2 = Get-Unique 3,1 3 2
 $results += T "Get-Unique 数组+位置" (($gu2 -join ",") -eq "3,1,2")
-# 58. Compare-Object 命名 + 位置落位
+# 58. Compare-Object 命名 + 位置映射
 $co = Compare-Object -DifferenceObject b a
-$results += T "Compare-Object 落位" (($co.Count -eq 2))
+$results += T "Compare-Object 位置映射" (($co.Count -eq 2))
 # 59. Set-Alias 两位置
 Set-Alias al1 cv1 2>$null
 $results += T "Set-Alias 两位置" (((Get-Alias al1).Definition -eq "cv1"))
-# 60. 管道输入 Set-Content 写文件，再用路径读回
+# 60. 管道输入 Set-Content 写文件，再用路径读回来
 "p1" | Set-Content p.txt
 $gp = Get-Content p.txt
 $results += T "Get-Content 单文件" (($gp -join ",") -eq "p1")

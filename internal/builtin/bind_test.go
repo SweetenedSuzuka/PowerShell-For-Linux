@@ -13,7 +13,7 @@ import (
 	"powershell/internal/shell"
 )
 
-// firstCommand 解析源码并取第一条命令（单命令管道或直接命令语句）。
+// firstCommand 解析源码并获取第一条命令（单命令管道或直接命令语句）。
 func firstCommand(t *testing.T, src string) *ast.Command {
 	t.Helper()
 	res := parser.Parse(src)
@@ -71,7 +71,7 @@ func TestBindPositionalMapping(t *testing.T) {
 	}
 }
 
-// TestBindNamedPrecedence 已命名参数不被位置实参覆盖，位置实参落到下一个空槽位。
+// TestBindNamedPrecedence 已命名参数不被位置实参覆盖，位置实参映射到下一个空槽位。
 func TestBindNamedPrecedence(t *testing.T) {
 	args, err := bindViaEval(t, "Set-Content -Path a.txt hello")
 	if err != nil {
@@ -162,7 +162,7 @@ func TestBindSwitchNoSlot(t *testing.T) {
 	}
 	assertNamedArg(t, args, "Path", "x")
 	if !args.Switches["Recurse"] {
-		t.Error("开关 -Recurse 应置真")
+		t.Error("开关 -Recurse 应置为真")
 	}
 	if len(args.Positional) != 0 {
 		t.Errorf("开关不占槽位，不应留位置实参，实际 %v", args.Positional)
@@ -272,14 +272,14 @@ func TestBindValueObjects(t *testing.T) {
 	}
 }
 
-// TestBindSwitchValuePositional 开关被赋予值时开关置真、值退回位置参数（Bind 的 ArgNamed 分支：Get-ChildItem -Force foo 中 foo 是位置实参，再按槽位映射）。
+// TestBindSwitchValuePositional 开关被赋予值时开关置为真、值退回位置参数（Bind 的 ArgNamed 分支：Get-ChildItem -Force foo 中 foo 是位置实参，再按槽位映射）。
 func TestBindSwitchValuePositional(t *testing.T) {
 	args, err := bindViaEval(t, "Get-ChildItem -Force foo")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !args.Switches["Force"] {
-		t.Error("-Force 被赋予值时应置真")
+		t.Error("-Force 被赋予值时应置为真")
 	}
 	assertNamedArg(t, args, "Path", "foo")
 	if !args.PosMapped["Path"] {
@@ -289,7 +289,7 @@ func TestBindSwitchValuePositional(t *testing.T) {
 
 // TestBindInlineSwitch 内联开关 -Recurse:$false / -Recurse:true 按布尔求值赋给开关。
 // $true/$false 与裸字 true/false 两种写法都覆盖：
-// 裸字整段由词法分析器并入 dash word（-Recurse:true）；
+// 裸字整段由词法分析器合并入 dash word（-Recurse:true）；
 // $var 中 $ 不是 dash word 字符，词法分析器拆成独立 token，由解析器合并回内联值（-Recurse:$true）。
 func TestBindInlineSwitch(t *testing.T) {
 	cases := []struct {

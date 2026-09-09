@@ -25,7 +25,7 @@ func (e *Evaluator) binaryOp(op string, l, r *object.PSObject) *object.PSObject 
 	case "*":
 		return e.mulOp(l, r)
 	case "/":
-		// 除数为零报错并置 $?=false
+		// 除数为零报错，并把 $? 置为 false
 		if rf, ok := r.AsFloat(); ok && rf == 0 {
 			e.reportError(fmt.Errorf("%s", lang.T(lang.MsgDivideByZero)))
 			return object.Null()
@@ -152,7 +152,7 @@ func pairMatch(op string, l, r *object.PSObject) bool {
 	return false
 }
 
-// compilePattern 编译 -match/-cmatch 用的正则，并把 .NET 命名组语法转成 Go 语法。
+// compilePattern 编译 -match/-cmatch 用的正则，并把 .NET 命名组语法转换成 Go 语法。
 // -match/-notmatch 在模式前加 (?i) 实现大小写不敏感。
 func compilePattern(op, pattern string) (*regexp.Regexp, error) {
 	p := translateNamedGroups(pattern)
@@ -162,7 +162,7 @@ func compilePattern(op, pattern string) (*regexp.Regexp, error) {
 	return regexp.Compile(p)
 }
 
-// translateNamedGroups 把 .NET 的命名组语法 (?<name>...) 转成 Go 的 (?P<name>...)。
+// translateNamedGroups 把 .NET 的命名组语法 (?<name>...) 转换成 Go 的 (?P<name>...)。
 // (?<= 与 (?<! 是环视，Go 不支持，原样保留，交给编译阶段报错。
 func translateNamedGroups(pattern string) string {
 	var sb strings.Builder
@@ -418,7 +418,7 @@ func rangeOp(l, r *object.PSObject) *object.PSObject {
 
 // formatOp 实现 .NET 风格格式串："{模板}" -f 值[, 值...]。
 // 支持 {N}、{N,宽度}（空格对齐）、{N:规格}（D 十进制补零、X/x 十六进制、F 定点小数、N 千分位）。
-// {{ 与 }} 转义字面大括号；未知规格退化为原样字符串；下标越界 → 报错并置 $?=false。
+// {{ 与 }} 转义字面大括号；未知规格退化为原样字符串；下标越界 → 报错，并把 $? 置为 false。
 func (e *Evaluator) formatOp(f, args *object.PSObject) *object.PSObject {
 	format := f.String()
 	items := flattenArgs(args)
@@ -601,7 +601,7 @@ func splitOp(l, r *object.PSObject) *object.PSObject {
 	if err != nil {
 		re = regexp.MustCompile(regexp.QuoteMeta(delim))
 	}
-	// n>0 时最多分 n 段、末段保留未分割剩余；n=0 或负数不限
+	// n>0 时最多分成 n 段、末段保留未分割剩余；n=0 或负数不限
 	n := -1
 	if maxN > 0 {
 		n = maxN
@@ -683,7 +683,7 @@ func asOp(l, r *object.PSObject) *object.PSObject {
 }
 
 // convertValue 把值转换为方括号里声明的类型；数组后缀对每个元素分别转换。
-// 无法转换时写非终止错误并返回 $null（与除零的既有错误风格一致）。
+// 无法转换时报告非终止错误并返回 $null（与除零的既有错误风格一致）。
 func (e *Evaluator) convertValue(v *object.PSObject, typeName string) *object.PSObject {
 	norm := strings.ToLower(typeName)
 	if strings.HasSuffix(norm, "[]") {
@@ -697,7 +697,7 @@ func (e *Evaluator) convertValue(v *object.PSObject, typeName string) *object.PS
 	return e.convertScalar(v, norm)
 }
 
-// convertScalar 单值转换：target 为归一化小写类型名；未知类型报"无法找到类型"（与参数绑定路径同文案）。
+// convertScalar 单值转换：target 为归一化小写类型名；未知类型报告"无法找到类型"（与参数绑定路径同文案）。
 func (e *Evaluator) convertScalar(v *object.PSObject, target string) *object.PSObject {
 	out, err := convertTarget(v, target)
 	if err != nil {
@@ -749,7 +749,7 @@ func convertTarget(v *object.PSObject, target string) (*object.PSObject, error) 
 // errTypeUnknown 表示目标类型未注册，区别于值无法转换成已注册类型。
 var errTypeUnknown = errors.New("type unknown")
 
-// parseVersionValue 从 "major.minor[.build[.revision]]" 构造版本对象；缺段记 -1（与 PowerShell 一致）。
+// parseVersionValue 从 "major.minor[.build[.revision]]" 构造版本对象；缺段记为 -1（与 PowerShell 一致）。
 func parseVersionValue(v *object.PSObject) (*object.PSObject, bool) {
 	if v.TypeName == "System.Version" {
 		return v, true

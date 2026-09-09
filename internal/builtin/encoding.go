@@ -10,7 +10,7 @@ import (
 func encodeText(enc, text string, bom bool) []byte {
 	switch strings.ToLower(strings.ReplaceAll(enc, "-", "")) {
 	case "ascii":
-		// 非 ASCII 字符替换为 '?'（对齐 .NET ASCII 编码）
+		// 非 ASCII 字符替换为 '?'（与 .NET ASCII 编码一致）
 		var out []byte
 		for _, r := range text {
 			if r < 128 {

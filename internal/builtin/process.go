@@ -281,7 +281,7 @@ func linuxProcStateEnded(state string) bool {
 	return state == "Z" || state == "X"
 }
 
-// linuxProcessActive 读 /proc/PID/stat 判定是否还在活动。
+// linuxProcessActive 读取 /proc/PID/stat 判定是否还在活动。
 // 条目不存在、状态不可读或已结束视为不再活动。
 func linuxProcessActive(pid int) bool {
 	data, err := os.ReadFile(filepath.Join("/proc", strconv.Itoa(pid), "stat"))

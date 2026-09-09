@@ -303,7 +303,7 @@ func statItemObject(full string, info os.FileInfo) *object.PSObject {
 	return o
 }
 
-// cmdGetItemPropertyValue 按名取单个属性值（Get-ItemProperty 取单个字段的直接形式）。
+// cmdGetItemPropertyValue 按名获取单个属性值（Get-ItemProperty 获取单个字段的直接形式）。
 func cmdGetItemPropertyValue(c *Context) ([]*object.PSObject, error) {
 	path := firstPathArg(c)
 	nameFilter, _ := c.Args.Str("Name")

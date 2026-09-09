@@ -74,8 +74,8 @@ func languageCode(locale string) string {
 	return locale
 }
 
-// T 取当前语言的文本并填入参数；当前语言表没有这一条时回退默认语言表。
-// 实参顺序以默认语言表为准，其它语言语序不同的改写措辞去对齐它，不用位置占位符。
+// T 获取当前语言的文本并填入参数；当前语言表没有这一条时回退默认语言表。
+// 实参顺序以默认语言表为准，其它语言语序不同的改写措辞与它一致，不用位置占位符。
 func T(m Msg, args ...any) string {
 	s, ok := catalogs[current][m]
 	if !ok {

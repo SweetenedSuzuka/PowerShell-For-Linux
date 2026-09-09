@@ -67,6 +67,25 @@ type Session struct {
 	HostOut        io.Writer
 	HostErr        io.Writer
 	HostIn         io.Reader
+	TranscriptFile *os.File // 会话记录文件，空表示未记录（Stop-Transcript 配对关闭）
+	TranscriptPath string   // 会话记录文件路径
+}
+
+// TranscriptWriter 把写入同时送往原始目标与会话记录文件（未记录时只写原始目标，文件写入失败不影响会话）。
+type TranscriptWriter struct {
+	Dst     io.Writer
+	Session *Session
+}
+
+// Write 实现 io.Writer。
+func (w TranscriptWriter) Write(p []byte) (int, error) {
+	n, err := w.Dst.Write(p)
+	if w.Session != nil {
+		if f := w.Session.TranscriptFile; f != nil {
+			_, _ = f.Write(p)
+		}
+	}
+	return n, err
 }
 
 // New 创建新会话。
@@ -86,6 +105,9 @@ func New(style Style, stdout, stderr io.Writer, stdin io.Reader) *Session {
 		HostIn:    stdin,
 	}
 	s.Aliases = buildAliases(style)
+	// 主机输出经记录包装流出：未记录时只写原始目标，记录中多写一份进文件。
+	s.HostOut = TranscriptWriter{Dst: stdout, Session: s}
+	s.HostErr = TranscriptWriter{Dst: stderr, Session: s}
 	// 会话语言即全局界面语言，提示文本与日期渲染都按它取
 	lang.SetCurrent(s.Lang)
 	return s

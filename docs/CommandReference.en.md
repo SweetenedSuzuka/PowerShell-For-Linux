@@ -603,7 +603,7 @@ Official original reference: [Write-Error](OriginalCrossPlatformDetails.en.md#wr
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.
 - Function: renders input with default formatting straight to the screen, nothing continues down the pipeline, like a bash command writing to the screen.
-- Difference from Windows PowerShell: -Transcript is accepted and ignored (no session transcription facility).
+- Difference from Windows PowerShell: -Transcript is accepted and ignored (transcription is started with Start-Transcript instead).
 Examples:
 - `1,2,3 | Out-Default` — shows 1, 2, 3 (bash equivalent: `printf '%s\n' 1 2 3`).
 - `Get-Process | Select-Object -First 5 | Out-Default` — shows the first 5 processes (bash equivalent: `ps | head -5`, table in default format).
@@ -653,6 +653,17 @@ Examples:
 - `Get-Process | Out-String | Set-Content proc.txt` — saves the process list as text (bash's `ps -ef > proc.txt`).
 
 Official original reference: [Out-String](OriginalCrossPlatformDetails.en.md#out-string).
+
+### Start-Transcript
+- Type: Go implementation.
+- Version: 5.1 and 7. Distro: any.
+- Function: starts session transcription, host output is also written to a text file, like the `script` command in bash.
+- Difference from Windows PowerShell: -Force and the invocation-header switches are accepted and ignored; -LiteralPath works like -Path; -OutputDirectory is not supported; redirected-away output does not enter the file.
+Examples:
+- `Start-Transcript session.log` — starts recording into session.log (like bash `script session.log`).
+- `Start-Transcript session.log -Append` — appends to an existing file (like bash `script -a session.log`).
+
+Official original reference: [Start-Transcript](OriginalCrossPlatformDetails.en.md#start-transcript).
 
 ### Format-Table (ft)
 - Type: Go implementation.

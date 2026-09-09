@@ -2,11 +2,18 @@ package builtin
 
 import (
 	"bufio"
+	"crypto/rand"
 	"fmt"
+	"os"
+	"os/user"
+	"path/filepath"
+	"strconv"
 	"strings"
+	"time"
 
 	"powershell/internal/lang"
 	"powershell/internal/object"
+	"powershell/internal/shell"
 )
 
 // host.go 实现主机与信息输出类 cmdlet。
@@ -189,6 +196,132 @@ func cmdInvokeExpression(c *Context) ([]*object.PSObject, error) {
 	return c.Engine.RunSource(src)
 }
 
+// transcriptStars 是记录起止块的分隔行。
+const transcriptStars = "**********************"
+
+// writeTranscriptHeader 向记录文件写起始块（只写能取到的主机信息）。
+func writeTranscriptHeader(f *os.File, c *Context) {
+	startTime := time.Now().Format("20060102150405")
+	userName := ""
+	if currentUser, err := user.Current(); err == nil {
+		userName = currentUser.Username
+	}
+	machine := ""
+	if hostName, err := os.Hostname(); err == nil {
+		machine = hostName
+	}
+	edition := "Core"
+	if c.Shell.Style == shell.StyleDesktop {
+		edition = "Desktop"
+	}
+	fmt.Fprintln(f, transcriptStars)
+	fmt.Fprintln(f, "PowerShell transcript start")
+	fmt.Fprintln(f, "Start time: "+startTime)
+	fmt.Fprintln(f, "Username: "+userName)
+	fmt.Fprintln(f, "Machine: "+machine)
+	fmt.Fprintln(f, "Host Application: "+transcriptAppName())
+	fmt.Fprintln(f, "Process ID: "+strconv.Itoa(os.Getpid()))
+	fmt.Fprintln(f, "PSEdition: "+edition)
+	fmt.Fprintln(f, "OS: "+c.Shell.OSName())
+	fmt.Fprintln(f, transcriptStars)
+}
+
+// transcriptAppName 取宿主程序的文件名。
+func transcriptAppName() string {
+	name := filepath.Base(os.Args[0])
+	if rest := strings.Join(os.Args[1:], " "); rest != "" {
+		return name + " " + rest
+	}
+	return name
+}
+
+// writeTranscriptEnd 向记录文件写结束块（Stop-Transcript 与重复启动共用）。
+func writeTranscriptEnd(f *os.File) {
+	fmt.Fprintln(f, transcriptStars)
+	fmt.Fprintln(f, "PowerShell transcript end")
+	fmt.Fprintln(f, "End time: "+time.Now().Format("20060102150405"))
+	fmt.Fprintln(f, transcriptStars)
+}
+
+// defaultTranscriptPath 按原版规则拼默认记录路径（家目录下 主机名.随机.时间戳）。
+func defaultTranscriptPath(c *Context) string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		home = c.Shell.Cwd
+	}
+	machine := "localhost"
+	if hostName, err := os.Hostname(); err == nil && hostName != "" {
+		machine = hostName
+	}
+	var randBytes [6]byte
+	if _, err := rand.Read(randBytes[:]); err != nil {
+		copy(randBytes[:], "abcdef")
+	}
+	const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+	var sb strings.Builder
+	for _, byteVal := range randBytes {
+		sb.WriteByte(alphabet[int(byteVal)%len(alphabet)])
+	}
+	name := "PowerShell_transcript." + machine + "." + sb.String() + "." + time.Now().Format("20060102150405") + ".txt"
+	return filepath.Join(home, name)
+}
+
+// cmdStartTranscript 开始会话记录，把主机输出同时写入文件（Stop-Transcript 配对停止）。
+func cmdStartTranscript(c *Context) ([]*object.PSObject, error) {
+	// 超量位置实参无槽位可接（Path 只占位置 0），报错而非静默忽略。
+	if len(c.Args.Positional) > 0 {
+		return errf(c, "%s", lang.T(lang.MsgPositionalParamNotFound, c.Args.Positional[0].String()))
+	}
+	path := firstPathArg(c)
+	if path == "" {
+		path, _ = c.Args.Str("LiteralPath")
+	}
+	full := path
+	if full == "" {
+		full = defaultTranscriptPath(c)
+	} else {
+		var derr error
+		full, derr = resolvePath(c, path)
+		if derr != nil {
+			return errf(c, "%v", derr)
+		}
+	}
+	if _, serr := os.Stat(full); serr == nil && c.Args.Switch("NoClobber") {
+		return errf(c, "%s", lang.T(lang.MsgFileExists, path))
+	}
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "Start-Transcript"
+	dryRun.c = c
+	var yesAll, noAll bool
+	if dryRun.reportWhatIf(full) {
+		out, _ := dryRun.result()
+		return out, nil
+	}
+	if confirmSkip(c, "Start-Transcript", full, &yesAll, &noAll) {
+		return nil, nil
+	}
+	// 已在记录时先结束旧的，再开新的（与 PowerShell 一致，不报错）。
+	if c.Shell.TranscriptFile != nil {
+		writeTranscriptEnd(c.Shell.TranscriptFile)
+		_ = c.Shell.TranscriptFile.Close()
+		c.Shell.TranscriptFile = nil
+	}
+	flags := os.O_WRONLY | os.O_CREATE
+	if c.Args.Switch("Append") {
+		flags |= os.O_APPEND
+	} else {
+		flags |= os.O_TRUNC
+	}
+	f, err := os.OpenFile(full, flags, 0o644)
+	if err != nil {
+		return errf(c, "%s", lang.T(lang.MsgCannotWrite, path))
+	}
+	writeTranscriptHeader(f, c)
+	c.Shell.TranscriptFile = f
+	c.Shell.TranscriptPath = full
+	return []*object.PSObject{object.Str(lang.T(lang.MsgTranscriptStarted, full))}, nil
+}
+
 // ---- 注册 ----
 
 func init() {
@@ -222,6 +355,15 @@ func init() {
 		{Name: "Message", Type: "string"},
 		{Name: "Title", Type: "string"},
 	}, cmdGetCredential)
+	Register("Start-Transcript", []ParamSpec{
+		{Name: "Path", Position: 0, PositionSet: true, Type: "path"},
+		{Name: "LiteralPath", Type: "path"},
+		{Name: "Append", Switch: true},
+		{Name: "Force", Switch: true},
+		{Name: "NoClobber", Switch: true},
+		{Name: "IncludeInvocationHeader", Switch: true},
+		{Name: "UseMinimalHeader", Switch: true},
+	}, cmdStartTranscript)
 	Register("Invoke-Expression", []ParamSpec{
 		{Name: "Command", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdInvokeExpression)

@@ -52,12 +52,12 @@ func run(args []string) int {
 	}
 
 	sess := shell.New(style, os.Stdout, os.Stderr, os.Stdin)
-	ev := eval.New(sess, os.Stdin, os.Stdout, os.Stderr)
+	ev := eval.New(sess, os.Stdin, sess.HostOut, sess.HostErr)
 	sess.NonInteractive = *nonInteractive
 
 	// 帮助
 	if *help || fs.NArg() > 0 && (fs.Arg(0) == "-?" || fs.Arg(0) == "-Help" || fs.Arg(0) == "-h") {
-		fmt.Fprint(os.Stdout, sess.Usage())
+		fmt.Fprint(sess.HostOut, sess.Usage())
 		return 0
 	}
 
@@ -66,7 +66,7 @@ func run(args []string) int {
 		switch strings.ToLower(*executionPolicy) {
 		case "allsigned", "bypass", "default", "remotesigned", "restricted", "unrestricted", "undefined":
 		default:
-			fmt.Fprintf(os.Stderr, "%s\n", lang.T(lang.MsgExecutionPolicyInvalid, *executionPolicy))
+			fmt.Fprintf(sess.HostErr, "%s\n", lang.T(lang.MsgExecutionPolicyInvalid, *executionPolicy))
 			return 2
 		}
 	}
@@ -74,7 +74,7 @@ func run(args []string) int {
 	// 启动目录：不存在报错后继续（对齐 PowerShell）
 	if *workingDirectory != "" {
 		if err := os.Chdir(*workingDirectory); err != nil {
-			fmt.Fprintf(os.Stderr, "%s : %s\n", sess.StyleName(), lang.T(lang.MsgPathNotFoundFmt, *workingDirectory))
+			fmt.Fprintf(sess.HostErr, "%s : %s\n", sess.StyleName(), lang.T(lang.MsgPathNotFoundFmt, *workingDirectory))
 		} else {
 			sess.Cwd, _ = os.Getwd()
 		}
@@ -82,7 +82,7 @@ func run(args []string) int {
 
 	// 启动脚本：默认加载 $HOME/.config/powershell/profile.ps1（-NoProfile 跳过）
 	if !*noProfile {
-		loadProfile(ev, sess, os.Stdout)
+		loadProfile(ev, sess, sess.HostOut)
 	}
 
 	// -File 脚本（-File 后的剩余位置参数作为脚本实参，供 param() 与 $args 使用）
@@ -98,7 +98,7 @@ func run(args []string) int {
 			defer func() {
 				if r := recover(); r != nil {
 					if err := eval.RecoverError(r); err != nil {
-						fmt.Fprintf(os.Stderr, "%s : %v\n", sess.StyleName(), err)
+						fmt.Fprintf(sess.HostErr, "%s : %v\n", sess.StyleName(), err)
 						failed = true
 						return
 					}
@@ -106,7 +106,7 @@ func run(args []string) int {
 				}
 			}()
 			ev.RunScriptFileStreaming(*file, scriptArgs, func(objs []*object.PSObject) {
-				_ = object.FormatOutput(os.Stdout, objs)
+				_ = object.FormatOutput(sess.HostOut, objs)
 			})
 		}()
 		code := exitCode(ev, sess)
@@ -143,7 +143,7 @@ func run(args []string) int {
 		_ = os.Chdir("/")
 	}
 	sess.Cwd, _ = os.Getwd()
-	repl.Run(sess, ev, !*noLogo, os.Stdin, os.Stdout, os.Stderr)
+	repl.Run(sess, ev, !*noLogo, os.Stdin, sess.HostOut, sess.HostErr)
 	return 0
 }
 
@@ -186,19 +186,19 @@ func executeOnce(sess *shell.Session, ev *eval.Evaluator, src string) (code int)
 	}()
 	res := parser.Parse(src)
 	if res.Error != nil {
-		fmt.Fprintf(os.Stderr, "%s : %v\n", sess.StyleName(), res.Error)
+		fmt.Fprintf(sess.HostErr, "%s : %v\n", sess.StyleName(), res.Error)
 		return 1
 	}
 	// 非交互单次执行拒绝不完整的输入（交互续行允许）。
 	if res.Incomplete {
-		fmt.Fprintf(os.Stderr, "%s : %s\n", sess.StyleName(), lang.T(lang.MsgIncompleteInput))
+		fmt.Fprintf(sess.HostErr, "%s : %s\n", sess.StyleName(), lang.T(lang.MsgIncompleteInput))
 		return 1
 	}
 	// 逐语句执行并格式化，保证与 Write-Host/Format-* 等直写命令的顺序一致
 	// 遇到未捕获的终止错误时中止后续语句并返回失败码（与 PowerShell 一致）
 	for _, st := range res.List.Statements {
 		objs, halted := ev.EvalStatementHalted(st)
-		_ = object.FormatOutput(os.Stdout, objs)
+		_ = object.FormatOutput(sess.HostOut, objs)
 		if ev.ExitRequested {
 			return exitCode(ev, sess)
 		}

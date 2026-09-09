@@ -131,6 +131,7 @@ const (
 	MsgParamSetUnresolvable
 	MsgPositionalParamNotFound
 	MsgInputObjectWithPipeline
+	MsgTranscriptStarted
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported

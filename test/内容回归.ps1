@@ -1111,6 +1111,16 @@ $rvx 2>rv_err.txt
 "world" > rv_out.txt
 "more" >> rv_out.txt
 $results += T "表达式尾随重定向" ((((Get-Content rv_out.txt) -join ",") -eq "world,more") -and ((Test-Path rv_err.txt)) -and ((@(Get-Content rv_err.txt).Count -eq 0)))
+# 252. 开始记录写入追加防覆盖
+Start-Transcript trrec.log | Out-Null
+"rec-marker-252"
+$trc = @(Get-Content trrec.log)
+Start-Transcript trrec.log -Append | Out-Null
+Start-Transcript trrec2.log | Out-Null
+$trc2 = @(Get-Content trrec.log)
+$te0 = $Error.Count
+Start-Transcript trrec.log -NoClobber 2>$null | Out-Null
+$results += T "开始记录写入追加防覆盖" ((($trc -contains "PowerShell transcript start")) -and (($trc -contains "rec-marker-252")) -and ((@($trc2 | Where-Object { $_ -eq "PowerShell transcript start" }).Count -eq 2)) -and (($trc2 -contains "PowerShell transcript end")) -and (($Error.Count -eq ($te0 + 1))))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

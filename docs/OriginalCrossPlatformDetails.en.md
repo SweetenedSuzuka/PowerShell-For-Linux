@@ -229,7 +229,7 @@ Status legend:
 | [`Start-Process`](#start-process) | Microsoft.PowerShell.Management | Both | Syntax differs | Starts one or more processes on the local computer. | Go implementation | Does not take over the new process's input/output. |
 | [`Start-Sleep`](#start-sleep) | Microsoft.PowerShell.Utility | Both | Syntax differs | Suspends the activity in a script or session for the specified period of time. | Go implementation |  |
 | [`Start-ThreadJob`](#start-threadjob) | Microsoft.PowerShell.ThreadJob | 7 only | 7 only | Creates background jobs similar to the `Start-Job` cmdlet. | Not implemented |  |
-| [`Start-Transcript`](#start-transcript) | Microsoft.PowerShell.Host | Both | Syntax differs | Creates a record of all or part of a PowerShell session to a text file. | Not implemented |  |
+| [`Start-Transcript`](#start-transcript) | Microsoft.PowerShell.Host | Both | Syntax differs | Creates a record of all or part of a PowerShell session to a text file. | Go implementation | Default home-directory naming; a repeated start finalizes first. |
 | [`Stop-Computer`](#stop-computer) | Microsoft.PowerShell.Management | Both | Syntax differs | Stops (shuts down) local and remote computers. | Mapped Linux (sudo reboot / shutdown / hostnamectl) |  |
 | [`Stop-Job`](#stop-job) | Microsoft.PowerShell.Core | Both | None | Stops a PowerShell background job. | Not implemented | Jobs and runspaces (requires job facilities; out of scope) |
 | [`Stop-Process`](#stop-process) | Microsoft.PowerShell.Management | Both | None | Stops one or more running processes. | Go implementation |  |
@@ -7776,6 +7776,26 @@ Start-Transcript
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Host/Start-Transcript.md)
+
+#### Implementation in PowerShell For Linux:
+
+- Differs from the original: -Force and the invocation-header switches are accepted and ignored; -LiteralPath works like -Path; -OutputDirectory is not supported; redirected-away output does not enter the file.
+
+- Type: Go implementation.
+- Function: starts session transcription, host output is also written to a text file.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-Path` (position 0) | path | Record file path, default home-directory naming when missing, e.g. `Start-Transcript session.log` |
+| `-LiteralPath` | path | Same as -Path |
+| `-Append` | switch | Appends to an existing file |
+| `-Force` | switch | Accepted and ignored |
+| `-NoClobber` | switch | Errors when the file exists, no overwrite |
+| `-IncludeInvocationHeader` | switch | Accepted and ignored |
+| `-UseMinimalHeader` | switch | Accepted and ignored |
+
+- Output: a notice string (transcription started, output file is some path).
+- Behavior: a repeated start finalizes first without error; a missing path uses default naming.
 
 
 ### Stop-Computer

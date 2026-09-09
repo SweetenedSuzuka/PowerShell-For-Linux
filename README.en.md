@@ -138,7 +138,7 @@ Broadly speaking, the commands making up a script behave the same as genuine Pow
 ```sh
 go test ./...                                           # unit tests
 ./powershell -NoLogo -NoProfile -File test/核验.ps1     # runs every example from the reference document
-./powershell -NoLogo -NoProfile -File test/内容回归.ps1  # Regression test script
+./powershell -NoLogo -NoProfile -File test/回归测试.ps1  # Regression test script
 ```
 
 ## Project layout
@@ -164,11 +164,14 @@ PowerShell-For-Linux/
 │   ├── 指令详解-原版跨平台指令.md   # Original PowerShell cross-platform commands: purposes, version differences, usage, official examples, compared against this program's implementations
 │   └── 指令详解-原版Windows指令.md  # Original PowerShell Windows-only commands: purposes, version differences, usage, official examples, compared against this program's implementations
 ├── test/
-│   ├── 核验.ps1          # Verifies every example from the reference document
-│   ├── 内容回归.ps1      # Regression test script
-│   ├── 功能演示.ps1      # Language feature showcase
-│   ├── 格式测试5.ps1     # Tests for the 5.X command format
-│   └── 格式测试7.ps1     # Tests for the 7.X command format
+│   ├── 核验.ps1             # Verifies every example from the reference document
+│   ├── 回归测试.ps1         # Regression test entry point
+│   ├── lib/
+│   │   └── TestCommon.ps1  # Shared regression setup
+│   ├── regression/         # Regression Partitions
+│   ├── 功能演示.ps1         # Language feature showcase
+│   ├── 格式测试5.ps1        # Tests for the 5.X command format
+│   └── 格式测试7.ps1        # Tests for the 7.X command format
 └── tools/
-    └── docs-maint/       # Document maintenance tool
+    └── docs-maint/          # Document maintenance tool
 ```

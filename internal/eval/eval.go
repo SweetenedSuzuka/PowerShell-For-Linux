@@ -149,7 +149,7 @@ func (e *Evaluator) checkedVar(name, scope string) *object.PSObject {
 }
 
 // lookupVar 按名字与作用域修饰符查变量，不区分大小写；found 报告是否找到。
-// scope 为空：自顶向下查（PowerShell 默认读语义）；"script"/"global"：只查全局（scopes[0]，即脚本作用域，本解释器脚本不推独立作用域）；"local"：只查当前（栈顶）作用域。
+// scope 为空：自顶向下查（PowerShell 默认读语义）；"script"/"global"：只检查全局（scopes[0]，即脚本作用域，本解释器脚本不推独立作用域）；"local"：只检查当前（栈顶）作用域。
 func (e *Evaluator) lookupVar(name, scope string) (*object.PSObject, bool) {
 	switch scope {
 	case "script", "global":

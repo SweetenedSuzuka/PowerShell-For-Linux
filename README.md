@@ -138,7 +138,7 @@ powershell -File 脚本.ps1
 ```sh
 go test ./...                                           # 单元测试
 ./powershell -NoLogo -NoProfile -File test/核验.ps1     # 逐条核验参考文档里的示例
-./powershell -NoLogo -NoProfile -File test/内容回归.ps1  # 回归测试脚本
+./powershell -NoLogo -NoProfile -File test/回归测试.ps1  # 回归测试脚本
 ```
 
 ## 项目结构
@@ -164,11 +164,14 @@ PowerShell-For-Linux/
 │   ├── 指令详解-原版跨平台指令.md   # 对原版 PowerShell 中跨平台指令的用途、版本差异、用法、官方示例的整理，以及和 PowerShell For Linux 实现的对比
 │   └── 指令详解-原版Windows指令.md  # 对原版 PowerShell 中 Windows 指令的用途、版本差异、用法、官方示例的整理，以及和 PowerShell For Linux 实现的对比
 ├── test/
-│   ├── 核验.ps1          # 逐条核验参考文档里的示例
-│   ├── 内容回归.ps1      # 回归测试脚本
-│   ├── 功能演示.ps1      # 语言特性演示
-│   ├── 格式测试5.ps1     # 5.X 命令格式测试
-│   └── 格式测试7.ps1     # 7.X 命令格式测试
+│   ├── 核验.ps1             # 逐条核验参考文档里的示例
+│   ├── 回归测试.ps1         # 回归测试入口
+│   ├── lib/
+│   │   └── TestCommon.ps1  # 回归共用前置项
+│   ├── regression/         # 回归项分组
+│   ├── 功能演示.ps1         # 语言特性演示
+│   ├── 格式测试5.ps1        # 5.X 命令格式测试
+│   └── 格式测试7.ps1        # 7.X 命令格式测试
 └── tools/
-    └── docs-maint/       # 文档维护工具
+    └── docs-maint/          # 文档维护工具
 ```

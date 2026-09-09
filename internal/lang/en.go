@@ -141,13 +141,15 @@ Switch style at runtime:
 	MsgProcNameNotFound:             "Cannot find a process with the name \"%s\".",
 	MsgPSVersionBad:                 "Set-PSVersion : Unsupported version %q (use 5.1 or 7.x)",
 	MsgPSVersionSet:                 "Style switched to %s.",
-	MsgStrictVersionBad:            "Set-StrictMode : Unsupported version %q (use 1.0, 2.0, 3.0 or Latest).",
-	MsgUndefinedVariable:           "Variable $%s has not been set.",
+	MsgStrictVersionBad:             "Set-StrictMode : Unsupported version %q (use 1.0, 2.0, 3.0 or Latest).",
+	MsgUndefinedVariable:            "Variable $%s has not been set.",
 	MsgHashAlgoUnsupported:          "Get-FileHash : Unsupported algorithm %s",
 	MsgParamSetUnresolvable:         "Parameter set cannot be resolved using the specified named parameters. One or more parameters issued cannot be used together or an insufficient number of parameters were provided.",
 	MsgPositionalParamNotFound:      "A positional parameter cannot be found that accepts argument '%s'.",
 	MsgInputObjectWithPipeline:      "The input object cannot be bound to any parameters for the command either because the command does not take pipeline input or the input and its properties do not match any of the parameters that take pipeline input.",
-	MsgTranscriptStarted:           "Transcript started, output file is %s.",
+	MsgTranscriptStarted:            "Transcript started, output file is %s.",
+	MsgTranscriptStopped:            "Transcript stopped, output file is %s.",
+	MsgStopTranscriptIdle:           "An error occurred stopping transcription: The host is not currently transcribing.",
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported: "not supported",

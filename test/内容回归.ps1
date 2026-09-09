@@ -1121,6 +1121,18 @@ $trc2 = @(Get-Content trrec.log)
 $te0 = $Error.Count
 Start-Transcript trrec.log -NoClobber 2>$null | Out-Null
 $results += T "开始记录写入追加防覆盖" ((($trc -contains "PowerShell transcript start")) -and (($trc -contains "rec-marker-252")) -and ((@($trc2 | Where-Object { $_ -eq "PowerShell transcript start" }).Count -eq 2)) -and (($trc2 -contains "PowerShell transcript end")) -and (($Error.Count -eq ($te0 + 1))))
+# 253. 停止记录结束块空闲报错
+$leftover = Stop-Transcript
+$stp0 = $Error.Count
+Stop-Transcript 2>$null | Out-Null
+$stpIdle = ($Error.Count -eq ($stp0 + 1))
+Stop-Transcript -WhatIf | Out-Null
+$stpWhatifIdle = ($Error.Count -eq ($stp0 + 1))
+Start-Transcript trstop.log | Out-Null
+"stop-marker-253"
+$sst = Stop-Transcript
+$stc = @(Get-Content trstop.log)
+$results += T "停止记录结束块空闲报错" ((($leftover -like "*trrec2.log*")) -and ($stpIdle) -and ($stpWhatifIdle) -and (($sst -like "*trstop.log*")) -and (($stc -contains "PowerShell transcript end")) -and (($stc -contains "stop-marker-253")))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

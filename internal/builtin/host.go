@@ -322,6 +322,35 @@ func cmdStartTranscript(c *Context) ([]*object.PSObject, error) {
 	return []*object.PSObject{object.Str(lang.T(lang.MsgTranscriptStarted, full))}, nil
 }
 
+// cmdStopTranscript 停止会话记录，关闭记录文件并返回状态行（未记录时报错）。
+func cmdStopTranscript(c *Context) ([]*object.PSObject, error) {
+	// 超量位置实参无槽位可接（Stop-Transcript 不收路径），报错而非静默忽略。
+	if len(c.Args.Positional) > 0 {
+		return errf(c, "%s", lang.T(lang.MsgPositionalParamNotFound, c.Args.Positional[0].String()))
+	}
+	var dryRun whatIfCollector
+	dryRun.cmdlet = "Stop-Transcript"
+	dryRun.c = c
+	var yesAll, noAll bool
+	// 预演先行：未记录时加 -WhatIf 只打印预演行，不报空闲错误（与 PowerShell 一致）。
+	if dryRun.reportWhatIf("") {
+		out, _ := dryRun.result()
+		return out, nil
+	}
+	if c.Shell.TranscriptFile == nil {
+		return errf(c, "%s", lang.T(lang.MsgStopTranscriptIdle))
+	}
+	path := c.Shell.TranscriptPath
+	if confirmSkip(c, "Stop-Transcript", path, &yesAll, &noAll) {
+		return nil, nil
+	}
+	writeTranscriptEnd(c.Shell.TranscriptFile)
+	_ = c.Shell.TranscriptFile.Close()
+	c.Shell.TranscriptFile = nil
+	c.Shell.TranscriptPath = ""
+	return []*object.PSObject{object.Str(lang.T(lang.MsgTranscriptStopped, path))}, nil
+}
+
 // ---- 注册 ----
 
 func init() {
@@ -364,6 +393,7 @@ func init() {
 		{Name: "IncludeInvocationHeader", Switch: true},
 		{Name: "UseMinimalHeader", Switch: true},
 	}, cmdStartTranscript)
+	Register("Stop-Transcript", nil, cmdStopTranscript)
 	Register("Invoke-Expression", []ParamSpec{
 		{Name: "Command", Position: 0, PositionSet: true, Type: "string"},
 	}, cmdInvokeExpression)

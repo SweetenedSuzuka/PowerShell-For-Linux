@@ -233,7 +233,7 @@ Status legend:
 | [`Stop-Computer`](#stop-computer) | Microsoft.PowerShell.Management | Both | Syntax differs | Stops (shuts down) local and remote computers. | Mapped Linux (sudo reboot / shutdown / hostnamectl) |  |
 | [`Stop-Job`](#stop-job) | Microsoft.PowerShell.Core | Both | None | Stops a PowerShell background job. | Not implemented | Jobs and runspaces (requires job facilities; out of scope) |
 | [`Stop-Process`](#stop-process) | Microsoft.PowerShell.Management | Both | None | Stops one or more running processes. | Go implementation |  |
-| [`Stop-Transcript`](#stop-transcript) | Microsoft.PowerShell.Host | Both | Syntax differs | Stops a transcript. | Not implemented |  |
+| [`Stop-Transcript`](#stop-transcript) | Microsoft.PowerShell.Host | Both | Syntax differs | Stops a transcript. | Go implementation | Writes the end block and closes the file; errors when idle. |
 | [`Switch-Process`](#switch-process) | Microsoft.PowerShell.Core | 7 only | 7 only on Linux/macOS (absent from Windows builds) | On Linux and macOS, the cmdlet calls the execv() function to provide similar behavior as POSIX
 shells. | Not implemented | Platform / miscellaneous |
 | [`Tee-Object`](#tee-object) | Microsoft.PowerShell.Utility | Both | Syntax differs | Saves command output in a file or variable and also sends it down the pipeline. | Go implementation |  |
@@ -7931,6 +7931,14 @@ Stop-Transcript
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Host/Stop-Transcript.md)
+
+#### Implementation in PowerShell For Linux:
+
+- Type: Go implementation.
+- Function: stops session transcription, writes the end block and closes the record file.
+
+- Output: a notice string (transcription stopped, output file is some path).
+- Behavior: errors when idle; with -WhatIf while idle it only prints the dry-run line, no error.
 
 
 ### Switch-Process

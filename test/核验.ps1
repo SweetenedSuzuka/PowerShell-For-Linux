@@ -121,6 +121,7 @@ $gc0 = [pscustomobject]@{ UserName = "u"; Password = "p" }; Get-Credential -Cred
 Set-StrictMode -Version Latest 2>$null >$null; if ($?) { $pass++; "PASS  Set-StrictMode" } else { $fail++; "FAIL  Set-StrictMode" }; Set-StrictMode -Off 2>$null >$null
 $rvv = "v"; $rvv 2>$null >$null; if ($?) { $pass++; "PASS  表达式重定向" } else { $fail++; "FAIL  表达式重定向" }
 Start-Transcript test/tmp/vtr.log 2>$null >$null; if ($?) { $pass++; "PASS  Start-Transcript" } else { $fail++; "FAIL  Start-Transcript" }
+Stop-Transcript 2>$null >$null; if ($?) { $pass++; "PASS  Stop-Transcript" } else { $fail++; "FAIL  Stop-Transcript" }
 New-Guid 2>$null >$null; if ($?) { $pass++; "PASS  New-Guid" } else { $fail++; "FAIL  New-Guid" }
 New-TimeSpan -Minutes 5 2>$null >$null; if ($?) { $pass++; "PASS  New-TimeSpan" } else { $fail++; "FAIL  New-TimeSpan" }
 $f = New-TemporaryFile; Remove-Item $f.FullName 2>$null >$null; if ($?) { $pass++; "PASS  New-TemporaryFile" } else { $fail++; "FAIL  New-TemporaryFile" }

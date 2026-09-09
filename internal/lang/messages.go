@@ -132,6 +132,8 @@ const (
 	MsgPositionalParamNotFound
 	MsgInputObjectWithPipeline
 	MsgTranscriptStarted
+	MsgTranscriptStopped
+	MsgStopTranscriptIdle
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported

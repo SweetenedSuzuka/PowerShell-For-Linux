@@ -665,6 +665,16 @@ Examples:
 
 Official original reference: [Start-Transcript](OriginalCrossPlatformDetails.en.md#start-transcript).
 
+### Stop-Transcript
+- Type: Go implementation.
+- Version: 5.1 and 7. Distributions: all.
+- Function: stops the session transcription started by Start-Transcript, writing the end block and closing the file.
+- Difference from Windows PowerShell: errors when idle; with -WhatIf while idle it only prints the dry-run line.
+Example:
+- `Stop-Transcript` — stops transcription and prints the output file path.
+
+Official original reference: [Stop-Transcript](OriginalCrossPlatformDetails.en.md#stop-transcript).
+
 ### Format-Table (ft)
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

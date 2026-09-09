@@ -264,7 +264,7 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 				break
 			}
 			p.advance() // .
-			p.advance() // 属性名（可能含点，如 $h.a.b 被词法分析器并为 a.b）
+			p.advance() // 属性名（可能含点，如 $h.a.b 的 a.b 由词法分析器合并成 a.b，作为单个词处理）
 			// 词法分析器把 '.' 视为裸字字符，因此 a.b.c 会作为单个词进入这里。
 			// 按 PowerShell 语义，未加引号的点号只会是链式成员访问，故拆开逐段解析。
 			segs := strings.Split(nt.Text, ".")
@@ -487,14 +487,14 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 					first := len(items) == 0
 					switch {
 					case p.cur().Type == TkWord && isAtCommandWord(p.cur().Text) && first:
-						// 首元素裸字走命令位置（与原版 PowerShell 一致）：后续逗号实参加入该命令，后元素不再另起。
+						// 首元素裸字按命令解析（与原版 PowerShell 一致）：后续逗号实参加入该命令，后元素不再另起。
 						item = p.parsePipelineElement()
 					case afterComma && p.cur().Type == TkWord && isAtCommandWord(p.cur().Text):
 						// 逗号后裸字：原版 PowerShell 报逗号后缺少表达式；分号/换行分隔的新语句不适用。
 						p.fail(lang.T(lang.MsgParseMissingExpr))
 						item = &ast.BareWord{Value: ""}
 					case p.atCommaAhead():
-						// 含顶层逗号的多元素沿用原解析路径，保持原有行为。
+						// 含顶层逗号的多元素按二进制表达式解析（优先级 27）。
 						item = p.parseBinaryExpr(27, false)
 					default:
 						// 其余沿用表达式路径（含语句关键字与管道，判据同 parseExpression）。

@@ -266,7 +266,7 @@ func (l *Lexer) nextTok0() Token {
 		return op
 	}
 
-	// '.' 单独处理：属性访问点号；但 './'、'..'、'.\' 等路径前缀走裸字
+	// '.' 单独处理：属性访问点号；但 './'、'..'、'.\' 等路径前缀视为裸字
 	if c == '.' {
 		nc := l.peekAt(1)
 		if nc == '/' || nc == '\\' || nc == '.' {
@@ -276,7 +276,7 @@ func (l *Lexer) nextTok0() Token {
 		return Token{Type: TkDot, Text: ".", Line: startLine, Col: startCol, Adjacent: adj}
 	}
 
-	// 空合并运算符 '??'：两个问号连写 → 运算符；单个 '?' 仍走裸字（三元/Where-Object 别名由解析器区分）
+	// 空合并运算符 '??'：两个问号连写 → 运算符；单个 '?' 仍视为裸字（三元/Where-Object 别名由解析器区分）
 	if c == '?' && l.peekAt(1) == '?' {
 		l.next()
 		l.next()

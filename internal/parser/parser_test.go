@@ -595,7 +595,7 @@ func TestBraceNewlineLayout(t *testing.T) {
 			t.Fatalf("%q 应可完整解析，实际 err=%v", src, res.Error)
 		}
 	}
-	// if 块后换行再写独立语句应解析为两条语句，换行不被 else 检查误吃
+	// if 块后换行再写独立语句应解析为两条语句，换行不被 else 检查消耗
 	res := Parse("if ($true)\n{ 1 }\necho done")
 	if res.Error != nil || len(res.List.Statements) != 2 {
 		t.Fatalf("if 块后的独立语句应解析为两条语句，实际 err=%v 条数=%d", res.Error, len(res.List.Statements))
@@ -941,7 +941,7 @@ func TestDupRedirectError(t *testing.T) {
 	}
 }
 
-// TestCommandCommaMissingArg 验证命令名后直接跟逗号报缺少参数；已有实参则走位置数组。
+// TestCommandCommaMissingArg 验证命令名后直接跟逗号报缺少参数；已有实参则按位置数组收集。
 func TestCommandCommaMissingArg(t *testing.T) {
 	for _, src := range []string{
 		`Get-Date, Get-Date`,

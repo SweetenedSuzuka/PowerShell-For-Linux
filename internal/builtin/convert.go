@@ -71,7 +71,7 @@ func csvLines(items []*object.PSObject, props []string, delim rune) []string {
 	return strings.Split(text, "\n")
 }
 
-// cmdExportCsv 把对象写成 CSV 文件（ConvertTo-Csv 加落盘，文本格式与 ConvertTo-Csv 一致）。
+// cmdExportCsv 把对象写成 CSV 文件（文本格式与 ConvertTo-Csv 一致）。
 func cmdExportCsv(c *Context) ([]*object.PSObject, error) {
 	path := firstPathArg(c)
 	if path == "" {
@@ -189,7 +189,7 @@ func csvRowsToObjects(records [][]string, header []string) []*object.PSObject {
 	return out
 }
 
-// cmdImportCsv 从 CSV 文件读出表格对象（读盘版 ConvertFrom-Csv，首行类型行跳过）。
+// cmdImportCsv 从 CSV 文件读出表格对象（与 ConvertFrom-Csv 共用记录转换，#TYPE 首行跳过）。
 func cmdImportCsv(c *Context) ([]*object.PSObject, error) {
 	// 超量位置实参无槽位可接（Path 占位置 0，Delimiter 占位置 1），报错而非静默忽略。
 	if len(c.Args.Positional) > 0 {

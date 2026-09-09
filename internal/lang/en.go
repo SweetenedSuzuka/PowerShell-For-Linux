@@ -150,6 +150,7 @@ Switch style at runtime:
 	MsgTranscriptStarted:            "Transcript started, output file is %s.",
 	MsgTranscriptStopped:            "Transcript stopped, output file is %s.",
 	MsgStopTranscriptIdle:           "An error occurred stopping transcription: The host is not currently transcribing.",
+	MsgSwitchCommandNotFound:        "Command '%s' was not found. The specified command must be an executable.",
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported: "not supported",

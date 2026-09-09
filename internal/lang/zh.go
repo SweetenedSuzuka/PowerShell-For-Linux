@@ -150,6 +150,7 @@ var zh = map[Msg]string{
 	MsgTranscriptStarted:            "已开始记录，输出文件为 %s。",
 	MsgTranscriptStopped:            "已停止记录，输出文件为 %s。",
 	MsgStopTranscriptIdle:           "停止记录时出错：主机当前未在记录。",
+	MsgSwitchCommandNotFound:        "找不到命令“%s”，指定的命令必须是可执行文件。",
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported: "不支持",

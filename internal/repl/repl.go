@@ -36,7 +36,7 @@ type REPL struct {
 
 // Run 启动 REPL 主循环。
 func Run(sess *shell.Session, ev *eval.Evaluator, showBanner bool, in *os.File, out, errw io.Writer) {
-	// 交互顶层回收：普通 panic 转为报错后返回，历史保存不受影响。
+	// 交互顶层恢复：普通 panic 转为报错后返回，历史保存不受影响。
 	defer func() {
 		if rec := recover(); rec != nil {
 			if ev.ReportPanic(rec) {
@@ -102,7 +102,7 @@ func (r *REPL) loop() {
 		exited := false
 		recovered := false
 		func() {
-			// 单轮回收：普通 panic 转为报错后继续下一轮。
+			// 单轮恢复：普通 panic 转为报错后继续下一轮。
 			defer func() {
 				if rec := recover(); rec != nil {
 					if r.Eval.ReportPanic(rec) {

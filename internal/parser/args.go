@@ -144,7 +144,7 @@ func isStatementKeyword(text string) bool {
 }
 
 // isAtCommandWord 报告 @() 元素开头的裸字是否按命令解析。
-// 语句关键字（判据与 parseStatement 的关键字分支一致）沿用表达式路径，其余裸字走命令位置。
+// 语句关键字（判据与 parseStatement 的关键字分支一致）按表达式路径解析，其余裸字按命令解析。
 func isAtCommandWord(text string) bool {
 	if isStatementKeyword(text) {
 		return false

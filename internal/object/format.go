@@ -107,7 +107,7 @@ func writeStrings(w io.Writer, objs []*PSObject) error {
 	return nil
 }
 
-// tableScalar 报告对象在表格中是否按标量直出：无可制表属性，-Property 忽略（DateTime 有属性，走表格）。
+// tableScalar 报告对象在表格中是否按标量直接输出：无可制表属性，-Property 忽略（DateTime 有属性，按表格渲染）。
 func tableScalar(o *PSObject) bool {
 	switch o.TypeName {
 	case "String", "Int", "Double", "Boolean", "Null", "ScriptBlock":
@@ -240,7 +240,7 @@ func truncateDisplay(s string, n int) string {
 	return s
 }
 
-// FormatTableTo 以表格形式渲染对象；标量穿插直出（顺序：先落攒的表，再出标量行）。
+// FormatTableTo 以表格形式渲染对象，非标量对象先暂存到缓冲，遇到标量时先刷新缓冲输出表格，再直接输出标量行。
 func FormatTableTo(w io.Writer, objs []*PSObject, props []string) error {
 	if len(objs) == 0 {
 		return nil

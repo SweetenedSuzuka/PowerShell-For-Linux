@@ -122,6 +122,7 @@ Set-StrictMode -Version Latest 2>$null >$null; if ($?) { $pass++; "PASS  Set-Str
 $rvv = "v"; $rvv 2>$null >$null; if ($?) { $pass++; "PASS  表达式重定向" } else { $fail++; "FAIL  表达式重定向" }
 Start-Transcript test/tmp/vtr.log 2>$null >$null; if ($?) { $pass++; "PASS  Start-Transcript" } else { $fail++; "FAIL  Start-Transcript" }
 Stop-Transcript 2>$null >$null; if ($?) { $pass++; "PASS  Stop-Transcript" } else { $fail++; "FAIL  Stop-Transcript" }
+Switch-Process 2>$null >$null; if ($?) { $pass++; "PASS  Switch-Process" } else { $fail++; "FAIL  Switch-Process" }
 New-Guid 2>$null >$null; if ($?) { $pass++; "PASS  New-Guid" } else { $fail++; "FAIL  New-Guid" }
 New-TimeSpan -Minutes 5 2>$null >$null; if ($?) { $pass++; "PASS  New-TimeSpan" } else { $fail++; "FAIL  New-TimeSpan" }
 $f = New-TemporaryFile; Remove-Item $f.FullName 2>$null >$null; if ($?) { $pass++; "PASS  New-TemporaryFile" } else { $fail++; "FAIL  New-TemporaryFile" }

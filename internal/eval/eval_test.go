@@ -105,7 +105,7 @@ func TestNumericLiterals(t *testing.T) {
 	wantStr(t, "1GB", "1073741824")
 }
 
-// TestFloatAddition 验证浮点加法不截断：整型路径按 TypeName 识别，任一操作数是浮点就走浮点运算（2 + 1/2 = 2.5 而非 2）。
+// TestFloatAddition 验证浮点加法不截断：整型路径按 TypeName 识别，任一操作数是浮点就按浮点运算（2 + 1/2 = 2.5 而非 2）。
 func TestFloatAddition(t *testing.T) {
 	wantStr(t, "2 + 1/2", "2.5")
 	wantStr(t, "1/2 + 1/2", "1")
@@ -126,7 +126,7 @@ func TestFloatIncrement(t *testing.T) {
 	wantStr(t, "$i = 3; $i--; $i", "2")
 	// 未定义变量从 0 起增
 	wantStr(t, "$i++; $i", "1")
-	// 复合赋值 += 浮点（走 addOp）
+	// 复合赋值 += 浮点（调用 addOp）
 	wantStr(t, "$i = 0.5; $i += 1; $i", "1.5")
 }
 
@@ -336,7 +336,7 @@ func TestSwitchArray(t *testing.T) {
 	wantStr(t, "switch (1,2,3) { 2 { 'hit2' } default { '无匹配' } }", "无匹配", "hit2", "无匹配")
 	// 逐元素 default 输出 $_（元素值）
 	wantStr(t, "switch (1,2,3) { default { $_ } }", "1", "2", "3")
-	// continue 进入下一元素（命中后的尾巴不执行）
+	// continue 进入下一元素（命中后剩余语句不执行）
 	wantStr(t, "switch (1,2,3) { 2 { 'hit'; continue; 'x' } default { 'd' } }", "d", "hit", "d")
 	// break 退出整个 switch
 	wantStr(t, "switch (1,2,3) { 2 { 'hit'; break; 'x' } default { 'd' } }", "d", "hit")
@@ -788,7 +788,7 @@ func TestTryCatchFinally(t *testing.T) {
 	// 基本捕获与 $_ 绑定（错误记录的 Message 属性）
 	wantStr(t, `try { throw "boom" } catch { "已捕获" }`, "已捕获")
 	wantStr(t, `try { throw "msg1" } catch { $_.Message }`, "msg1")
-	// catch 块不推独立作用域：普通变量赋值穿透到外层（对齐 PowerShell）
+	// catch 块不推独立作用域：普通变量赋值对外可见（对齐 PowerShell）
 	wantStr(t, `$tc = "未执行"; try { throw "boom" } catch { $tc = "已捕获" }; $tc`, "已捕获")
 	// catch 的 $_ 是临时绑定：块结束后外层 $_ 不受影响
 	wantStr(t, `$old = $_; try { throw "x" } catch { $tmp = $_ }; $_ -eq $old`, "True")
@@ -827,7 +827,7 @@ func TestTryCatchFinally(t *testing.T) {
 	wantStr(t, `"x" | ForEach-Object { "块前"; return "块后" }`, "块前", "块后")
 	// 子表达式 return 沿途输出保留
 	wantStr(t, `$("a"; return "b")`, "a", "b")
-	// switch 不推独立作用域：case 块内普通赋值穿透外层（与 foreach 同机制）
+	// switch 不推独立作用域：case 块内普通赋值对外可见（与 foreach 同机制）
 	wantStr(t, `switch (1) { 1 { $sv = 5 } }; $sv`, "5")
 }
 
@@ -949,7 +949,7 @@ func TestExternalCommand(t *testing.T) {
 }
 
 func TestFormatting(t *testing.T) {
-	// 文件对象走表格
+	// 文件对象按表格渲染
 	sess := shell.New(shell.StyleCore, io.Discard, io.Discard, strings.NewReader(""))
 	ev := New(sess, strings.NewReader(""), io.Discard, io.Discard)
 	res := parser.Parse("Get-ChildItem -Name")

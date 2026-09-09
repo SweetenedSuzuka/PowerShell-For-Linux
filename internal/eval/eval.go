@@ -26,13 +26,13 @@ type Evaluator struct {
 	hostOut       io.Writer
 	hostErr       io.Writer
 	scopes        []map[string]*object.PSObject // 变量作用域栈，scopes[0] 为全局
-	strict        []bool                         // 严格模式栈，随作用域推弹，栈顶为当前生效
+	strict        []bool                        // 严格模式栈，随作用域推弹，栈顶为当前生效
 	inCapture     int                           // 进入捕获模式（函数/脚本块/子表达式）计数
 	inPipeline    int                           // 命令处于管道输入位的层数（>0 表示本次调用有管道输入，哪怕为零项）
-	inTry         int                           // 进入 try 体计数（语句级错误在计数为零时就地消化，非零时上抛给 try）
+	inTry         int                           // 进入 try 体计数；计数为零时语句级错误打印并继续执行，非零时上抛给 try
 	ExitRequested bool                          // 是否遇到 exit 语句
 	ExitCode      int                           // exit 码
-	// consoleOut 是不受重定向影响的主机输出（Write-Host 类走它，不随重定向指位）。
+	// consoleOut 是不受重定向影响的主机输出（Write-Host 类输出到它，不随重定向指位）。
 	consoleOut io.Writer
 	// redirOut 是 stdout 重定向生效中的目标写者；直接写与返回值共用这一次打开，不另开文件。
 	redirOut io.Writer
@@ -278,7 +278,7 @@ func (e *Evaluator) throwError(msg string) {
 }
 
 // stmtError 抛出一个语句级错误：累积进 $Error、置 $? 为失败后以 flowStmtError 上抛，外层 try 可捕获。
-// 无 try 承接时由语句级兜底打印并继续执行，不经首选项分发。
+// 无 try 承接时打印并继续执行，不经首选项分发。
 func (e *Evaluator) stmtError(msg string) {
 	e.Session.LastSuccess = false
 	rec := e.Session.RecordError(msg)

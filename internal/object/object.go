@@ -191,7 +191,7 @@ func (o *PSObject) Unwrap() any {
 }
 
 // PropValue 按名字取属性；不存在返回 nil, false。
-// 先查 Props，再查虚拟属性（DateTime 字段、字符串 Length、数组 Count、哈希表键）。
+// 先检查 Props，再检查虚拟属性（DateTime 字段、字符串 Length、数组 Count、哈希表键）。
 func (o *PSObject) PropValue(name string) (*PSObject, bool) {
 	for _, p := range o.Props {
 		if strings.EqualFold(p.Name, name) {
@@ -220,7 +220,7 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 					return en.Value, true
 				}
 			}
-			// 键未命中时才落到内置属性（PowerShell 键优先于属性）。
+			// 键未命中时再检查内置属性（PowerShell 键优先于属性）。
 			// Count 返回条目数；Keys/Values 返回按插入顺序排列的数组。
 			switch strings.ToLower(name) {
 			case "count":
@@ -284,7 +284,7 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 				hh, mm, ss := t.Clock()
 				days := time.Date(y, mo, d, 0, 0, 0, 0, time.UTC).Unix()/86400 + 719162
 				return Int((days*86400+int64(hh)*3600+int64(mm)*60+int64(ss))*10000000 + int64(t.Nanosecond())/100), true
-			// 亚秒字段按 100ns 刻度量化（与 Ticks 口径一致，真机最小刻度即 100ns）。
+			// 亚秒字段按 100ns 刻度量化（与 Ticks 口径一致，PowerShell 最小刻度即 100ns）。
 			case "millisecond":
 				return Int(int64(t.Nanosecond() / 100 * 100 / 1e6)), true
 			case "microsecond":

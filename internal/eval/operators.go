@@ -473,7 +473,7 @@ func (e *Evaluator) formatOp(f, args *object.PSObject) *object.PSObject {
 	return object.Str(sb.String())
 }
 
-// flattenArgs 把 -f 的参数数组展平为位置参数列表（范围/括号数组/变量数组都摊开）。
+// flattenArgs 把 -f 的参数数组展平为位置参数列表。
 func flattenArgs(v *object.PSObject) []*object.PSObject {
 	if !v.IsArray() {
 		return []*object.PSObject{v}

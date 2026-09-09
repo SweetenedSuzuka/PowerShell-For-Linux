@@ -24,7 +24,7 @@ type Engine interface {
 	EvalFilterExpr(node ast.Node, obj *object.PSObject) (bool, error)
 	// RunSource 解析并执行一段源码，返回输出对象（Invoke-Expression / Invoke-History 用）。
 	RunSource(src string) ([]*object.PSObject, error)
-	// LookupVar 按 PowerShell 默认读语义查变量（自顶向下查作用域，再查自动变量）。
+	// LookupVar 按 PowerShell 默认读语义查变量（自顶向下查作用域，再检查自动变量）。
 	LookupVar(name string) *object.PSObject
 	// SetStrictMode 设置当前作用域的严格模式（Set-StrictMode 用）。
 	SetStrictMode(on bool)

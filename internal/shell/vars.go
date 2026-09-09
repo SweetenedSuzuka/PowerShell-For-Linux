@@ -114,7 +114,7 @@ func (s *Session) SetVar(name string, val *object.PSObject) error {
 	return nil
 }
 
-// GetVar 读取变量：先查显式变量，再查自动变量；两处都不区分大小写。
+// GetVar 读取变量：先查显式变量，再检查自动变量；两处都不区分大小写。
 func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 	if v, ok := s.Vars[s.varKey(name)]; ok {
 		return v, true
@@ -142,7 +142,7 @@ func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 		return s.Matches, true
 	case "error":
 		arr := object.Array(s.ErrorRecords)
-		// 标记为 $Error 的动态视图：Clear/RemoveAt 等方法经 Session 落到 ErrorRecords 本体
+		// 标记为 $Error 的动态视图：Clear/RemoveAt 等方法经 Session 作用到 ErrorRecords 本体
 		arr.AddProp(ErrorViewMarker, object.Str("1"))
 		return arr, true
 	case "erroractionpreference":
@@ -200,7 +200,8 @@ func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 }
 
 // AllVarNames 列出全部可见变量名（用于 Get-Variable / 补全），不区分大小写去重，显式变量优先。
-// s.Vars中同时存在不同写法时，实际选择的写法取决于map遍历顺序，不过写入的时候已经进行过归一键，应该不会有这种情况。
+// s.Vars 中同时存在多种写法时，实际选择的写法取决于遍历顺序。
+// 写入时键按已有写法归一，不会出现并存。
 func (s *Session) AllVarNames() []string {
 	byLower := map[string]string{}
 	for n := range s.Vars {

@@ -162,7 +162,7 @@ func (e *Evaluator) builtinError(args *builtin.BoundArgs, err error) {
 }
 
 // execCommand 调度一条命令：别名 → 函数 → 内置 → 脚本 → 外部。
-// Name 为 "&" 的是调用命令：目标求值为脚本块时执行脚本块，否则按名字走常规分发。
+// Name 为 "&" 的是调用命令：目标求值为脚本块时执行脚本块，否则按名字常规分发。
 func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLast bool) []*object.PSObject {
 	if cmd.Name == "&" {
 		defer e.enterRedirects(cmd.Redirs, cmd)()
@@ -205,7 +205,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 	}
 	if isScriptPath(name) {
 		// 显式位置实参（如 .\s.ps1 1 2 3）优先作为脚本实参；
-		// 无显式实参时沿用管道输入（保持原有近似行为）
+		// 无显式实参时管道输入转为脚本实参。
 		var args []*object.PSObject
 		for _, slot := range cmd.ArgOrder {
 			if slot.Kind == ast.ArgPositional {
@@ -238,8 +238,8 @@ func isScriptPath(name string) bool {
 }
 
 // enterRedirects 在重定向表非空时把执行期输出指到目标，返回恢复函数（调用方 defer）。
-// 直接写屏的命令一并捕获；Write-Host 类走 Console（恒为初始主机输出），不受影响；外部命令不经过这里。
-// redirOut 只归属本次持有者（owner 判定，命令或管道），内层自带重定向的不被外层劫持。
+// 直接写屏的命令一并捕获；Write-Host 类输出到 Console（恒为初始主机输出），不受影响；外部命令不经过这里。
+// redirOut 只归属本次持有者（owner 判定，命令或管道），内层自带重定向的不被外层接管。
 func (e *Evaluator) enterRedirects(redirs []ast.Redirection, owner any) func() {
 	restores := []func(){}
 	if w, closer := e.stderrRedirectTarget(redirs); w != nil {
@@ -346,14 +346,14 @@ func (e *Evaluator) applyRedirects(redirs []ast.Redirection, owner any, out []*o
 		return out
 	}
 	// 内置分支已把目标打开并指给 redirOut：返回值直接写进去，不另开文件（否则会截掉直接写的内容）。
-	// 只认本次持有者归属的 redirOut（owner 判定），内层自带重定向的不被外层劫持。
+	// 只认本次持有者归属的 redirOut（owner 判定），内层自带重定向的不被外层接管。
 	if e.redirOut != nil && e.redirCmd == owner {
 		var buf bytes.Buffer
 		_ = object.FormatOutput(&buf, out)
 		_, _ = io.WriteString(e.redirOut, buf.String())
 		return nil
 	}
-	// 函数/脚本/外部命令路径：返回值逐个目标落盘（沿用旧行为）。
+	// 函数/脚本/外部命令路径：返回值逐个目标写入文件。
 	for _, r := range redirs {
 		if r.Kind != ast.RedirStdout && r.Kind != ast.RedirAppend {
 			continue
@@ -555,7 +555,7 @@ func (e *Evaluator) bindParams(params []ast.FunctionParam, ca callArgs) ([]*obje
 }
 
 // execInvoke 执行 & 调用命令：首个位置实参是调用目标。
-// 目标为脚本块时按函数语义执行（param 形参、$args、$input、动态作用域）；其余目标转成名字后走常规命令分发。
+// 目标为脚本块时按函数语义执行（param 形参、$args、$input、动态作用域）；其余目标转成名字，按常规命令分发。
 func (e *Evaluator) execInvoke(cmd *ast.Command, input []*object.PSObject, isLast bool) []*object.PSObject {
 	targetIdx := -1
 	var rest []ast.ArgItem

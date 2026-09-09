@@ -1133,6 +1133,15 @@ Start-Transcript trstop.log | Out-Null
 $sst = Stop-Transcript
 $stc = @(Get-Content trstop.log)
 $results += T "停止记录结束块空闲报错" ((($leftover -like "*trrec2.log*")) -and ($stpIdle) -and ($stpWhatifIdle) -and (($sst -like "*trstop.log*")) -and (($stc -contains "PowerShell transcript end")) -and (($stc -contains "stop-marker-253")))
+# 254. 替换进程缺命令报错无参空转（成功替换会结束进程，只断言非替换路径）
+$swp0 = $Error.Count
+Switch-Process 2>$null | Out-Null
+$swpNoop = ($Error.Count -eq $swp0)
+Switch-Process -WithCommand "definitely-missing-xyz-123" 2>$null | Out-Null
+$swpMiss = ($Error.Count -eq ($swp0 + 1))
+Switch-Process -WithCommand "/bin/echo" -WhatIf 2>$null | Out-Null
+$swpWI = ($Error.Count -eq ($swp0 + 2))
+$results += T "替换进程缺命令报错无参空转" (($swpNoop) -and ($swpMiss) -and ($swpWI))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

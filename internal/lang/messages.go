@@ -134,6 +134,7 @@ const (
 	MsgTranscriptStarted
 	MsgTranscriptStopped
 	MsgStopTranscriptIdle
+	MsgSwitchCommandNotFound
 
 	// ---- object 与内部提示 ----
 	MsgUnsupported

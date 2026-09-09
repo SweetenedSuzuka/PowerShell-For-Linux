@@ -27,7 +27,7 @@ Supports both the Windows PowerShell 5.X and 7.X command formats.
 - **Dual command formats** — banner, `$PSVersionTable`, aliases, and automatic variables all follow the 5.X / 7.X switch together.
 - **Multi-language support** — the banner, help text, and error messages match your interface language against the system variables `LANGUAGE`/`LC_ALL`/`LC_MESSAGES`/`LANG` in order; Chinese and English are supported for now, and unsupported languages fall back to Chinese. Date display and locale info follow the language setting.
 - **External command passthrough** — anything not built in is executed straight from the system PATH, with its exit code recorded in `$LASTEXITCODE`.
-- **127 cmdlets** — 127 built-in cmdlets plus 77 of their aliases, covering files, paths, processes, services, system information, JSON/CSV conversion, formatting, and more.
+- **128 cmdlets** — 128 built-in cmdlets plus 77 of their aliases, covering files, paths, processes, services, system information, JSON/CSV conversion, formatting, and more.
 - **Scripts and syntax** — `.ps1` scripts run directly; methods on objects, strings, and dates can be called directly; language features include `try/catch/finally`, `throw`, script blocks, `param()` declarations, scope modifiers (`$script:`/`$global:`/`$local:`), `switch` branches, and more.
 - **Line editing** — history, Tab completion, multi-line continuation.
 - **Zero external dependencies** — a static binary; the target machine needs nothing else installed.
@@ -93,7 +93,7 @@ Switch format at runtime: `Set-PSVersion 5.1` (to 5.X), `Set-PSVersion 7` (back 
 
 ## Built-in commands
 
-127 cmdlets are built in, plus 77 aliases. For each command's usage, version and distro requirements, and its bash equivalent, see [docs/CommandReference.en.md](docs/CommandReference.en.md).  
+128 cmdlets are built in, plus 77 aliases. For each command's usage, version and distro requirements, and its bash equivalent, see [docs/CommandReference.en.md](docs/CommandReference.en.md).  
 Details live in [docs/OriginalCrossPlatformDetails.en.md](docs/OriginalCrossPlatformDetails.en.md) and [docs/OriginalWindowsDetails.en.md](docs/OriginalWindowsDetails.en.md), showing original commands' purposes, version differences and official examples alongside details of this program's implementations.
 
 ## Scripts

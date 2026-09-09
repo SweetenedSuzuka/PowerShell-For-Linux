@@ -242,7 +242,7 @@ func (p *Parser) collectCommandArgs(cmd *ast.Command) {
 				continue
 			}
 		}
-		// 命令名后直接跟逗号（尚无任何实参）：缺少参数（与 PowerShell 一致）；已有实参则走位置数组。
+		// 命令名后直接跟逗号（尚无任何实参）：缺少参数（与 PowerShell 一致）；已有实参则按位置数组收集。
 		if t.Type == TkPunct && t.Text == "," && len(cmd.Positional) == 0 && len(cmd.Named) == 0 && len(cmd.Switches) == 0 {
 			p.fail(lang.T(lang.MsgParseMissingArg))
 			break

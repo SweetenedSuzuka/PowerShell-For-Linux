@@ -235,7 +235,7 @@ Status legend:
 | [`Stop-Process`](#stop-process) | Microsoft.PowerShell.Management | Both | None | Stops one or more running processes. | Go implementation |  |
 | [`Stop-Transcript`](#stop-transcript) | Microsoft.PowerShell.Host | Both | Syntax differs | Stops a transcript. | Go implementation | Writes the end block and closes the file; errors when idle. |
 | [`Switch-Process`](#switch-process) | Microsoft.PowerShell.Core | 7 only | 7 only on Linux/macOS (absent from Windows builds) | On Linux and macOS, the cmdlet calls the execv() function to provide similar behavior as POSIX
-shells. | Not implemented | Platform / miscellaneous |
+shells. | Go implementation | First item is the executable; returns silently with no command. |
 | [`Tee-Object`](#tee-object) | Microsoft.PowerShell.Utility | Both | Syntax differs | Saves command output in a file or variable and also sends it down the pipeline. | Go implementation |  |
 | [`Test-Connection`](#test-connection) | Microsoft.PowerShell.Management | Both | Syntax differs | Sends ICMP echo request packets, or pings, to one or more computers. | Mapped Linux (ping) |  |
 | [`Test-Json`](#test-json) | Microsoft.PowerShell.Utility | 7 only | 7 only | Tests whether a string is a valid JSON document | Go implementation |  |
@@ -7958,6 +7958,18 @@ Example: Execute a command that depends on `exec`
 ```powershell
 ssh-copy-id user@host
 ```
+
+#### Implementation in PowerShell For Linux:
+
+- Type: Go implementation.
+- Function: replaces the current process with the given command (execv semantics).
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-WithCommand` (position 0) | string[] | First item is the executable, the rest are arguments, e.g. `Switch-Process /bin/echo hello` |
+
+- Output: none (on success the process is replaced, nothing returns).
+- Behavior: succeeds silently with no command; errors when the command is missing; -WhatIf/-Confirm are rejected with an error.
 
 
 ### Tee-Object

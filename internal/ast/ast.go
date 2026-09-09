@@ -80,7 +80,7 @@ type Command struct {
 // Assign 是赋值：$x = 5、$env:X = "y"、$x += 1、$script:x = 1。
 type Assign struct {
 	Target string // 变量名，如 x 或 "env:Name"（不含前导 $ 与 ${}）
-	Scope  string // 作用域修饰符："" / "script" / "global" / "local"（$env: 单独走 Target）
+	Scope  string // 作用域修饰符："" / "script" / "global" / "local"（$env: 名存入 Target）
 	Op     string // =、+=、-=、*=、/=、%=
 	Value  Node
 }

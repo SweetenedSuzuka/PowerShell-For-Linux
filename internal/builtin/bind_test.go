@@ -87,8 +87,9 @@ func TestBindNamedPrecedence(t *testing.T) {
 	}
 }
 
-// TestBindUnsetSlotNotPositional 位置绑定核心回归：未声明位置槽位的参数（如 -Encoding）
-// 不参与位置绑定，位置实参只映射到声明过的槽位。
+// TestBindUnsetSlotNotPositional 位置绑定核心回归：
+//   - 未声明位置槽位的参数不参与位置绑定。
+//   - 位置实参只映射到声明过的槽位（如 -Encoding 这类仅命名参数不占槽位）。
 func TestBindUnsetSlotNotPositional(t *testing.T) {
 	args, err := bindViaEval(t, "Set-Content -Path b.txt bval")
 	if err != nil {
@@ -288,11 +289,11 @@ func TestBindSwitchValuePositional(t *testing.T) {
 
 // TestBindInlineSwitch 内联开关 -Recurse:$false / -Recurse:true 按布尔求值赋给开关。
 // $true/$false 与裸字 true/false 两种写法都覆盖：
-// 裸字整段被词法分析器吃进 dash word（-Recurse:true）；
+// 裸字整段由词法分析器并入 dash word（-Recurse:true）；
 // $var 中 $ 不是 dash word 字符，词法分析器拆成独立 token，由解析器合并回内联值（-Recurse:$true）。
 func TestBindInlineSwitch(t *testing.T) {
 	cases := []struct {
-		src  string
+		src      string
 		expected bool
 	}{
 		{"Get-ChildItem -Recurse:$false", false},

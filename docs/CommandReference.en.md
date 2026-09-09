@@ -405,6 +405,16 @@ Examples:
 
 Official original reference: [Wait-Process](OriginalCrossPlatformDetails.en.md#wait-process).
 
+### Switch-Process
+- Type: Go implementation.
+- Version: 7 only. Distro: 7 on Linux and macOS (absent from Windows builds).
+- Function: replaces the current process with the given command, the `exec` of bash.
+- Difference from Windows PowerShell: succeeds silently when no command is given; -WhatIf/-Confirm are rejected with an error.
+Example:
+- `Switch-Process /bin/echo hello` — the current process becomes echo, prints hello and exits.
+
+Official original reference: [Switch-Process](OriginalCrossPlatformDetails.en.md#switch-process).
+
 ### Start-Sleep (sleep)
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

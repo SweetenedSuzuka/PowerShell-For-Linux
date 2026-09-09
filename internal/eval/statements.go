@@ -143,7 +143,7 @@ func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 			if !catchMatches(cc.TypeName, sig.value) {
 				continue
 			}
-			// catch 块不推独立作用域：普通变量赋值穿透，只有 $_ 是临时绑定，块结束恢复原值。
+			// catch 块不推独立作用域：普通变量赋值对外可见，只有 $_ 是临时绑定，块结束恢复原值。
 			sc := e.scopes[len(e.scopes)-1]
 			oldUS, hadUS := sc["_"]
 			sc["_"] = sig.value
@@ -383,7 +383,7 @@ func (e *Evaluator) execFor(v *ast.For) []*object.PSObject {
 // execSwitch 执行 switch 语句。
 // 值为数组时逐元素匹配：每个元素跑全部 case（可命中多个），default 按元素判断；
 // break 退出整个 switch，continue 进入下一个元素（标量时二者等效，都退出）。
-// 与 foreach 同机制：不推独立作用域（体内普通赋值穿透外层），只临时绑定 $_/PSItem，结束恢复。
+// 与 foreach 同机制：不推独立作用域（体内普通赋值对外可见），只临时绑定 $_/PSItem，结束恢复。
 func (e *Evaluator) execSwitch(v *ast.Switch) []*object.PSObject {
 	val := e.evalValue(v.Value)
 	sc := e.scopes[len(e.scopes)-1]

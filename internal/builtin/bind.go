@@ -139,8 +139,7 @@ func Bind(engine Engine, cmd *ast.Command, spec []ParamSpec, extra map[string]*o
 
 // bindPositional 把位置实参按规格的 Position 序号中心化映射到命名参数。
 // 规则：
-//   - 只有显式声明了位置槽位（PositionSet）的参数参与，未声明的参数（如
-//     -Encoding、-Filter 这类仅命名参数）不占槽位；
+//   - 只有显式声明了位置槽位（PositionSet）的参数参与，未声明的仅命名参数（如 -Encoding、-Filter）不占槽位；
 //   - 第 k 个位置实参（0 起）映射到 Position 序号第 k 大的参数；
 //   - 已被显式命名赋值的槽位跳过（如 Set-Content -Path foo bar 中 bar 落到 Value）；
 //   - 脚本块参数只映射 AST 节点（NamedNode），保持惰性求值；

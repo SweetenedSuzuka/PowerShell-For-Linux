@@ -33,7 +33,7 @@ var catalogs = map[Lang]map[Msg]string{
 	LangEn: en,
 }
 
-// defaultLang 是默认语言：探测不到已注册语言以及语言表缺条目时的归宿。
+// defaultLang 是默认语言：探测不到已注册语言、语言表缺条目时回退到它。
 const defaultLang = LangZh
 
 // localeVars 是探测顺序，遵循 GNU gettext 约定：LANGUAGE 优先于各 LC 变量。

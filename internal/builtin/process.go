@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"powershell/internal/external"
 	"powershell/internal/lang"
 	"powershell/internal/object"
 	"powershell/internal/shell"
@@ -299,6 +300,37 @@ func linuxProcessActive(pid int) bool {
 	return !linuxProcStateEnded(fields[0])
 }
 
+// cmdSwitchProcess 用给定命令替换当前进程（首个为可执行文件，其余为实参；成功时不返回）。
+func cmdSwitchProcess(c *Context) ([]*object.PSObject, error) {
+	// PowerShell 不接受 -WhatIf 与 -Confirm，传入时报错，不执行替换。
+	for name := range c.Args.Switches {
+		if strings.EqualFold(name, "WhatIf") || strings.EqualFold(name, "Confirm") {
+			return errf(c, "%s", lang.T(lang.MsgBindNoParam, name))
+		}
+	}
+	withCmd := c.Args.StringSlice("WithCommand")
+	for _, p := range c.Args.Positional {
+		withCmd = append(withCmd, p.String())
+	}
+	// 未给命令即无操作，直接成功返回（与 PowerShell 一致）。
+	if len(withCmd) == 0 {
+		return nil, nil
+	}
+	path, derr := shell.DrivePath(withCmd[0])
+	if derr != nil {
+		return errf(c, "%v", derr)
+	}
+	bin, ok := external.LookPath(path)
+	if !ok {
+		return errf(c, "%s", lang.T(lang.MsgSwitchCommandNotFound, withCmd[0]))
+	}
+	argv := append([]string{bin}, withCmd[1:]...)
+	if err := syscall.Exec(bin, argv, os.Environ()); err != nil {
+		return errf(c, "%s", lang.T(lang.MsgExternalExecFail, withCmd[0], err))
+	}
+	return nil, nil
+}
+
 // ---- 注册 ----
 
 func init() {
@@ -318,4 +350,7 @@ func init() {
 		{Name: "Name", Position: 0, PositionSet: true, Type: "string"},
 		{Name: "Id", Type: "int"},
 	}, cmdWaitProcess)
+	Register("Switch-Process", []ParamSpec{
+		{Name: "WithCommand", Position: 0, PositionSet: true, Type: "string[]"},
+	}, cmdSwitchProcess)
 }

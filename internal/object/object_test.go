@@ -260,7 +260,7 @@ func TestFormatOutputMixedTableShapes(t *testing.T) {
 	}
 }
 
-// TestFormatOutputSingleCustomObjectList 验证单个自定义对象走列表（与 PowerShell 一致）。
+// TestFormatOutputSingleCustomObjectList 验证单个自定义对象用列表渲染（与 PowerShell 一致）。
 func TestFormatOutputSingleCustomObjectList(t *testing.T) {
 	o := PSCustomObject([]HashEntry{{Key: "n", Value: Str("x")}})
 	var sb strings.Builder
@@ -268,7 +268,7 @@ func TestFormatOutputSingleCustomObjectList(t *testing.T) {
 		t.Fatal(err)
 	}
 	if sb.String() != "n : x\n" {
-		t.Errorf("单个自定义对象应走列表，得到 %q", sb.String())
+		t.Errorf("单个自定义对象应使用列表渲染，得到 %q", sb.String())
 	}
 }
 
@@ -345,7 +345,7 @@ func TestFitWidthsTruncate(t *testing.T) {
 	}
 }
 
-// TestWideFollowsWidth 验证宽幅列数跟终端宽度走。
+// TestWideFollowsWidth 验证宽幅列数随终端宽度变化。
 func TestWideFollowsWidth(t *testing.T) {
 	t.Setenv("COLUMNS", "30")
 	var buf strings.Builder
@@ -377,7 +377,7 @@ func TestFormatTableMissingBlank(t *testing.T) {
 	}
 }
 
-// TestFormatTableScalarPassthrough 验证标量直出：标量无可制表属性，-Property 忽略，不起表头。
+// TestFormatTableScalarPassthrough 验证标量直接输出：标量无可制表属性，-Property 忽略，不起表头。
 func TestFormatTableScalarPassthrough(t *testing.T) {
 	var sb strings.Builder
 	if err := FormatTableTo(&sb, []*PSObject{Str("hello")}, []string{"Nope"}); err != nil {
@@ -388,7 +388,7 @@ func TestFormatTableScalarPassthrough(t *testing.T) {
 	}
 }
 
-// TestFormatTableMixedOrder 验证混排顺序：先落攒的表，再出标量行（任一顺序标量都不进表）。
+// TestFormatTableMixedOrder 验证混排顺序：先刷出缓冲的表，再输出标量行（任一顺序标量都不进表）。
 func TestFormatTableMixedOrder(t *testing.T) {
 	f := Object("System.IO.FileInfo", "/a/b")
 	var sb strings.Builder

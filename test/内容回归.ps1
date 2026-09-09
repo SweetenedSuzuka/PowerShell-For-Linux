@@ -1083,6 +1083,28 @@ $gcInner = "$root/test/tmp/reg/gcpinner.ps1"
 $gcPipe = sh -c "printf 'testu1\ns3cr3tzz\n' | $root/powershell -NoLogo -NoProfile -File $gcInner" 2>$null
 $gcNi = sh -c "$root/powershell -NoLogo -NoProfile -NonInteractive -Command 'Get-Credential'" 2>$null
 $results += T "提示输入凭据识别非交互" ((($gcPipe -join "") -like "*^u=testu1*") -and ((($gcPipe -join "") -notlike "*s3cr3tzz*")) -and (($gcPipe -contains "^s=testu1")) -and (($gcPipe -contains "^de=1")) -and ((($gcNi -join "") -eq "")))
+# 249. 严格模式未定义检查
+Set-StrictMode -Version Latest
+$se0 = $Error.Count
+$smCaught = try { $nosuchvar_sm249 } catch { "yes" }
+$smDef = 42
+Set-StrictMode -Off
+$nosuchvar_sm249b
+$results += T "严格模式未定义检查" ((($Error.Count -eq ($se0 + 1))) -and (($smCaught -eq "yes")) -and (($smDef -eq 42)) -and (($null -eq $nosuchvar_sm249b)))
+# 250. 版本写法参数集作用域
+Set-StrictMode -Version 1.0
+Set-StrictMode -Version 2.0
+Set-StrictMode -Version 3
+function SMF250 { Set-StrictMode -Off; $nosuchvar_sm250 }
+$smfOut = SMF250 2>$null
+try { $nosuchvar_sm250b } catch { }
+$se2 = $Error.Count
+Set-StrictMode -Version 9.9 -ErrorAction SilentlyContinue | Out-Null
+Set-StrictMode -Version Latest -Off 2>$null | Out-Null
+Set-StrictMode 2>$null | Out-Null
+Set-StrictMode 1.0 extra 2>$null | Out-Null
+Set-StrictMode -Off
+$results += T "版本写法参数集作用域" ((($null -eq $smfOut)) -and (($Error.Count -eq ($se2 + 4))))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

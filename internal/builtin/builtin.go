@@ -26,6 +26,8 @@ type Engine interface {
 	RunSource(src string) ([]*object.PSObject, error)
 	// LookupVar 按 PowerShell 默认读语义查变量（自顶向下查作用域，再查自动变量）。
 	LookupVar(name string) *object.PSObject
+	// SetStrictMode 设置当前作用域的严格模式（Set-StrictMode 用）。
+	SetStrictMode(on bool)
 }
 
 // Context 是内置 cmdlet 的调用上下文。

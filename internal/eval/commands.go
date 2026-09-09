@@ -407,7 +407,7 @@ func (e *Evaluator) callFunction(fn *shell.Function, cmd *ast.Command, input []*
 			panic(sig)
 		case flowExit:
 			panic(sig)
-		case flowError:
+		case flowError, flowStmtError:
 			// 函数内终止错误向调用方传播，panic 前已产生的输出一并携带（外层 try 可捕获）。
 			sig.out = out
 			panic(sig)
@@ -439,7 +439,7 @@ func (e *Evaluator) callFunctionNamedBlocks(fn *shell.Function, input []*object.
 			panic(sig)
 		case flowExit:
 			panic(sig)
-		case flowError:
+		case flowError, flowStmtError:
 			// 命名块内终止错误向调用方传播，panic 前已产生的输出一并携带（外层 try 可捕获）。
 			sig.out = out
 			panic(sig)
@@ -643,7 +643,7 @@ func (e *Evaluator) invokeScriptBlock(node *ast.ScriptBlock, ca callArgs, input 
 			panic(sig)
 		case flowExit:
 			panic(sig)
-		case flowError:
+		case flowError, flowStmtError:
 			// 调用运算符执行块内终止错误向调用方传播，panic 前已产生的输出一并携带（外层 try 可捕获）。
 			sig.out = out
 			panic(sig)
@@ -843,7 +843,7 @@ func (e *Evaluator) runScript(path string, args []*object.PSObject, emit func(ob
 			case flowExit:
 				e.ExitRequested = true
 				e.ExitCode = sig.code
-			case flowError:
+			case flowError, flowStmtError:
 				// 未捕获的终止错误：中止脚本并向上传播，调用方的 try 可以捕获；
 				// 传到最外层时由 EvalStatement/main.go 打印。
 				// panic 前已产生的输出一并携带。

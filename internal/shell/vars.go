@@ -192,6 +192,9 @@ func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 		return object.Null(), true
 	case "ofs":
 		return object.Str(" "), true
+	case "myinvocation", "executioncontext":
+		// 调用信息只做存在性占位，内容为空（严格模式下不报错）。
+		return object.Null(), true
 	}
 	return nil, false
 }
@@ -205,7 +208,7 @@ func (s *Session) AllVarNames() []string {
 			byLower[strings.ToLower(n)] = n
 		}
 	}
-	for _, n := range []string{"PWD", "HOME", "PID", "PSVersionTable", "LASTEXITCODE", "?", "Matches", "Error", "PSCommandPath", "args", "Host", "PSEdition", "IsLinux", "IsWindows", "IsMacOS", "IsCoreCLR", "PSHOME", "OFS", "ErrorActionPreference"} {
+	for _, n := range []string{"PWD", "HOME", "PID", "PSVersionTable", "LASTEXITCODE", "?", "Matches", "Error", "PSCommandPath", "args", "Host", "PSEdition", "IsLinux", "IsWindows", "IsMacOS", "IsCoreCLR", "PSHOME", "OFS", "ErrorActionPreference", "MyInvocation", "ExecutionContext"} {
 		if _, ok := byLower[strings.ToLower(n)]; !ok {
 			byLower[strings.ToLower(n)] = n
 		}

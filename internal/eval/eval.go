@@ -26,8 +26,10 @@ type Evaluator struct {
 	hostOut       io.Writer
 	hostErr       io.Writer
 	scopes        []map[string]*object.PSObject // 变量作用域栈，scopes[0] 为全局
+	strict        []bool                         // 严格模式栈，随作用域推弹，栈顶为当前生效
 	inCapture     int                           // 进入捕获模式（函数/脚本块/子表达式）计数
 	inPipeline    int                           // 命令处于管道输入位的层数（>0 表示本次调用有管道输入，哪怕为零项）
+	inTry         int                           // 进入 try 体计数（语句级错误在计数为零时就地消化，非零时上抛给 try）
 	ExitRequested bool                          // 是否遇到 exit 语句
 	ExitCode      int                           // exit 码
 	// consoleOut 是不受重定向影响的主机输出（Write-Host 类走它，不随重定向指位）。
@@ -49,6 +51,7 @@ func New(sess *shell.Session, stdin io.Reader, stdout, stderr io.Writer) *Evalua
 		hostErr:    stderr,
 		consoleOut: stdout,
 		scopes:     []map[string]*object.PSObject{sess.Vars},
+		strict:     []bool{false},
 	}
 }
 
@@ -86,7 +89,7 @@ func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObj
 		case flowReturn:
 			// return 前的输出一并保留（与函数调用一致：& { "a"; return "b" } 输出 a、b）
 			return append(out, unwrapOutput(sig.value)...), nil
-		case flowError:
+		case flowError, flowStmtError:
 			// 脚本块内终止错误向调用方传播，panic 前已产生的输出一并携带（外层 try 可捕获，本层不打印）。
 			sig.out = out
 			panic(sig)
@@ -97,45 +100,78 @@ func (e *Evaluator) InvokeBlock(block *ast.Block, extra map[string]*object.PSObj
 
 // LookupVar 按名字查变量，供内置 cmdlet 读取首选项这类作用域敏感变量。
 func (e *Evaluator) LookupVar(name string) *object.PSObject {
-	return e.lookupVar(name, "")
+	v, _ := e.lookupVar(name, "")
+	return v
 }
 
 // ---- 作用域与变量 ----
 
 func (e *Evaluator) pushScope() {
 	e.scopes = append(e.scopes, map[string]*object.PSObject{})
+	on := false
+	if len(e.strict) > 0 {
+		on = e.strict[len(e.strict)-1]
+	}
+	e.strict = append(e.strict, on)
 }
 
 func (e *Evaluator) popScope() {
 	if len(e.scopes) > 1 {
 		e.scopes = e.scopes[:len(e.scopes)-1]
 	}
+	if len(e.strict) > 1 {
+		e.strict = e.strict[:len(e.strict)-1]
+	}
 }
 
-// lookupVar 按名字与作用域修饰符查变量，不区分大小写。
+// strictOn 报告当前作用域是否打开严格模式。
+func (e *Evaluator) strictOn() bool {
+	return len(e.strict) > 0 && e.strict[len(e.strict)-1]
+}
+
+// SetStrictMode 设置当前作用域的严格模式（Set-StrictMode 用）。
+func (e *Evaluator) SetStrictMode(on bool) {
+	if len(e.strict) == 0 {
+		e.strict = []bool{on}
+		return
+	}
+	e.strict[len(e.strict)-1] = on
+}
+
+// checkedVar 按读语义取值：缺失且严格模式打开时抛语句级未定义错误。
+func (e *Evaluator) checkedVar(name, scope string) *object.PSObject {
+	v, found := e.lookupVar(name, scope)
+	if !found && e.strictOn() {
+		e.stmtError(lang.T(lang.MsgUndefinedVariable, name))
+		return object.Null()
+	}
+	return v
+}
+
+// lookupVar 按名字与作用域修饰符查变量，不区分大小写；found 报告是否找到。
 // scope 为空：自顶向下查（PowerShell 默认读语义）；"script"/"global"：只查全局（scopes[0]，即脚本作用域，本解释器脚本不推独立作用域）；"local"：只查当前（栈顶）作用域。
-func (e *Evaluator) lookupVar(name, scope string) *object.PSObject {
+func (e *Evaluator) lookupVar(name, scope string) (*object.PSObject, bool) {
 	switch scope {
 	case "script", "global":
 		if v, ok := e.scopes[0][scopeVarKey(e.scopes[0], name)]; ok {
-			return v
+			return v, true
 		}
 	case "local":
 		if v, ok := e.scopes[len(e.scopes)-1][scopeVarKey(e.scopes[len(e.scopes)-1], name)]; ok {
-			return v
+			return v, true
 		}
-		return object.Null()
+		return object.Null(), false
 	default:
 		for i := len(e.scopes) - 1; i >= 0; i-- {
 			if v, ok := e.scopes[i][scopeVarKey(e.scopes[i], name)]; ok {
-				return v
+				return v, true
 			}
 		}
 	}
 	if v, ok := e.Session.GetVar(name); ok {
-		return v
+		return v, true
 	}
-	return object.Null()
+	return object.Null(), false
 }
 
 // scopeVarKey 取某层作用域的存储键：已存在（不区分大小写）沿用原大小写，否则用传入名。
@@ -241,6 +277,17 @@ func (e *Evaluator) throwError(msg string) {
 	panic(&flowSignal{kind: flowError, value: rec})
 }
 
+// stmtError 抛出一个语句级错误：累积进 $Error、置 $? 为失败后以 flowStmtError 上抛，外层 try 可捕获。
+// 无 try 承接时由语句级兜底打印并继续执行，不经首选项分发。
+func (e *Evaluator) stmtError(msg string) {
+	e.Session.LastSuccess = false
+	rec := e.Session.RecordError(msg)
+	exc := object.Object("System.RuntimeException", msg)
+	exc.AddProp("Message", object.Str(msg))
+	rec.AddProp("Exception", exc)
+	panic(&flowSignal{kind: flowStmtError, value: rec})
+}
+
 // ReportPanic 把顶层回收到的非控制流 panic 转为非终止错误。
 // 控制流信号返回 false，交由调用方继续传播。
 func (e *Evaluator) ReportPanic(r any) bool {
@@ -278,7 +325,7 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 	case *ast.NullLit:
 		return object.Null()
 	case *ast.VarRef:
-		return e.lookupVar(v.Name, v.Scope)
+		return e.checkedVar(v.Name, v.Scope)
 	case *ast.EnvRef:
 		return object.Str(os.Getenv(v.Name))
 	case *ast.BareWord:
@@ -396,7 +443,7 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 			case flowReturn:
 				// 子表达式整体作为输出流：return 前的输出保留（$( "a"; return "b" ) → a、b）
 				return wrapSingle(append(out, unwrapOutput(sig.value)...))
-			case flowError:
+			case flowError, flowStmtError:
 				// 子表达式里的终止错误向上传播，panic 前已产生的输出一并携带（外层 try 可捕获）。
 				sig.out = out
 				panic(sig)
@@ -411,7 +458,7 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		if v.Op == "--" {
 			delta = -1
 		}
-		old, nv := e.incrOldNew(e.lookupVar(v.Var, v.Scope), delta)
+		old, nv := e.incrOldNew(e.checkedVar(v.Var, v.Scope), delta)
 		_ = e.setVar(v.Var, v.Scope, nv)
 		return old
 	case *ast.PipelineExpr:

@@ -219,7 +219,7 @@ Status legend:
 | [`Set-PSReadLineKeyHandler`](#set-psreadlinekeyhandler) | PSReadLine | Both | None | Binds keys to user-defined or PSReadLine key handler functions. | Not implemented |  |
 | [`Set-PSReadLineOption`](#set-psreadlineoption) | PSReadLine | Both | Syntax differs | Customizes the behavior of command line editing in **PSReadLine**. | Not implemented |  |
 | [`Set-PSResourceRepository`](#set-psresourcerepository) | Microsoft.PowerShell.PSResourceGet | 7 only | 7 only | Sets information for a registered repository. | Not implemented |  |
-| [`Set-StrictMode`](#set-strictmode) | Microsoft.PowerShell.Core | Both | None | Establishes and enforces coding rules in expressions, scripts, and scriptblocks. | Not implemented | Platform / miscellaneous |
+| [`Set-StrictMode`](#set-strictmode) | Microsoft.PowerShell.Core | Both | None | Establishes and enforces coding rules in expressions, scripts, and scriptblocks. | Go implementation | Checks undefined variables only; all versions behave the same. |
 | [`Set-TraceSource`](#set-tracesource) | Microsoft.PowerShell.Utility | Both | None | Configures, starts, and stops a trace of PowerShell components. | Not implemented | Events / breakpoints / tracing (debugger facilities) |
 | [`Set-Variable`](#set-variable) | Microsoft.PowerShell.Utility | Both | Syntax differs | Sets the value of a variable. Creates the variable if one with the requested name does not exist. | Go implementation | Assignment to read-only automatic variables (PID etc.) is rejected. |
 | [`Show-Markdown`](#show-markdown) | Microsoft.PowerShell.Utility | 7 only | 7 only | Shows a Markdown file or string in the console in a friendly way using VT100 escape sequences or in a browser using HTML. | Not implemented | GUI and printing |
@@ -7380,6 +7380,21 @@ $a -gt 5
 ```
 
 Source: [Official reference source](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/7.5/Microsoft.PowerShell.Core/Set-StrictMode.md)
+
+#### Implementation in PowerShell For Linux:
+
+- Differs from the original: all versions behave the same, only undefined-variable checks are done.
+
+- Type: Go implementation.
+- Function: turns strict mode on or off; reading an undefined variable errors when on.
+
+| Parameter | Type | Meaning |
+| :--- | :--- | :--- |
+| `-Version` (position 0) | string | Version number, 1.0, 2.0, 3.0, Latest and their single-digit forms, e.g. `Set-StrictMode -Version Latest` |
+| `-Off` | switch | Turns strict mode off |
+
+- Output: no output.
+- Behavior: errors skip the current statement and continue, catchable by try; inherited into functions without leaking out; automatic and environment variables do not trigger.
 
 
 ### Set-TraceSource

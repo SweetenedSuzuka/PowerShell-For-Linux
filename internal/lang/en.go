@@ -141,6 +141,8 @@ Switch style at runtime:
 	MsgProcNameNotFound:             "Cannot find a process with the name \"%s\".",
 	MsgPSVersionBad:                 "Set-PSVersion : Unsupported version %q (use 5.1 or 7.x)",
 	MsgPSVersionSet:                 "Style switched to %s.",
+	MsgStrictVersionBad:            "Set-StrictMode : Unsupported version %q (use 1.0, 2.0, 3.0 or Latest).",
+	MsgUndefinedVariable:           "Variable $%s has not been set.",
 	MsgHashAlgoUnsupported:          "Get-FileHash : Unsupported algorithm %s",
 	MsgParamSetUnresolvable:         "Parameter set cannot be resolved using the specified named parameters. One or more parameters issued cannot be used together or an insufficient number of parameters were provided.",
 	MsgPositionalParamNotFound:      "A positional parameter cannot be found that accepts argument '%s'.",

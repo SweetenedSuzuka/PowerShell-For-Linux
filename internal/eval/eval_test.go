@@ -1361,3 +1361,62 @@ func TestTryCatchQuestionMark(t *testing.T) {
 	wantStr(t, `try { "ok" } catch { "c" }; if ($?) { "t" } else { "f" }`, "ok", "t")
 	wantStr(t, `try { throw "x" } catch { "ok" }; if ($?) { "t" } else { "f" }`, "ok", "t")
 }
+
+// TestStrictModeUndefinedVariable 严格模式未定义检查：打开后读未定义变量记错并跳过本句继续执行，已赋值的正常，函数内继承且向外不泄漏，非法版本记错，关闭后恢复。
+func TestStrictModeUndefinedVariable(t *testing.T) {
+	sess := shell.New(shell.StyleCore, io.Discard, io.Discard, strings.NewReader(""))
+	ev := New(sess, strings.NewReader(""), io.Discard, io.Discard)
+	run := func(src string) []string {
+		t.Helper()
+		res := parser.Parse(src)
+		if res.Error != nil {
+			t.Fatalf("解析错误 %q: %v", src, res.Error)
+		}
+		var got []string
+		for _, st := range res.List.Statements {
+			got = append(got, strs(ev.EvalStatement(st))...)
+		}
+		return got
+	}
+	errs := func() int { return len(sess.ErrorRecords) }
+	run(`$nosuch_sm_t1`)
+	if errs() != 0 {
+		t.Fatalf("默认关闭应无错，实际 %d 条", errs())
+	}
+	run(`Set-StrictMode -Version Latest`)
+	run(`$nosuch_sm_t2`)
+	if errs() != 1 {
+		t.Fatalf("严格下读未定义应记 1 条，实际 %d 条", errs())
+	}
+	if sess.LastSuccess {
+		t.Fatalf("读未定义后问号变量应为失败")
+	}
+	if got := run(`"after-strict"`); len(got) != 1 || got[0] != "after-strict" {
+		t.Fatalf("出错后应继续执行，实际 %v", got)
+	}
+	run(`$smDef = 42`)
+	if got := run(`$smDef`); len(got) != 1 || got[0] != "42" {
+		t.Fatalf("已赋值变量应正常读出，实际 %v", got)
+	}
+	if errs() != 1 {
+		t.Fatalf("正常读取不应记错，实际 %d 条", errs())
+	}
+	run(`function SMFunc { Set-StrictMode -Off; $nosuch_sm_t3 }`)
+	run(`SMFunc`)
+	if errs() != 1 {
+		t.Fatalf("函数内关闭应生效，实际 %d 条", errs())
+	}
+	run(`$nosuch_sm_t4`)
+	if errs() != 2 {
+		t.Fatalf("函数内关闭不应泄漏到外层，实际 %d 条", errs())
+	}
+	run(`Set-StrictMode -Version 9.9`)
+	if errs() != 3 {
+		t.Fatalf("非法版本应记错，实际 %d 条", errs())
+	}
+	run(`Set-StrictMode -Off`)
+	run(`$nosuch_sm_t5`)
+	if errs() != 3 {
+		t.Fatalf("关闭后应恢复，实际 %d 条", errs())
+	}
+}

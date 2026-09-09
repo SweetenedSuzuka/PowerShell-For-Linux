@@ -1024,6 +1024,17 @@ Examples:
 
 Official original reference: [Set-Variable](OriginalCrossPlatformDetails.en.md#set-variable).
 
+### Set-StrictMode
+- Type: Go implementation.
+- Version: 5.1 and 7. Distro: any.
+- Function: turns on strict mode, reading an undefined variable errors, like `set -u` in bash.
+- Difference from Windows PowerShell: all versions behave the same, only undefined-variable checks are done.
+Examples:
+- `Set-StrictMode -Version Latest; $nosuch` — reading an undefined variable errors (like reading one under bash `set -u`).
+- `Set-StrictMode -Off` — turns strict mode off (like bash `set +u`).
+
+Official original reference: [Set-StrictMode](OriginalCrossPlatformDetails.en.md#set-strictmode).
+
 ### $env: environment variables
 - Type: Go implementation.
 - Version: 5.1 and 7. Distro: any.

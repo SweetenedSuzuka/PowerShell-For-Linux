@@ -16,6 +16,7 @@ const (
 	flowReturn
 	flowExit
 	flowError // 终止错误（throw / 未捕获错误）
+	flowStmtError // 语句级错误（跳过本句继续执行，可被 try 捕获）
 )
 
 // flowSignal 用 panic/recover 传递 break/continue/return/exit/error。

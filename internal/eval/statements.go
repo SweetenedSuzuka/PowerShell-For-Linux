@@ -26,7 +26,19 @@ func (e *Evaluator) runStatements(stmts []ast.Node) (out []*object.PSObject, sig
 		}
 	}()
 	for _, st := range stmts {
-		out = append(out, e.execStatement(st)...)
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					// 语句级错误在无 try 承接时就地打印并继续执行下一句，有 try 承接时上抛给它。
+					if fs, ok := r.(*flowSignal); ok && fs.kind == flowStmtError && e.inTry == 0 {
+						e.printError(fmt.Errorf("%s", fs.value.String()))
+						return
+					}
+					panic(r)
+				}
+			}()
+			out = append(out, e.execStatement(st)...)
+		}()
 	}
 	return out, nil
 }
@@ -120,10 +132,12 @@ func (e *Evaluator) execThrow(v *ast.Throw) []*object.PSObject {
 // finally 无论是否出错、是否被捕获都恒执行；catch/finally 自身的信号优先，未捕获的错误在 finally 之后原样上抛（外层 try 可继续捕获）。
 func (e *Evaluator) execTry(v *ast.Try) []*object.PSObject {
 	var out []*object.PSObject
+	e.inTry++
+	defer func() { e.inTry-- }()
 	bodyOut, sig := e.runStatements(v.Body.Body.Statements)
 	out = append(out, bodyOut...)
 
-	if sig != nil && sig.kind == flowError {
+	if sig != nil && (sig.kind == flowError || sig.kind == flowStmtError) {
 		handled := false
 		for _, cc := range v.Catches {
 			if !catchMatches(cc.TypeName, sig.value) {
@@ -215,7 +229,7 @@ func (e *Evaluator) execAssign(a *ast.Assign) {
 		os.Setenv(a.Target[len("env:"):], val.String())
 	} else {
 		if a.Op != "=" {
-			cur := e.lookupVar(a.Target, a.Scope)
+			cur := e.checkedVar(a.Target, a.Scope)
 			val = e.binaryOp(a.Op[:len(a.Op)-1], cur, val)
 		}
 		if err := e.setVar(a.Target, a.Scope, val); err != nil {
@@ -289,7 +303,7 @@ func (e *Evaluator) execForEach(v *ast.ForEach) []*object.PSObject {
 				return out
 			case flowContinue:
 				continue
-			case flowReturn, flowExit, flowError:
+			case flowReturn, flowExit, flowError, flowStmtError:
 				sig.out = out // 保留 panic 前已收集的输出
 				panic(sig)
 			}
@@ -308,7 +322,7 @@ func (e *Evaluator) execWhile(v *ast.While, doFirst bool) []*object.PSObject {
 			switch sig.kind {
 			case flowBreak:
 				return out
-			case flowReturn, flowExit, flowError:
+			case flowReturn, flowExit, flowError, flowStmtError:
 				sig.out = out // 保留 panic 前已收集的输出
 				panic(sig)
 			}
@@ -324,7 +338,7 @@ func (e *Evaluator) execWhile(v *ast.While, doFirst bool) []*object.PSObject {
 				return out
 			case flowContinue:
 				continue
-			case flowReturn, flowExit, flowError:
+			case flowReturn, flowExit, flowError, flowStmtError:
 				sig.out = out // 保留 panic 前已收集的输出
 				panic(sig)
 			}
@@ -354,7 +368,7 @@ func (e *Evaluator) execFor(v *ast.For) []*object.PSObject {
 				return out
 			case flowContinue:
 				// 执行 post 后继续
-			case flowReturn, flowExit, flowError:
+			case flowReturn, flowExit, flowError, flowStmtError:
 				sig.out = out // 保留 panic 前已收集的输出
 				panic(sig)
 			}
@@ -415,7 +429,7 @@ nextItem:
 							return out
 						case flowContinue:
 							continue nextItem
-						case flowReturn, flowExit, flowError:
+						case flowReturn, flowExit, flowError, flowStmtError:
 							sig.out = out // 保留 panic 前已收集的输出
 							panic(sig)
 						}
@@ -448,7 +462,7 @@ nextItem:
 						return out
 					case flowContinue:
 						continue nextItem
-					case flowReturn, flowExit, flowError:
+					case flowReturn, flowExit, flowError, flowStmtError:
 						sig.out = out // 保留 panic 前已收集的输出
 						panic(sig)
 					}

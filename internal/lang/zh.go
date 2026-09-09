@@ -141,6 +141,8 @@ var zh = map[Msg]string{
 	MsgProcNameNotFound:             "找不到名为 \"%s\" 的进程。",
 	MsgPSVersionBad:                 "Set-PSVersion : 不支持的版本 %q（请用 5.1 或 7.x）",
 	MsgPSVersionSet:                 "已切换到 %s 风格。",
+	MsgStrictVersionBad:            "Set-StrictMode : 不支持的版本 %q（请用 1.0、2.0、3.0 或 Latest）。",
+	MsgUndefinedVariable:           "变量 $%s 未设置。",
 	MsgHashAlgoUnsupported:          "Get-FileHash : 不支持的算法 %s",
 	MsgParamSetUnresolvable:         "无法使用指定的命名参数解析参数集，有一个或多个参数不能一起使用，或提供的参数不足。",
 	MsgPositionalParamNotFound:      "找不到接受实参 \"%s\" 的位置参数。",

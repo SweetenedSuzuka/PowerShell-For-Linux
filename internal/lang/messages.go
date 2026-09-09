@@ -125,6 +125,8 @@ const (
 	MsgProcNameNotFound
 	MsgPSVersionBad
 	MsgPSVersionSet
+	MsgStrictVersionBad
+	MsgUndefinedVariable
 	MsgHashAlgoUnsupported
 	MsgParamSetUnresolvable
 	MsgPositionalParamNotFound

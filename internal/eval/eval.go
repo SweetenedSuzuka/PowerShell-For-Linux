@@ -36,8 +36,8 @@ type Evaluator struct {
 	consoleOut io.Writer
 	// redirOut 是 stdout 重定向生效中的目标写者；直接写与返回值共用这一次打开，不另开文件。
 	redirOut io.Writer
-	// redirCmd 是本次 redirOut 所属的命令；内层同名检查用它判定归属。
-	redirCmd *ast.Command
+	// redirCmd 是本次 redirOut 所属的命令或管道；内层同名检查用它判定归属。
+	redirCmd any
 }
 
 // New 创建求值器。

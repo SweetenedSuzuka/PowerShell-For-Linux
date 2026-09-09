@@ -40,6 +40,11 @@ func writeNode(sb *strings.Builder, n ast.Node) {
 			writeNode(&inner, c)
 			parts = append(parts, inner.String())
 		}
+		for _, r := range v.Redirs {
+			var inner strings.Builder
+			writeNode(&inner, r.Target)
+			parts = append(parts, "[redir>"+inner.String()+"]")
+		}
 		sb.WriteString(strings.Join(parts, " | "))
 	case *ast.Command:
 		sb.WriteString("cmd(")
@@ -415,6 +420,27 @@ func TestRedirection(t *testing.T) {
 	}
 	if strings.Contains(d, "2>") {
 		t.Fatalf("2> 被合并进实参: %s", d)
+	}
+}
+
+// TestExprRedirect 验证纯表达式管道头的尾随重定向收进管道（如 $x 2>err.txt），同流两次报错。
+func TestExprRedirect(t *testing.T) {
+	d := dump(parseOK(t, "$x 2> err.txt"))
+	if !strings.Contains(d, "[redir>word(err.txt)]") {
+		t.Fatalf("表达式 2> 重定向解析失败: %s", d)
+	}
+	d = dump(parseOK(t, `"hi" > out.txt`))
+	if !strings.Contains(d, "[redir>word(out.txt)]") {
+		t.Fatalf("表达式 > 重定向解析失败: %s", d)
+	}
+	for _, src := range []string{
+		`$x > a.txt > b.txt`,
+		`$x 2> a.txt 2> b.txt`,
+	} {
+		res := Parse(src)
+		if res.Error == nil {
+			t.Errorf("%q 应报错，实际通过", src)
+		}
 	}
 }
 

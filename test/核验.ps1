@@ -119,6 +119,7 @@ Get-Content test/tmp/ge-missing.txt 2>$null >$null; Get-Error 2>$null >$null; if
 Resolve-DnsName localhost 2>$null >$null; if ($?) { $pass++; "PASS  Resolve-DnsName" } else { $fail++; "FAIL  Resolve-DnsName" }
 $gc0 = [pscustomobject]@{ UserName = "u"; Password = "p" }; Get-Credential -Credential $gc0 2>$null >$null; if ($?) { $pass++; "PASS  Get-Credential" } else { $fail++; "FAIL  Get-Credential" }
 Set-StrictMode -Version Latest 2>$null >$null; if ($?) { $pass++; "PASS  Set-StrictMode" } else { $fail++; "FAIL  Set-StrictMode" }; Set-StrictMode -Off 2>$null >$null
+$rvv = "v"; $rvv 2>$null >$null; if ($?) { $pass++; "PASS  表达式重定向" } else { $fail++; "FAIL  表达式重定向" }
 New-Guid 2>$null >$null; if ($?) { $pass++; "PASS  New-Guid" } else { $fail++; "FAIL  New-Guid" }
 New-TimeSpan -Minutes 5 2>$null >$null; if ($?) { $pass++; "PASS  New-TimeSpan" } else { $fail++; "FAIL  New-TimeSpan" }
 $f = New-TemporaryFile; Remove-Item $f.FullName 2>$null >$null; if ($?) { $pass++; "PASS  New-TemporaryFile" } else { $fail++; "FAIL  New-TemporaryFile" }

@@ -1105,6 +1105,12 @@ Set-StrictMode 2>$null | Out-Null
 Set-StrictMode 1.0 extra 2>$null | Out-Null
 Set-StrictMode -Off
 $results += T "版本写法参数集作用域" ((($null -eq $smfOut)) -and (($Error.Count -eq ($se2 + 4))))
+# 251. 表达式语句尾随重定向
+$rvx = $null
+$rvx 2>rv_err.txt
+"world" > rv_out.txt
+"more" >> rv_out.txt
+$results += T "表达式尾随重定向" ((((Get-Content rv_out.txt) -join ",") -eq "world,more") -and ((Test-Path rv_err.txt)) -and ((@(Get-Content rv_err.txt).Count -eq 0)))
 $Error.Clear()
 $ErrorActionPreference = 'Continue'
 

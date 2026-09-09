@@ -13,9 +13,11 @@ type StatementList struct {
 
 // Pipeline 是管道：由 '|' 分隔的命令序列。
 // Expr 非空表示管道以纯表达式开头（如 1,2,3 | ForEach-Object {...}）。
+// 无命令时，把 Expr 尾随的重定向（如 $x 2>$null）存在这个字段。
 type Pipeline struct {
 	Commands []*Command
 	Expr     Node
+	Redirs   []Redirection
 }
 
 // Chain 是管道链（PowerShell 7 的 && / ||）：左侧成功/失败决定是否执行右侧。

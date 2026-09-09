@@ -93,6 +93,10 @@ func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 	if pipe.Expr != nil {
 		// 纯表达式语句求值前置位 $?（对齐命令路径：求值中出错由 writeError 覆盖为 false）
 		e.Session.LastSuccess = true
+		// 无命令时重定向记录在管道层（如 $x 2>$null），在这里启用（打开目标、切换输出），语义与命令重定向一致。
+		if len(pipe.Commands) == 0 && len(pipe.Redirs) > 0 {
+			defer e.enterRedirects(pipe.Redirs, pipe)()
+		}
 		if inc, ok := pipe.Expr.(*ast.Increment); ok {
 			// $i++ 作为语句：仅副作用，不输出
 			e.evalValue(inc)
@@ -113,6 +117,10 @@ func (e *Evaluator) evalPipeline(pipe *ast.Pipeline) []*object.PSObject {
 	// 管道内出现过错误（即使后续命令成功）：整条管道置失败（与 PowerShell 一致）。
 	if e.Session.ErrorSeq != mark {
 		e.Session.LastSuccess = false
+	}
+	// 无命令时在这里把表达式输出写进目标文件（只返回 nil，不进管道）。
+	if len(pipe.Commands) == 0 && len(pipe.Redirs) > 0 {
+		return e.applyRedirects(pipe.Redirs, pipe, cur)
 	}
 	return cur
 }
@@ -157,7 +165,7 @@ func (e *Evaluator) builtinError(args *builtin.BoundArgs, err error) {
 // Name 为 "&" 的是调用命令：目标求值为脚本块时执行脚本块，否则按名字走常规分发。
 func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLast bool) []*object.PSObject {
 	if cmd.Name == "&" {
-		defer e.enterRedirects(cmd)()
+		defer e.enterRedirects(cmd.Redirs, cmd)()
 		return e.execInvoke(cmd, input, isLast)
 	}
 	name := cmd.Name
@@ -170,8 +178,8 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		name = resolved
 	}
 	if fn, ok := e.findFunction(name); ok {
-		defer e.enterRedirects(cmd)()
-		return e.applyRedirects(cmd, e.callFunction(fn, cmd, input))
+		defer e.enterRedirects(cmd.Redirs, cmd)()
+		return e.applyRedirects(cmd.Redirs, cmd, e.callFunction(fn, cmd, input))
 	}
 	if fn, ok := builtin.Lookup(name); ok {
 		spec := builtin.Spec(name)
@@ -182,7 +190,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		}
 		// 参数绑定后才定 $?：绑定过程可能读取 $?，不能被新命令提前覆盖
 		e.Session.LastSuccess = true
-		defer e.enterRedirects(cmd)()
+		defer e.enterRedirects(cmd.Redirs, cmd)()
 		ctx := &builtin.Context{
 			Shell: e.Session, Engine: e,
 			Stdout: e.hostOut, Stderr: e.hostErr, Stdin: e.stdin, Console: e.consoleOut,
@@ -193,7 +201,7 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 			e.builtinError(args, err)
 			return nil
 		}
-		return e.applyRedirects(cmd, out)
+		return e.applyRedirects(cmd.Redirs, cmd, out)
 	}
 	if isScriptPath(name) {
 		// 显式位置实参（如 .\s.ps1 1 2 3）优先作为脚本实参；
@@ -207,8 +215,8 @@ func (e *Evaluator) execCommand(cmd *ast.Command, input []*object.PSObject, isLa
 		if len(args) == 0 && len(input) > 0 {
 			args = input
 		}
-		defer e.enterRedirects(cmd)()
-		return e.applyRedirects(cmd, e.runScriptFile(name, args))
+		defer e.enterRedirects(cmd.Redirs, cmd)()
+		return e.applyRedirects(cmd.Redirs, cmd, e.runScriptFile(name, args))
 	}
 	return e.runExternal(cmd, input, isLast)
 }
@@ -229,12 +237,12 @@ func isScriptPath(name string) bool {
 	return strings.HasSuffix(strings.ToLower(name), ".ps1")
 }
 
-// enterRedirects 在命令携带重定向时把执行期输出指到目标，返回恢复函数（调用方 defer）。
+// enterRedirects 在重定向表非空时把执行期输出指到目标，返回恢复函数（调用方 defer）。
 // 直接写屏的命令一并捕获；Write-Host 类走 Console（恒为初始主机输出），不受影响；外部命令不经过这里。
-// redirOut 只归属本次命令（redirCmd 判定），内层自带重定向的不被外层劫持。
-func (e *Evaluator) enterRedirects(cmd *ast.Command) func() {
+// redirOut 只归属本次持有者（owner 判定，命令或管道），内层自带重定向的不被外层劫持。
+func (e *Evaluator) enterRedirects(redirs []ast.Redirection, owner any) func() {
 	restores := []func(){}
-	if w, closer := e.stderrRedirectTarget(cmd); w != nil {
+	if w, closer := e.stderrRedirectTarget(redirs); w != nil {
 		oldErr := e.hostErr
 		e.hostErr = w
 		restores = append(restores, func() { e.hostErr = oldErr })
@@ -243,9 +251,9 @@ func (e *Evaluator) enterRedirects(cmd *ast.Command) func() {
 			restores = append(restores, func() { _ = c.Close() })
 		}
 	}
-	if w, closer := e.stdoutRedirectTarget(cmd); w != nil {
+	if w, closer := e.stdoutRedirectTarget(redirs); w != nil {
 		oldOut, oldRedir, oldCmd := e.hostOut, e.redirOut, e.redirCmd
-		e.hostOut, e.redirOut, e.redirCmd = w, w, cmd
+		e.hostOut, e.redirOut, e.redirCmd = w, w, owner
 		restores = append(restores, func() { e.hostOut, e.redirOut, e.redirCmd = oldOut, oldRedir, oldCmd })
 		if closer != nil {
 			c := closer
@@ -274,9 +282,9 @@ func (e *Evaluator) redirTargetPath(node ast.Node) (string, bool) {
 	return np, true
 }
 
-// stderrRedirectTarget 打开命令的 2> 重定向目标；目标为 $null 时返回 io.Discard。
-func (e *Evaluator) stderrRedirectTarget(cmd *ast.Command) (io.Writer, io.Closer) {
-	for _, r := range cmd.Redirs {
+// stderrRedirectTarget 打开重定向表的 2> 重定向目标；目标为 $null 时返回 io.Discard。
+func (e *Evaluator) stderrRedirectTarget(redirs []ast.Redirection) (io.Writer, io.Closer) {
+	for _, r := range redirs {
 		if r.Kind == ast.RedirStderr {
 			target, ok := e.redirTargetPath(r.Target)
 			if !ok {
@@ -297,11 +305,11 @@ func (e *Evaluator) stderrRedirectTarget(cmd *ast.Command) (io.Writer, io.Closer
 	return nil, nil
 }
 
-// stdoutRedirectTarget 求 stdout 重定向目标（> / >>）；多个取最后一个；$null 或非法返回 Discard。
-func (e *Evaluator) stdoutRedirectTarget(cmd *ast.Command) (io.Writer, io.Closer) {
+// stdoutRedirectTarget 求重定向表的 stdout 重定向目标（> / >>）；多个取最后一个；$null 或非法返回 Discard。
+func (e *Evaluator) stdoutRedirectTarget(redirs []ast.Redirection) (io.Writer, io.Closer) {
 	var pick *ast.Redirection
-	for i := range cmd.Redirs {
-		if r := &cmd.Redirs[i]; r.Kind == ast.RedirStdout || r.Kind == ast.RedirAppend {
+	for i := range redirs {
+		if r := &redirs[i]; r.Kind == ast.RedirStdout || r.Kind == ast.RedirAppend {
 			pick = r
 		}
 	}
@@ -324,11 +332,11 @@ func (e *Evaluator) stdoutRedirectTarget(cmd *ast.Command) (io.Writer, io.Closer
 	return io.Discard, nil
 }
 
-// applyRedirects 处理命令的 stdout 重定向（> / >>）。
+// applyRedirects 处理重定向表的 stdout 重定向（> / >>）。
 // stdout 被重定向时输出不进管道（返回 nil）；只有 stderr 重定向时输出照常返回。
-func (e *Evaluator) applyRedirects(cmd *ast.Command, out []*object.PSObject) []*object.PSObject {
+func (e *Evaluator) applyRedirects(redirs []ast.Redirection, owner any, out []*object.PSObject) []*object.PSObject {
 	hasStdout := false
-	for _, r := range cmd.Redirs {
+	for _, r := range redirs {
 		if r.Kind != ast.RedirStdout && r.Kind != ast.RedirAppend {
 			continue
 		}
@@ -338,15 +346,15 @@ func (e *Evaluator) applyRedirects(cmd *ast.Command, out []*object.PSObject) []*
 		return out
 	}
 	// 内置分支已把目标打开并指给 redirOut：返回值直接写进去，不另开文件（否则会截掉直接写的内容）。
-	// 只认本次命令归属的 redirOut（redirCmd 判定），内层自带重定向的不被外层劫持。
-	if e.redirOut != nil && e.redirCmd == cmd {
+	// 只认本次持有者归属的 redirOut（owner 判定），内层自带重定向的不被外层劫持。
+	if e.redirOut != nil && e.redirCmd == owner {
 		var buf bytes.Buffer
 		_ = object.FormatOutput(&buf, out)
 		_, _ = io.WriteString(e.redirOut, buf.String())
 		return nil
 	}
 	// 函数/脚本/外部命令路径：返回值逐个目标落盘（沿用旧行为）。
-	for _, r := range cmd.Redirs {
+	for _, r := range redirs {
 		if r.Kind != ast.RedirStdout && r.Kind != ast.RedirAppend {
 			continue
 		}
@@ -565,7 +573,7 @@ func (e *Evaluator) execInvoke(cmd *ast.Command, input []*object.PSObject, isLas
 	target := e.evalValue(cmd.Positional[targetIdx])
 	if node, ok := target.Value.(*ast.ScriptBlock); ok {
 		ca := e.evalCallArgs(cmd, rest)
-		return e.applyRedirects(cmd, e.invokeScriptBlock(node, ca, input))
+		return e.applyRedirects(cmd.Redirs, cmd, e.invokeScriptBlock(node, ca, input))
 	}
 	// 非脚本块目标按名字分发：改写成以目标字符串为名的普通命令，剔除已消费的目标实参
 	nameCmd := rewriteWithoutPositional(cmd, targetIdx)

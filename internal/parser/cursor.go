@@ -86,4 +86,3 @@ func (p *Parser) describe(t lexer.Token) string {
 	}
 	return "token"
 }
-

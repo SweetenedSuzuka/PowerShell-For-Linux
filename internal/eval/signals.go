@@ -15,15 +15,15 @@ const (
 	flowContinue
 	flowReturn
 	flowExit
-	flowError // 终止错误（throw / 未捕获错误）
+	flowError     // 终止错误（throw / 未捕获错误）
 	flowStmtError // 语句级错误（跳过本句继续执行，可被 try 捕获）
 )
 
 // flowSignal 用 panic/recover 传递 break/continue/return/exit/error。
 type flowSignal struct {
 	kind  flowKind
-	value *object.PSObject // return 值 / 错误记录
-	code  int              // exit 码
+	value *object.PSObject   // return 值 / 错误记录
+	code  int                // exit 码
 	out   []*object.PSObject // panic 前已产生的输出（传播时保留，如 throw 前循环的输出）
 }
 
@@ -35,4 +35,3 @@ func RecoverError(r any) error {
 	}
 	return nil
 }
-

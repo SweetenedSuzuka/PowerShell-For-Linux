@@ -5,9 +5,9 @@ import "testing"
 // TestDrivePath 盘符前缀归一化：C: 当根目录，其它盘符报错，无盘符原样。
 func TestDrivePath(t *testing.T) {
 	cases := []struct {
-		in   string
+		in       string
 		expected string
-		err  bool
+		err      bool
 	}{
 		{"C:\\tmp\\x", "/tmp/x", false},
 		{"C:/tmp/x", "/tmp/x", false},

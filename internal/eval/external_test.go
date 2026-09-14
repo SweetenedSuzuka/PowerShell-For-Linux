@@ -35,7 +35,7 @@ func externalCmd(t *testing.T, src string) (string, []string) {
 // TestExternalArgv 外部命令 argv 依源码顺序重建：位置实参原样、命名参数配对、开关独立。
 func TestExternalArgv(t *testing.T) {
 	cases := []struct {
-		src     string
+		src      string
 		wantProg string
 		wantArgv []string
 	}{

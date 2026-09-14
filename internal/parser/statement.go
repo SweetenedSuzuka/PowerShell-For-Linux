@@ -1,10 +1,10 @@
 package parser
 
 import (
-	"strings"
 	"powershell/internal/ast"
 	"powershell/internal/lang"
 	"powershell/internal/lexer"
+	"strings"
 )
 
 // statement.go 实现语句分发、管道、赋值与块解析。
@@ -142,4 +142,3 @@ func (p *Parser) parseBlock() *ast.Block {
 	}
 	return &ast.Block{Body: body}
 }
-

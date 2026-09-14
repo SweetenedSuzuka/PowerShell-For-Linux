@@ -155,4 +155,3 @@ func isAtCommandWord(text string) bool {
 	}
 	return true
 }
-

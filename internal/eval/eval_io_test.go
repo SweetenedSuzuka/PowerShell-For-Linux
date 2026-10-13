@@ -21,7 +21,7 @@ func TestStderrRedirectKeepsOutput(t *testing.T) {
 	outFile := filepath.Join(dir, "o.txt")
 	src := "Write-Output 'file' > " + outFile
 	if got := strs(runEval(t, src)); len(got) != 0 {
-		t.Fatalf("> 文件应无输出，实际 %v", got)
+		t.Fatalf("> 文件应无输出，得到 %v", got)
 	}
 	data, err := os.ReadFile(outFile)
 	if err != nil || string(data) != "file\n" {
@@ -45,7 +45,7 @@ func TestStderrRedirectRestoredAfterExecutePanic(t *testing.T) {
 	}
 	// 恢复已执行，报错回到原缓冲，不滞留文件
 	if !strings.Contains(errBuf.String(), "子字符串") {
-		t.Fatalf("抛出错误后 stderr 应归位，实际 %q", errBuf.String())
+		t.Fatalf("抛出错误后 stderr 应归位，得到 %q", errBuf.String())
 	}
 	// 后续命令的错误继续写原缓冲，不再进文件
 	res = parser.Parse(`Get-Item 不存在XYZ123`)
@@ -56,7 +56,7 @@ func TestStderrRedirectRestoredAfterExecutePanic(t *testing.T) {
 		ev.EvalStatement(st)
 	}
 	if !strings.Contains(errBuf.String(), "不存在XYZ123") {
-		t.Fatalf("后续 stderr 应写原缓冲，实际 %q", errBuf.String())
+		t.Fatalf("后续 stderr 应写原缓冲，得到 %q", errBuf.String())
 	}
 }
 
@@ -96,7 +96,7 @@ func TestAddContentEncoding(t *testing.T) {
 	}
 	want := append([]byte{0xEF, 0xBB, 0xBF}, []byte("a\nb\n")...)
 	if string(data) != string(want) {
-		t.Fatalf("追加两次应只有一个 BOM，实际 % x", data)
+		t.Fatalf("追加两次应只有一个 BOM，得到 % x", data)
 	}
 }
 

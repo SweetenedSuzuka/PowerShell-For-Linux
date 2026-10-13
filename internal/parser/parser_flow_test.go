@@ -49,13 +49,13 @@ func TestBraceNewlineLayout(t *testing.T) {
 	} {
 		res := Parse(src)
 		if res.Error != nil || res.Incomplete {
-			t.Fatalf("%q 应可完整解析，实际 err=%v", src, res.Error)
+			t.Fatalf("%q 应可完整解析，err=%v", src, res.Error)
 		}
 	}
 	// if 块后换行再写独立语句应解析为两条语句，换行不被 else 检查消耗
 	res := Parse("if ($true)\n{ 1 }\necho done")
 	if res.Error != nil || len(res.List.Statements) != 2 {
-		t.Fatalf("if 块后的独立语句应解析为两条语句，实际 err=%v 条数=%d", res.Error, len(res.List.Statements))
+		t.Fatalf("if 块后的独立语句应解析为两条语句，err=%v 条数=%d", res.Error, len(res.List.Statements))
 	}
 	// 分号与缺大括号的写法仍拒绝
 	for _, src := range []string{
@@ -72,7 +72,7 @@ func TestBraceNewlineLayout(t *testing.T) {
 func TestCatchTypeFilterNewline(t *testing.T) {
 	res := Parse("try\n{\nthrow \"e\"\n}\ncatch\n[System.Exception]\n{ \"c\" }")
 	if res.Error != nil || res.Incomplete || len(res.List.Statements) != 1 {
-		t.Fatalf("catch 类型过滤换行应可完整解析，实际 err=%v", res.Error)
+		t.Fatalf("catch 类型过滤换行应可完整解析，err=%v", res.Error)
 	}
 }
 
@@ -81,7 +81,7 @@ func TestCatchTypeFilterNewline(t *testing.T) {
 func TestTryRequiresHandler(t *testing.T) {
 	res := Parse("try { \"x\" }\n")
 	if res.Error != nil || !res.Incomplete {
-		t.Fatalf("try 体后截断应标记不完整，实际 err=%v incomplete=%v", res.Error, res.Incomplete)
+		t.Fatalf("try 体后截断应标记不完整，err=%v incomplete=%v", res.Error, res.Incomplete)
 	}
 	for _, src := range []string{
 		"try { echo X } \necho done",
@@ -99,7 +99,7 @@ func TestTryRequiresHandler(t *testing.T) {
 	} {
 		r := Parse(src)
 		if r.Error != nil || r.Incomplete {
-			t.Fatalf("%q 应可完整解析，实际 err=%v incomplete=%v", src, r.Error, r.Incomplete)
+			t.Fatalf("%q 应可完整解析，err=%v incomplete=%v", src, r.Error, r.Incomplete)
 		}
 	}
 }
@@ -119,7 +119,7 @@ func TestParamTypeAnnotations(t *testing.T) {
 	for src, want := range cases {
 		res := Parse(src)
 		if res.Error != nil || res.Incomplete {
-			t.Fatalf("%q 应完整解析，实际 err=%v incomplete=%v", src, res.Error, res.Incomplete)
+			t.Fatalf("%q 应完整解析，err=%v incomplete=%v", src, res.Error, res.Incomplete)
 		}
 		var fd *ast.FunctionDef
 		for _, st := range res.List.Statements {
@@ -161,14 +161,14 @@ func TestParamTypeAnnotations(t *testing.T) {
 func TestNamedBlocks(t *testing.T) {
 	res := Parse("function f { begin { 1 } process { 2 } end { 3 } }")
 	if res.Error != nil || res.Incomplete {
-		t.Fatalf("三块应完整解析，实际 err=%v incomplete=%v", res.Error, res.Incomplete)
+		t.Fatalf("三块应完整解析，err=%v incomplete=%v", res.Error, res.Incomplete)
 	}
 	fn := res.List.Statements[0].(*ast.FunctionDef)
 	if fn.Begin == nil || fn.Process == nil || fn.End == nil {
 		t.Fatalf("三块都应拆进对应字段：begin=%v process=%v end=%v", fn.Begin != nil, fn.Process != nil, fn.End != nil)
 	}
 	if len(fn.Body.Body.Statements) != 0 {
-		t.Fatalf("命名块应从体里剔除，实际残留 %d 条", len(fn.Body.Body.Statements))
+		t.Fatalf("命名块应从体里剔除，体里仍残留 %d 条", len(fn.Body.Body.Statements))
 	}
 	// 块乱序
 	res = Parse("function h { end { 'e' } begin { 'b' } }")

@@ -31,16 +31,16 @@ func TestPromptText(t *testing.T) {
 	sess := shell.New(shell.StyleCore, io.Discard, io.Discard, strings.NewReader(""))
 	r := &REPL{Session: sess}
 	if got := r.promptText(); got != sess.Prompt() {
-		t.Fatalf("未定义应回默认，实际 %q", got)
+		t.Fatalf("未定义应回默认，得到 %q", got)
 	}
 	// 定义后取值
 	r = evalPromptDef(t, `function prompt { 'MYPROMPT> ' }`)
 	if got := r.promptText(); got != "MYPROMPT> " {
-		t.Fatalf("定义后应取值，实际 %q", got)
+		t.Fatalf("定义后应取值，得到 %q", got)
 	}
 	// 失败回默认
 	r = evalPromptDef(t, `function prompt { throw 'x' }`)
 	if got := r.promptText(); got != r.Session.Prompt() {
-		t.Fatalf("失败应回默认，实际 %q", got)
+		t.Fatalf("失败应回默认，得到 %q", got)
 	}
 }

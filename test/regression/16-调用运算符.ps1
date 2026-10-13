@@ -5,7 +5,7 @@ Write-Output "== 调用运算符 =="
 $ic1 = & { "a"; "b" }
 $results += T "& 直调脚本块" (($ic1 -join ",") -eq "a,b")
 $sb = { param($x) $x * 2 }
-$results += T "& 变量持块带 param" ((& $sb 21) -eq 42)
+$results += T "& 变量存脚本块带 param" ((& $sb 21) -eq 42)
 # 127. 多余实参进 $args
 $sb2 = { param($x) "x=$x args=$args" }
 $results += T "& 多余实参进 args" ((& $sb2 1 2 3) -eq "x=1 args=2 3")

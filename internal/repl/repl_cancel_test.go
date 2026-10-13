@@ -37,7 +37,7 @@ func TestCancelClearsPending(t *testing.T) {
 	r.reader = &seqReader{steps: []any{errLineCancelled}}
 	r.loop()
 	if r.pending != "" {
-		t.Fatalf("中断后累积应清空，实际 %q", r.pending)
+		t.Fatalf("中断后累积应清空，得到 %q", r.pending)
 	}
 	if strings.Contains(out.String(), "True") {
 		t.Fatalf("中断后不应执行，输出 %q", out.String())

@@ -55,7 +55,7 @@ func assertNamedArg(t *testing.T, args *builtin.BoundArgs, name, expected string
 	}
 }
 
-// TestBindPositionalMapping 位置实参按规格中心化映射到命名参数。
+// TestBindPositionalMapping 位置实参按规格 Position 序号对应到命名参数。
 func TestBindPositionalMapping(t *testing.T) {
 	args, err := bindViaEval(t, "Set-Content a.txt hello")
 	if err != nil {
@@ -64,10 +64,10 @@ func TestBindPositionalMapping(t *testing.T) {
 	assertNamedArg(t, args, "Path", "a.txt")
 	assertNamedArg(t, args, "Value", "hello")
 	if !args.PosMapped["Path"] || !args.PosMapped["Value"] {
-		t.Errorf("位置映射应标记 PosMapped，实际 %v", args.PosMapped)
+		t.Errorf("位置映射应标记 PosMapped，得到 %v", args.PosMapped)
 	}
 	if len(args.Positional) != 0 {
-		t.Errorf("映射后不应留位置实参，实际 %v", args.Positional)
+		t.Errorf("映射后不应留位置实参，得到 %v", args.Positional)
 	}
 }
 
@@ -135,7 +135,7 @@ func TestBindExcessPositional(t *testing.T) {
 	assertNamedArg(t, args, "Path", "a")
 	assertNamedArg(t, args, "Destination", "b")
 	if len(args.Positional) != 1 || args.Positional[0].String() != "c" {
-		t.Errorf("第 3 个实参应留 Positional，实际 %v", args.Positional)
+		t.Errorf("第 3 个实参应留 Positional，得到 %v", args.Positional)
 	}
 }
 
@@ -165,7 +165,7 @@ func TestBindSwitchNoSlot(t *testing.T) {
 		t.Error("开关 -Recurse 应置为真")
 	}
 	if len(args.Positional) != 0 {
-		t.Errorf("开关不占槽位，不应留位置实参，实际 %v", args.Positional)
+		t.Errorf("开关不占槽位，不应留位置实参，得到 %v", args.Positional)
 	}
 }
 
@@ -190,10 +190,10 @@ func TestBindArrayPositional(t *testing.T) {
 	}
 	v := args.Get("Path")
 	if v == nil || !v.IsArray() {
-		t.Fatalf("Path 应是数组，实际 %v", v)
+		t.Fatalf("Path 应是数组，得到 %v", v)
 	}
 	if got := v.ArrayItems(); len(got) != 2 {
-		t.Errorf("数组应有 2 项，实际 %d", len(got))
+		t.Errorf("数组应有 2 项，得到 %d", len(got))
 	}
 	assertNamedArg(t, args, "Destination", "d")
 }
@@ -268,7 +268,7 @@ func TestBindValueObjects(t *testing.T) {
 		t.Fatal("Seconds 应为 2")
 	}
 	if _, ok := v.Value.(int64); !ok {
-		t.Errorf("Seconds 应为整数对象，实际 %T", v.Value)
+		t.Errorf("Seconds 应为整数对象，得到 %T", v.Value)
 	}
 }
 

@@ -37,7 +37,7 @@ func firstPathArg(c *Context) string {
 	return firstArg(c, "Path")
 }
 
-// firstArg 获取命名参数（位置实参已由 Bind 按规格中心化映射到同名命名参数）。
+// firstArg 获取命名参数（位置实参已由 Bind 按规格 Position 序号对应到同名命名参数）。
 func firstArg(c *Context, name string) string {
 	if p, ok := c.Args.Str(name); ok && p != "" {
 		return p
@@ -62,8 +62,8 @@ func namedOrPosArgs(c *Context, name string) []string {
 	return out
 }
 
-// pathAndValue 解析"路径 + 值"类命令（Set-Content/Add-Content/Set-Item）。
-// 位置实参已由 Bind 中心化映射到 -Path/-Value（跳过已命名的槽位）。
+// pathAndValue 解析「路径 + 值」类命令（Set-Content/Add-Content/Set-Item）。
+// 位置实参已由 Bind 按 Position 序号对应到 -Path/-Value（跳过已命名的槽位）。
 // 缺值时：显式命名 -Path 而无值视为命令没写完，静默不动。
 // 位置形式（如 Set-Content foo）允许写空文件，用 PosMapped 区分两者。
 func pathAndValue(c *Context) (string, *object.PSObject) {
@@ -78,8 +78,8 @@ func pathAndValue(c *Context) (string, *object.PSObject) {
 	return path, val
 }
 
-// pairArgs 解析"名称 + 值"类命令（New-Variable/Set-Variable）。
-// 位置实参已由 Bind 中心化映射到 -Name/-Value（跳过已命名的槽位）。
+// pairArgs 解析「名称 + 值」类命令（New-Variable/Set-Variable）。
+// 位置实参已由 Bind 按 Position 序号对应到 -Name/-Value（跳过已命名的槽位）。
 func pairArgs(c *Context, keyName string) (string, *object.PSObject) {
 	key, _ := c.Args.Str(keyName)
 	val := c.Args.Get("Value")
@@ -171,7 +171,7 @@ type whatIfCollector struct {
 	out    []*object.PSObject
 }
 
-// reportWhatIf 登记 -WhatIf 预演行；返回真表示跳过实际变更。
+// reportWhatIf 登记 -WhatIf 预演行；返回真表示跳过变更。
 func (w *whatIfCollector) reportWhatIf(target string) bool {
 	if !w.c.Args.Switch("WhatIf") {
 		return false
@@ -241,7 +241,7 @@ func readLineBytes(r io.Reader) (string, bool) {
 	}
 }
 
-// pathList 汇总管道输入或 -Path / 位置参数中的路径列表（数组展开，支持"可多个"）。
+// pathList 汇总管道输入或 -Path / 位置参数中的路径列表（数组展开，支持「可多个」）。
 func pathList(c *Context) []string {
 	var paths []string
 	if len(c.Input) > 0 {

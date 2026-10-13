@@ -25,7 +25,7 @@ func TestDrivePath(t *testing.T) {
 		actual, err := DrivePath(tc.in)
 		if tc.err {
 			if err == nil {
-				t.Errorf("%q 应报错，实际得 %q", tc.in, actual)
+				t.Errorf("%q 应报错，得到 %q", tc.in, actual)
 			}
 			continue
 		}

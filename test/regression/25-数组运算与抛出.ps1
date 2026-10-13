@@ -22,7 +22,7 @@ $results += T "函数抛出前输出保留" ((($so2 -join ",") -eq "f2a,f2caught
 # 225. 进入 catch 时问号变量保持失败
 $qc = try { throw "t1" } catch { if ($?) { "true" } else { "false" } }
 $results += T "进入catch时问号保持失败" (($qc -eq "false"))
-# 226. 错误上抛经过 finally 时问号变量保持失败
+# 226. 错误向外抛出经过 finally 时问号变量保持失败
 $qf = try { try { throw "t2" } finally { if ($?) { "f-true" } else { "f-false" } } } catch { "outer" }
 $results += T "经过finally时问号保持失败" ((($qf -join ",") -eq "f-false,outer"))
 # 227. 空 catch 块之后问号变量保持失败

@@ -4,10 +4,10 @@ Write-Output "== 对象管道行为一致 =="
 # 89. Select-String 默认大小写不敏感（匹配大小写变体）
 $ssn = "Hello","HELLO" | Select-String "hello"
 $results += T "Select-String 默认不敏感" (($ssn.Count -eq 2))
-# 90. Select-String -CaseSensitive 只认精确大小写
+# 90. Select-String -CaseSensitive 只匹配精确大小写
 $ssc = "Hello","hello" | Select-String "hello" -CaseSensitive
 $results += T "Select-String CaseSensitive" (($ssc.Count -eq 1) -and ($ssc[0].Line -eq "hello"))
-# 91. Select-String 管道编号按对象序号，未匹配对象占号（x 不匹配，b/c 编号 2/3）
+# 91. Select-String 管道编号按对象序号，未匹配的对象也占用编号（x 不匹配，b/c 编号 2/3）
 $ssl = "x","b","c" | Select-String "[bc]" | ForEach-Object { "$($_.LineNumber):$($_.Line)" }
 $results += T "Select-String 管道编号" (($ssl -join ",") -eq "2:b,3:c")
 # 92. Group-Object 默认大小写不敏感合并，Name 取出首次原值，合并后只有一组
@@ -23,7 +23,7 @@ $results += T "Compare-Object 默认顺序" (($coSeq -join ",") -eq "=>C,<=a")
 # 95. Compare-Object -IncludeEqual 相等项显示基准集的值（A 与 a 相等显示 A）
 $cie = Compare-Object -ReferenceObject A -DifferenceObject a -IncludeEqual
 $results += T "Compare-Object IncludeEqual值" (($cie[0].SideIndicator -eq "==") -and ($cie[0].InputObject -eq "A"))
-# 96. Sort-Object -Unique 大小写不敏感去重（apple/Apple 合并为排序后首个）
+# 96. Sort-Object -Unique 大小写不敏感去重（apple/Apple 合并为排序后的第一个）
 $su = "banana","apple","Apple" | Sort-Object -Unique
 $results += T "Sort-Object Unique去重" (($su -join ",") -eq "apple,banana")
 # 97. Sort-Object -Unique -CaseSensitive 全保留

@@ -51,11 +51,11 @@ func TestRawParts(t *testing.T) {
 func TestBinaryOpsInCommandArgs(t *testing.T) {
 	res := Parse("Where-Object Length -gt 100")
 	if res.Error != nil {
-		t.Fatalf("Where-Object Length -gt 100 应可解析，实际 err=%v", res.Error)
+		t.Fatalf("Where-Object Length -gt 100 应该被解析，err=%v", res.Error)
 	}
 	res = Parse("Get-ChildItem | Where-Object Name -like \"a*\"")
 	if res.Error != nil {
-		t.Fatalf("管道加 -like 合并应可解析，实际 err=%v", res.Error)
+		t.Fatalf("管道加 -like 合并应该被解析，err=%v", res.Error)
 	}
 }
 
@@ -72,11 +72,11 @@ func TestInvokeCommand(t *testing.T) {
 	for src := range cases {
 		res := Parse(src)
 		if res.Error != nil || res.Incomplete {
-			t.Fatalf("%q 应可完整解析，实际 err=%v incomplete=%v", src, res.Error, res.Incomplete)
+			t.Fatalf("%q 应可完整解析，err=%v incomplete=%v", src, res.Error, res.Incomplete)
 		}
 		d := dump(parseOK(t, src))
 		if !strings.Contains(d, cases[src]) {
-			t.Fatalf("%q 的形态应含 %q，实际 %s", src, cases[src], d)
+			t.Fatalf("%q 的形态应含 %q，得到 %s", src, cases[src], d)
 		}
 	}
 	// & 后无目标标记为不完整
@@ -96,7 +96,7 @@ func TestCommandCommaMissingArg(t *testing.T) {
 	} {
 		res := Parse(src)
 		if res.Error == nil || !strings.Contains(res.Error.Error(), "缺少参数") {
-			t.Errorf("%q 应报告缺少参数，实际 err=%v", src, res.Error)
+			t.Errorf("%q 应报告缺少参数，err=%v", src, res.Error)
 		}
 	}
 	for _, src := range []string{
@@ -106,7 +106,7 @@ func TestCommandCommaMissingArg(t *testing.T) {
 		`Copy-Item a b, c`,
 	} {
 		if res := Parse(src); res.Error != nil || res.Incomplete {
-			t.Errorf("%q 应可解析，实际 err=%v", src, res.Error)
+			t.Errorf("%q 应该被解析，err=%v", src, res.Error)
 		}
 	}
 }

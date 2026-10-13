@@ -29,9 +29,9 @@ $results += T "Get-Member -MemberType" (($gm2.Count -gt 0) -and ($gm2[0].MemberT
 # 86. ConvertTo-Json -Depth（嵌套展开截断）
 $jd = @{ a = @{ b = @{ c = 1 } } } | ConvertTo-Json -Depth 1
 $results += T "ConvertTo-Json -Depth" (($jd -like '*"a": {}*'))
-# 87. New-Object（PSObject -Property 哈希表变属性）
+# 87. New-Object（PSObject -Property 把哈希表变成属性）
 $no = New-Object PSObject -Property @{ aa = 1; bb = "z" }
 $results += T "New-Object" (($no.aa -eq 1) -and ($no.bb -eq "z"))
-# 88. [pscustomobject] 类型字面量（条目变属性）
+# 88. [pscustomobject] 类型字面量（把条目变成属性）
 $pc = [pscustomobject]@{ nn = 7; ss = "q" }
 $results += T "[pscustomobject]" (($pc.nn -eq 7) -and ($pc.ss -eq "q"))

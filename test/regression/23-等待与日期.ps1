@@ -7,7 +7,7 @@ $results += T "等待缺失进程" ((($? -eq $false)) -and (($Error.Count -ge 1)
 $Error.Clear()
 Wait-Process -Name "zzz-no-such-proc-abc"
 $results += T "等待缺失进程名" ((($? -eq $false)) -and (($Error.Count -ge 1)))
-# 201. @() 首命令接纳逗号实参
+# 201. @() 首命令接受逗号实参
 $at1 = @(Write-Output "a", "b")
 $results += T "数组首命令" ((($at1.Count -eq 2)) -and ((($at1 -join "|") -eq "a|b")))
 # 202. @() 命名首命令可解析
@@ -26,7 +26,7 @@ $results += T "字符串问号展开" ((($qi -eq "AFTER=True")) -and (($qj -eq "
 $Error.Clear()
 Start-Sleep 1 2
 $results += T "睡眠超量位置" ((($? -eq $false)) -and (($Error.Count -ge 1)))
-# 206. [version] 类型转换与未知类型本地化
+# 206. [version] 类型转换与未知类型的报错内容
 $ver = [version]"1.2"
 $Error.Clear()
 $zz = [zzznope]"a"
@@ -54,9 +54,9 @@ $results += T "非法日期报错" ((($? -eq $false)) -and (($Error.Count -ge 1)
 # 212. 日期对象链式成员
 $dd = Get-Date 2024-01-02
 $results += T "日期链式成员" ((($dd.Date.Year -eq 2024)) -and (($dd.Ticks -gt 0)))
-# 213. 管道内错误粘滞
+# 213. 管道内命令失败后 $? 保持失败
 Get-Content zzz-no-such-xyz-123 2>$null | Out-Null
-$results += T "管道错误粘滞" (($? -eq $false))
+$results += T "管道失败后问号保持失败" (($? -eq $false))
 # 214. 成员读取重置
 $qm = @(Get-Content zzz-no-such-xyz-123 2>$null).Count
 $results += T "成员读取重置" (($? -eq $true))

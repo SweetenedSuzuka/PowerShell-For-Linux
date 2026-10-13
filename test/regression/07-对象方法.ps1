@@ -4,7 +4,7 @@ Write-Output "== 对象方法 =="
 # 76. DateTime ToShortDateString（Get-Date -Date 指定日期）
 $dts = (Get-Date -Date "2020-01-15").ToShortDateString()
 $results += T "DateTime ToShortDateString" (($dts -eq "1/15/2020"))
-# 77. FileInfo 虚拟属性 Extension（Get-Item 返回对象的路径派生属性）
+# 77. FileInfo 计算属性 Extension（Get-Item 返回对象的路径派生属性）
 "x" | Set-Content ov.txt
 $fie = (Get-Item ov.txt).Extension
 $results += T "FileInfo Extension" (($fie -eq ".txt"))

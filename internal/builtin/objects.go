@@ -130,7 +130,7 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 				for _, pr := range it.Props {
 					names = append(names, pr.Name)
 				}
-				// DateTime 虚拟属性补齐（顺序与 PowerShell 一致；其它类型沿用实属性）。
+				// DateTime 的计算属性补齐（顺序与 PowerShell 一致；其它类型用 Props 里存的属性）。
 				if it.TypeName == "DateTime" {
 					for _, vn := range object.DateTimeSelectColumns {
 						dup := false
@@ -174,7 +174,7 @@ func cmdSelectObject(c *Context) ([]*object.PSObject, error) {
 		}
 		items = out
 	}
-	// -Unique 最后去重：按投影/展开后的值（原版 PowerShell 语义）
+	// -Unique 最后去重：按取属性值、展开数组后的值（原版 PowerShell 语义）
 	if unique {
 		seen := map[string]bool{}
 		var uniq []*object.PSObject

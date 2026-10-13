@@ -77,10 +77,10 @@ func TestScriptParamTypeAnnotations(t *testing.T) {
 	}
 	out = ev.RunScriptFile(badPath, []*object.PSObject{object.Str("abc")})
 	if got := strs(out); len(got) != 0 {
-		t.Fatalf("绑定失败脚本应无输出，实际 %v", got)
+		t.Fatalf("绑定失败脚本应无输出，得到 %v", got)
 	}
 	if sess.LastExit != 1 {
-		t.Fatalf("绑定失败应设置失败退出码 1，实际 %d", sess.LastExit)
+		t.Fatalf("绑定失败应设置失败退出码 1，得到 %d", sess.LastExit)
 	}
 }
 

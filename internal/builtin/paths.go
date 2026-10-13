@@ -327,7 +327,7 @@ func cmdGetItemPropertyValue(c *Context) ([]*object.PSObject, error) {
 }
 
 func cmdSetItemProperty(c *Context) ([]*object.PSObject, error) {
-	// 位置实参已由 Bind 中心化映射到 路径→属性名→值（跳过已命名的槽位）
+	// 位置实参已由 Bind 按 Position 序号对应到 -Path/-Name/-Value（跳过已命名的槽位）
 	path, _ := c.Args.Str("Path")
 	name, _ := c.Args.Str("Name")
 	val := c.Args.Get("Value")

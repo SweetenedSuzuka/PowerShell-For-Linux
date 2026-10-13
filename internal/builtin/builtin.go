@@ -58,7 +58,7 @@ type BoundArgs struct {
 	Named          map[string]*object.PSObject
 	NamedNode      map[string]ast.Node
 	Switches       map[string]bool
-	PosMapped      map[string]bool // 参数名 → 是否由位置实参中心化映射而来（cmdlet 区分"显式命名"与"位置"用）
+	PosMapped      map[string]bool // 参数名 → 是否由位置实参按规格 Position 序号对应而来（cmdlet 区分「显式命名」与「位置」用）
 	ErrorAction    string          // -ErrorAction 的归一化取值（小写），空为未指定，按 Continue 处理
 }
 

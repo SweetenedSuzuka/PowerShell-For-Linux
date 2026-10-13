@@ -333,7 +333,7 @@ func (p *Parser) parsePostfix(argMode bool) ast.Node {
 
 // atCommaAhead 报告 @() 当前元素内是否有顶层逗号：从当前位置按括号深度扫描 token。
 // 深度归零处的逗号分隔下一个元素；`)`/`]`/`}`、管道、分号、赋值、换行与文件尾表示没有。
-// 词法 token 原子计入，字符串与脚本块内部不影响深度；只读游标，不移动位置。
+// 词法 token 原子计入，字符串与脚本块内部不影响深度；只读当前位置，不移动位置。
 func (p *Parser) atCommaAhead() bool {
 	depth := 0
 	for i := p.pos; i < len(p.toks); i++ {

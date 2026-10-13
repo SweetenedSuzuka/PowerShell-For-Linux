@@ -52,7 +52,7 @@ func TestSwitchNewlineBraceTerminates(t *testing.T) {
 	} {
 		res := Parse(src)
 		if res.Error != nil || res.Incomplete || len(res.List.Statements) != 1 {
-			t.Fatalf("%q 应可完整解析，实际 err=%v", src, res.Error)
+			t.Fatalf("%q 应可完整解析，err=%v", src, res.Error)
 		}
 	}
 }
@@ -63,11 +63,11 @@ func TestParserLoopsTerminate(t *testing.T) {
 	// -not 只有一元用法，不在 binaryOpInfo 表里，按普通命名参数解析
 	res := Parse("echo a -not")
 	if res.Error != nil || res.Incomplete {
-		t.Fatalf("echo a -not 应可解析（-not 按命名参数），实际 err=%v", res.Error)
+		t.Fatalf("echo a -not 应可解析（-not 按命名参数），err=%v", res.Error)
 	}
 	res = Parse("echo a -not b")
 	if res.Error != nil || res.Incomplete {
-		t.Fatalf("echo a -not b 应可解析，实际 err=%v", res.Error)
+		t.Fatalf("echo a -not b 应该被解析，err=%v", res.Error)
 	}
 	// 三个集合环遇不消费 token 的失败路径应报错退出而非死循环
 	for _, src := range []string{
@@ -95,7 +95,7 @@ func TestIncompleteInputsFlagged(t *testing.T) {
 	} {
 		res := Parse(src)
 		if res.Error != nil || !res.Incomplete {
-			t.Fatalf("%q 应标记不完整，实际 err=%v incomplete=%v", src, res.Error, res.Incomplete)
+			t.Fatalf("%q 应标记不完整，err=%v incomplete=%v", src, res.Error, res.Incomplete)
 		}
 	}
 }
@@ -109,11 +109,11 @@ func TestStringSubexprPropagatesState(t *testing.T) {
 	}
 	res = Parse(`"$side$(try { "SIDE" })"`)
 	if res.Error != nil || !res.Incomplete {
-		t.Fatalf("子表达式截断应标记外层不完整，实际 err=%v incomplete=%v", res.Error, res.Incomplete)
+		t.Fatalf("子表达式截断应标记外层不完整，err=%v incomplete=%v", res.Error, res.Incomplete)
 	}
 	res = Parse(`$s = "a$(echo hi)b"; $s`)
 	if res.Error != nil || res.Incomplete {
-		t.Fatalf("合法插值应不受影响，实际 err=%v", res.Error)
+		t.Fatalf("合法插值应不受影响，err=%v", res.Error)
 	}
 }
 
@@ -137,13 +137,13 @@ func TestExpressionLineContinuation(t *testing.T) {
 	} {
 		res := Parse(src)
 		if res.Error != nil {
-			t.Fatalf("%q 应支持跨行续写，实际 err=%v", src, res.Error)
+			t.Fatalf("%q 应支持跨行续写，err=%v", src, res.Error)
 		}
 	}
 	// 行尾没有运算符时换行仍是语句边界：两条独立语句
 	res := Parse("$x = 5\necho done")
 	if res.Error != nil || len(res.List.Statements) != 2 {
-		t.Fatalf("无运算符结尾的换行应分隔两条语句，实际 err=%v 条数=%d", res.Error, len(res.List.Statements))
+		t.Fatalf("无运算符结尾的换行应分隔两条语句，err=%v 条数=%d", res.Error, len(res.List.Statements))
 	}
 	// 截断输入仍标记不完整供 REPL 续行
 	if res := Parse("1 +"); !res.Incomplete {

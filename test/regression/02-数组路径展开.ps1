@@ -18,7 +18,7 @@ $results += T "多文件 -TotalCount 按文件" (($gto -join ",") -eq "l1,k1")
 # 40. Get-Content 多位置实参
 $g3 = Get-Content g1.txt g2.txt
 $results += T "Get-Content 多位置" (($g3 -join ",") -eq "g1,g2")
-# 41. Get-Item 通配数组（g?.txt 避开本脚本早前创建的 g.txt）
+# 41. Get-Item 通配数组（g?.txt 避开本脚本运行到这之前创建的 g.txt）
 $gw = Get-Item g?.txt, m*.txt
 $results += T "Get-Item 通配数组" (($gw.Count -eq 4))
 # 42. Get-Item 单路径不受影响

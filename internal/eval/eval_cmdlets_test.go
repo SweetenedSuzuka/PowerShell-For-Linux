@@ -351,9 +351,9 @@ func TestSelectObjectSkip(t *testing.T) {
 	wantStr(t, `1..5 | Select-Object -Skip -1; if ($?) { "ok" } else { "fail" }`, "fail")
 }
 
-// TestSelectObjectUniqueLast 验证 -Unique 在投影/展开之后去重。
+// TestSelectObjectUniqueLast 验证 -Unique 在取属性值、展开数组之后去重。
 func TestSelectObjectUniqueLast(t *testing.T) {
-	// 按投影后的属性值去重
+	// 按取出的属性值去重
 	wantStr(t, `([pscustomobject]@{n="a";m=1},[pscustomobject]@{n="a";m=2} | Select-Object -Property n -Unique | Measure-Object).Count`, "1")
 	// 按展开后的值去重
 	wantStr(t, `([pscustomobject]@{n="a"},[pscustomobject]@{n="a"},[pscustomobject]@{n="b"} | Select-Object -ExpandProperty n -Unique)`, "a", "b")

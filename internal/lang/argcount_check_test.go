@@ -103,7 +103,7 @@ func TestCallSitesArgCount(t *testing.T) {
 					args := len(call.Args) - 1
 					want := placeholderCount(zh[Msg(msgIndexOf[msgName.Sel.Name])])
 					if args != want {
-						t.Errorf("%s: %s 期望 %d 个实参，实际 %d 个",
+						t.Errorf("%s: %s 期望 %d 个实参，得到 %d 个",
 							fset.Position(call.Pos()), msgName.Sel.Name, want, args)
 					}
 					return true

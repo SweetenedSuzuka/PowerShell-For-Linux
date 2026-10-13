@@ -107,7 +107,7 @@ func writeStrings(w io.Writer, objs []*PSObject) error {
 	return nil
 }
 
-// tableScalar 报告对象在表格中是否按标量直接输出：无可制表属性，-Property 忽略（DateTime 有属性，按表格渲染）。
+// tableScalar 报告对象在表格中是否直接输出单值：无可制表属性，-Property 忽略（DateTime 有属性，按表格渲染）。
 func tableScalar(o *PSObject) bool {
 	switch o.TypeName {
 	case "String", "Int", "Double", "Boolean", "Null", "ScriptBlock":
@@ -166,7 +166,7 @@ func tableColumns(objs []*PSObject) (labels []string, aligns []string) {
 			return labels, aligns
 		}
 	}
-	// DateTime 用默认列（虚拟属性通过 PropValue 获取值，顺序见 dateTimeColumns）。
+	// DateTime 用默认列（计算属性通过 PropValue 获取值，顺序见 dateTimeColumns）。
 	if len(objs) > 0 && objs[0].TypeName == "DateTime" {
 		labels := make([]string, len(dateTimeColumns))
 		copy(labels, dateTimeColumns)
@@ -402,7 +402,7 @@ func FormatListTo(w io.Writer, objs []*PSObject, props []string) error {
 			for _, p := range o.Props {
 				names = append(names, p.Name)
 			}
-			// DateTime 虚拟属性补齐（顺序见 DateTimeSelectColumns；其它类型沿用实属性）。
+			// DateTime 的计算属性补齐（顺序见 DateTimeSelectColumns；其它类型用 Props 里存的属性）。
 			if o.TypeName == "DateTime" {
 				for _, vn := range DateTimeSelectColumns {
 					dup := false
@@ -435,7 +435,7 @@ func FormatListTo(w io.Writer, objs []*PSObject, props []string) error {
 					val = v.String()
 				}
 			} else if o.TypeName == "DateTime" {
-				// 虚拟属性通过 PropValue 获取值；实属性 PropValue 优先查询 Props，结果一致。
+				// 计算属性通过 PropValue 取值；Props 里的属性 PropValue 也优先查询 Props，结果一致。
 				if v, ok := o.PropValue(n); ok {
 					val = v.String()
 				}

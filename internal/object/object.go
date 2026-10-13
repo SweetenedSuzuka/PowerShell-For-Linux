@@ -85,7 +85,7 @@ func DateTime(t time.Time) *PSObject {
 	return &PSObject{TypeName: "DateTime", Value: t}
 }
 
-// versionParts 存放四段版本号（major.minor.build.revision）。
+// versionParts 保存版本号的四段（major.minor.build.revision）。
 type versionParts struct {
 	major, minor, build, revision int
 }
@@ -191,7 +191,7 @@ func (o *PSObject) Unwrap() any {
 }
 
 // PropValue 按名字获取属性；不存在返回 nil, false。
-// 先检查 Props，再检查虚拟属性（DateTime 字段、字符串 Length、数组 Count、哈希表键）。
+// 先检查 Props，再检查由代码算出的属性（DateTime 字段、字符串 Length、数组 Count、哈希表键）。
 func (o *PSObject) PropValue(name string) (*PSObject, bool) {
 	for _, p := range o.Props {
 		if strings.EqualFold(p.Name, name) {
@@ -201,8 +201,8 @@ func (o *PSObject) PropValue(name string) (*PSObject, bool) {
 	return o.virtualProp(name)
 }
 
-// virtualProp 解析不在 Props 里的虚拟属性（与 eval 的成员访问一致）。
-// Select-Object/Sort-Object/Group-Object/Measure-Object 等按名获取属性都要经过它。
+// virtualProp 计算不在 Props 里、由代码算出的属性（与 eval 的成员访问一致）。
+// Select-Object/Sort-Object/Group-Object/Measure-Object 等按名获取属性都在这里处理。
 func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 	switch o.TypeName {
 	case "String":
@@ -240,7 +240,7 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 			}
 		}
 	case "System.IO.FileInfo", "System.IO.DirectoryInfo":
-		// 虚拟属性从路径计算：Extension（目录恒空）、BaseName（文件去扩展名）、DirectoryName（父目录）。
+		// 计算属性从路径算出：Extension（目录恒空）、BaseName（文件去扩展名）、DirectoryName（父目录）。
 		// 与 FullName 一致按传入路径原样计算，不解析为绝对路径（与现有简化一致）。
 		if path, ok := o.Value.(string); ok {
 			switch strings.ToLower(name) {

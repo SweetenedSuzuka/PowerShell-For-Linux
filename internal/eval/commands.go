@@ -305,7 +305,7 @@ func (e *Evaluator) stderrRedirectTarget(redirs []ast.Redirection) (io.Writer, i
 	return nil, nil
 }
 
-// stdoutRedirectTarget 计算重定向表的 stdout 重定向目标（> / >>）；多个获取最后一个；$null 或非法返回 Discard。
+// stdoutRedirectTarget 计算重定向表的 stdout 重定向目标（> / >>）；输入多个时取最后一个；$null 或非法返回 Discard。
 func (e *Evaluator) stdoutRedirectTarget(redirs []ast.Redirection) (io.Writer, io.Closer) {
 	var pick *ast.Redirection
 	for i := range redirs {
@@ -898,7 +898,7 @@ func (e *Evaluator) bindParamValue(p ast.FunctionParam, v *object.PSObject) (*ob
 	return out, true
 }
 
-// writeBindError 报告参数绑定错误：类型未注册则报告"无法找到类型"，否则报告实参转换失败。
+// writeBindError 报告参数绑定错误：类型未注册则报告“无法找到类型”，否则报告实参转换失败。
 func (e *Evaluator) writeBindError(err error, v *object.PSObject, param, target string) {
 	if errors.Is(err, errTypeUnknown) {
 		e.reportError(fmt.Errorf("%s", lang.T(lang.MsgTypeUnknown, target)))

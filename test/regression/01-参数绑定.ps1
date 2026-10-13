@@ -1,5 +1,5 @@
-# 参数绑定：位置绑定中心化回归。
-Write-Output "== 参数绑定（位置绑定中心化回归） =="
+# 参数绑定：位置绑定按文档规格对应。
+Write-Output "== 参数绑定（位置绑定按文档规格对应） =="
 
 # 1. Set-Content 全位置
 Set-Content a.txt "val-a"

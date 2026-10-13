@@ -200,7 +200,7 @@ func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 }
 
 // AllVarNames 列出全部可见变量名（用于 Get-Variable / 补全），不区分大小写去重，显式变量优先。
-// s.Vars 中同时存在多种写法时，实际选择的写法取决于遍历顺序。
+// s.Vars 里同一个变量大小写不同时，列出哪一种写法取决于 map 遍历顺序。
 // 写入时键按已有写法归一，不会出现并存。
 func (s *Session) AllVarNames() []string {
 	byLower := map[string]string{}

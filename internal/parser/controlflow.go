@@ -199,7 +199,7 @@ func (p *Parser) parseFor() ast.Node {
 
 func (p *Parser) parseSwitch() ast.Node {
 	p.advance() // switch
-	// 可选开关：-regex / -wildcard / -exact / -casesensitive（记录但 MVP 仅影响匹配方式）
+	// 可选开关：-regex / -wildcard / -exact / -casesensitive（已记录，目前只影响匹配方式）
 	mode := "exact"
 	for {
 		t := p.cur()

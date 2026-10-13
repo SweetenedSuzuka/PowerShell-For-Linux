@@ -447,7 +447,7 @@ nextItem:
 				case "regex":
 					isMatch, _ = regexp.MatchString(cv.String(), item.String())
 				case "wildcard":
-					isMatch = wildcardMatch(cv.String(), item.String())
+					isMatch = object.WildcardMatch(cv.String(), item.String())
 				default:
 					isMatch = compareEq(cv, item)
 				}
@@ -473,7 +473,7 @@ nextItem:
 	return out
 }
 
-// evalBlockValue 执行语句块并获取其"返回值"（输出包装为单个值）。
+// evalBlockValue 执行语句块并获取其“返回值”（输出包装为单个值）。
 func (e *Evaluator) evalBlockValue(body *ast.StatementList) *object.PSObject {
 	e.inCapture++
 	defer func() { e.inCapture-- }()

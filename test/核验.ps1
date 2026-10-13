@@ -1,6 +1,6 @@
 # 指令核验脚本：对照 docs/指令参考.md 逐条运行示例，用 $? 判定通过/失败。
 # 用法：./powershell -NoLogo -NoProfile -File test/核验.ps1。
-# 平台相关项（systemctl/ping/xclip/sudo）在非对应环境会失败，属预期，见参考文档说明。
+# 平台相关项（systemctl/ping/xclip/sudo）在没有该功能的环境会返回失败，这是正常情况，可见参考文档。
 
 $pass = 0
 $fail = 0
@@ -35,7 +35,7 @@ Set-Content test/tmp/c1.txt "hello" 2>$null >$null; if ($?) { $pass++; "PASS  Se
 Get-Content test/tmp/c1.txt 2>$null >$null; if ($?) { $pass++; "PASS  Get-Content" } else { $fail++; "FAIL  Get-Content" }
 Add-Content test/tmp/c1.txt "world" 2>$null >$null; if ($?) { $pass++; "PASS  Add-Content" } else { $fail++; "FAIL  Add-Content" }
 Add-Content -Encoding utf8BOM test/tmp/enc.txt "a" 2>$null >$null; if ($?) { $pass++; "PASS  Add-Content -Encoding" } else { $fail++; "FAIL  Add-Content -Encoding" }
-if ((Get-Content test/tmp/enc.txt -TotalCount 1) -eq "a") { $pass++; "PASS  读取去 BOM" } else { $fail++; "FAIL  读取去 BOM" }
+if ((Get-Content test/tmp/enc.txt -TotalCount 1) -eq "a") { $pass++; "PASS  读取时去掉 BOM" } else { $fail++; "FAIL  读取时去掉 BOM" }
 Clear-Content test/tmp/c1.txt 2>$null >$null; if ($?) { $pass++; "PASS  Clear-Content" } else { $fail++; "FAIL  Clear-Content" }
 Set-Item env:VERIFY_VAR "v" 2>$null >$null; if ($?) { $pass++; "PASS  Set-Item 环境变量" } else { $fail++; "FAIL  Set-Item 环境变量" }
 Get-FileHash test/tmp/c1.txt -Algorithm MD5 2>$null >$null; if ($?) { $pass++; "PASS  Get-FileHash" } else { $fail++; "FAIL  Get-FileHash" }

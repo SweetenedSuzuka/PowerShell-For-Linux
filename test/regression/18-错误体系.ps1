@@ -9,7 +9,7 @@ $results += T '$Error 累积与顺序' (($Error.Count -ge 2) -and ($Error[0].Mes
 $ec1 = $Error.Count
 try { throw "ev-x" } catch {}
 $results += T "throw 进 Error" (($Error.Count -eq $ec1 + 1) -and ($Error[0].Message -eq "ev-x"))
-# 139. Clear 清空本体
+# 139. Clear 清空集合本身
 $Error.Clear()
 $results += T 'Error.Clear 清空' (($Error.Count -eq 0))
 # 140. RemoveAt 删除指定下标

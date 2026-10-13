@@ -25,7 +25,7 @@ $results += T "管道+命名缺值不写" ((-not (Test-Path np.txt)))
 # 53. Add-Content 位置缺值追加空
 Add-Content ac.txt
 $results += T "Add-Content 位置缺值写空" (((Test-Path ac.txt)))
-# 54. Get-ChildItem 通配多路径（多个通配符并列，结果包含目标文件）
+# 54. Get-ChildItem 通配多路径（多个通配符并列，结果包含被匹配的文件）
 "t1" | Set-Content f1.log; "t2" | Set-Content f2.md
 $wc = Get-ChildItem *.txt, *.log -Name
 $results += T "Get-ChildItem 通配数组" (($wc -contains "a1.txt") -and ($wc -contains "f1.log") -and ($wc.Count -ge 4))

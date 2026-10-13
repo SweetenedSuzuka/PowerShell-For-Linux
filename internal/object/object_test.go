@@ -74,16 +74,16 @@ func TestArrayAndProps(t *testing.T) {
 func TestVersionObject(t *testing.T) {
 	// 末尾为 0 的段省略，至少保留 major
 	if got := Version(7, 0, 0, 0).String(); got != "7" {
-		t.Errorf("Version(7,0,0,0).String() = %q，想要 \"7\"", got)
+		t.Errorf("Version(7,0,0,0).String() = %q，想要 “7”", got)
 	}
 	if got := Version(5, 1, 0, 0).String(); got != "5.1" {
-		t.Errorf("Version(5,1,0,0).String() = %q，想要 \"5.1\"", got)
+		t.Errorf("Version(5,1,0,0).String() = %q，想要 “5.1”", got)
 	}
 	if got := Version(1, 2, 3, 0).String(); got != "1.2.3" {
-		t.Errorf("Version(1,2,3,0).String() = %q，想要 \"1.2.3\"", got)
+		t.Errorf("Version(1,2,3,0).String() = %q，想要 “1.2.3”", got)
 	}
 	if got := Version(1, 2, 3, 4).String(); got != "1.2.3.4" {
-		t.Errorf("Version(1,2,3,4).String() = %q，想要 \"1.2.3.4\"", got)
+		t.Errorf("Version(1,2,3,4).String() = %q，想要 “1.2.3.4”", got)
 	}
 	v := Version(7, 0, 0, 0)
 	if p, ok := v.PropValue("Major"); !ok || p.String() != "7" {
@@ -154,7 +154,7 @@ func TestFormatList(t *testing.T) {
 	}
 }
 
-// TestFormatListDateTimeAll 验证 Format-List * 列出虚拟属性。
+// TestFormatListDateTimeAll 验证 Format-List * 列出计算属性。
 func TestFormatListDateTimeAll(t *testing.T) {
 	o := DateTime(time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC))
 	o.AddProp("DisplayHint", "DateTime")
@@ -253,10 +253,10 @@ func TestFormatOutputMixedTableShapes(t *testing.T) {
 	}
 	out := sb.String()
 	if strings.Count(out, "----") != 2 {
-		t.Errorf("两类形状应各成一张表（两组下划线），得到:\n%s", out)
+		t.Errorf("两类形状应各成一张表（两组下划线），得到：\n%s", out)
 	}
 	if !strings.Contains(out, "Name") || !strings.HasPrefix(strings.Split(out, "\n")[3], "n") {
-		t.Errorf("哈希表取 Name/Value 列、自定义对象取自身属性列，得到:\n%s", out)
+		t.Errorf("哈希表取 Name/Value 列、自定义对象取自身属性列，得到：\n%s", out)
 	}
 }
 
@@ -272,8 +272,8 @@ func TestFormatOutputSingleCustomObjectList(t *testing.T) {
 	}
 }
 
-// TestFileInfoVirtualProps 验证 FileInfo/DirectoryInfo 虚拟属性：Extension/BaseName/DirectoryName 从路径计算。
-func TestFileInfoVirtualProps(t *testing.T) {
+// TestFileInfoComputedProps 验证 FileInfo/DirectoryInfo 的计算属性：Extension/BaseName/DirectoryName 从路径算出。
+func TestFileInfoComputedProps(t *testing.T) {
 	// DirectoryName 经 filepath.Dir 计算，Windows 下返回反斜杠分隔，测试验证 Linux 行为
 	if runtime.GOOS != "linux" {
 		t.Skip("跳过：DirectoryName 的路径分隔符随平台变化，仅验证 Linux")
@@ -356,7 +356,7 @@ func TestWideFollowsWidth(t *testing.T) {
 	// 30/10=3 列，4 项应排 2 行
 	lines := strings.Split(strings.TrimRight(buf.String(), "\n"), "\n")
 	if len(lines) != 2 {
-		t.Fatalf("30 宽 10 列宽应排 2 行，实际 %q", buf.String())
+		t.Fatalf("30 宽 10 列宽应排 2 行，得到 %q", buf.String())
 	}
 }
 

@@ -32,7 +32,7 @@ const (
 	TkPunct                     // 其它标点：| ; , ( ) { } [ ] @
 )
 
-// PartKind 是双引号串内部"分段"的种类。
+// PartKind 是双引号串内部“分段”的种类。
 type PartKind int
 
 const (
@@ -300,7 +300,7 @@ func (l *Lexer) nextTok0() Token {
 		}
 	case ';', ',', '(', ')', '{', '}', '[', ']', ':':
 	case '@':
-		// @( 与 @{ 与 @ 单独
+		// @( 与 @{ 是子表达式与哈希表起始，@ 单独也是标点
 		tt = TkPunct
 	case '!':
 		tt = TkOp
@@ -391,7 +391,7 @@ func (l *Lexer) lexNumber(adj bool) Token {
 }
 
 // numberSuffix 尝试读取数字后缀 KB/MB/GB/TB/PB（不区分大小写，二进制倍数）。
-// 成功时消费两个字符并返回倍数；不匹配返回 false（不动游标）。
+// 成功时消费两个字符并返回倍数；不匹配返回 false（不移动位置）。
 func (l *Lexer) numberSuffix() (float64, bool) {
 	c := l.peek()
 	b := l.peekAt(1)
@@ -708,7 +708,7 @@ func (l *Lexer) lexDash(adj bool) Token {
 	return Token{Type: TkOp, Text: "-", Line: startLine, Col: startCol, Adjacent: adj}
 }
 
-// endsValue 判断前一 token 是否以"值"结尾（即 * / % 此时应视为运算符而非通配符）。
+// endsValue 判断前一 token 是否以“值”结尾（即 * / % 此时应视为运算符而非通配符）。
 func (l *Lexer) endsValue(adj bool) bool {
 	switch l.prevType {
 	case TkNumber, TkString, TkVariable, TkBraceVar:

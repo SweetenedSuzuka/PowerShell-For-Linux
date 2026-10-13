@@ -1,13 +1,13 @@
 # 指令详解-原版Windows指令
 
 原版 PowerShell 中仅 Windows 可用的指令。
-PowerShell For Linux默认不实现它们，但有时候会因为特殊原因实现一部分，会在下面标注。
+PowerShell For Linux 默认不实现下面列出的指令；已实现的部分在表格「实现状态」列标出，细节见对应小节。
 
 实现状态说明：
-- **Go实现**：行为在本程序内部用 Go 复现，不调用外部命令。
-- **映射 Linux**：委托给对应的 Linux 命令/工具，括号内为所调工具。
+- **Go实现**：行为在本程序内部用 Go 实现，不调用外部命令。
+- **映射 Linux**：调用对应的 Linux 命令或工具完成，括号里是实际调用的命令。
 - **未实现**：本程序尚未实现。
-- **不实现**：超出范围，本程序不做，原因见备注。
+- **不实现**：本程序暂时不会实现，原因见备注。
 
 ## 指令列表
 
@@ -171,7 +171,7 @@ PowerShell For Linux默认不实现它们，但有时候会因为特殊原因实
 | [`Get-CIPolicy`](#get-cipolicy) | ConfigCI | 仅5.1 | 仅5.1提供 | 获取代码完整性策略中的规则。 | 不实现 |  |
 | [`Get-CIPolicyIdInfo`](#get-cipolicyidinfo) | ConfigCI | 仅5.1 | 仅5.1提供 | 显示代码完整性策略信息。 | 不实现 |  |
 | [`Get-CIPolicyInfo`](#get-cipolicyinfo) | ConfigCI | 仅5.1 | 仅5.1提供 | 此 cmdlet 不受支持。 | 不实现 |  |
-| [`Get-ComputerInfo`](#get-computerinfo) | Microsoft.PowerShell.Management | 都有 | 无 | 获取系统和作系统属性的合并对象。 | Go实现 | 字段精简。 |
+| [`Get-ComputerInfo`](#get-computerinfo) | Microsoft.PowerShell.Management | 都有 | 无 | 获取系统和作系统属性的合并对象。 | Go实现 | 字段比原版少，仅输出对应小节列出的字段。 |
 | [`Get-ComputerRestorePoint`](#get-computerrestorepoint) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 获取本地计算机上的还原点。 | 不实现 |  |
 | [`Get-ControlPanelItem`](#get-controlpanelitem) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 获取控制面板项。 | 不实现 |  |
 | [`Get-Counter`](#get-counter) | Microsoft.PowerShell.Diagnostics | 都有 | 无 | 从本地和远程计算机获取性能计数器数据。 | 不实现 | Windows 专属（注册表 / 服务 / 回收站 / 补丁 / 事件） |
@@ -322,8 +322,8 @@ PowerShell For Linux默认不实现它们，但有时候会因为特殊原因实
 | [`New-WSManSessionOption`](#new-wsmansessionoption) | Microsoft.WSMan.Management | 都有 | 无 | 创建会话选项哈希表，用作 WS-Management cmdlet 的输入参数。 | 不实现 |  |
 | [`Optimize-AppxProvisionedPackages`](#optimize-appxprovisionedpackages) | Dism | 仅5.1 | 仅5.1提供 | 用硬链接替换相同文件，优化映像中预配包的总大小。 | 不实现 |  |
 | [`Optimize-WindowsImage`](#optimize-windowsimage) | Dism | 仅5.1 | 仅5.1提供 | 按指定优化配置 Windows 映像。 | 不实现 |  |
-| [`Out-GridView`](#out-gridview) | Microsoft.PowerShell.Utility | 都有 | 无 | 将输出发送到单独窗口中的交互式表中。 | 不实现 | GUI 与打印 |
-| [`Out-Printer`](#out-printer) | Microsoft.PowerShell.Utility | 都有 | 无 | 将输出发送到打印机。 | 不实现 | GUI 与打印 |
+| [`Out-GridView`](#out-gridview) | Microsoft.PowerShell.Utility | 都有 | 无 | 将输出发送到单独窗口中的交互式表中。 | 不实现 | 依赖图形界面与打印功能 |
+| [`Out-Printer`](#out-printer) | Microsoft.PowerShell.Utility | 都有 | 无 | 将输出发送到打印机。 | 不实现 | 依赖图形界面与打印功能 |
 | [`Publish-AppvClientPackage`](#publish-appvclientpackage) | AppvClient | 仅5.1 | 仅5.1提供 | 发布 App-V 包。 | 不实现 |  |
 | [`Publish-DscConfiguration`](#publish-dscconfiguration) | PSDesiredStateConfiguration | 仅5.1 | 仅5.1提供 | 将 DSC 配置发布到一组计算机。 | 不实现 |  |
 | [`Receive-DtcDiagnosticTransaction`](#receive-dtcdiagnostictransaction) | MsDtc | 仅5.1 | 仅5.1提供 | 从给定诊断资源管理器传播事务。 | 不实现 |  |
@@ -381,7 +381,7 @@ PowerShell For Linux默认不实现它们，但有时候会因为特殊原因实
 | [`Reset-AppxPackage`](#reset-appxpackage) | Appx | 仅5.1 | 仅5.1提供 | 将 Windows 应用恢复到初始配置。 | 不实现 |  |
 | [`Reset-ComputerMachinePassword`](#reset-computermachinepassword) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 重置计算机的计算机帐户密码。 | 不实现 |  |
 | [`Reset-LapsPassword`](#reset-lapspassword) | LAPS | 仅5.1 | 仅5.1提供 | 使 LAPS 立即轮换当前受管本地帐户的密码。 | 不实现 |  |
-| [`Resolve-DnsName`](#resolve-dnsname) | DnsClient | 仅5.1 | 仅5.1提供 | 对指定名称执行 DNS 解析。 | Go实现 | Go 内置解析重做；输出 Name/Type/Data 三列。 |
+| [`Resolve-DnsName`](#resolve-dnsname) | DnsClient | 仅5.1 | 仅5.1提供 | 对指定名称执行 DNS 解析。 | Go实现 | 用程序自带的域名解析，不调用外部命令；输出 Name/Type/Data 三列。 |
 | [`Restart-Service`](#restart-service) | Microsoft.PowerShell.Management | 都有 | 无 | 停止并接着启动一个或更多服务。 | 映射 Linux（systemctl start/stop/restart） |  |
 | [`Restore-Computer`](#restore-computer) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 在本地计算机上启动系统还原。 | 不实现 |  |
 | [`Restore-UevBackup`](#restore-uevbackup) | UEV | 仅5.1 | 仅5.1提供 | 将另一台计算机备份的设置应用到本机。 | 不实现 |  |
@@ -469,7 +469,7 @@ PowerShell For Linux默认不实现它们，但有时候会因为特殊原因实
 | [`Set-WmiInstance`](#set-wmiinstance) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 创建或更新现有 Windows Management Instrumentation （WMI） 类的实例。 | 不实现 |  |
 | [`Set-WSManInstance`](#set-wsmaninstance) | Microsoft.WSMan.Management | 都有 | 无 | 修改与资源相关的管理信息。 | 不实现 |  |
 | [`Set-WSManQuickConfig`](#set-wsmanquickconfig) | Microsoft.WSMan.Management | 都有 | 无 | 配置用于远程管理的本地计算机。 | 不实现 |  |
-| [`Show-Command`](#show-command) | Microsoft.PowerShell.Utility | 都有 | 无 | 在图形窗口中显示 PowerShell 命令信息。 | 不实现 | GUI 与打印 |
+| [`Show-Command`](#show-command) | Microsoft.PowerShell.Utility | 都有 | 无 | 在图形窗口中显示 PowerShell 命令信息。 | 不实现 | 依赖图形界面与打印功能 |
 | [`Show-ControlPanelItem`](#show-controlpanelitem) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 打开控制面板项。 | 不实现 |  |
 | [`Show-EventLog`](#show-eventlog) | Microsoft.PowerShell.Management | 仅5.1 | 仅5.1提供 | 在事件查看器中显示本地或远程计算机的事件日志。 | 不实现 |  |
 | [`Show-WindowsDeveloperLicenseRegistration`](#show-windowsdeveloperlicenseregistration) | WindowsDeveloperLicense | 仅5.1 | 仅5.1提供 | 提供如何启用设备进行开发的信息。 | 不实现 |  |
@@ -3984,7 +3984,7 @@ Get-ComputerInfo
 
 #### PowerShell For Linux中的实现：
 
-- 与原版差异：字段精简。
+- 与原版差异：字段比原版少，仅输出下面列出的字段。
 
 - 类型：Go实现。
 - 功能：汇总系统信息。对应 bash `uname -a` + 发行版信息。
@@ -4995,9 +4995,9 @@ Get-Service
 | :--- | :--- | :--- |
 | `-Name`（位置 0） | string | 按服务名过滤（支持通配），如 `Get-Service -Name ssh*` |
 
-- 实现：调用外部 `systemctl`（权限不足时自动加 `sudo`），解析输出第 0/2 列（单元名、状态）。
+- 实现：调用外部 `systemctl`，读它的输出，取第 1 列（单元名）和第 3 列（状态）；权限不够时改用 `sudo`。
 - 输出：ServiceController 对象，字段 Name（去掉 .service 后缀）、Status（active/inactive/...）、DisplayName（同 Name）。表格列 Status/Name/DisplayName。
-- 无 systemctl → 报错。
+- 系统里没有 systemctl 时报错退出。
 
 ### Get-SystemDriver
 
@@ -8808,7 +8808,7 @@ Rename-Computer -NewName "Server044" -DomainCredential Domain01\Admin01 -Restart
 
 - 类型：映射 Linux 命令（`sudo hostnamectl set-hostname`）。
 - 发行版：需要 sudo。
-- 同组：Restart-Computer、Stop-Computer。
+- 相关指令：Restart-Computer、Stop-Computer。
 - 功能：修改主机名。
 
 | 参数 | 类型 | 映射 / 说明 |
@@ -9046,11 +9046,11 @@ PS C:\> Resolve-DnsName -Name www.bing.com
 
 #### PowerShell For Linux中的实现：
 
-- 与原版差异：原版仅 5.1 提供，这里用 Go 内置解析重做；输出统一 Name/Type/Data 三列；只支持 A、AAAA、CNAME、MX、TXT、NS、PTR。
+- 与原版差异：原版只有 5.1 提供；这里不调用外部命令，用程序自带的域名解析；输出 Name/Type/Data 三列；只支持 A、AAAA、CNAME、MX、TXT、NS、PTR。
 
 - 类型：Go实现。
 - 功能：查询域名的 DNS 记录。对应 bash `dig +short` / `getent hosts`。
-- 实现：Go 内置解析；默认用系统解析器，-Server 指定上游（UDP 53）。
+- 实现：用程序自带的域名解析；默认走系统解析器，-Server 指定上游 DNS 服务器（UDP 53）。
 - 输出：DnsRecord 对象，字段 Name、Type、Data。
 
 | 参数 | 类型 | 含义 |
@@ -9085,15 +9085,15 @@ PS C:\> Restart-Service -Name winmgmt
 
 - 类型：映射 Linux 命令（`systemctl` + sudo）。
 - 发行版：systemd 系 + sudo。
-- 同组：Start-Service、Stop-Service、Restart-Service、Resume-Service。
+- 相关指令：Start-Service、Stop-Service、Restart-Service、Resume-Service。
 - 功能：启动/停止/重启服务。
 
 | 参数 | 类型 | 映射 / 说明 |
 | :--- | :--- | :--- |
-| `-Name`（位置 0） | string | 服务名；传给 `systemctl <动作> <单元>`（自动补 .service 后缀） |
+| `-Name`（位置 0） | string | 服务名。实际执行 `systemctl <start|stop|restart> <服务名>.service`，程序会自动加上 `.service` 后缀 |
 
-- 实现：`systemctl start/stop/restart <单元>`；普通权限失败自动用 `sudo` 重试。对应 `sudo systemctl start/stop/restart`。
-- Stop-Service、Restart-Service、Resume-Service 参数同 Start-Service，动作为 stop/restart/start。
+- 实现：`systemctl start/stop/restart <服务名>.service`；当前用户权限不够时，改用 `sudo systemctl start/stop/restart`。
+- Stop-Service、Restart-Service、Resume-Service 的参数与 Start-Service 相同，执行的动作分别是 stop、restart、start。
 
 ### Restore-Computer
 
@@ -9264,15 +9264,15 @@ PS C:\> Resume-Service "sens"
 
 - 类型：映射 Linux 命令（`systemctl` + sudo）。
 - 发行版：systemd 系 + sudo。
-- 同组：Start-Service、Stop-Service、Restart-Service、Resume-Service。
+- 相关指令：Start-Service、Stop-Service、Restart-Service、Resume-Service。
 - 功能：启动/停止/重启服务。
 
 | 参数 | 类型 | 映射 / 说明 |
 | :--- | :--- | :--- |
-| `-Name`（位置 0） | string | 服务名；传给 `systemctl <动作> <单元>`（自动补 .service 后缀） |
+| `-Name`（位置 0） | string | 服务名。实际执行 `systemctl <start|stop|restart> <服务名>.service`，程序会自动加上 `.service` 后缀 |
 
-- 实现：`systemctl start/stop/restart <单元>`；普通权限失败自动用 `sudo` 重试。对应 `sudo systemctl start/stop/restart`。
-- Stop-Service、Restart-Service、Resume-Service 参数同 Start-Service，动作为 stop/restart/start。
+- 实现：`systemctl start/stop/restart <服务名>.service`；当前用户权限不够时，改用 `sudo systemctl start/stop/restart`。
+- Stop-Service、Restart-Service、Resume-Service 的参数与 Start-Service 相同，执行的动作分别是 stop、restart、start。
 
 ### Save-OsImage
 
@@ -10599,11 +10599,11 @@ Set-Service -Name LanmanWorkstation -DisplayName "LanMan Workstation"
 
 - 类型：映射 Linux 命令（`systemctl` + sudo）。
 - 发行版：systemd 系 + sudo。
-- 功能：修改服务状态与自启。
+- 功能：修改服务运行状态，以及是否随系统启动。
 
 | 参数 | 类型 | 映射 / 说明 |
 | :--- | :--- | :--- |
-| `-Name`（位置 0） | string | 服务名（自动补 .service 后缀） |
+| `-Name`（位置 0） | string | 服务名。程序会自动加上 `.service` 后缀 |
 | `-Status` | string | `running`/`started` → `systemctl start`；`stopped` → `systemctl stop` |
 | `-StartupType` | string | `automatic`/`auto` → `systemctl enable`；`disabled` → `systemctl disable` |
 
@@ -10655,7 +10655,7 @@ Set-TimeZone -Id "UTC"
 
 - 类型：映射 Linux 命令（`sudo timedatectl`）。
 - 发行版：需要 systemd 的 timedatectl + sudo。
-- 同组：Get-TimeZone。
+- 相关指令：Get-TimeZone。
 - 功能：修改时区。
 
 | 参数 | 类型 | 映射 / 说明 |
@@ -11308,15 +11308,15 @@ Start-Service -Name "eventlog"
 
 - 类型：映射 Linux 命令（`systemctl` + sudo）。
 - 发行版：systemd 系 + sudo。
-- 同组：Start-Service、Stop-Service、Restart-Service、Resume-Service。
+- 相关指令：Start-Service、Stop-Service、Restart-Service、Resume-Service。
 - 功能：启动/停止/重启服务。
 
 | 参数 | 类型 | 映射 / 说明 |
 | :--- | :--- | :--- |
-| `-Name`（位置 0） | string | 服务名；传给 `systemctl <动作> <单元>`（自动补 .service 后缀） |
+| `-Name`（位置 0） | string | 服务名。实际执行 `systemctl <start|stop|restart> <服务名>.service`，程序会自动加上 `.service` 后缀 |
 
-- 实现：`systemctl start/stop/restart <单元>`；普通权限失败自动用 `sudo` 重试。对应 `sudo systemctl start/stop/restart`。
-- Stop-Service、Restart-Service、Resume-Service 参数同 Start-Service，动作为 stop/restart/start。
+- 实现：`systemctl start/stop/restart <服务名>.service`；当前用户权限不够时，改用 `sudo systemctl start/stop/restart`。
+- Stop-Service、Restart-Service、Resume-Service 的参数与 Start-Service 相同，执行的动作分别是 stop、restart、start。
 
 ### Start-Transaction
 
@@ -11454,15 +11454,15 @@ Stop-Service -Name "sysmonlog"
 
 - 类型：映射 Linux 命令（`systemctl` + sudo）。
 - 发行版：systemd 系 + sudo。
-- 同组：Start-Service、Stop-Service、Restart-Service、Resume-Service。
+- 相关指令：Start-Service、Stop-Service、Restart-Service、Resume-Service。
 - 功能：启动/停止/重启服务。
 
 | 参数 | 类型 | 映射 / 说明 |
 | :--- | :--- | :--- |
-| `-Name`（位置 0） | string | 服务名；传给 `systemctl <动作> <单元>`（自动补 .service 后缀） |
+| `-Name`（位置 0） | string | 服务名。实际执行 `systemctl <start|stop|restart> <服务名>.service`，程序会自动加上 `.service` 后缀 |
 
-- 实现：`systemctl start/stop/restart <单元>`；普通权限失败自动用 `sudo` 重试。对应 `sudo systemctl start/stop/restart`。
-- Stop-Service、Restart-Service、Resume-Service 参数同 Start-Service，动作为 stop/restart/start。
+- 实现：`systemctl start/stop/restart <服务名>.service`；当前用户权限不够时，改用 `sudo systemctl start/stop/restart`。
+- Stop-Service、Restart-Service、Resume-Service 的参数与 Start-Service 相同，执行的动作分别是 stop、restart、start。
 
 ### Suspend-BitsTransfer
 

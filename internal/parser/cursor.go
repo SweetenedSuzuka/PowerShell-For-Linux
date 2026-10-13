@@ -7,7 +7,7 @@ import (
 	"powershell/internal/lexer"
 )
 
-// cursor.go 实现解析游标移动、错误记录与 token 描述。
+// cursor.go 实现解析位置的移动、错误记录与 token 描述。
 func (p *Parser) cur() lexer.Token { return p.toks[p.pos] }
 func (p *Parser) peekAt(n int) lexer.Token {
 	if p.pos+n < len(p.toks) {

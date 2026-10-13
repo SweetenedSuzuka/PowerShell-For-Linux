@@ -9,8 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"powershell/internal/builtin"
-	"powershell/internal/external"
 	"powershell/internal/lang"
 	"powershell/internal/object"
 )
@@ -418,7 +416,7 @@ func rangeOp(l, r *object.PSObject) *object.PSObject {
 
 // formatOp 实现 .NET 风格格式串："{模板}" -f 值[, 值...]。
 // 支持 {N}、{N,宽度}（空格对齐）、{N:规格}（D 十进制补零、X/x 十六进制、F 定点小数、N 千分位）。
-// {{ 与 }} 转义字面大括号；未知规格退化为原样字符串；下标越界 → 报错，并把 $? 置为 false。
+// {{ 与 }} 转义字面大括号；规格字不支持的按普通字符串输出；下标越界直接报错，并把 $? 置为 false。
 func (e *Evaluator) formatOp(f, args *object.PSObject) *object.PSObject {
 	format := f.String()
 	items := flattenArgs(args)
@@ -542,7 +540,7 @@ func formatArg(v *object.PSObject, spec string) string {
 			return addThousands(strconv.FormatFloat(fv, 'f', dec, 64))
 		}
 	}
-	// 未知规格：退化为普通字符串
+	// 规格字不支持的当作普通字符串输出
 	return v.String()
 }
 
@@ -697,7 +695,7 @@ func (e *Evaluator) convertValue(v *object.PSObject, typeName string) *object.PS
 	return e.convertScalar(v, norm)
 }
 
-// convertScalar 单值转换：target 为归一化小写类型名；未知类型报告"无法找到类型"（与参数绑定路径同文案）。
+// convertScalar 单值转换：target 为归一化小写类型名；未知类型报告“无法找到类型”（与参数绑定路径同文案）。
 func (e *Evaluator) convertScalar(v *object.PSObject, target string) *object.PSObject {
 	out, err := convertTarget(v, target)
 	if err != nil {
@@ -799,12 +797,3 @@ func (e *Evaluator) bitOp(l, r *object.PSObject, fn func(a, b int64) int64) *obj
 	}
 	return object.Int(fn(li, ri))
 }
-
-// wildcardMatch 委托给 object 包的通配符实现。
-func wildcardMatch(pattern, s string) bool {
-	return object.WildcardMatch(pattern, s)
-}
-
-// requireBuiltin 简化：确保包被引用（编译期占位）。
-var _ = builtin.Lookup
-var _ = external.LookPath

@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-// TestReportPanic 验证顶层回收：普通 panic 转为报错，控制流信号继续传播。
+// TestReportPanic 验证顶层恢复：普通 panic 转为报错，控制流信号继续传播。
 func TestReportPanic(t *testing.T) {
 	sess := shell.New(shell.StyleCore, io.Discard, io.Discard, strings.NewReader(""))
 	ev := New(sess, strings.NewReader(""), io.Discard, io.Discard)
@@ -104,42 +104,42 @@ func TestStrictModeUndefinedVariable(t *testing.T) {
 	errs := func() int { return len(sess.ErrorRecords) }
 	run(`$nosuch_sm_t1`)
 	if errs() != 0 {
-		t.Fatalf("默认关闭应无错，实际 %d 条", errs())
+		t.Fatalf("默认关闭应无错，得到 %d 条", errs())
 	}
 	run(`Set-StrictMode -Version Latest`)
 	run(`$nosuch_sm_t2`)
 	if errs() != 1 {
-		t.Fatalf("严格模式下读取未定义变量应记录 1 条，实际 %d 条", errs())
+		t.Fatalf("严格模式下读取未定义变量应记录 1 条，得到 %d 条", errs())
 	}
 	if sess.LastSuccess {
 		t.Fatalf("读未定义后问号变量应为失败")
 	}
 	if got := run(`"after-strict"`); len(got) != 1 || got[0] != "after-strict" {
-		t.Fatalf("出错后应继续执行，实际 %v", got)
+		t.Fatalf("出错后应继续执行，得到 %v", got)
 	}
 	run(`$smDef = 42`)
 	if got := run(`$smDef`); len(got) != 1 || got[0] != "42" {
-		t.Fatalf("已赋值变量应正常读出，实际 %v", got)
+		t.Fatalf("已赋值变量应正常读出，得到 %v", got)
 	}
 	if errs() != 1 {
-		t.Fatalf("正常读取不应记错，实际 %d 条", errs())
+		t.Fatalf("正常读取不应记错，得到 %d 条", errs())
 	}
 	run(`function SMFunc { Set-StrictMode -Off; $nosuch_sm_t3 }`)
 	run(`SMFunc`)
 	if errs() != 1 {
-		t.Fatalf("函数内关闭应生效，实际 %d 条", errs())
+		t.Fatalf("函数内关闭应生效，得到 %d 条", errs())
 	}
 	run(`$nosuch_sm_t4`)
 	if errs() != 2 {
-		t.Fatalf("函数内关闭不应泄漏到外层，实际 %d 条", errs())
+		t.Fatalf("函数内关闭不应泄漏到外层，得到 %d 条", errs())
 	}
 	run(`Set-StrictMode -Version 9.9`)
 	if errs() != 3 {
-		t.Fatalf("非法版本应记录错误，实际 %d 条", errs())
+		t.Fatalf("非法版本应记录错误，得到 %d 条", errs())
 	}
 	run(`Set-StrictMode -Off`)
 	run(`$nosuch_sm_t5`)
 	if errs() != 3 {
-		t.Fatalf("关闭后应恢复，实际 %d 条", errs())
+		t.Fatalf("关闭后应恢复，得到 %d 条", errs())
 	}
 }

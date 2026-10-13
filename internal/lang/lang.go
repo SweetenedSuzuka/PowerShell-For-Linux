@@ -1,6 +1,5 @@
 // Package lang 提供界面语言选择与提示文本。
-// 界面语言按照优先顺序依次匹配环境变量的 LANGUAGE、LC_ALL、LC_MESSAGES、LANG 来决定，把每个变量的候选 locale 串成一条有序列表。
-// 以第一个成功匹配的已注册语言为准，全部未命中时使用中文。
+// 界面语言按 LANGUAGE、LC_ALL、LC_MESSAGES、LANG 的顺序读取，以第一个成功匹配的已注册语言为准，全部未命中时使用中文。
 // 文本按语言分文件存放，每种语言一张表，如 zh.go、en.go。新增语言就新建一个文件定义表并在 catalogs 里注册，该语言暂缺的条目在取用时自动回退默认语言。
 package lang
 

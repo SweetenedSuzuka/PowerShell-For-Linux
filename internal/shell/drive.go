@@ -61,7 +61,7 @@ func ResolvePath(cwd, p string) (string, error) {
 }
 
 // DisplayPath 把 Linux 路径显示为 Windows 风格（C:\，根目录即 C:\）。
-// 这是本项目的身份标识：无论命令格式是 7 还是 5，提示符都显示 Windows 风格路径。
+// 无论命令格式是 5 还是 7，提示符都显示 Windows 风格路径。
 func (s *Session) DisplayPath(path string) string {
 	if runtime.GOOS == "windows" {
 		return path

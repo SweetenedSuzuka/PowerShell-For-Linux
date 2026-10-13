@@ -1,5 +1,5 @@
-# 虚拟属性、时间种类与直接输入。
-# 215. Select * 含虚拟属性
+# 计算属性、时间种类与直接输入。
+# 215. Select * 含计算属性
 $sa = Get-Date | Select-Object *
 $results += T "星号选择" ((($sa.Year -gt 0)) -and (($sa.Ticks -gt 0)))
 # 216. 过大、过小年份刻度

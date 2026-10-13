@@ -61,7 +61,7 @@ func TestConfirmSkipAllFlags(t *testing.T) {
 		t.Fatal("A 应执行")
 	}
 	if !*yesAll || *noAll {
-		t.Fatalf("A 应置 yesAll，实际 %v %v", *yesAll, *noAll)
+		t.Fatalf("A 应置 yesAll，得到 %v %v", *yesAll, *noAll)
 	}
 	ctx2, yesAll2, noAll2 := confirmCtx("l\n", true)
 	if !confirmSkip(ctx2, "Remove-Item", "b1", yesAll2, noAll2) {

@@ -1,5 +1,5 @@
 // static.go 实现 [类型]::成员 的静态成员分派表。
-// 覆盖 math/string/datetime/guid/int 等常用类型；未注册的类型或成员返回"不存在成员"错误。
+// 覆盖 math/string/datetime/guid/int 等常用类型；未注册的类型或成员返回“不存在成员”错误。
 package eval
 
 import (

@@ -1,7 +1,7 @@
 # 文档维护工具
 
-这个目录包含了一系列脚本，可以用于比对文档中对原版 PowerShell 的描述与微软的官方文档是否有出入。
-作用是获取官方页面，与之前保存的参考快照进行对比，把所有改变的条目列出。
+这个目录下的脚本用来比对本项目文档里对原版 PowerShell 的描述与微软官方文档的差异。
+作用是获取官方页面，与参考快照比对，列出有变化的条目。
 
 ## 脚本说明
 
@@ -16,7 +16,7 @@
 在仓库根目录执行：
 
 ```bash
-python tools/docs-maint/collect_source_urls.py   # 文档出处变了才需运行。
+python tools/docs-maint/collect_source_urls.py   # 文档出处有变化时才需要运行。
 python tools/docs-maint/snapshot.py              # 全部条目的检查需要较长时间。
 python tools/docs-maint/snapshot.py --only Get-ChildItem
 python tools/docs-maint/check_official_changes.py
@@ -27,7 +27,7 @@ python tools/docs-maint/check_official_changes.py --only Get-ChildItem,Get-Servi
 `check_official_changes.py` 另有 `--reference` 与 `--report`（指定参考快照与报告路径）。
 `collect_source_urls.py` 附带产生 `uncovered.txt`（无出处条目清单）。
 
-报告每条列出文件、条目锚点、官方出处链接、前后 diff。
+报告每条列出文件、条目锚点、官方出处链接与前后差异。
 moniker 变化、标题变化、页面失效与恢复单独列出。
 
 ## 备忘

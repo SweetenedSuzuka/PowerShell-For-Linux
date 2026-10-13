@@ -354,9 +354,9 @@ func (e *Evaluator) evalValue(n ast.Node) *object.PSObject {
 		return e.evalValue(v.Else)
 	case *ast.ArrayLit:
 		// @(...) ：
-		//   唯一元素 → “确保是数组”：元素输出流直接作为结果（@($arr) 得到 $arr 的元素）。
-		//   多个元素 → 各语句输出依次收集，数组值整体占一位（@(@("a"),"b") 内层数组保留）。
-		//   管道元素 → 每项输出各占一位（@("x" | ForEach-Object { ... })）。
+		//   只有一个元素：不另包一层，元素自己的输出流就是结果（@($arr) 得到 $arr 的元素）。
+		//   多个元素：各语句输出依次收集，数组值整体占一位（@(@("a"),"b") 内层数组保留）。
+		//   管道元素：每项输出各占一位（@("x" | ForEach-Object { ... })）。
 		if v.Flatten && len(v.Items) == 1 {
 			if pl, ok := v.Items[0].(*ast.PipelineExpr); ok {
 				return object.Array(e.evalPipeline(pl.Pipeline))
@@ -612,14 +612,6 @@ func (e *Evaluator) memberProp(base *object.PSObject, prop string) *object.PSObj
 		return object.Int(1)
 	}
 	return object.Null()
-}
-
-// propertyOf 在对象上获取属性（用于 Where-Object Length 等裸属性）。
-func (e *Evaluator) propertyOf(obj *object.PSObject, name string) *object.PSObject {
-	if obj == nil {
-		return object.Null()
-	}
-	return e.memberProp(obj, name)
 }
 
 // evalMethodCall 调用字符串/数组/哈希表方法。
@@ -960,7 +952,7 @@ func (e *Evaluator) evalIndex(i *ast.Index) *object.PSObject {
 		}
 		return object.Null()
 	}
-	// 标量（非集合）索引：[0] 返回自身，其余下标 $null
+	// 数组、字符串与哈希表之外的标量索引：[0] 返回自身，其余下标 $null
 	if n, ok := idx.AsInt(); ok && n == 0 {
 		return base
 	}

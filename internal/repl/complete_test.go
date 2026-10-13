@@ -27,7 +27,7 @@ func assertCompleteContains(t *testing.T, buf string, expected ...string) {
 			}
 		}
 		if !found {
-			t.Fatalf("%q 补全缺 %q，实际 %v", buf, item, actual)
+			t.Fatalf("%q 补全缺 %q，得到 %v", buf, item, actual)
 		}
 	}
 }
@@ -42,7 +42,7 @@ func TestCompleteParam(t *testing.T) {
 	assertCompleteContains(t, "gci -R", "-Recurse ")
 	// 未知命令无补全
 	if actual := testREPL().complete("NoSuchCmd -X"); len(actual) != 0 {
-		t.Fatalf("未知命令不应补全，实际 %v", actual)
+		t.Fatalf("未知命令不应补全，得到 %v", actual)
 	}
 	// 命令补全不受影响（既有返回小写名）
 	assertCompleteContains(t, "Get-Ch", "get-childitem ")

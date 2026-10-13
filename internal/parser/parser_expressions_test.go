@@ -149,7 +149,7 @@ func TestAtArrayCommaRules(t *testing.T) {
 		`@($x; Get-Date)`,
 	} {
 		if res := Parse(src); res.Error != nil {
-			t.Errorf("%q 应可解析，实际 err=%v", src, res.Error)
+			t.Errorf("%q 应该被解析，err=%v", src, res.Error)
 		}
 	}
 	for _, src := range []string{
@@ -171,7 +171,7 @@ func TestFormatOperatorValue(t *testing.T) {
 		`"{0}" -f abc`,
 	} {
 		if res := Parse(src); res.Error == nil {
-			t.Errorf("%q 应报错，实际通过", src)
+			t.Errorf("%q 需要报错，但被通过", src)
 		}
 	}
 	for _, src := range []string{
@@ -181,7 +181,7 @@ func TestFormatOperatorValue(t *testing.T) {
 1`,
 	} {
 		if res := Parse(src); res.Error != nil || res.Incomplete {
-			t.Errorf("%q 应可解析，实际 err=%v", src, res.Error)
+			t.Errorf("%q 应该被解析，err=%v", src, res.Error)
 		}
 	}
 }

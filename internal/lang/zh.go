@@ -28,14 +28,14 @@ var zh = map[Msg]string{
 	MsgDriveUnsupported: "不支持的盘符 %s:。Linux 上只用 C 盘表示系统盘，没有其它盘的概念。",
 
 	// ---- parser ----
-	MsgParseExpectText:          "期望 '%s'，实际遇到 %s",
-	MsgParseExpectWhat:          "期望 %s，实际遇到 %s",
+	MsgParseExpectText:          "期望 '%s'，遇到 %s",
+	MsgParseExpectWhat:          "期望 %s，遇到 %s",
 	MsgParseUnexpectedAfter:     "语句后出现意外的 token：%s",
 	MsgParseCatchAfterTry:       "catch 必须跟在 try 之后",
 	MsgParseTryMissingHandler:   "try 语句缺少 catch 或 finally 块。",
 	MsgParseFinallyAfterTry:     "finally 必须跟在 try 之后",
 	MsgParseAssignOp:            "期望赋值运算符",
-	MsgParseExpectBrace:         "期望 '{'，实际遇到 %s",
+	MsgParseExpectBrace:         "期望 '{'，遇到 %s",
 	MsgParseForeachVar:          "foreach 需要循环变量",
 	MsgParseForeachIn:           "foreach 需要 'in'",
 	MsgParseDoWhile:             "do 需要 while (cond)",
@@ -149,7 +149,7 @@ var zh = map[Msg]string{
 	MsgInputObjectWithPipeline:      "指定 -InputObject 时不能再接收管道输入。",
 	MsgTranscriptStarted:            "已开始记录，输出文件为 %s。",
 	MsgTranscriptStopped:            "已停止记录，输出文件为 %s。",
-	MsgStopTranscriptIdle:           "停止记录时出错：主机当前未在记录。",
+	MsgStopTranscriptIdle:           "停止记录时出错：主机当前没有在记录。",
 	MsgSwitchCommandNotFound:        "找不到命令“%s”，指定的命令必须是可执行文件。",
 
 	// ---- object 与内部提示 ----

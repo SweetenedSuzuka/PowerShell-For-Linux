@@ -3,7 +3,7 @@
 $odc = 9 | Out-Default | Measure-Object | Select-Object -ExpandProperty Count
 $odr2 = Out-Default -InputObject @()
 $results += T "默认出口截断" ((($odc -eq 0)) -and (($null -eq $odr2)))
-# 240. 输入冲突与超量位置报错继续，记录开关接受忽略
+# 240. 输入冲突与超量位置报错继续，记录开关接受后不作处理
 $oe0 = $Error.Count
 1 | Out-Default -InputObject 2 2>$null
 if ($?) { $odcok = $true } else { $odcok = $false }
@@ -41,11 +41,11 @@ $ge0 = $Error.Count
 Get-Error -Newest 0 2>$null | Out-Null
 Get-Error -Newest 1 -InputObject $Error[0] 2>$null | Out-Null
 $results += T "条数边界输入对象" ((($ge3.Count -eq $ge0)) -and (($ge4.Count -eq 1)) -and (($ge5.Count -eq 2)) -and (($null -eq (Get-Error -InputObject ($Error[0],$Error[1])))) -and (($Error.Count -eq ($ge0 + 2))))
-# 245. 本地解析与位置类型
+# 245. 解析本机名与位置参数
 $dn1 = Resolve-DnsName localhost
 $dn2 = Resolve-DnsName localhost A
 $dn3 = "localhost" | Resolve-DnsName
-$results += T "本地解析位置类型" ((($dn1.Data -contains "127.0.0.1")) -and (($dn2.Data -contains "127.0.0.1")) -and (($dn3.Data -contains "127.0.0.1")))
+$results += T "解析本机名与位置参数" ((($dn1.Data -contains "127.0.0.1")) -and (($dn2.Data -contains "127.0.0.1")) -and (($dn3.Data -contains "127.0.0.1")))
 # 246. 解析失败与参数报错继续
 $de0 = $Error.Count
 Resolve-DnsName invalid.invalid 2>$null | Out-Null

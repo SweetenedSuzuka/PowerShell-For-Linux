@@ -69,7 +69,7 @@ func (p *Parser) parseStatement() ast.Node {
 }
 
 // parseStatementPipeline 解析管道，并处理 PowerShell 7 的 && / || 链。
-// 链式运算符写在行尾时右操作数从下一行继续；行首出现的 && / || 属语法错误，到此断句。
+// 连接符写在行尾时右操作数从下一行继续；行首出现 && / || 属语法错误，此处停止解析并报错。
 func (p *Parser) parseStatementPipeline() ast.Node {
 	var stmt ast.Node = p.parsePipeline()
 	for {

@@ -56,8 +56,8 @@ func (s *Session) DeleteVar(name string) bool {
 // maxErrorRecords 是 $Error 的容量上限（对应 PowerShell 的 $MaximumErrorCount 默认值）。
 const maxErrorRecords = 256
 
-// ErrorViewMarker 标记一个数组对象是 $Error 的动态视图（eval 层的 Clear/RemoveAt 据此作用到记录本体）。
-const ErrorViewMarker = "__ErrorView"
+// ErrorRecordsMarker 标记一个数组对象取自会话的错误记录列表（eval 层见到该标记时，Clear/RemoveAt 改为操作 Session 的 ErrorRecords）。
+const ErrorRecordsMarker = "__ErrorRecords"
 
 // ParseErrorAction 把错误动作取值归一化为小写，未知取值返回 false。
 func ParseErrorAction(s string) (string, bool) {
@@ -142,8 +142,8 @@ func (s *Session) GetVar(name string) (*object.PSObject, bool) {
 		return s.Matches, true
 	case "error":
 		arr := object.Array(s.ErrorRecords)
-		// 标记为 $Error 的动态视图：Clear/RemoveAt 等方法经 Session 作用到 ErrorRecords 本体
-		arr.AddProp(ErrorViewMarker, object.Str("1"))
+		// 标记这个数组取自错误记录列表：Clear/RemoveAt 等方法据此改为操作 Session 的 ErrorRecords
+		arr.AddProp(ErrorRecordsMarker, object.Str("1"))
 		return arr, true
 	case "erroractionpreference":
 		// 首选项变量：未赋值或已清空时按 Continue 处理

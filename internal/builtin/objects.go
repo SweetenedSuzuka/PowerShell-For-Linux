@@ -347,7 +347,7 @@ func cmdGroupObject(c *Context) ([]*object.PSObject, error) {
 	}
 	var out []*object.PSObject
 	for _, k := range order {
-		// 组成员放 Group 属性（对应 PowerShell 的 GroupInfo.Group 属性），Value 保持空以免被当成集合。
+		// 组成员放 Group 属性（对应 PowerShell 的 GroupInfo.Group 属性），Value 留空，以免该属性按表格渲染。
 		g := object.Object("GroupInfo", nil)
 		g.AddProp("Group", groups[k])
 		g.AddProp("Name", firstName[k])
@@ -537,7 +537,7 @@ func cmdUpdateList(c *Context) ([]*object.PSObject, error) {
 		}
 		input = []*object.PSObject{arg}
 	}
-	// 缺 -Property 时返回空（与 PowerShell 有差异，见文档）。
+	// 缺少 -Property 时返回空内容。
 	prop, _ := c.Args.Str("Property")
 	if prop == "" || len(input) == 0 {
 		return nil, nil

@@ -55,8 +55,8 @@ func (p *Parser) parseTry() ast.Node {
 	for {
 		t := p.peekPastNewlines()
 		if t.Type == TkEOF {
-			// catch/finally 可以写在后续行且可以有多个。
-			// 一个都没有时当作输入未完成处理，已有处理器则语句完整，EOF 只是不再有更多 catch。
+			// catch/finally 可以写在后续行，也可以有多个。
+			// 后面一个 catch 也没有时按输入未完成处理；已有 catch 子句则语句完整，EOF 表示后面不再有 catch。
 			if !hasHandler {
 				p.incomplete = true
 			}
@@ -97,7 +97,7 @@ func (p *Parser) parseTry() ast.Node {
 			}
 			break
 		}
-		// try 语句必须有 catch 或 finally：后面跟的是其它内容而一个处理器都没有时按解析错误处理。
+		// try 语句必须有 catch 或 finally：后面既不是 catch 也不是 finally 时按解析错误处理。
 		if !hasHandler {
 			p.fail(lang.T(lang.MsgParseTryMissingHandler))
 		}
@@ -153,7 +153,7 @@ func (p *Parser) parseDoWhile() ast.Node {
 	// while 允许写在 } 的下一行
 	w := p.peekPastNewlines()
 	if w.Type == TkEOF {
-		// while 可能写在后续行：输入到此为止视为未完，交由流式入口继续等待或拒绝
+		// while 可能写在后续行：输入到此为止视为不完整，由 REPL 决定继续读取或报错
 		p.incomplete = true
 		return &ast.DoWhile{Body: body}
 	}
@@ -199,7 +199,7 @@ func (p *Parser) parseFor() ast.Node {
 
 func (p *Parser) parseSwitch() ast.Node {
 	p.advance() // switch
-	// 可选开关：-regex / -wildcard / -exact / -casesensitive（已记录，目前只影响匹配方式）
+	// 可选开关：-regex 与 -wildcard 决定匹配方式；-exact 与 -casesensitive 解析后储存到 Mode，不参与匹配判断
 	mode := "exact"
 	for {
 		t := p.cur()

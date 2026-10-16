@@ -9,7 +9,7 @@ import (
 )
 
 // expression.go 实现表达式解析（二元优先级、一元、后缀、主表达式）。
-// isValueStart 判断一个 token 是否能开始一个"值"（参数值或位置实参）。
+// isValueStart 判断一个 token 是否能开始一个「值」（参数值或位置实参）。
 func (p *Parser) isValueStart(t lexer.Token) bool {
 	switch t.Type {
 	case TkWord, TkNumber, TkString, TkVariable, TkBraceVar, TkDot:
@@ -17,7 +17,7 @@ func (p *Parser) isValueStart(t lexer.Token) bool {
 	case TkPunct:
 		return t.Text == "(" || t.Text == "@" || t.Text == "{" || t.Text == "["
 	case TkOp:
-		// 单独运算符可作值（/ 根路径、-、+、*、%、! 等字面量，与"裸运算符参数"一致）
+		// 单独运算符可作值（/ 根路径、-、+、*、%、! 等字面量，与「裸运算符参数」一致）
 		switch t.Text {
 		case "-", "!", "/", "+", "%", "*":
 			return true
@@ -29,7 +29,7 @@ func (p *Parser) isValueStart(t lexer.Token) bool {
 // ---- 表达式 ----
 
 // parseExpression 解析表达式（含逗号数组）。
-// 非实参模式下，若以"后跟参数/终止符的裸字"开头，视为命令调用（赋值右侧、条件等场景）。
+// 非实参模式下，若以「后跟参数/终止符的裸字」开头，视为命令调用（赋值右侧、条件等场景）。
 func (p *Parser) parseExpression(argMode bool) ast.Node {
 	if p.err != nil {
 		return nil
@@ -96,14 +96,14 @@ func (p *Parser) parseBinaryTail(lhs ast.Node, minPrec int, argMode bool) ast.No
 		if prec < 0 || prec < minPrec {
 			break
 		}
-		// 实参模式下破折号词可能是后一个命名参数（如 Update-List 的 -Replace），停在这里交回命令参数收集处理，符号运算符与永不作参数名的 -f 不受影响。
+		// 实参模式下，-Name 形式的 token 可能是后一个命名参数（如 Update-List 的 -Replace），因此需要交给命令参数收集处理，而-f 不作参数名，则不受影响。
 		if argMode && op != "-f" && p.cur().Type == lexer.TkDashWord {
 			break
 		}
 		switch op {
 		case ",":
 			// 逗号：构建数组（比比较运算绑定更紧，使 1,2,3 -eq 2 过滤整个数组）。
-			// 值语义下逗号后不许另起命令（与原版 PowerShell 一致，会报错缺表达式）；命令实参内裸字仍是字符串。
+			// 按值解析时逗号后不能起新命令（与 PowerShell 一致，报错说缺少表达式）；命令实参内的裸字仍按字符串处理。
 			items := []ast.Node{lhs}
 			for p.cur().Type == TkPunct && p.cur().Text == "," {
 				p.advance()
@@ -565,16 +565,16 @@ func (p *Parser) parsePrimary(argMode bool) ast.Node {
 				return &ast.BareWord{Value: ""}
 			}
 			p.advance()
-			// [pscustomobject]@{...} 构造自定义对象，两种模式都保留既有行为
+			// [pscustomobject]@{...} 构造自定义对象；实参模式与非实参模式都构造对象
 			if strings.EqualFold(typeName, "pscustomobject") && p.cur().Type == TkPunct && p.cur().Text == "@" {
 				p.advance() // @
 				return &ast.TypeCast{TypeName: typeName, Expr: p.parseHashtable()}
 			}
-			// 实参模式：类型字面量与静态成员都按裸词字符串处理（如 Write-Output [int] 原样输出）
+			// 实参模式：类型字面量与静态成员都按裸字字符串处理（如 Write-Output [int] 原样输出）
 			if argMode {
 				return &ast.BareWord{Value: "[" + typeName + "]"}
 			}
-			// 词法分析器把 :: 与成员名合并成一个裸词（[math]::Sqrt → "math"、"]"、"::Sqrt"），在此拆出静态成员名；带括号为方法调用，否则为静态属性。
+			// 词法分析器把 :: 与成员名合并成一个裸字（[math]::Sqrt → "math"、"]"、"::Sqrt"），在此拆出静态成员名；带括号为方法调用，否则为静态属性。
 			if p.cur().Type == TkWord && strings.HasPrefix(p.cur().Text, "::") {
 				return p.finishStaticMember(typeName, strings.TrimPrefix(p.cur().Text, "::"))
 			}
@@ -654,7 +654,7 @@ func (p *Parser) parseScriptBlockExpr() ast.Node {
 	return sb
 }
 
-// parseValueExpr 解析"值表达式"：不做裸字合并、不做命令检测（哈希表键等场景用）。
+// parseValueExpr 解析「值表达式」：不做裸字合并、不做命令检测（哈希表键等场景用）。
 func (p *Parser) parseValueExpr() ast.Node {
 	return p.parseBinaryExpr(0, false)
 }

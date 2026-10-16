@@ -176,9 +176,8 @@ func TestStaticMembers(t *testing.T) {
 	wantStr(t, `[string]::Format("{0}+{1}", 1, 2)`, "1+2")
 	wantStr(t, `[datetime]::Now.Year -gt 2000`, "True")
 	wantStr(t, "$g = [guid]::NewGuid(); $g.ToString().Length", "36")
-	// 未注册成员报非终止错误，后续语句继续执行
+	// 未注册成员进行非终止错误报错，后续语句继续执行
 	wantStr(t, "[math]::NoSuch(1); \"继续\"", "继续")
-	// 未注册成员报错且后续语句继续执行
 }
 
 // TestTypeLiteralValue 类型字面量本身求值为类型名。

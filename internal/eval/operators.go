@@ -681,7 +681,7 @@ func asOp(l, r *object.PSObject) *object.PSObject {
 }
 
 // convertValue 把值转换为方括号里声明的类型；数组后缀对每个元素分别转换。
-// 无法转换时报告非终止错误并返回 $null（与除零的既有错误风格一致）。
+// 无法转换时调用 reportError 报告非终止错误并返回 $null。
 func (e *Evaluator) convertValue(v *object.PSObject, typeName string) *object.PSObject {
 	norm := strings.ToLower(typeName)
 	if strings.HasSuffix(norm, "[]") {

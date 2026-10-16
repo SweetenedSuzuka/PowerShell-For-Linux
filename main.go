@@ -1,4 +1,4 @@
-// powershell —— 在 Linux 上运行的 PowerShell 风格解释器。
+// powershell —— 在 Linux 上运行的 PowerShell 风格语法解释器。
 package main
 
 import (
@@ -91,7 +91,7 @@ func run(args []string) int {
 		for _, a := range fs.Args() {
 			scriptArgs = append(scriptArgs, object.Str(a))
 		}
-		// 脚本失败标记：defer 内只标记不退出，展开完毕再返回退出码。
+		// 脚本失败标记：defer 内只标记不退出，匿名函数返回后再返回退出码。
 		failed := false
 		func() {
 			// 脚本顶层未捕获的终止错误（throw）：打印后标记失败
@@ -194,7 +194,7 @@ func executeOnce(sess *shell.Session, ev *eval.Evaluator, src string) (code int)
 		fmt.Fprintf(sess.HostErr, "%s : %s\n", sess.StyleName(), lang.T(lang.MsgIncompleteInput))
 		return 1
 	}
-	// 逐语句执行并格式化，保证与 Write-Host/Format-* 等直接写命令的顺序一致
+	// 逐语句执行并格式化，保证与 Write-Host、Format-* 这些直接往输出流写内容的命令顺序一致
 	// 遇到未捕获的终止错误时中止后续语句并返回失败码（与 PowerShell 一致）
 	for _, st := range res.List.Statements {
 		objs, halted := ev.EvalStatementHalted(st)

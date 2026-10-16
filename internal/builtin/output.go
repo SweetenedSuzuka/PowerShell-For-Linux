@@ -71,7 +71,7 @@ func cmdOutFile(c *Context) ([]*object.PSObject, error) {
 	}
 	defer f.Close()
 	enc, _ := c.Args.Str("Encoding")
-	// 追加模式不写 BOM，避免重复追加时多次写文件头
+	// 追加模式不添加 BOM，避免重复追加时多次写入文件头
 	_, _ = f.Write(encodeText(enc, buf.String(), !appendMode))
 	return nil, nil
 }
@@ -165,7 +165,7 @@ func cmdSelectString(c *Context) ([]*object.PSObject, error) {
 			}
 		}
 	} else if v := c.Args.Get("InputObject"); v != nil {
-		// 管道/参数输入：每个对象整体作为一行参与匹配，LineNumber 是对象在流中的序号
+		// 管道/参数输入：每个对象整体作为一行参与匹配，LineNumber 是对象在输入序列中的序号
 		for n, it := range v.ArrayItems() {
 			line := it.String()
 			if matchLine(line) {

@@ -33,7 +33,7 @@ func TestErrorVariable(t *testing.T) {
 		"1", `无法把实参“bad”转换成形参 k 声明的类型“int”。`)
 }
 
-// TestErrorAction 验证 -ErrorAction：默认继续、SilentlyContinue 与 Ignore 压住显示、Stop 转终止错误可被捕获、无效取值报绑定错误。
+// TestErrorAction 验证 -ErrorAction：默认继续、SilentlyContinue 与 Ignore 不写 stderr、Stop 转终止错误可被捕获、无效取值报绑定错误。
 func TestErrorAction(t *testing.T) {
 	// 默认 Continue：记录并把 $? 置为 false，后续语句继续（$? 用 if 读取，直接读取会被表达式语句先置位）
 	wantStr(t, `Get-Item 不存在XYZ123; $Error.Count`, "1")

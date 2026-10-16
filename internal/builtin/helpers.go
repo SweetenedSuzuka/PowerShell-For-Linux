@@ -186,8 +186,8 @@ func (w *whatIfCollector) result() ([]*object.PSObject, bool) {
 }
 
 // confirmSkip 处理 -Confirm：需要确认时提示用户选择，返回是否应跳过本次变更。
-// yesAll 与 noAll 由调用方在同一命令的多目标循环间传递，使 A/L 的选择覆盖后续目标。
-// 输入结束（EOF）按拒绝处理；未指定 -Confirm 且此前没有全部性选择时直接执行。
+// yesAll 与 noAll 由调用方在同一命令的多目标循环间传递，用户选 A 或 L 之后，后续目标不再逐个询问。
+// 输入结束（EOF）按拒绝处理；未指定 -Confirm 且此前没有选过 A 或 L 时直接执行。
 func confirmSkip(c *Context, operation string, target string, yesAll, noAll *bool) bool {
 	if *noAll {
 		return true

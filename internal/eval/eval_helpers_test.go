@@ -11,7 +11,6 @@ import (
 )
 
 // runEval 解析并执行一段源码，返回输出对象。
-
 func runEval(t *testing.T, src string) []*object.PSObject {
 	t.Helper()
 	return runEvalWithStyle(t, shell.StyleCore, src)

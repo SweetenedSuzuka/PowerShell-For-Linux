@@ -238,8 +238,8 @@ func isScriptPath(name string) bool {
 }
 
 // enterRedirects 在重定向表非空时把执行期输出指到目标，返回恢复函数（调用方 defer）。
-// 直接输出到 Console 的命令一并捕获；Write-Host 类输出到 Console（恒为初始主机输出），不受影响；外部命令不经过这里。
-// redirOut 只归属本次持有者（owner 判定，命令或管道），内层自带重定向的外层不接管。
+// 直接向 hostOut 写入的命令在此一并捕获；Write-Host 类命令向 consoleOut 写入（consoleOut 恒为初始主机输出），不受影响；外部命令不经过这里。
+// redirOut 只归属本次的 owner（owner 是命令或管道）；redirCmd 与 owner 不一致时不取用 redirOut。
 func (e *Evaluator) enterRedirects(redirs []ast.Redirection, owner any) func() {
 	restores := []func(){}
 	if w, closer := e.stderrRedirectTarget(redirs); w != nil {
@@ -346,7 +346,7 @@ func (e *Evaluator) applyRedirects(redirs []ast.Redirection, owner any, out []*o
 		return out
 	}
 	// 内置分支已把目标打开并赋值给 redirOut：返回值直接写入其中，不另开文件（否则会截掉直接写入的内容）。
-	// 只认本次持有者归属的 redirOut（owner 判定），内层自带重定向的外层不接管。
+	// 只取用 redirCmd 等于本次 owner 的 redirOut；owner 不一致时不取用。
 	if e.redirOut != nil && e.redirCmd == owner {
 		var buf bytes.Buffer
 		_ = object.FormatOutput(&buf, out)

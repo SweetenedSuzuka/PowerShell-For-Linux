@@ -102,7 +102,7 @@ func (p *Parser) parseFunction(filter bool) ast.Node {
 	return fn
 }
 
-// parseBlockNamed 解析函数体大括号，体头按 begin/process/end 命名块拆进 fn。
+// parseBlockNamed 解析函数体的大括号；开头的 begin/process/end 命名块分别写入 fn 的 Begin、Process、End 字段。
 // 命名块必须连续出现在体开头，其后出现裸语句或重复块名报错。
 func (p *Parser) parseBlockNamed(fn *ast.FunctionDef) *ast.Block {
 	if p.err != nil {
@@ -132,7 +132,7 @@ func (p *Parser) parseBlockNamed(fn *ast.FunctionDef) *ast.Block {
 }
 
 // parseFunctionStatements 解析函数体/脚本块体的语句列表：开头连续的 begin/process/end 命名块拆进目标，其余语句照常。
-// 命名块的形态是裸字 begin/process/end 后紧跟 { ... }；裸字后不是大括号时按普通命令处理。
+// 命名块的形态是裸字 begin/process/end 后紧跟 { ... }；裸字后面不是大括号时按普通命令处理。
 func (p *Parser) parseFunctionStatements(fn *ast.FunctionDef, sb *ast.ScriptBlock) *ast.StatementList {
 	list := &ast.StatementList{}
 	if p.cur().Type == TkWord && strings.EqualFold(p.cur().Text, "param") {
@@ -158,7 +158,7 @@ func (p *Parser) parseFunctionStatements(fn *ast.FunctionDef, sb *ast.ScriptBloc
 			nt := p.peekAt(1)
 			isBlock := nt.Type == TkPunct && nt.Text == "{"
 			if !isBlock {
-				// 裸字 begin 等不接大括号：按普通命令语句回主路径
+				// 裸字 begin 后面不是大括号：按普通命令语句解析
 				list.Statements = append(list.Statements, p.parseStatement())
 				if p.err != nil {
 					break
@@ -209,14 +209,14 @@ func (p *Parser) parseFunctionStatements(fn *ast.FunctionDef, sb *ast.ScriptBloc
 	return list
 }
 
-// blockSlots 汇总函数或脚本块的三个命名块槽位。
-type blockSlots struct{ begin, process, end **ast.Block }
+// blockFields 汇总函数或脚本块 begin/process/end 三个块的存放位置，供解析时写入。
+type blockFields struct{ begin, process, end **ast.Block }
 
-func slotsOf(fn *ast.FunctionDef, sb *ast.ScriptBlock) blockSlots {
+func slotsOf(fn *ast.FunctionDef, sb *ast.ScriptBlock) blockFields {
 	if fn != nil {
-		return blockSlots{&fn.Begin, &fn.Process, &fn.End}
+		return blockFields{&fn.Begin, &fn.Process, &fn.End}
 	}
-	return blockSlots{&sb.Begin, &sb.Process, &sb.End}
+	return blockFields{&sb.Begin, &sb.Process, &sb.End}
 }
 
 // namedBlockKeyword 返回 token 对应的命名块名（begin/process/end），其余返回空。

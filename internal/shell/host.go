@@ -10,9 +10,9 @@ import (
 
 // host.go 构造会话呈现对象（版本表、区域、主机）。
 
-// psVersion* 是 $PSVersionTable 里宣称的版本号，只标到 -Version 标志的粒度：
+// psVersion* 是 $PSVersionTable 里的版本号，精确到 -Version 标志的粒度：
 // 5.X 对应 Windows PowerShell 5.1，7.X 对应 PowerShell 7（Minor 为 0，渲染时省略）。
-// 不宣称具体小版本；要修改版本号，只修改这里的常量，渲染与 $PSVersionTable 都会跟着变。
+// 版本号在这四个常量里取值，渲染与 $PSVersionTable 都从它们取值。
 const (
 	psVersionMajorDesktop = 5
 	psVersionMinorDesktop = 1

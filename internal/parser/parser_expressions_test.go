@@ -28,7 +28,7 @@ func TestChainedMemberAccess(t *testing.T) {
 		t.Fatalf("内层属性应为 a，得到 %q", inner.Prop)
 	}
 	if vr, ok := inner.Base.(*ast.VarRef); !ok || vr.Name != "h" {
-		t.Fatalf("$h.a.b 基座应为变量 $h")
+		t.Fatalf("$h.a.b 的被访问对象应为变量 $h")
 	}
 
 	// 链式访问最后一段是方法调用时，应解析为 MethodCall
@@ -42,7 +42,7 @@ func TestChainedMemberAccess(t *testing.T) {
 		t.Fatalf("方法名应为 b，得到 %q", mc.Name)
 	}
 	if ma, ok := mc.Base.(*ast.MemberAccess); !ok || ma.Prop != "a" {
-		t.Fatalf("$x.a.b() 的基座应为 .a 成员访问")
+		t.Fatalf("$x.a.b() 的被访问对象应为 .a 成员访问")
 	}
 }
 
@@ -68,7 +68,7 @@ func TestStringExpansion(t *testing.T) {
 }
 
 func TestArraysAndHashtables(t *testing.T) {
-	// @(...) 元素解析优先级低于逗号：1,2,3 在元素内先成数组（Flatten 展开后语义与平铺一致）
+	// @(...) 的元素可以含逗号：@(1, 2, 3) 求值后是 1、2、3 三个元素，与直接写 1, 2, 3 相同
 	d := dump(parseOK(t, "$a = @(1, 2, 3)"))
 	if !strings.Contains(d, "set(a = [[num(1),num(2),num(3)]") {
 		t.Fatalf("数组解析失败: %s", d)
@@ -105,7 +105,7 @@ func TestTernaryAndOperators(t *testing.T) {
 }
 
 // TestTypeLiterals 验证类型字面量与强制转换的解析形态：
-// 无操作数为类型字面量，紧跟操作数为强制转换，数组后缀合并入类型名，实参位置保持裸词字符串。
+// 无操作数为类型字面量，紧跟操作数为强制转换，数组后缀合并入类型名，实参位置保持裸字字符串。
 func TestTypeLiterals(t *testing.T) {
 	cases := []struct {
 		src  string

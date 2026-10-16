@@ -858,14 +858,14 @@ func (e *Evaluator) evalMethodCall(m *ast.MethodCall) *object.PSObject {
 			}
 			return object.Bool(false)
 		case "clear":
-			// $Error.Clear()：带动态视图标记的数组把清空作用到会话的错误记录本体
-			if _, ok := base.PropValue(shell.ErrorViewMarker); ok {
+			// $Error.Clear()：带 ErrorRecordsMarker 标记的数组把清空作用到会话的 ErrorRecords
+			if _, ok := base.PropValue(shell.ErrorRecordsMarker); ok {
 				e.Session.ClearErrorRecords()
 			}
 			return object.Null()
 		case "removeat":
-			// $Error.RemoveAt(n)：同样作用到会话的错误记录本体；越界报错
-			if _, ok := base.PropValue(shell.ErrorViewMarker); ok {
+			// $Error.RemoveAt(n)：同样作用到会话的 ErrorRecords；越界报错
+			if _, ok := base.PropValue(shell.ErrorRecordsMarker); ok {
 				if idx, ok := arg(0).AsInt(); ok {
 					if !e.Session.RemoveErrorRecord(idx) {
 						e.reportError(fmt.Errorf("%s", lang.T(lang.MsgIndexOutOfRange)))

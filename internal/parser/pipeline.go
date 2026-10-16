@@ -41,14 +41,14 @@ func (p *Parser) parsePipeline() *ast.Pipeline {
 			break
 		}
 	}
-	// 纯表达式管道头的尾随重定向（如 $x 2>$null）：命令参数收集不处理表达式语句，由管道层存入 Redirs。
+	// 纯表达式管道头的尾随重定向（如 $x 2>$null）：collectCommandArgs 不处理表达式语句，因此将重定向储存到管道节点的 Redirs。
 	if len(pipe.Commands) == 0 && pipe.Expr != nil {
 		p.collectPipeRedirs(&pipe.Redirs)
 	}
 	return pipe
 }
 
-// collectPipeRedirs 解析纯表达式管道头的尾随重定向，存入给定的重定向表，与命令参数收集的重定向分支同规则。
+// collectPipeRedirs 解析纯表达式管道头的尾随重定向，存入给定的重定向表；同一输出流或错误流只能重定向一次，规则与 collectCommandArgs 相同。
 // 遇到非重定向 token 就停下，交回语句层处理。
 func (p *Parser) collectPipeRedirs(redirs *[]ast.Redirection) {
 	for {
@@ -252,7 +252,7 @@ func (p *Parser) collectCommandArgs(cmd *ast.Command) {
 			// 二元运算符（比较、逻辑、成员测试等）会把最后一个位置实参合并入运算表达式，后续 token 由后缀逻辑消费。
 			// 判定依据与后缀逻辑一致，都是 binaryOpInfo；不在表里的词（如只有一元用法的 -not）按普通命名参数处理。
 			// 位置实参为空时不可能是运算符（如 Update-List 的 -Replace 参数），交由命名参数处理，由绑定阶段判定。
-			// 运算符本身在这里消费，右操作数与后续串联交后缀逻辑；后缀在实参模式遇到破折号词会停下，外层循环重新进入本分支，每次迭代至少消费一个 token。
+			// 运算符 token 在此处使用，右操作数与其后的连续运算交给 parseBinaryTail；parseBinaryTail 在实参模式下遇到 -Name 形式的 token 就中止，而 collectCommandArgs 的循环会在下一轮重新进入这一分支。
 			if opName, prec := p.binaryOpInfo(t); prec >= 0 && len(cmd.Positional) > 0 {
 				lhs := cmd.Positional[len(cmd.Positional)-1]
 				cmd.Positional = cmd.Positional[:len(cmd.Positional)-1]

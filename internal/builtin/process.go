@@ -83,7 +83,7 @@ func listProcesses() ([]procEntry, error) {
 	return nil, fmt.Errorf("%s", lang.T(lang.MsgUnsupported))
 }
 
-// clockTicks 是内核每秒的时钟滴答数（/proc/stat 时间字段单位），Linux 用户态 ABI 固定 100。
+// clockTicks 是内核每秒的时钟计数单位（/proc/stat 时间字段单位），Linux 用户态 ABI 固定 100。
 const clockTicks = 100
 
 func listLinuxProcs() ([]procEntry, error) {
@@ -256,7 +256,7 @@ func processNameActive(name string) bool {
 }
 
 // processActive 判断进程是否还在活动，已结束的不再等待。
-// Linux 通过 /proc 判断状态，其它平台取进程句柄后发空信号探测，成功视为还在活动，但不一定准确。
+// Linux 通过 /proc 判断状态，其它平台取到进程对象后发送信号 0，发送成功说明进程存在，但结果不完全准确。
 func processActive(pid int) bool {
 	if runtime.GOOS == "linux" {
 		return linuxProcessActive(pid)

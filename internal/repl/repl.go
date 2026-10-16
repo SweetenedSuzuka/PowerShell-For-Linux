@@ -21,7 +21,7 @@ type lineReader interface {
 	ReadLine(prompt string) (string, error)
 }
 
-// errLineCancelled 是行读取被 Ctrl-C 中断的标记（raw 编辑器返回，loop 据此丢弃续行累积回到主提示符）。
+// errLineCancelled 是行读取被 Ctrl-C 中断的标记（raw 编辑器返回，loop 据此清空续行累积并显示主提示符）。
 var errLineCancelled = errors.New("line cancelled")
 
 // REPL 是一次交互式会话。
@@ -98,7 +98,7 @@ func (r *REPL) loop() {
 		if len(r.Session.History) == 0 || r.Session.History[len(r.Session.History)-1] != joined {
 			r.Session.History = append(r.Session.History, joined)
 		}
-		// 逐语句执行并格式化，保证与直写命令顺序一致
+		// 逐语句执行并格式化，保证与直接写命令顺序一致
 		exited := false
 		recovered := false
 		func() {
@@ -199,7 +199,7 @@ func (r *REPL) complete(buf string) []string {
 		return nil // 纯空白行：无词可补
 	}
 	lastTok := fields[len(fields)-1]
-	// 参数名补全（末词以 - 开头，按首词命令的规格参数加通用参数枚举）
+	// 参数名补全（末词以 - 开头，按首词命令声明的参数加通用参数枚举）
 	if strings.HasPrefix(lastTok, "-") {
 		return r.completeParam(fields[0], lastTok)
 	}
@@ -226,7 +226,7 @@ func (r *REPL) complete(buf string) []string {
 	return completePath(r.Session, lastTok)
 }
 
-// completeParam 补全指定命令的参数名（规格参数在前，通用参数在后，去重）。
+// completeParam 补全指定命令的参数名（命令声明的参数在前，通用参数在后，去重）。
 func (r *REPL) completeParam(cmd, prefix string) []string {
 	name := cmd
 	if resolved, ok := r.Session.ResolveAlias(cmd); ok {

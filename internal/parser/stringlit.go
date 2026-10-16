@@ -61,7 +61,7 @@ func (p *Parser) canMergeBareword() bool {
 	return false
 }
 
-// isStrongValueStart 判断 token 是否以"强值"开头（引号串/变量/括号）。
+// isStrongValueStart 判断 token 是否属于引号串、变量或括号。
 // 此时前面的 '=' 是赋值分隔而非裸字延续。
 func (p *Parser) isStrongValueStart(t lexer.Token) bool {
 	switch t.Type {

@@ -13,7 +13,8 @@ import (
 // drive.go 实现路径的盘符归一、解析与显示（C 盘即根目录，显示保持反斜杠风格）。
 
 // DrivePath 处理输入路径的盘符前缀：C: 开头视为根目录（C 盘 = 根），其它盘符报错。
-// Linux 没有盘符概念，C: 只是给人看的系统盘表示；Windows 写法 C:\tmp、C:/tmp 都归一化到根路径。
+// Linux 没有盘符的概念，C: 只是给人看的，实际表示的是根目录。
+// Windows 写法的 C:\tmp、C:/tmp 都转成根目录下的路径。
 func DrivePath(p string) (string, error) {
 	if len(p) < 2 || p[1] != ':' {
 		return p, nil
@@ -61,7 +62,7 @@ func ResolvePath(cwd, p string) (string, error) {
 }
 
 // DisplayPath 把 Linux 路径显示为 Windows 风格（C:\，根目录即 C:\）。
-// 无论命令格式是 5 还是 7，提示符都显示 Windows 风格路径。
+// 无论命令风格是 5.X 还是 7.X，提示符都显示 Windows 风格路径。
 func (s *Session) DisplayPath(path string) string {
 	if runtime.GOOS == "windows" {
 		return path

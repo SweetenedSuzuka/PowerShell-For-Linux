@@ -241,7 +241,7 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 		}
 	case "System.IO.FileInfo", "System.IO.DirectoryInfo":
 		// 计算属性从路径算出：Extension（目录恒空）、BaseName（文件去扩展名）、DirectoryName（父目录）。
-		// 与 FullName 一致按传入路径原样计算，不解析为绝对路径（与现有简化一致）。
+		// 与 FullName 一致按传入路径原样计算，不解析为绝对路径。
 		if path, ok := o.Value.(string); ok {
 			switch strings.ToLower(name) {
 			case "extension":
@@ -284,7 +284,7 @@ func (o *PSObject) virtualProp(name string) (*PSObject, bool) {
 				hh, mm, ss := t.Clock()
 				days := time.Date(y, mo, d, 0, 0, 0, 0, time.UTC).Unix()/86400 + 719162
 				return Int((days*86400+int64(hh)*3600+int64(mm)*60+int64(ss))*10000000 + int64(t.Nanosecond())/100), true
-			// 亚秒字段按 100ns 刻度量化（与 Ticks 口径一致，PowerShell 最小刻度即 100ns）。
+			// 亚秒字段按 100ns 刻度量化（与 Ticks 取值相同，PowerShell 最小刻度即 100ns）。
 			case "millisecond":
 				return Int(int64(t.Nanosecond() / 100 * 100 / 1e6)), true
 			case "microsecond":
@@ -337,7 +337,7 @@ func (o *PSObject) HasProp(name string) bool {
 }
 
 // SetProp 设置属性值：已存在（不区分大小写）则替换，否则追加。
-// 哈希表按条目键替换或追加；存入解包后的值，与 AddProp 口径一致。
+// 哈希表按条目键替换或追加；存入解包后的值，与 AddProp 相同。
 func (o *PSObject) SetProp(name string, val *PSObject) *PSObject {
 	var v any
 	if val != nil {

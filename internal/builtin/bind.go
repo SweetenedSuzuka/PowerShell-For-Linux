@@ -13,7 +13,7 @@ import (
 
 // bind.go 依据参数规格把命令实参绑定为 BoundArgs。
 
-// commonParams 是所有 cmdlet 通用的参数：-ErrorAction、-WhatIf、-Confirm 按各自语义生效，其余接受但忽略。
+// commonParams 是所有 cmdlet 通用的参数：-ErrorAction、-WhatIf、-Confirm 为有效参数，其余参数不报错，但是直接忽略。
 var commonParams = map[string]bool{
 	"erroraction": true, "errorvariable": true, "verbose": true, "debug": true,
 	"whatif": true, "confirm": true, "outvariable": true, "outbuffer": true,

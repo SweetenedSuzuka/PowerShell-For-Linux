@@ -32,9 +32,9 @@ func assertCompleteContains(t *testing.T, buf string, expected ...string) {
 	}
 }
 
-// TestCompleteParam 验证 - 后补参数名：规格参数、通用参数、别名解析、未知命令无补全。
+// TestCompleteParam 验证 - 后补参数名：命令声明的参数、通用参数、别名解析、未知命令无补全。
 func TestCompleteParam(t *testing.T) {
-	// 前缀匹配规格参数
+	// 前缀匹配命令声明的参数
 	assertCompleteContains(t, "Get-ChildItem -F", "-Filter ", "-Force ", "-File ")
 	// 通用参数
 	assertCompleteContains(t, "Get-ChildItem -Error", "-ErrorAction ", "-ErrorVariable ")
@@ -44,6 +44,6 @@ func TestCompleteParam(t *testing.T) {
 	if actual := testREPL().complete("NoSuchCmd -X"); len(actual) != 0 {
 		t.Fatalf("未知命令不应补全，得到 %v", actual)
 	}
-	// 命令补全不受影响（既有返回小写名）
+	// 命令补全仍返回小写名
 	assertCompleteContains(t, "Get-Ch", "get-childitem ")
 }

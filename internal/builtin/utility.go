@@ -12,7 +12,7 @@ import (
 	"powershell/internal/object"
 )
 
-// utility.go 收纳不成体系的独立小指令（连接测试、暂停）。
+// utility.go 实现网络与等待类 cmdlet（Test-Connection、Start-Sleep、Resolve-DnsName）。
 
 func cmdTestConnection(c *Context) ([]*object.PSObject, error) {
 	host := firstArg(c, "TargetName")
@@ -66,7 +66,7 @@ func dnsRecord(name, typ, data string) *object.PSObject {
 	return o
 }
 
-// cmdResolveDnsName 域名解析（Go 内置解析，默认系统解析器，-Server 指定上游；默认查询 A 与 AAAA）。
+// cmdResolveDnsName 域名解析（Go 内置解析，默认跟随系统解析器，-Server 指定 DNS 服务器地址；默认查询 A 与 AAAA）。
 func cmdResolveDnsName(c *Context) ([]*object.PSObject, error) {
 	// 超量位置实参无槽位可接（Name 占位置 0，Type 占位置 1），报错而非静默忽略。
 	if len(c.Args.Positional) > 0 {

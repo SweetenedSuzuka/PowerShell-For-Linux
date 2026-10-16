@@ -10,7 +10,7 @@ import (
 
 // args.go 实现调用实参与静态成员解析工具。
 // parseCallArgs 解析括号内的逗号分隔实参列表；进入时当前 token 是 "("。
-// 零实参也返回非 nil 空切片，供调用方区分"无括号的属性形态"。
+// 零实参也返回非 nil 空切片，供调用方区分「无括号的属性形态」。
 func (p *Parser) parseCallArgs() []ast.Node {
 	p.advance()
 	args := []ast.Node{}
@@ -37,7 +37,7 @@ func (p *Parser) parseCallArgs() []ast.Node {
 
 // finishStaticMember 完成 [类型]::成员 的静态成员节点；进入时当前 token 是成员名。
 // 成员名为空或以冒号开头按解析错误处理。
-// 成员名可带点分尾链（如 ::Now.Year，词法分析器把点合并入裸字），拆成逐段成员访问；尾链末段紧跟括号时按方法调用解析，实参挂到末段。
+// 成员名可带点后缀（如 ::Now.Year，词法分析器把点合并入裸字），拆成逐段成员访问；最后一段紧跟括号时按方法调用解析，实参记到最后一段。
 func (p *Parser) finishStaticMember(typeName, member string) ast.Node {
 	p.advance() // 消费成员名
 	if member == "" || strings.HasPrefix(member, ":") {
@@ -76,7 +76,7 @@ func (p *Parser) isStatementEnd(t lexer.Token) bool {
 
 // ---- 语句 ----
 
-// parseStatementList 解析一串语句，直到 EOF 或闭合字符 term（0 表示顶层）。
+// parseStatementList 解析一串语句，直到 EOF 或遇到 term 指定的闭合字符（0 表示顶层，没有闭合字符）。
 func (p *Parser) parseStatementList(term byte) *ast.StatementList {
 	list := &ast.StatementList{}
 	// 块/脚本开头的 param() 声明块：它是块的头部而非普通语句，先行解析，不受语句终止符检查约束（param($x) 后可直接跟语句）。

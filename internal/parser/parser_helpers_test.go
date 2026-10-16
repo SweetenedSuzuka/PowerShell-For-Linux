@@ -9,7 +9,6 @@ import (
 )
 
 // dump 把 AST 渲染成一行文本，便于断言结构。
-
 func dump(n ast.Node) string {
 	var sb strings.Builder
 	writeNode(&sb, n)

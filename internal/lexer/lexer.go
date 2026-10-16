@@ -59,7 +59,7 @@ type Token struct {
 	Adjacent bool         // 紧贴前一 Token（中间无空白），用于识别 '2>' 这类
 	Line     int
 	Col      int
-	Pos      int    // 字节偏移（token 起始）
+	Pos      int    // 该 token 在源码中的字节偏移位置
 	Raw      string // 原始文本（含引号等），用于外部命令重建
 }
 
@@ -96,7 +96,7 @@ type Lexer struct {
 	pos      int
 	line     int
 	col      int
-	tokStart int       // 当前 token 起始字节偏移（跳过空白后）
+	tokStart int       // 跳过空白后，当前 token 所在位置的字节偏移
 	prevType TokenType // 前一 token 类型（用于消解 *、% 的歧义）
 	prevText string    // 前一 token 文本
 }
@@ -230,7 +230,7 @@ func (l *Lexer) nextTok0() Token {
 		return l.nextTok() // 递归跳过注释（不返回 token）
 	}
 
-	// 反引号：行内续行或转义（裸上下文下忽略）
+	// 反引号：行内续行或转义（裸字位置上一律跳过）
 	if c == '`' {
 		l.next()
 		if l.peek() == '\n' {
@@ -261,7 +261,7 @@ func (l *Lexer) nextTok0() Token {
 		return l.lexDash(adj)
 	}
 
-	// 操作符
+	// 运算符
 	if op := l.lexOperator(adj); op.Type != TkEOF {
 		return op
 	}
@@ -376,7 +376,7 @@ func (l *Lexer) lexNumber(adj bool) Token {
 	var f float64
 	var isIntF bool
 	if isInt {
-		// 手动解析避免 strconv 对超大整数的限制
+		// 自行按位累积，不受 strconv.ParseInt 的位数上限限制
 		f = parseInt(s)
 		isIntF = true
 	} else {
@@ -708,7 +708,8 @@ func (l *Lexer) lexDash(adj bool) Token {
 	return Token{Type: TkOp, Text: "-", Line: startLine, Col: startCol, Adjacent: adj}
 }
 
-// endsValue 判断前一 token 是否以“值”结尾（即 * / % 此时应视为运算符而非通配符）。
+// endsValue 报告前一 token 的类型是否属于可作值的类型（数字、字符串、变量、右括号、紧贴的裸字）。
+// 此时 * / % 视为运算符，不作通配符。
 func (l *Lexer) endsValue(adj bool) bool {
 	switch l.prevType {
 	case TkNumber, TkString, TkVariable, TkBraceVar:

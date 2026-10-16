@@ -91,7 +91,7 @@ func cmdReadHost(c *Context) ([]*object.PSObject, error) {
 	return []*object.PSObject{object.Str(line)}, nil
 }
 
-// promptLine 按 Read-Host 链路读取一行：非交互运行报错；输出提示后读取行；流结束时 ok 为 false。
+// promptLine 是 Read-Host 的读行实现：非交互运行报错；输出提示后读取一行；输入流结束时 ok 为 false。
 // 同一次输入源的多次读取共用一个读取器，逐次新建时前一个读取器的预读会占用后续行。
 func promptLine(c *Context, prompt string, reader *bufio.Reader) (string, bool, error) {
 	// 非交互运行不能读取输入，直接报错。
@@ -108,13 +108,13 @@ func promptLine(c *Context, prompt string, reader *bufio.Reader) (string, bool, 
 	return strings.TrimRight(line, "\r\n"), true, nil
 }
 
-// cmdGetCredential 终端提示输入用户名和密码（复用 Read-Host 链路；密码输入回显，输出表格只显示用户名）。
+// cmdGetCredential 终端提示输入用户名和密码（复用 promptLine 读行；密码输入回显，输出表格只显示用户名）。
 func cmdGetCredential(c *Context) ([]*object.PSObject, error) {
 	// 超量位置实参无槽位可接（UserName 只占位置 0），报错而非静默忽略。
 	if len(c.Args.Positional) > 0 {
 		return errf(c, "%s", lang.T(lang.MsgPositionalParamNotFound, c.Args.Positional[0].String()))
 	}
-	// 非交互运行无法提示，直接返回空（Read-Host 此时报错，原版如此）。
+	// 非交互运行无法提示，直接返回空（同样情况下 Read-Host 会报错）。
 	if c.Shell.NonInteractive {
 		return nil, nil
 	}

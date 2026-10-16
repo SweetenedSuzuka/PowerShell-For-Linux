@@ -14,7 +14,7 @@ type formatShape int
 const (
 	shapeScalar      formatShape = iota // 标量：每行一个
 	shapeTable                          // 表格（带 Table 定义或哈希表）
-	shapeCustomTable                    // 自定义对象表格：与其它表格形状分组渲染，避免异构错列
+	shapeCustomTable                    // 自定义对象表格：单独分组渲染，与其它表格形状互不混排
 	shapeList                           // 列表（Name : value）
 )
 
@@ -53,7 +53,7 @@ func FormatOutput(w io.Writer, objs []*PSObject) error {
 				return err
 			}
 		case shapeTable, shapeCustomTable:
-			// 单个自定义对象使用列表处理（与 PowerShell 一致），多个才合成表格
+			// 单个自定义对象按列表渲染（与 PowerShell 一致），多个自定义对象合成一张表格。
 			if shape == shapeCustomTable && len(group) == 1 {
 				if err := FormatListTo(w, group, nil); err != nil {
 					return err
